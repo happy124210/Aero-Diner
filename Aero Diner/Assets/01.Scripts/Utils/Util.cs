@@ -1,9 +1,11 @@
+using System;
+using System.Linq;
 using UnityEngine;
 
 public static class Util
 {
     /// <summary>
-    /// 지정된 이름을 가진 자식 오브젝트에서 특정 컴포넌트 타입을 찾아 반환.
+    /// [확장메서드] 지정된 이름을 가진 자식 오브젝트에서 특정 컴포넌트 타입을 찾아 반환.
     /// 비활성화된 오브젝트도 포함하여 검색.
     /// </summary>
     /// <param name="transform">검색을 시작할 기준 Transform</param>
@@ -21,5 +23,18 @@ public static class Util
             }
         }
         return null;
+    }
+    
+    /// <summary>
+    /// [확장메서드] kebab-case를 PascalCase로 변환
+    /// </summary>
+    public static string KebabToPascal(this string kebab)
+    {
+        if (string.IsNullOrEmpty(kebab))
+            return string.Empty;
+
+        return string.Join("", kebab
+            .Split('-', StringSplitOptions.RemoveEmptyEntries)
+            .Select(word => char.ToUpper(word[0]) + word.Substring(1)));
     }
 }
