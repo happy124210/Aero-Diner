@@ -16,6 +16,9 @@ public class PlayerController : MonoBehaviour
     public float interactionRadius = 1.5f;
     public LayerMask interactableLayer;
 
+    [SerializeField]
+    private PlayerInventory playerInventory;
+
     private Vector2 moveInput;
     private Vector2 lastMoveDir = Vector2.down;
     private Rigidbody2D rb;
@@ -23,6 +26,7 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        playerInventory = GetComponent<PlayerInventory>();
     }
 
     void Update()
@@ -89,9 +93,9 @@ public class PlayerController : MonoBehaviour
             if (closest != null)
             {
                 var interactable = closest.GetComponent<IInteractable>();
-                if (interactable != null)
+                if (playerInventory != null && interactable != null)
                 {
-                    interactable.Interact();
+                    interactable.Interact(playerInventory);
                 }
             }
         }
