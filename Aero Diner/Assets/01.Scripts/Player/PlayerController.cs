@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     public LayerMask interactableLayer;
 
     private Vector2 moveInput;
+    private Vector2 lastMoveDir = Vector2.down;
     private Rigidbody2D rb;
 
     void Awake()
@@ -46,6 +47,11 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(upKey)) v += 1f;
 
         moveInput = new Vector2(h, v).normalized;
+
+        if (moveInput != Vector2.zero)
+        {
+            lastMoveDir = moveInput;
+        }
     }
 
     void Move()
@@ -62,8 +68,7 @@ public class PlayerController : MonoBehaviour
             Collider2D closest = null;
             float minDistance = Mathf.Infinity;
 
-            Vector2 forward = moveInput; // 현재 이동 방향을 기준으로 바라보는 방향 설정
-            if (forward == Vector2.zero) forward = Vector2.down; // 정지 중일 땐 아래를 기본 방향으로 설정
+            Vector2 forward = lastMoveDir;
 
             foreach (var col in hits)
             {
@@ -96,5 +101,8 @@ public class PlayerController : MonoBehaviour
         // 상호작용 범위 디버그
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, interactionRadius);
+        Vector3 forward = (Vector3)(Application.isPlaying ? lastMoveDir : Vector2.down);
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(transform.position, transform.position + forward.normalized * interactionRadius);
     }
 }
