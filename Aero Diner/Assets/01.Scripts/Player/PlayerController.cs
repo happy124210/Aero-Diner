@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         HandleInput();
-        
+        TryInteract();
     }
 
     void FixedUpdate()
@@ -59,29 +59,42 @@ public class PlayerController : MonoBehaviour
         {
             Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, interactionRadius, interactableLayer);
 
-            Collider2D largest = null;
-            float maxArea = 0f;
+            Collider2D closest = null;
+            float minDistance = Mathf.Infinity;
+
+            Vector2 forward = moveInput; // 현재 이동 방향을 기준으로 바라보는 방향 설정
+            if (forward == Vector2.zero) forward = Vector2.down; // 정지 중일 땐 아래를 기본 방향으로 설정
 
             foreach (var col in hits)
             {
-                Vector2 size = col.bounds.size;
-                float area = size.x * size.y;
+                Vector2 toTarget = (Vector2)col.transform.position - (Vector2)transform.position;
+                float angle = Vector2.Angle(forward, toTarget);
 
-                if (area > maxArea)
+                if (angle < 60f) // 플레이어가 바라보는 방향 앞쪽 120도 범위 안에 있을 때만
                 {
-                    maxArea = area;
-                    largest = col;
+                    float distance = toTarget.magnitude;
+                    if (distance < minDistance)
+                    {
+                        minDistance = distance;
+                        closest = col;
+                    }
                 }
             }
 
-            if (largest != null)
+            if (closest != null)
             {
-                var interactable = largest.GetComponent<IInteractable>();
+                var interactable = closest.GetComponent<IInteractable>();
                 if (interactable != null)
                 {
                     interactable.Interact();
                 }
             }
         }
+    }
+    void OnDrawGizmosSelected()
+    {
+        // 상호작용 범위 디버그
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, interactionRadius);
     }
 }
