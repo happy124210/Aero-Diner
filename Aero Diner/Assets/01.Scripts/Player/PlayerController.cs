@@ -60,7 +60,7 @@ public class PlayerController : MonoBehaviour
 
     void Move()
     {
-        Vector2 newPos = rb.position + moveInput * moveSpeed * Time.fixedDeltaTime;
+        Vector2 newPos = rb.position + moveInput * (moveSpeed * Time.fixedDeltaTime);
         rb.MovePosition(newPos);
     }
     void TryInteract()
@@ -90,10 +90,10 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            if (closest != null)
+            if (closest)
             {
                 var interactable = closest.GetComponent<IInteractable>();
-                if (playerInventory != null && interactable != null)
+                if (playerInventory && interactable != null)
                 {
                     interactable.Interact(playerInventory);
                 }
