@@ -1,108 +1,74 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
     [Header("이동 속도")]
     public float moveSpeed = 5f;
 
-    [Header("키 설정")]
-    public KeyCode upKey = KeyCode.W;
-    public KeyCode downKey = KeyCode.S;
-    public KeyCode leftKey = KeyCode.A;
-    public KeyCode rightKey = KeyCode.D;
-    public KeyCode interactKey = KeyCode.E;
-
     [Header("상호작용 설정")]
     public float interactionRadius = 1.5f;
     public LayerMask interactableLayer;
 
-    [SerializeField]
-    private PlayerInventory playerInventory;
+    [SerializeField] private PlayerInventory playerInventory;
+
+    private IInteractable currentTarget;
 
     private Vector2 moveInput;
     private Vector2 lastMoveDir = Vector2.down;
     private Rigidbody2D rb;
-
-    void Awake()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         playerInventory = GetComponent<PlayerInventory>();
     }
 
-    void Update()
+    public void OnMove(InputAction.CallbackContext context)
     {
-        HandleInput();
-        TryInteract();
+        moveInput = context.ReadValue<Vector2>();
     }
-
-    void FixedUpdate()
+    private void Update()
     {
-        Move();
-    }
-
-    void HandleInput()
-    {
-        float h = 0f;
-        float v = 0f;
-
-        if (Input.GetKey(leftKey)) h -= 1f;
-        if (Input.GetKey(rightKey)) h += 1f;
-        if (Input.GetKey(downKey)) v -= 1f;
-        if (Input.GetKey(upKey)) v += 1f;
-
-        moveInput = new Vector2(h, v).normalized;
-
         if (moveInput != Vector2.zero)
-        {
             lastMoveDir = moveInput;
-        }
-    }
 
-    void Move()
-    {
-        Vector2 newPos = rb.position + moveInput * (moveSpeed * Time.fixedDeltaTime);
-        rb.MovePosition(newPos);
+        RaycastForInteractable(); // ▶ 매 프레임 상호작용 대상 탐색
     }
-    void TryInteract()
+    private void FixedUpdate()
     {
-        if (Input.GetKeyDown(interactKey))
+        rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
+    }
+    private void RaycastForInteractable()
+    {
+        Vector2 origin = transform.position;
+        Vector2 direction = lastMoveDir;
+        float distance = interactionRadius;
+
+        RaycastHit2D hit = Physics2D.Raycast(origin, direction, distance, interactableLayer);
+
+        if (hit.collider != null)
         {
-            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, interactionRadius, interactableLayer);
-
-            Collider2D closest = null;
-            float minDistance = Mathf.Infinity;
-
-            Vector2 forward = lastMoveDir;
-
-            foreach (var col in hits)
-            {
-                Vector2 toTarget = (Vector2)col.transform.position - (Vector2)transform.position;
-                float angle = Vector2.Angle(forward, toTarget);
-
-                if (angle < 60f) // 플레이어가 바라보는 방향 앞쪽 120도 범위 안에 있을 때만
-                {
-                    float distance = toTarget.magnitude;
-                    if (distance < minDistance)
-                    {
-                        minDistance = distance;
-                        closest = col;
-                    }
-                }
-            }
-
-            if (closest)
-            {
-                var interactable = closest.GetComponent<IInteractable>();
-                if (playerInventory && interactable != null)
-                {
-                    interactable.Interact(playerInventory);
-                }
-            }
+            currentTarget = hit.collider.GetComponent<IInteractable>();
+        }
+        else
+        {
+            currentTarget = null;
         }
     }
-    void OnDrawGizmosSelected()
+    public void OnInteract(InputAction.CallbackContext context)
     {
-        // 상호작용 범위 디버그
+        if (!context.performed) return;
+
+        if (currentTarget != null && playerInventory != null)
+        {
+            Debug.Log("상호작용 시도!");
+            currentTarget.Interact(playerInventory);
+        }
+    }
+
+
+    private void OnDrawGizmosSelected()
+    {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, interactionRadius);
         Vector3 forward = (Vector3)(Application.isPlaying ? lastMoveDir : Vector2.down);
