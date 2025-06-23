@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "IngredientGroup", menuName = "CookingGame/IngredientGroup")]
 public class IngredientSOGroup : ScriptableObject
@@ -20,5 +21,10 @@ public class IngredientSOGroup : ScriptableObject
                 return entry.prefab;
         }
         return null;
+    }
+
+    internal bool Contains(FoodData currentFoodData)
+    {
+        throw new NotImplementedException();
     }
 }
