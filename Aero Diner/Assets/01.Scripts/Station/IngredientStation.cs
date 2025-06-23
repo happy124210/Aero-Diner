@@ -31,4 +31,12 @@ public class IngredientStation : MonoBehaviour, IInteractable
             Instantiate(prefab, spawnPoint.position, Quaternion.identity);
         }
     }
+    public void OnHoverEnter()
+    {
+
+    }
+    public void OnHoverExit()
+    {
+
+    }
 }
