@@ -85,7 +85,12 @@ public class AutomaticStation : MonoBehaviour
             currentIngredients.Add(data.id);
 
         // 레시피 판단을 직접 싱글톤 RecipeManager에서 실행
-        RecipeData selectedRecipe = RecipeManager.Instance.TrySetRecipe(stationType, currentIngredients);
+        RecipeData selectedRecipe = RecipeManager.Instance.TrySetRecipe(
+            stationType,
+            currentIngredients,
+            SetRecipe.Instance.selectedRecipes
+        );
+
         if (selectedRecipe != null)
         {
             Debug.Log($"레시피 '{selectedRecipe.recipeName}' 가능!");
@@ -179,6 +184,12 @@ public class AutomaticStation : MonoBehaviour
         Debug.Log("플레이어가 물체를 들었습니다. 스테이션 상태 초기화됨.");
     }
 
-    public void OnHoverEnter() { }  // 커서 올릴 때 시각 효과 필요 시 구현
-    public void OnHoverExit() { }   // 커서 빠질 때 효과 제거 처리
+    public void OnHoverEnter() 
+    {
+
+    }  
+    public void OnHoverExit() 
+    { 
+
+    }   
 }
