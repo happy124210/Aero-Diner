@@ -75,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 50
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0.8301887, g: 0.16838734, b: 0.16838734, a: 1}
   m_FlipX: 0
@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d8299292fe84d49aa45b529417f69c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slotPoint: {fileID: 5923935781197246304}
   ingredientGroup: {fileID: 11400000, guid: 5f7e84b54ed034643b4536bf49b41243, type: 2}
   selectedIngredient: {fileID: 11400000, guid: 3e74ac311bd0c744090155ac219f909b, type: 2}
   spawnPoint: {fileID: 5923935781197246304}

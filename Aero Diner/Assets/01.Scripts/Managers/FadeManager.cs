@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
@@ -68,6 +68,10 @@ public class FadeManager : Singleton<FadeManager>
         currentFade = null;
     }
 
+    /// <summary>
+    /// 로딩창 포함 씬 불러오기
+    /// </summary>
+    /// <param name="targetScene">불러올 씬 이름</param>
     public void FadeOutAndLoadSceneWithLoading(string targetScene)
     {
         StartCoroutine(FadeAndLoadLoadingScene(targetScene));
@@ -89,4 +93,3 @@ public class FadeManager : Singleton<FadeManager>
         yield return StartCoroutine(FadeRoutine(targetAlpha, duration));
     }
 }
-

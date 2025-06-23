@@ -232,7 +232,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &2900659279703028481
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -393,4 +393,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemSlotTransform: {fileID: 8758876864210790752}
   itemSlotRenderer: {fileID: 6161027120883218044}
-  curruntItemname: {fileID: 0}
+  currentItemname: {fileID: 0}
