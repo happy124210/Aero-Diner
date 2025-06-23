@@ -19,7 +19,6 @@ public class PlayerController : MonoBehaviour
 
     public IInteractable currentTarget;
     private IInteractable previousTarget;
-    private IItem heldItem;
 
     private Vector2 moveInput;
     private Vector2 lastMoveDir = Vector2.down;
@@ -55,7 +54,7 @@ public class PlayerController : MonoBehaviour
 
         RaycastHit2D hit = Physics2D.Raycast(origin, direction, distance, interactableLayer);
 
-        if (hit.collider != null)
+        if (hit.collider)
             newTarget = hit.collider.GetComponent<IInteractable>();
 
         //변화가 있을 때만 후처리

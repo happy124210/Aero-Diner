@@ -10,7 +10,7 @@ public class PlayerInventory : MonoBehaviour
 
     [SerializeField] private Transform itemSlotTransform;
     [SerializeField] private SpriteRenderer itemSlotRenderer;
-    [SerializeField] private TextMeshProUGUI curruntItemname;
+    [SerializeField] private TextMeshProUGUI currentItemname;
     public void TryPickup(IInteractable target)
     {
         if (heldItem != null) return;
@@ -53,8 +53,8 @@ public class PlayerInventory : MonoBehaviour
         heldItem = item;
         if(itemSlotRenderer)
         itemSlotRenderer.sprite = item.GetSprite();
-        curruntItemname.text = item.GetItemName();
-        curruntItemname.gameObject.SetActive(true);
+        currentItemname.text = item.GetItemName();
+        currentItemname.gameObject.SetActive(true);
         itemSlotTransform.gameObject.SetActive(true);
         var itemBehaviour = item as MonoBehaviour;
         if (itemBehaviour)
@@ -66,7 +66,7 @@ public class PlayerInventory : MonoBehaviour
     public void ClearItem()
     {
         heldItem = null;
-        curruntItemname.gameObject.SetActive(false);
+        currentItemname.gameObject.SetActive(false);
         itemSlotTransform.gameObject.SetActive(false);
     }
     //public void Use()
