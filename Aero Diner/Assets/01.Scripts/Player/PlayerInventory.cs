@@ -1,4 +1,4 @@
-﻿using TMPro;
+using TMPro;
 using UnityEngine;
 
 public class PlayerInventory : MonoBehaviour
@@ -10,14 +10,29 @@ public class PlayerInventory : MonoBehaviour
 
     [SerializeField] private Transform itemSlotTransform;
     [SerializeField] private SpriteRenderer itemSlotRenderer;
-    [SerializeField] private TextMeshProUGUI curruntItemname;
+    [SerializeField] private TextMeshProUGUI currentItemname;
+    
     public void TryPickup(IInteractable target)
     {
         if (heldItem != null) return;
 
-        if (target is IItem item)
+        IItem itemToPickup = null;
+
+        if (target is IItem directItem)
         {
-            HoldItem(item);
+            itemToPickup = directItem;
+        }
+        else if (target is ItemSlotStation station && station.HasItem)
+        {
+            itemToPickup = station.StoredItem;
+
+            // 슬롯 비우기
+            station.RemoveItem();
+        }
+
+        if (itemToPickup != null)
+        {
+            HoldItem(itemToPickup);
             Debug.Log("아이템을 주웠습니다.");
         }
         else
@@ -25,50 +40,50 @@ public class PlayerInventory : MonoBehaviour
             Debug.Log("이 오브젝트는 아이템이 아닙니다.");
         }
     }
+    
     public void DropItem(IInteractable target)
     {
         if (heldItem == null) return;
 
-        if (target != null)
+        if (target is ItemSlotStation slot)
         {
-            var targetMono = target as MonoBehaviour;
-            var itemBehaviour = heldItem as MonoBehaviour;
-
-            if (targetMono != null && itemBehaviour != null)
+            if (slot.HasItem)
             {
-                itemBehaviour.transform.SetParent(targetMono.transform);
-                itemBehaviour.transform.position = targetMono.transform.position;
+                Debug.Log("이 설비에는 이미 아이템이 있습니다.");
+                return;
             }
 
+            slot.PlaceItem(heldItem);
             ClearItem();
-            Debug.Log("아이템을 상호작용 대상 위에 놓았습니다.");
+            Debug.Log("설비 위에 아이템을 놓았습니다.");
         }
         else
         {
-            Debug.Log("놓을 수 있는 대상이 없습니다.");
+            Debug.Log("이 오브젝트는 아이템을 놓을 수 없습니다.");
         }
     }
+    
     public void HoldItem(IItem item)
     {
         heldItem = item;
-        if(itemSlotRenderer)
-        itemSlotRenderer.sprite = item.GetSprite();
-        curruntItemname.text = item.GetItemName();
-        curruntItemname.gameObject.SetActive(true);
-        itemSlotTransform.gameObject.SetActive(true);
+        
         var itemBehaviour = item as MonoBehaviour;
         if (itemBehaviour)
         {
+            // Raycast 대상에서 제외
+            itemBehaviour.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+
             itemBehaviour.transform.SetParent(itemSlotTransform);
             itemBehaviour.transform.localPosition = Vector3.zero;
         }
     }
+    
     public void ClearItem()
     {
         heldItem = null;
-        curruntItemname.gameObject.SetActive(false);
-        itemSlotTransform.gameObject.SetActive(false);
+        //currentItemname.gameObject.SetActive(false);
     }
+    
     //public void Use()
     //{
     //    if (heldItem != null)

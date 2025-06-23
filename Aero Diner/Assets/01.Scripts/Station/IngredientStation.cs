@@ -3,7 +3,7 @@
 /// <summary>
 /// 플레이어가 상호작용하면 재료를 생성해주는 스테이션
 /// </summary>
-public class IngredientStation : MonoBehaviour, IInteractable
+public class IngredientStation : ItemSlotStation
 {
     [Header("재료 데이터 그룹")]
     public IngredientSOGroup ingredientGroup;
@@ -17,7 +17,7 @@ public class IngredientStation : MonoBehaviour, IInteractable
     /// <summary>
     /// 플레이어가 J 키를 눌렀을 때 실행되는 상호작용 메서드
     /// </summary>
-    public void Interact(PlayerInventory playerInventory)
+    public override void Interact(PlayerInventory playerInventory)
     {
         // 필요한 컴포넌트나 데이터가 누락된 경우 실행하지 않음
         if (ingredientGroup == null || selectedIngredient == null || spawnPoint == null) return;

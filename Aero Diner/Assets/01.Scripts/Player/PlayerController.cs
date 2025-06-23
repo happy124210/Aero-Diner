@@ -19,7 +19,6 @@ public class PlayerController : MonoBehaviour
 
     public IInteractable currentTarget;
     private IInteractable previousTarget;
-    private IItem heldItem;
 
     private Vector2 moveInput;
     private Vector2 lastMoveDir = Vector2.down;
@@ -55,7 +54,7 @@ public class PlayerController : MonoBehaviour
 
         RaycastHit2D hit = Physics2D.Raycast(origin, direction, distance, interactableLayer);
 
-        if (hit.collider != null)
+        if (hit.collider)
             newTarget = hit.collider.GetComponent<IInteractable>();
 
         //변화가 있을 때만 후처리
@@ -100,18 +99,23 @@ public class PlayerController : MonoBehaviour
     public void OnPickupDown(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
-
         if (playerInventory == null) return;
 
         if (playerInventory.IsHoldingItem)
         {
-            playerInventory.DropItem(currentTarget);
-            Debug.Log("아이템을 내려놓음");
+            if (currentTarget != null)
+            {
+                playerInventory.DropItem(currentTarget);
+                Debug.Log("아이템을 내려놓음");
+            }
+            else
+            {
+                Debug.Log("내려놓을 대상이 없습니다."); // 또는 피드백 UI
+            }
         }
         else
         {
             playerInventory.TryPickup(currentTarget);
-            Debug.Log("아이템을 주움");
         }
     }
 
