@@ -1,5 +1,15 @@
 using UnityEngine;
 
+public enum StationType
+{
+    Shelf,
+    Trashcan,
+    CuttingBoard,
+    FryingPan,
+    Pot,
+    None, // 빈 공간이면 어디든 상관 없음
+}
+
 /// <summary>
 /// 음식/재료 데이터
 /// </summary>
@@ -10,7 +20,9 @@ public class FoodData : ScriptableObject
     public string id;
     public string foodName;
     public string displayName;
-    public Sprite icon;
-    public int cost;
-    public bool isServe;
+    public Sprite foodIcon;
+    public Sprite processedIcon;
+    public string description;
+    public StationType requireStation;
+    public int foodCost;
 }
