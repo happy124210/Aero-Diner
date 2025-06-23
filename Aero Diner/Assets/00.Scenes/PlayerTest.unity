@@ -343,7 +343,19 @@ MonoBehaviour:
     m_ActionId: 98c5f20f-71a4-497c-8bc0-065f3334662d
     m_ActionName: Player/Interact[/Keyboard/j]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 579184680}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 1ed28ea9-a744-4f31-9205-6255ff31255c
     m_ActionName: Player/Pickup/down[/Keyboard/k]
   m_NeverAutoSwitchControlSchemes: 0

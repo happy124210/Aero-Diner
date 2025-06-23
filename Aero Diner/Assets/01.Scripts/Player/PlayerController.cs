@@ -17,8 +17,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Vector2 slotOffsetLeft = new Vector2(-0.5f, 0);
     [SerializeField] private Vector2 slotOffsetRight = new Vector2(0.5f, 0);
 
-    private IInteractable currentTarget;
+    public IInteractable currentTarget;
     private IInteractable previousTarget;
+    private IItem heldItem;
 
     private Vector2 moveInput;
     private Vector2 lastMoveDir = Vector2.down;
@@ -94,6 +95,23 @@ public class PlayerController : MonoBehaviour
         else
         {
             itemSlotTransform.localPosition = dir.y > 0 ? slotOffsetUp : slotOffsetDown;
+        }
+    }
+    public void OnPickupDown(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+
+        if (playerInventory == null) return;
+
+        if (playerInventory.IsHoldingItem)
+        {
+            playerInventory.DropItem(currentTarget);
+            Debug.Log("아이템을 내려놓음");
+        }
+        else
+        {
+            playerInventory.TryPickup(currentTarget);
+            Debug.Log("아이템을 주움");
         }
     }
 
