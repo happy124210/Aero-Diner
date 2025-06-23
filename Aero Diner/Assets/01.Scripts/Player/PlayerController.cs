@@ -11,8 +11,14 @@ public class PlayerController : MonoBehaviour
     public LayerMask interactableLayer;
 
     [SerializeField] private PlayerInventory playerInventory;
+    [SerializeField] private Transform itemSlotTransform;
+    [SerializeField] private Vector2 slotOffsetUp = new Vector2(0, 0.5f);
+    [SerializeField] private Vector2 slotOffsetDown = new Vector2(0, -0.5f);
+    [SerializeField] private Vector2 slotOffsetLeft = new Vector2(-0.5f, 0);
+    [SerializeField] private Vector2 slotOffsetRight = new Vector2(0.5f, 0);
 
     private IInteractable currentTarget;
+    private IInteractable previousTarget;
 
     private Vector2 moveInput;
     private Vector2 lastMoveDir = Vector2.down;
@@ -31,8 +37,8 @@ public class PlayerController : MonoBehaviour
     {
         if (moveInput != Vector2.zero)
             lastMoveDir = moveInput;
-
-        RaycastForInteractable(); // ▶ 매 프레임 상호작용 대상 탐색
+        UpdateItemSlotPosition();
+        RaycastForInteractable(); //매 프레임 상호작용 대상 탐색
     }
     private void FixedUpdate()
     {
@@ -40,6 +46,8 @@ public class PlayerController : MonoBehaviour
     }
     private void RaycastForInteractable()
     {
+        IInteractable newTarget = null;
+
         Vector2 origin = transform.position;
         Vector2 direction = lastMoveDir;
         float distance = interactionRadius;
@@ -47,12 +55,20 @@ public class PlayerController : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(origin, direction, distance, interactableLayer);
 
         if (hit.collider != null)
+            newTarget = hit.collider.GetComponent<IInteractable>();
+
+        //변화가 있을 때만 후처리
+        if (newTarget != currentTarget)
         {
-            currentTarget = hit.collider.GetComponent<IInteractable>();
-        }
-        else
-        {
-            currentTarget = null;
+            // 이전 대상 정리
+            if (currentTarget != null)
+                currentTarget.OnHoverExit();
+
+            // 새 대상 처리
+            if (newTarget != null)
+                newTarget.OnHoverEnter();
+
+            currentTarget = newTarget;
         }
     }
     public void OnInteract(InputAction.CallbackContext context)
@@ -65,7 +81,21 @@ public class PlayerController : MonoBehaviour
             currentTarget.Interact(playerInventory);
         }
     }
+    private void UpdateItemSlotPosition()
+    {
+        if (itemSlotTransform == null) return;
 
+        // 4방향 중 가장 가까운 방향 결정
+        Vector2 dir = lastMoveDir;
+        if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
+        {
+            itemSlotTransform.localPosition = dir.x > 0 ? slotOffsetRight : slotOffsetLeft;
+        }
+        else
+        {
+            itemSlotTransform.localPosition = dir.y > 0 ? slotOffsetUp : slotOffsetDown;
+        }
+    }
 
     private void OnDrawGizmosSelected()
     {

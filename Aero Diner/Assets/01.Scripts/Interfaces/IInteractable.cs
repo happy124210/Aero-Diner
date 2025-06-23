@@ -1,4 +1,6 @@
 ﻿public interface IInteractable
 {
-    void Interact(PlayerInventory player);
+    void Interact(PlayerInventory inventory);
+    void OnHoverEnter();
+    void OnHoverExit();
 }
