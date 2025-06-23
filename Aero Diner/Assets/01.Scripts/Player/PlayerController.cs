@@ -99,18 +99,23 @@ public class PlayerController : MonoBehaviour
     public void OnPickupDown(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
-
         if (playerInventory == null) return;
 
         if (playerInventory.IsHoldingItem)
         {
-            playerInventory.DropItem(currentTarget);
-            Debug.Log("아이템을 내려놓음");
+            if (currentTarget != null)
+            {
+                playerInventory.DropItem(currentTarget);
+                Debug.Log("아이템을 내려놓음");
+            }
+            else
+            {
+                Debug.Log("내려놓을 대상이 없습니다."); // 또는 피드백 UI
+            }
         }
         else
         {
             playerInventory.TryPickup(currentTarget);
-            Debug.Log("아이템을 주움");
         }
     }
 
