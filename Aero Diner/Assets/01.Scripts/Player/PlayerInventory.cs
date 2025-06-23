@@ -1,4 +1,4 @@
-﻿using TMPro;
+using TMPro;
 using UnityEngine;
 
 public class PlayerInventory : MonoBehaviour
@@ -11,6 +11,7 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] private Transform itemSlotTransform;
     [SerializeField] private SpriteRenderer itemSlotRenderer;
     [SerializeField] private TextMeshProUGUI currentItemname;
+    
     public void TryPickup(IInteractable target)
     {
         if (heldItem != null) return;
@@ -39,6 +40,7 @@ public class PlayerInventory : MonoBehaviour
             Debug.Log("이 오브젝트는 아이템이 아닙니다.");
         }
     }
+    
     public void DropItem(IInteractable target)
     {
         if (heldItem == null) return;
@@ -60,10 +62,11 @@ public class PlayerInventory : MonoBehaviour
             Debug.Log("이 오브젝트는 아이템을 놓을 수 없습니다.");
         }
     }
+    
     public void HoldItem(IItem item)
     {
         heldItem = item;
-
+        
         var itemBehaviour = item as MonoBehaviour;
         if (itemBehaviour)
         {
@@ -74,11 +77,13 @@ public class PlayerInventory : MonoBehaviour
             itemBehaviour.transform.localPosition = Vector3.zero;
         }
     }
+    
     public void ClearItem()
     {
         heldItem = null;
         //currentItemname.gameObject.SetActive(false);
     }
+    
     //public void Use()
     //{
     //    if (heldItem != null)
