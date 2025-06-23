@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// 플레이어가 상호작용하면 재료를 생성해주는 스테이션
@@ -19,22 +20,25 @@ public class IngredientStation : ItemSlotStation
     /// </summary>
     public override void Interact(PlayerInventory playerInventory)
     {
-        // 필요한 컴포넌트나 데이터가 누락된 경우 실행하지 않음
-        if (ingredientGroup == null || selectedIngredient == null || spawnPoint == null) return;
-
-        // 선택된 재료 데이터에 해당하는 프리팹을 가져옴
-        GameObject prefab = ingredientGroup.GetPrefabByData(selectedIngredient);
-
-        // 프리팹이 존재하면 스폰 위치에 재료 인스턴스를 생성
-        if (prefab != null)
+        // 필수 컴포넌트 검사
+        if (ingredientGroup == null || selectedIngredient == null || spawnPoint == null)
         {
-            Instantiate(prefab, spawnPoint.position, Quaternion.identity);
+            Debug.LogError("필수 데이터가 누락되었습니다.");
+            return;
         }
 
-        if (selectedIngredient == null || spawnPoint == null)
+        // 선택된 재료 데이터를 캐스팅
+        if (selectedIngredient is IngredientData ingredientData)
         {
-            Debug.LogError("선택된 음식 데이터 또는 생성 위치가 설정되지 않았습니다.");
-            return;
+            GameObject prefab = ingredientGroup.GetPrefabByData(ingredientData);
+            if (prefab != null)
+            {
+                Instantiate(prefab, spawnPoint.position, Quaternion.identity);
+            }
+        }
+        else
+        {
+            Debug.LogError("선택된 ScriptableObject는 IngredientData 타입이 아닙니다.");
         }
 
         //// 새 GameObject를 생성하고 이름은 displayName으로 지정
