@@ -53,8 +53,8 @@ public class PlayerInventory : MonoBehaviour
         heldItem = item;
         if(itemSlotRenderer)
         itemSlotRenderer.sprite = item.GetSprite();
-        currentItemname.text = item.GetItemName();
-        currentItemname.gameObject.SetActive(true);
+        //currentItemname.text = item.GetItemName();
+        //currentItemname.gameObject.SetActive(true);
         itemSlotTransform.gameObject.SetActive(true);
         var itemBehaviour = item as MonoBehaviour;
         if (itemBehaviour)
@@ -66,7 +66,7 @@ public class PlayerInventory : MonoBehaviour
     public void ClearItem()
     {
         heldItem = null;
-        currentItemname.gameObject.SetActive(false);
+        //currentItemname.gameObject.SetActive(false);
         itemSlotTransform.gameObject.SetActive(false);
     }
     //public void Use()

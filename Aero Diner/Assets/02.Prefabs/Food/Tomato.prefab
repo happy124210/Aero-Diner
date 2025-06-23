@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 8181074669376440417}
   - component: {fileID: 4574744753281923309}
   - component: {fileID: 5540364180777089059}
-  - component: {fileID: 1202873576264028623}
-  m_Layer: 0
+  - component: {fileID: 5424802550339211213}
+  m_Layer: 6
   m_Name: Tomato
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -131,30 +131,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!50 &1202873576264028623
-Rigidbody2D:
-  serializedVersion: 4
+--- !u!114 &5424802550339211213
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8415192494585073783}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a24a9e1aa11404e44a543e4c0830b8f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ingredientData: {fileID: 11400000, guid: 3e74ac311bd0c744090155ac219f909b, type: 2}
+  icon: {fileID: 0}
+  itemName: Cookie

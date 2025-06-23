@@ -568,7 +568,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemSlotTransform: {fileID: 8072338524583816229}
   itemSlotRenderer: {fileID: 6632430617305133881}
-  curruntItemname: {fileID: 0}
+  currentItemname: {fileID: 0}
 --- !u!4 &6351075875343638060
 Transform:
   m_ObjectHideFlags: 0
@@ -702,7 +702,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!4 &8072338524583816229
 Transform:
   m_ObjectHideFlags: 0
