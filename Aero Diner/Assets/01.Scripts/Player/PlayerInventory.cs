@@ -17,12 +17,7 @@ public class PlayerInventory : MonoBehaviour
 
         if (target is IItem item)
         {
-            HoldItem(item); // ← 바로 여기서 이 함수 사용!
-
-            var itemBehaviour = item as MonoBehaviour;
-            if (itemBehaviour != null)
-                itemBehaviour.transform.SetParent(itemSlotTransform);
-
+            HoldItem(item);
             Debug.Log("아이템을 주웠습니다.");
         }
         else
@@ -56,10 +51,17 @@ public class PlayerInventory : MonoBehaviour
     public void HoldItem(IItem item)
     {
         heldItem = item;
-        itemSlotRenderer.sprite = item.GetSprite(); // IItem에 GetSprite() 정의 필요
+        if(itemSlotRenderer)
+        itemSlotRenderer.sprite = item.GetSprite();
         curruntItemname.text = item.GetItemName();
         curruntItemname.gameObject.SetActive(true);
         itemSlotTransform.gameObject.SetActive(true);
+        var itemBehaviour = item as MonoBehaviour;
+        if (itemBehaviour)
+        {
+            itemBehaviour.transform.SetParent(itemSlotTransform);
+            itemBehaviour.transform.localPosition = Vector3.zero;
+        }
     }
     public void ClearItem()
     {
