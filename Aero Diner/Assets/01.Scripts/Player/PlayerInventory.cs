@@ -1,22 +1,35 @@
-﻿using UnityEngine;
-using static UnityEditor.Progress;
+﻿using TMPro;
+using UnityEngine;
 
 public class PlayerInventory : MonoBehaviour
 {
-    public Item heldItem;
+    private IItem heldItem;
+    public IItem HeldItem => heldItem;
+    public bool IsHoldingItem => heldItem != null;
 
-    public bool HasItem => heldItem != null;
 
-    public void Hold(Item item)
+    [SerializeField] private Transform itemSlotTransform;
+    [SerializeField] private SpriteRenderer itemSlotRenderer;
+    [SerializeField] private TextMeshProUGUI curruntItemname;
+    public void HoldItem(IItem item)
     {
         heldItem = item;
-        // UI 업데이트 등
+        itemSlotRenderer.sprite = item.GetSprite(); // IItem에 GetSprite() 정의 필요
+        curruntItemname.text = item.GetItemName();
+        curruntItemname.gameObject.SetActive(true);
+        itemSlotTransform.gameObject.SetActive(true);
     }
-
-    public Item Drop()
+    public void ClearItem()
     {
-        Item temp = heldItem;
         heldItem = null;
-        return temp;
+        curruntItemname.gameObject.SetActive(false);
+        itemSlotTransform.gameObject.SetActive(false);
+    }
+    public void Use()
+    {
+        if (heldItem != null)
+        {
+            heldItem.Use(); // IItem에 정의된 메서드
+        }
     }
 }
