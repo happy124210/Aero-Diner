@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
@@ -8,7 +8,7 @@ public class FadeManager : Singleton<FadeManager>
     public Image fadeImage;
     public float defaultFadeTime = 1f;
     private Coroutine currentFade;
-
+    
     protected override void Awake()
     {
         base.Awake();
@@ -79,6 +79,7 @@ public class FadeManager : Singleton<FadeManager>
         LoadingTargetHolder.TargetScene = targetScene;
         SceneManager.LoadScene("LoadingScene");
     }
+    
     public IEnumerator FadeToCoroutine(float targetAlpha, float duration = -1f)
     {
         if (currentFade != null)
@@ -87,4 +88,3 @@ public class FadeManager : Singleton<FadeManager>
 
         yield return StartCoroutine(FadeRoutine(targetAlpha, duration));
     }
-}
