@@ -8,5 +8,5 @@ using UnityEngine;
 public class SetRecipe : Singleton<SetRecipe>
 {
     [Header("게임에서 사용할 선택된 레시피 리스트")]
-    public List<RecipeData> selectedRecipes; // 게임 시작 시 수동 또는 초기 설정
+    public List<MenuData> selectedRecipes; // 게임 시작 시 수동 또는 초기 설정
 }
