@@ -16,7 +16,7 @@ public class CSVImporter
     [MenuItem("Tools/Import Game Data/Customer Data")]
     public static void ImportCustomerData()
     {
-        ImportData<CustomerData>("CustomerData", ParseCustomerData, "Customer");
+        ImportData("CustomerData", ParseCustomerData, "Customer");
     }
     
     public static CustomerData ParseCustomerData(string[] cols)
@@ -36,25 +36,24 @@ public class CSVImporter
     
     #endregion
     
-    #region RecipeData 생성
+    #region MenuData 생성
     
-    [MenuItem("Tools/Import Game Data/Recipe Data")]
+    [MenuItem("Tools/Import Game Data/Menu Data")]
     public static void ImportRecipeData()
     {
-        ImportData<RecipeData>("RecipeData", ParseRecipeData, "Recipe");
+        ImportData("MenuData", ParseRecipeData, "Menu");
     }
     
-    public static RecipeData ParseRecipeData(string[] cols)
+    public static MenuData ParseRecipeData(string[] cols)
     {
-        var data = ScriptableObject.CreateInstance<RecipeData>();
+        var data = ScriptableObject.CreateInstance<MenuData>();
         
         // 레시피 데이터 파싱
         data.id = cols[0].Trim();
-        data.recipeName = cols[1].Trim();
+        data.menuName = cols[1].Trim();
         data.ingredients = ParseStringArray(cols[2]); // 파이프로 구분된 재료들
-        data.resId = cols[3].Trim();
-        data.requireStation = (CookingStation)Enum.Parse(typeof(CookingStation), cols[4].Trim());
-        data.cookTime = float.Parse(cols[5]);
+        data.cookTime = float.Parse(cols[3]);
+        data.menuCost = float.Parse(cols[4]);
         
         return data;
     }
@@ -77,9 +76,11 @@ public class CSVImporter
         data.id = cols[0].Trim();
         data.foodName = cols[1].Trim();
         data.displayName = cols[2].Trim();
-        data.icon = LoadIcon($"{data.foodName}-icon", "Food"); // Resources에서 아이콘 로드
-        data.cost = int.Parse(cols[3]);
-        data.isServe = bool.Parse(cols[4].ToLower());
+        data.description = cols[3].Trim();
+        data.foodIcon = LoadIcon($"{data.foodName}-icon", "Food"); // Resources에서 아이콘 로드
+        data.processedIcon = LoadIcon($"{data.foodName}-processed", "Food");
+        data.requireStation = (StationType)Enum.Parse(typeof(StationType), cols[4].Trim()); // StationType enum값 parse
+        data.foodCost = int.Parse(cols[5]);
         
         return data;
     }
