@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 public enum SFXType
 {
     BlankClick,
@@ -10,20 +9,11 @@ public enum SFXType
 }
 public enum UIEventType
 {
-    OpenPause,
-    ClosePause,
-    OpenOption,
-    CloseOption,
-    GotoStartScene,
-    QuitGame,
-    OpenSound,
-    CloseSound,
-    OpenVideo,
-    CloseVideo,
-    OpenControl,
-    ResetOptions,
-    SaveOptions,
-
+    OpenPause, ClosePause,
+    OpenOption, CloseOption,
+    CloseSound, CloseVideo,
+    CloseControl,
+    ShowSoundTab, ShowVideoTab, ShowControlTab
 }
 
 public static class EventBus
