@@ -5,64 +5,51 @@ public class SFXManager : Singleton<SFXManager>
 {
     public static SFXManager Instance;
 
-    [Header("효과음 목록")]
-    public List<SFXEntry> sfxList = new List<SFXEntry>();
-
-    private AudioSource audioSource;
-    private Dictionary<string, AudioClip> sfxDict = new Dictionary<string, AudioClip>();
-
     [System.Serializable]
     public class SFXEntry
     {
-        public string key;
+        public SFXType type;
         public AudioClip clip;
     }
+
+    public List<SFXEntry> sfxList;
+    private Dictionary<SFXType, AudioClip> sfxDict;
+    private AudioSource audioSource;
 
     private void Awake()
     {
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
 
+        sfxDict = new Dictionary<SFXType, AudioClip>();
         foreach (var entry in sfxList)
         {
-            if (!sfxDict.ContainsKey(entry.key))
-                sfxDict.Add(entry.key, entry.clip);
+            sfxDict[entry.type] = entry.clip;
         }
     }
 
-    /// <summary>
-    /// 키 값으로 효과음을 재생합니다.
-    /// </summary>
-    public void Play(string key)
+    private void OnEnable()
     {
-        if (sfxDict.TryGetValue(key, out AudioClip clip))
+        SFXEventBus.OnSFXRequested += HandleSFXRequest;
+    }
+
+    private void OnDisable()
+    {
+        SFXEventBus.OnSFXRequested -= HandleSFXRequest;
+    }
+
+    private void HandleSFXRequest(SFXType type)
+    {
+        if (sfxDict.TryGetValue(type, out var clip))
         {
             audioSource.PlayOneShot(clip);
         }
         else
         {
-            Debug.LogWarning($"[SFXManager] '{key}' 키에 해당하는 효과음이 없습니다.");
+            Debug.LogWarning($"[SFXManager] 등록되지 않은 SFXType: {type}");
         }
     }
 
-    /// <summary>
-    /// 특정 위치에서 효과음을 재생합니다 (3D 환경에서).
-    /// </summary>
-    public void PlayAt(string key, Vector3 position)
-    {
-        if (sfxDict.TryGetValue(key, out AudioClip clip))
-        {
-            AudioSource.PlayClipAtPoint(clip, position);
-        }
-    }
-
-    public void SetVolume(float volume)
-    {
-        audioSource.volume = volume;
-    }
-
-    public float GetVolume()
-    {
-        return audioSource.volume;
-    }
+    //호출 예시
+    //SFXEventBus.PlaySFX(SFXType.ItemPickup);
 }

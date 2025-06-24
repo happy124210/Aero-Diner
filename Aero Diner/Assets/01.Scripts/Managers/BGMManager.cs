@@ -5,8 +5,6 @@ using System.Collections.Generic;
 [RequireComponent(typeof(AudioSource))]
 public class BGMManager : Singleton<BGMManager>
 {
-    public static BGMManager Instance;
-
     [Header("씬별 배경음악")]
     public List<SceneBGM> sceneBGMs = new List<SceneBGM>();
 
