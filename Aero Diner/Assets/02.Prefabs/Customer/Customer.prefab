@@ -56,7 +56,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -314,6 +314,7 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 1265474c0d37a144d83fccaf01ecfb60, type: 2}
   entrancePoint: {fileID: 0}
   exitPoint: {fileID: 0}
+  seatPoint: {fileID: 0}
 --- !u!195 &7523355939073356595
 NavMeshAgent:
   m_ObjectHideFlags: 0

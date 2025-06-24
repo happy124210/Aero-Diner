@@ -15,6 +15,6 @@ MonoBehaviour:
   id: c1
   customerName: test
   displayName: "\uD14C\uC2A4\uD2B8 \uC190\uB2D8"
-  speed: 2
+  speed: 5
   waitTime: 30
   eatTime: 5

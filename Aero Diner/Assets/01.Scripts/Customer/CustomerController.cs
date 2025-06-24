@@ -15,7 +15,7 @@ public enum CustomerAnimState
 public class CustomerController : MonoBehaviour
 {
     [Header("Debug")]
-    [SerializeField] private bool showDebugInfo = true;
+    [SerializeField] private bool showDebugInfo;
     [SerializeField] public string currentNodeName;
     
     [Header("Customer Stats")]
@@ -47,13 +47,9 @@ public class CustomerController : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log($"Customer position: {transform.position}");
-        Debug.Log($"NavMesh exists: {NavMesh.SamplePosition(transform.position, out var hit, 5f, NavMesh.AllAreas)}");
-        
         SetupCustomerData();
         SetupNavMeshAgent();
         SetupBT();
-        
     }
 
     private void Update()
@@ -119,25 +115,25 @@ public class CustomerController : MonoBehaviour
     {
         // 전체 고객 흐름을 하나의 Sequence로 구성
         var mainFlow = new Sequence(this,
-            new MoveToEntrance(this),
+            new MoveToPosition(this, GetEntrancePosition, "MoveToEntrance"),
             new CheckWaitingTime(this),
             new CheckAvailableSeat(this),
-            new MoveToSeat(this),
+            new MoveToPosition(this, GetAssignedSeatPosition, "MoveToSeat"),
             new Selector(this,
                 new Sequence(this,
                     new CheckWaitingTime(this),
                     new TakeOrder(this),
                     new Payment(this)
                 ),
-                new Leave(this) // 중간에 인내심 소진시 이탈
+                new LeaveRestaurant(this) // 중간에 인내심 소진시 이탈
             ),
-            new Leave(this) // 정상 완료 후 이탈
+            new LeaveRestaurant(this) // 정상 완료 후 이탈
         );
         
         // 전체 실패시에도 이탈 처리
         rootNode = new Selector(this,
             mainFlow,
-            new Leave(this)
+            new LeaveRestaurant(this)
         );
         
         rootNode.Reset();
