@@ -20,7 +20,7 @@ public class IngredientStation : ItemSlotStation
     /// </summary>
     public override void Interact(PlayerInventory playerInventory)
     {
-        // 필요한 경우 필수 컴포넌트나 데이터가 누락되었는지 확인할 수 있습니다.
+        // 필요한 경우 필수 컴포넌트나 데이터가 누락되었는지 확인
         if (ingredientGroup == null || selectedIngredient == null || spawnPoint == null)
         {
             Debug.LogError("필수 데이터가 누락되었습니다.");
@@ -46,8 +46,12 @@ public class IngredientStation : ItemSlotStation
             // 스프라이트가 없는 경우 기본 회색으로 표시
             spriteRenderer.color = Color.gray;
         }
+
+        FoodDisplay foodDisplay = ingredientObj.AddComponent<FoodDisplay>();
+        foodDisplay.foodData = selectedIngredient;
     }
-public void OnHoverEnter()
+
+    public void OnHoverEnter()
     {
 
     }

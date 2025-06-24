@@ -210,6 +210,9 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         else
             spriteRenderer.color = Color.gray;
 
+        FoodDisplay foodDisplay = ingredientObj.AddComponent<FoodDisplay>();
+        foodDisplay.foodData = selectedIngredient;
+
         return ingredientObj;
     }
 
