@@ -108,7 +108,6 @@ public class CustomerController : MonoBehaviour
         navAgent.updateUpAxis = false;
         navAgent.speed = speed;
         navAgent.stoppingDistance = 0.1f;
-        navAgent.autoBraking = true;
     }
     
     private void SetupBT()
@@ -215,15 +214,16 @@ public class CustomerController : MonoBehaviour
     #endregion
     
     #region Movement & Animation
-    
+
+    private const float AGENT_DRIFT = 0.0001f;
     public void SetDestination(Vector3 destination) 
     { 
         if (navAgent && navAgent.isOnNavMesh)
         {
             // NavMeshPlus Y축 버그 방지용
-            if (Mathf.Abs(transform.position.x - destination.x) < 0.0001f)
+            if (Mathf.Abs(transform.position.x - destination.x) < AGENT_DRIFT)
             {
-                destination.x += 0.0001f;
+                destination.x += AGENT_DRIFT;
             }
             
             navAgent.SetDestination(destination);
