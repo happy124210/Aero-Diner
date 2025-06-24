@@ -18,7 +18,7 @@ public class AutomaticStation : MonoBehaviour
     public Text cookingTimeText;
 
     [Header("스테이션 타입")]
-    public CookingStation stationType;
+    public StationType stationType;
 
     [Header("현재 등록된 재료 ID 목록")]
     public List<string> currentIngredients = new List<string>();
@@ -64,70 +64,70 @@ public class AutomaticStation : MonoBehaviour
     /// 플레이어가 재료를 내려놓았을 때 호출됨
     /// 재료 오브젝트를 생성하고 조리를 시작함
     /// </summary>
-    public void PlaceIngredient(FoodData data)
-    {
-        if (currentFoodData != null)
-        {
-            Debug.Log("이미 재료가 배치되어 있습니다.");
-            return;
-        }
-
-        if (NeededIngredients != null && !NeededIngredients.Contains(data))
-        {
-            Debug.Log("제공된 재료가 요구되는 그룹에 속하지 않습니다.");
-            return;
-        }
-
-        currentFoodData = data;
-        placedIngredientObj = CreateIngredientDisplay(data);
-
-        if (!currentIngredients.Contains(data.id))
-            currentIngredients.Add(data.id);
-
-        // 레시피 판단을 직접 싱글톤 RecipeManager에서 실행
-        RecipeData selectedRecipe = RecipeManager.Instance.TrySetRecipe(
-            stationType,
-            currentIngredients,
-            SetRecipe.Instance.selectedRecipes
-        );
-
-        if (selectedRecipe != null)
-        {
-            Debug.Log($"레시피 '{selectedRecipe.recipeName}' 가능!");
-        }
-        else
-        {
-            Debug.Log("조건에 맞는 레시피 없음");
-        }
-
-        currentCookingTime = cookingTime;
-        isCooking = true;
-        UpdateCookingTimeText();
-    }
+    // public void PlaceIngredient(FoodData data)
+    // {
+    //     if (currentFoodData != null)
+    //     {
+    //         Debug.Log("이미 재료가 배치되어 있습니다.");
+    //         return;
+    //     }
+    //
+    //     if (NeededIngredients != null && !NeededIngredients.Contains(data))
+    //     {
+    //         Debug.Log("제공된 재료가 요구되는 그룹에 속하지 않습니다.");
+    //         return;
+    //     }
+    //
+    //     currentFoodData = data;
+    //     placedIngredientObj = CreateIngredientDisplay(data);
+    //
+    //     if (!currentIngredients.Contains(data.id))
+    //         currentIngredients.Add(data.id);
+    //
+    //     // 레시피 판단을 직접 싱글톤 RecipeManager에서 실행
+    //     RecipeData selectedRecipe = RecipeManager.Instance.TrySetRecipe(
+    //         stationType,
+    //         currentIngredients,
+    //         SetRecipe.Instance.selectedRecipes
+    //     );
+    //
+    //     if (selectedRecipe != null)
+    //     {
+    //         Debug.Log($"레시피 '{selectedRecipe.recipeName}' 가능!");
+    //     }
+    //     else
+    //     {
+    //         Debug.Log("조건에 맞는 레시피 없음");
+    //     }
+    //
+    //     currentCookingTime = cookingTime;
+    //     isCooking = true;
+    //     UpdateCookingTimeText();
+    // }
 
 
     /// <summary>
     /// 재료 데이터를 기반으로 화면에 보여질 재료 오브젝트 생성
     /// </summary>
-    private GameObject CreateIngredientDisplay(FoodData data)
-    {
-        GameObject obj = new GameObject(data.displayName);
-        obj.transform.SetParent(transform);
-        obj.transform.localPosition = Vector3.zero;
-
-        SpriteRenderer sr = obj.AddComponent<SpriteRenderer>();
-        sr.sprite = data.icon ?? null;
-
-        if (data.icon == null)
-            sr.color = Color.gray;
-
-        obj.AddComponent<BoxCollider2D>();
-        Rigidbody2D rb = obj.AddComponent<Rigidbody2D>();
-        rb.bodyType = RigidbodyType2D.Kinematic;
-        rb.gravityScale = 0f;
-
-        return obj;
-    }
+    // private GameObject CreateIngredientDisplay(FoodData data)
+            // {
+            //     GameObject obj = new GameObject(data.displayName);
+            //     obj.transform.SetParent(transform);
+            //     obj.transform.localPosition = Vector3.zero;
+            //
+            //     SpriteRenderer sr = obj.AddComponent<SpriteRenderer>();
+            //     sr.sprite = data.icon ?? null;
+            //
+            //     if (data.icon == null)
+            //         sr.color = Color.gray;
+            //
+            //     obj.AddComponent<BoxCollider2D>();
+            //     Rigidbody2D rb = obj.AddComponent<Rigidbody2D>();
+            //     rb.bodyType = RigidbodyType2D.Kinematic;
+            //     rb.gravityScale = 0f;
+            //
+            //     return obj;
+            // }
 
     /// <summary>
     /// 조리 완료 시 호출됨. 기존 오브젝트 제거 및 결과 출력

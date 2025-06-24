@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using System;
+using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
@@ -23,11 +24,11 @@ public class UIManager : MonoBehaviour
         switch (eventType)
         {
             case UIEventType.OpenPause:
-                if (pausePanel != null) pausePanel.SetActive(true);
+                if (pausePanel) pausePanel.SetActive(true);
                 break;
 
             case UIEventType.ClosePause:
-                if (pausePanel != null) pausePanel.SetActive(false);
+                if (pausePanel) pausePanel.SetActive(false);
                 break;
 
             case UIEventType.OpenOption:

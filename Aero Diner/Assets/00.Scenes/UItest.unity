@@ -921,7 +921,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1707589420}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: OptionBtn, Assembly-CSharp
         m_MethodName: OnClickVideoTab
         m_Mode: 1
@@ -1054,7 +1054,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1707589420}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: OptionBtn, Assembly-CSharp
         m_MethodName: OnClickControlTab
         m_Mode: 1
@@ -7290,7 +7290,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1707589420}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: OptionBtn, Assembly-CSharp
         m_MethodName: OnClickOption
         m_Mode: 1
@@ -7849,7 +7849,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1503507081}
-  - component: {fileID: 1503507082}
   m_Layer: 0
   m_Name: PausePanel
   m_TagString: Untagged
@@ -7873,18 +7872,6 @@ Transform:
   - {fileID: 287901473}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1503507082
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1503507080}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a42adb70a0516dd4e83a92565309b291, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1524082084
 GameObject:
   m_ObjectHideFlags: 0
@@ -8796,10 +8783,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1707589419}
-  - component: {fileID: 1707589421}
-  - component: {fileID: 1707589420}
-  - component: {fileID: 1707589422}
-  - component: {fileID: 1707589423}
   m_Layer: 0
   m_Name: UIManager
   m_TagString: Untagged
@@ -8822,59 +8805,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1707589420
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1707589417}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74a15ea6a5f2846489b622b8bca3b80d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1707589421
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1707589417}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3163e8cd07ad95a468e7761f73c8be40, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pausePanel: {fileID: 1503507080}
-  optionPanel: {fileID: 1551219369}
-  soundPanel: {fileID: 1719434328}
-  videoPanel: {fileID: 115514202}
-  controlPanel: {fileID: 1535868945}
---- !u!114 &1707589422
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1707589417}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6073105bd1485b46bd6131310cd1cc1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1707589423
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1707589417}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b02b678afb496de47a16f89e004676b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1718967070
 GameObject:
   m_ObjectHideFlags: 0
@@ -9835,7 +9765,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1707589420}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: OptionBtn, Assembly-CSharp
         m_MethodName: OnClickSoundTab
         m_Mode: 1
