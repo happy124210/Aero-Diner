@@ -19,9 +19,9 @@ public class MoveToEntrance : BaseNode
         {
             case State.Moving:
                 Debug.Log("Customer moving to entrance...");
-                
-                // TODO: 실제 이동 로직
-                customer.StartCoroutine(SimulateMovement());
+
+                Vector3 entrance = customer.GetEntrancePosition();
+                customer.SetDestination(entrance);
                 currentState = State.Arrived;
                 return NodeState.Running;
                 
@@ -37,16 +37,6 @@ public class MoveToEntrance : BaseNode
     {
         currentState = State.Moving;
     }
-
-    #region TestCode
-
-    private IEnumerator SimulateMovement()
-    {
-        yield return new WaitForSeconds(2f);
-        currentState = State.Arrived;
-    }
-
-    #endregion
 }
 
 /// <summary>
@@ -125,10 +115,8 @@ public class MoveToSeat : BaseNode
             case State.Moving:
                 Debug.Log("Customer moving to seat...");
                 
-                // TODO: 실제 좌석 이동 로직
                 Vector3 seatPosition = customer.GetAssignedSeatPosition();
                 customer.SetDestination(seatPosition);
-                customer.StartCoroutine(SimulateMovement());
                 currentState = State.Arrived;
                 return NodeState.Running;
                 
@@ -149,12 +137,6 @@ public class MoveToSeat : BaseNode
     {
         currentState = State.Moving;
     }
-
-    private IEnumerator SimulateMovement()
-    {
-        yield return new WaitForSeconds(2f);
-        currentState = State.Arrived;
-    }
 }
 
 /// <summary>
@@ -164,7 +146,7 @@ public class TakeOrder : BaseNode
 {
     public override string NodeName => "TakeOrder";
     
-    private bool orderPlaced = false;
+    private bool orderPlaced;
     
     public TakeOrder(CustomerController customer) : base(customer) { }
     
@@ -261,10 +243,8 @@ public class Leave : BaseNode
             case State.Moving:
                 Debug.Log("Customer leaving...");
                 
-                // TODO: 실제 퇴장 로직
                 Vector3 exitPosition = customer.GetExitPosition();
                 customer.SetDestination(exitPosition);
-                customer.StartCoroutine(SimulateLeaving());
                 currentState = State.Left;
                 return NodeState.Running;
                 
@@ -280,11 +260,5 @@ public class Leave : BaseNode
     public override void Reset()
     {
         currentState = State.Moving;
-    }
-    
-    private IEnumerator SimulateLeaving()
-    {
-        yield return new WaitForSeconds(2f);
-        currentState = State.Left;
     }
 }

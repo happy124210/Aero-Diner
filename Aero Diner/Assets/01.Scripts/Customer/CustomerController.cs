@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 /// <summary>
@@ -18,9 +19,16 @@ public class CustomerController : MonoBehaviour
     [SerializeField] public string currentNodeName;
     
     [Header("Customer Stats")]
-    [SerializeField] private float maxPatience;
-    [SerializeField] private float currentPatience;
-    [SerializeField] private float eatingTime;
+    [SerializeField] private CustomerData data;
+    private float speed;
+    private float maxWaitTime;
+    private float eatTime;
+    private float currentPatience;
+    
+    [Header("Positions - 임시")]
+    [SerializeField] private Transform entrancePoint;
+    [SerializeField] private Transform exitPoint;
+    [SerializeField] private Transform seatPoint;
     
     private INode rootNode;
     private Vector3 assignedSeatPosition;
@@ -32,12 +40,20 @@ public class CustomerController : MonoBehaviour
     private bool eatingFinished;
     private bool paymentCompleted;
 
+    // components
+    private NavMeshAgent navAgent;
+    
     #region Unity Events
 
     private void Start()
     {
-        currentPatience = maxPatience;
+        Debug.Log($"Customer position: {transform.position}");
+        Debug.Log($"NavMesh exists: {NavMesh.SamplePosition(transform.position, out var hit, 5f, NavMesh.AllAreas)}");
+        
+        SetupCustomerData();
+        SetupNavMeshAgent();
         SetupBT();
+        
     }
 
     private void Update()
@@ -52,7 +68,7 @@ public class CustomerController : MonoBehaviour
         if (isEating)
         {
             eatingTimer += Time.deltaTime;
-            if (eatingTimer >= eatingTime)
+            if (eatingTimer >= eatTime)
             {
                 isEating = false;
                 eatingFinished = true;
@@ -74,7 +90,32 @@ public class CustomerController : MonoBehaviour
 
     #endregion
 
-    public void SetupBT()
+    private void SetupCustomerData()
+    {
+        speed = data.speed; 
+        maxWaitTime = data.waitTime;
+        eatTime = data.eatTime;
+        
+        currentPatience = maxWaitTime;
+    }
+    
+    private void SetupNavMeshAgent()
+    {
+        navAgent = GetComponent<NavMeshAgent>();
+        if (navAgent == null)
+        {
+            navAgent = gameObject.AddComponent<NavMeshAgent>();
+        }
+
+        // 2D NavMesh
+        navAgent.updateRotation = false;
+        navAgent.updateUpAxis = false;
+        navAgent.speed = speed;
+        navAgent.stoppingDistance = 0.1f;
+        navAgent.autoBraking = true;
+    }
+    
+    private void SetupBT()
     {
         // 전체 고객 흐름을 하나의 Sequence로 구성
         var mainFlow = new Sequence(this,
@@ -124,18 +165,15 @@ public class CustomerController : MonoBehaviour
         if (hasSeats)
         {
             // 좌석 할당
-            assignedSeatPosition = new Vector3(
-                Random.Range(-5f, 5f), 
-                0, 
-                Random.Range(-5f, 5f)
-            );
+            assignedSeatPosition = seatPoint.position;
         }
         return hasSeats;
     }
     
     public Vector3 GetAssignedSeatPosition() => assignedSeatPosition;
-    
-    public Vector3 GetExitPosition() => new Vector3(10f, 0, 0); // 출구 위치
+
+    public Vector3 GetEntrancePosition() => entrancePoint.position; // 입구 위치
+    public Vector3 GetExitPosition() => exitPoint.position; // 출구 위치
     
     public void PlaceOrder()
     {
@@ -184,14 +222,26 @@ public class CustomerController : MonoBehaviour
     
     public void SetDestination(Vector3 destination) 
     { 
-        // TODO: NavMesh 연동
-        transform.position = Vector3.MoveTowards(transform.position, destination, Time.deltaTime * 2f);
+        if (navAgent && navAgent.isOnNavMesh)
+        {
+            // NavMeshPlus Y축 버그 방지용
+            if (Mathf.Abs(transform.position.x - destination.x) < 0.0001f)
+            {
+                destination.x += 0.0001f;
+            }
+            
+            navAgent.SetDestination(destination);
+            SetAnimationState(CustomerAnimState.Walking);
+        }
     }
     
     public bool HasReachedDestination() 
     { 
-        // TODO: 실제 목적지 도달 체크
-        return Random.Range(0f, 1f) > 0.1f;
+        if (!navAgent || !navAgent.isOnNavMesh) return false;
+        
+        return !navAgent.pathPending && 
+               navAgent.remainingDistance < 0.5f && 
+               navAgent.velocity.sqrMagnitude < 0.1f;
     }
     
     public void SetAnimationState(CustomerAnimState state) 
