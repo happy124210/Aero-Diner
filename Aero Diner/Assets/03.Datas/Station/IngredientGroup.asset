@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: IngredientGroup
   m_EditorClassIdentifier: 
   ingredientList:
-  - ingredientData: {fileID: 11400000, guid: 3e74ac311bd0c744090155ac219f909b, type: 2}
+  - ingredientData: {fileID: 11400000, guid: 12dc7a547849313489f8866c27edffc6, type: 2}
   - ingredientData: {fileID: 11400000, guid: f02da3cce38effa4c95245798ef86752, type: 2}

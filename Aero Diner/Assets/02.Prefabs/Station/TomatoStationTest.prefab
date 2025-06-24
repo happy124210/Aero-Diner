@@ -101,7 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotPoint: {fileID: 5923935781197246304}
   ingredientGroup: {fileID: 11400000, guid: 5f7e84b54ed034643b4536bf49b41243, type: 2}
-  selectedIngredient: {fileID: 11400000, guid: 3e74ac311bd0c744090155ac219f909b, type: 2}
+  selectedIngredient: {fileID: 11400000, guid: 12dc7a547849313489f8866c27edffc6, type: 2}
   spawnPoint: {fileID: 5923935781197246304}
 --- !u!61 &5965878420344070524
 BoxCollider2D:
