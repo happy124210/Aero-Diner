@@ -10,7 +10,7 @@ public class IngredientStation : ItemSlotStation
     public IngredientSOGroup ingredientGroup;
 
     [Header("생성할 재료 SO")]
-    public ScriptableObject selectedIngredient;
+    public FoodData selectedIngredient;
 
     [Header("재료 생성 위치")]
     public Transform spawnPoint;
@@ -20,46 +20,34 @@ public class IngredientStation : ItemSlotStation
     /// </summary>
     public override void Interact(PlayerInventory playerInventory)
     {
-        // 필수 컴포넌트 검사
+        // 필요한 경우 필수 컴포넌트나 데이터가 누락되었는지 확인할 수 있습니다.
         if (ingredientGroup == null || selectedIngredient == null || spawnPoint == null)
         {
             Debug.LogError("필수 데이터가 누락되었습니다.");
             return;
         }
 
-        // 선택된 재료 데이터를 캐스팅
-        if (selectedIngredient is IngredientData ingredientData)
+        // 새 GameObject를 생성하고 이름은 FoodData에 정의된 foodName으로 지정
+        GameObject ingredientObj = new GameObject(selectedIngredient.foodName);
+
+        // 생성 위치 지정
+        ingredientObj.transform.position = spawnPoint.position;
+
+        // SpriteRenderer 추가하여 foodIcon 스프라이트를 적용
+        SpriteRenderer spriteRenderer = ingredientObj.AddComponent<SpriteRenderer>();
+        spriteRenderer.sortingOrder = 55;
+
+        if (selectedIngredient.foodIcon != null)
         {
-            GameObject prefab = ingredientGroup.GetPrefabByData(ingredientData);
-            if (prefab != null)
-            {
-                Instantiate(prefab, spawnPoint.position, Quaternion.identity);
-            }
+            spriteRenderer.sprite = selectedIngredient.foodIcon;
         }
         else
         {
-            Debug.LogError("선택된 ScriptableObject는 IngredientData 타입이 아닙니다.");
+            // 스프라이트가 없는 경우 기본 회색으로 표시
+            spriteRenderer.color = Color.gray;
         }
-
-        //// 새 GameObject를 생성하고 이름은 displayName으로 지정
-        //GameObject ingredientObj = new GameObject(selectedIngredient.foodName);
-
-        //// 생성 위치 지정
-        //ingredientObj.transform.position = spawnPoint.position;
-
-        //// SpriteRenderer 추가하여 foodIcon 스프라이트를 적용
-        //SpriteRenderer spriteRenderer = ingredientObj.AddComponent<SpriteRenderer>();
-        //if (selectedIngredient.foodIcon != null)
-        //{
-        //    spriteRenderer.sprite = selectedIngredient.foodIcon;
-        //}
-        //else
-        //{
-        //    // 스프라이트가 없는 경우 기본 회색으로 표시
-        //    spriteRenderer.color = Color.gray;
-        //}
     }
-    public void OnHoverEnter()
+public void OnHoverEnter()
     {
 
     }
