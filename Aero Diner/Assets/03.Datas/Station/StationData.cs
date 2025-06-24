@@ -20,8 +20,10 @@ public enum StationType
     None             // 빈 공간
 }
 
-public class StationData : MonoBehaviour
+[CreateAssetMenu(fileName = "StationData", menuName = "CookingGame/StationData")]
+public class StationData : ScriptableObject
 {
+
     // 스테이션의 종류
     public StationType stationType;
 
