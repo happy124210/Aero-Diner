@@ -30,12 +30,12 @@ public class SFXManager : Singleton<SFXManager>
 
     private void OnEnable()
     {
-        SFXEventBus.OnSFXRequested += HandleSFXRequest;
+        EventBus.OnSFXRequested += HandleSFXRequest;
     }
 
     private void OnDisable()
     {
-        SFXEventBus.OnSFXRequested -= HandleSFXRequest;
+        EventBus.OnSFXRequested -= HandleSFXRequest;
     }
 
     private void HandleSFXRequest(SFXType type)
