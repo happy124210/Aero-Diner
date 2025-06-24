@@ -1,14 +1,4 @@
-using UnityEngine;
-
-public enum StationType
-{
-    Shelf,
-    Trashcan,
-    CuttingBoard,
-    FryingPan,
-    Pot,
-    None, // 빈 공간이면 어디든 상관 없음
-}
+﻿using UnityEngine;
 
 /// <summary>
 /// 음식/재료 데이터
