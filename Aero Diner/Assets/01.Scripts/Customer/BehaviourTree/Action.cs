@@ -1,52 +1,65 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 /// <summary>
 /// 생성 후 입구로 이동
 /// </summary>
-public class MoveToEntrance : BaseNode
+public class MoveToPosition : BaseNode
 {
-    public override string NodeName => "MoveToEntrance";
+    public override string NodeName { get; }
+
+    private readonly Func<Vector3> getDestination;
+    private bool hasStartedMoving = false;
     
-    private enum State { Moving, Arrived }
-    private State currentState = State.Moving;
-    
-    public MoveToEntrance(CustomerController customer) : base(customer) { }
+    /// <summary>
+    /// MoveToPosition 생성자
+    /// </summary>
+    /// <param name="customer">손님 컨트롤러</param>
+    /// <param name="getDestination">목적지를 가져오는 함수</param>
+    /// <param name="nodeName">노드 이름</param>
+    public MoveToPosition(CustomerController customer, Func<Vector3> getDestination, 
+        string nodeName = "MoveToPosition")
+        : base(customer)
+    {
+        this.getDestination = getDestination;
+        NodeName = nodeName;
+    }
     
     public override NodeState Execute()
     {
-        switch (currentState)
+        if (!hasStartedMoving)
         {
-            case State.Moving:
-                Debug.Log("Customer moving to entrance...");
-                
-                // TODO: 실제 이동 로직
-                customer.StartCoroutine(SimulateMovement());
-                currentState = State.Arrived;
-                return NodeState.Running;
-                
-            case State.Arrived:
-                Debug.Log("Customer arrived at entrance");
-                return NodeState.Success;
+            Vector3 destination = getDestination();
+            
+            if (destination == Vector3.zero)
+            {
+                Debug.LogError($"Invalid destination for {NodeName}!");
+                return NodeState.Failure;
+            }
+            
+            Debug.Log($"Customer moving to {destination}");
+            customer.SetDestination(destination);
+            hasStartedMoving = true;
+            
+            return NodeState.Running;
         }
         
-        return NodeState.Failure;
+        // 목적지 도착 체크
+        if (customer.HasReachedDestination())
+        {
+            customer.SetAnimationState(CustomerAnimState.Idle);
+            Debug.Log($"Customer arrived at destination ({NodeName})");
+            return NodeState.Success;
+        }
+        
+        return NodeState.Running;
     }
     
     public override void Reset()
     {
-        currentState = State.Moving;
+        hasStartedMoving = false;
     }
-
-    #region TestCode
-
-    private IEnumerator SimulateMovement()
-    {
-        yield return new WaitForSeconds(2f);
-        currentState = State.Arrived;
-    }
-
-    #endregion
 }
 
 /// <summary>
@@ -106,56 +119,6 @@ public class CheckAvailableSeat : BaseNode
     }
 }
 
-/// <summary>
-/// 자리로 이동
-/// </summary>
-public class MoveToSeat : BaseNode
-{
-    public override string NodeName => "MoveToSeat";
-    
-    private enum State { Moving, Arrived }
-    private State currentState = State.Moving;
-    
-    public MoveToSeat(CustomerController customer) : base(customer) { }
-    
-    public override NodeState Execute()
-    {
-        switch (currentState)
-        {
-            case State.Moving:
-                Debug.Log("Customer moving to seat...");
-                
-                // TODO: 실제 좌석 이동 로직
-                Vector3 seatPosition = customer.GetAssignedSeatPosition();
-                customer.SetDestination(seatPosition);
-                customer.StartCoroutine(SimulateMovement());
-                currentState = State.Arrived;
-                return NodeState.Running;
-                
-            case State.Arrived:
-                if (customer.HasReachedDestination())
-                {
-                    Debug.Log("Customer arrived at seat");
-                    customer.SetAnimationState(CustomerAnimState.Idle);
-                    return NodeState.Success;
-                }
-                return NodeState.Running;
-        }
-        
-        return NodeState.Failure;
-    }
-    
-    public override void Reset()
-    {
-        currentState = State.Moving;
-    }
-
-    private IEnumerator SimulateMovement()
-    {
-        yield return new WaitForSeconds(2f);
-        currentState = State.Arrived;
-    }
-}
 
 /// <summary>
 /// 주문받기
@@ -164,7 +127,7 @@ public class TakeOrder : BaseNode
 {
     public override string NodeName => "TakeOrder";
     
-    private bool orderPlaced = false;
+    private bool orderPlaced;
     
     public TakeOrder(CustomerController customer) : base(customer) { }
     
@@ -245,27 +208,37 @@ public class Payment : BaseNode
 /// <summary>
 /// 이탈
 /// </summary>
-public class Leave : BaseNode
+public class LeaveRestaurant : BaseNode
 {
-    public override string NodeName => "Leave";
+    public override string NodeName => "LeaveRestaurant";
     
     private enum State { Moving, Left }
     private State currentState = State.Moving;
+    private bool hasStartedMoving = false;
     
-    public Leave(CustomerController customer) : base(customer) { }
+    public LeaveRestaurant(CustomerController customer) : base(customer) { }
     
     public override NodeState Execute()
     {
         switch (currentState)
         {
             case State.Moving:
-                Debug.Log("Customer leaving...");
+                // 처음에만 목적지 설정
+                if (!hasStartedMoving)
+                {
+                    Vector3 exitPosition = customer.GetExitPosition();
+                    Debug.Log($"Customer starting to leave to {exitPosition}");
+                    customer.SetDestination(exitPosition);
+                    hasStartedMoving = true;
+                }
                 
-                // TODO: 실제 퇴장 로직
-                Vector3 exitPosition = customer.GetExitPosition();
-                customer.SetDestination(exitPosition);
-                customer.StartCoroutine(SimulateLeaving());
-                currentState = State.Left;
+                // 도착 체크
+                if (customer.HasReachedDestination())
+                {
+                    Debug.Log("Customer reached exit");
+                    currentState = State.Left;
+                }
+                
                 return NodeState.Running;
                 
             case State.Left:
@@ -280,11 +253,6 @@ public class Leave : BaseNode
     public override void Reset()
     {
         currentState = State.Moving;
-    }
-    
-    private IEnumerator SimulateLeaving()
-    {
-        yield return new WaitForSeconds(2f);
-        currentState = State.Left;
+        hasStartedMoving = false;
     }
 }
