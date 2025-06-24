@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 public class SFXManager : Singleton<SFXManager>
 {
-    public static SFXManager Instance;
 
     [System.Serializable]
     public class SFXEntry
@@ -30,12 +29,12 @@ public class SFXManager : Singleton<SFXManager>
 
     private void OnEnable()
     {
-        SFXEventBus.OnSFXRequested += HandleSFXRequest;
+        EventBus.OnSFXRequested += HandleSFXRequest;
     }
 
     private void OnDisable()
     {
-        SFXEventBus.OnSFXRequested -= HandleSFXRequest;
+        EventBus.OnSFXRequested -= HandleSFXRequest;
     }
 
     private void HandleSFXRequest(SFXType type)
@@ -49,7 +48,16 @@ public class SFXManager : Singleton<SFXManager>
             Debug.LogWarning($"[SFXManager] 등록되지 않은 SFXType: {type}");
         }
     }
+    public void SetVolume(float volume)
+    {
+        if (audioSource != null)
+            audioSource.volume = volume;
+    }
 
+    public float GetVolume()
+    {
+        return audioSource != null ? audioSource.volume : 0f;
+    }
     //호출 예시
     //SFXEventBus.PlaySFX(SFXType.ItemPickup);
 }
