@@ -15,8 +15,9 @@ public class SFXManager : Singleton<SFXManager>
     private Dictionary<SFXType, AudioClip> sfxDict;
     private AudioSource audioSource;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
 
