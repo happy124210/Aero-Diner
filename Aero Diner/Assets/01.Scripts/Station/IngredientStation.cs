@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using JetBrains.Annotations;
+using System.Collections.Generic;
 using UnityEngine;
+using static System.Collections.Specialized.BitVector32;
 
 /// <summary>
 /// 플레이어가 상호작용하면 재료를 생성해주는 스테이션
 /// </summary>
-public class IngredientStation : ItemSlotStation
+public class IngredientStation : MonoBehaviour, IInteractable
 {
     [Header("재료 데이터 그룹")]
     public IngredientSOGroup ingredientGroup;
@@ -18,7 +20,7 @@ public class IngredientStation : ItemSlotStation
     /// <summary>
     /// 플레이어가 J 키를 눌렀을 때 실행되는 상호작용 메서드
     /// </summary>
-    public override void Interact(PlayerInventory playerInventory)
+    public void Interact(PlayerInventory playerInventory)
     {
         if (ingredientGroup == null || selectedIngredient == null || spawnPoint == null)
         {
@@ -27,7 +29,7 @@ public class IngredientStation : ItemSlotStation
         }
 
         // 해당 위치에 "Ingredient" 태그를 가진 오브젝트가 있는지 확인
-        Collider2D[] hits = Physics2D.OverlapCircleAll(spawnPoint.position, 0.1f);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(spawnPoint.position, 0.7f);
         foreach (Collider2D hit in hits)
         {
             if (hit.CompareTag("Ingredient"))
@@ -41,6 +43,7 @@ public class IngredientStation : ItemSlotStation
         GameObject ingredientObj = new GameObject(selectedIngredient.foodName);
         ingredientObj.transform.position = spawnPoint.position;
         ingredientObj.tag = "Ingredient";
+        ingredientObj.layer = 6;
 
         // SpriteRenderer 추가
         SpriteRenderer spriteRenderer = ingredientObj.AddComponent<SpriteRenderer>();
@@ -57,7 +60,7 @@ public class IngredientStation : ItemSlotStation
         // Collider2D 추가 및 설정
         CircleCollider2D collider = ingredientObj.AddComponent<CircleCollider2D>();
         collider.isTrigger = true;
-        collider.radius = 0.1f;
+        collider.radius = 0.7f;
 
         // Rigidbody2D 추가 및 설정
         Rigidbody2D rb = ingredientObj.AddComponent<Rigidbody2D>();
@@ -98,8 +101,6 @@ public class IngredientStation : ItemSlotStation
         //    Debug.Log("이 장소에는 해당 재료를 놓을 수 없습니다!");
         //}
     }
-
-
     public void OnHoverEnter()
     {
 

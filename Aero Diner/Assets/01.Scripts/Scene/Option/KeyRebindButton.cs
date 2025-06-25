@@ -16,8 +16,8 @@ public class KeyRebindButton : MonoBehaviour
     private bool waitingForKey = false;
 
     private string originalOverridePath;
-    private string bindingSaveKey => $"{actionRef.action.name}_binding_{bindingIndex}";
-
+    public string BindingSaveKey => $"{actionRef.action.name}_binding_{bindingIndex}";
+    public string GetCurrentPath() => actionRef.action.bindings[bindingIndex].effectivePath;
     private void Awake()
     {
         button = GetComponent<Button>();
@@ -65,14 +65,14 @@ public class KeyRebindButton : MonoBehaviour
     public void SaveBinding()
     {
         var path = actionRef.action.bindings[bindingIndex].effectivePath;
-        PlayerPrefs.SetString(bindingSaveKey, path);
+        PlayerPrefs.SetString(BindingSaveKey, path);
     }
 
     public void LoadBinding()
     {
-        if (PlayerPrefs.HasKey(bindingSaveKey))
+        if (PlayerPrefs.HasKey(BindingSaveKey))
         {
-            string savedPath = PlayerPrefs.GetString(bindingSaveKey);
+            string savedPath = PlayerPrefs.GetString(BindingSaveKey);
             actionRef.action.ApplyBindingOverride(bindingIndex, savedPath);
         }
         UpdateKeyText();
@@ -91,7 +91,7 @@ public class KeyRebindButton : MonoBehaviour
     public void ResetToDefault()
     {
         actionRef.action.RemoveBindingOverride(bindingIndex);
-        PlayerPrefs.DeleteKey(bindingSaveKey);
+        PlayerPrefs.DeleteKey(BindingSaveKey);
         UpdateKeyText();
     }
 

@@ -13,7 +13,16 @@ public class KeyRebindManager : MonoBehaviour
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
-
+    public bool HasUnsavedChanges()
+    {
+        foreach (var btn in rebindButtons)
+        {
+            var path = btn.GetCurrentPath();
+            var saved = PlayerPrefs.GetString(btn.BindingSaveKey, null);
+            if (path != saved) return true;
+        }
+        return false;
+    }
     public void SaveAll()
     {
         foreach (var btn in rebindButtons)
