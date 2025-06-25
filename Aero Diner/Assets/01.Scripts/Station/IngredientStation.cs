@@ -29,7 +29,7 @@ public class IngredientStation : MonoBehaviour, IInteractable
         }
 
         // 해당 위치에 "Ingredient" 태그를 가진 오브젝트가 있는지 확인
-        Collider2D[] hits = Physics2D.OverlapCircleAll(spawnPoint.position, 0.1f);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(spawnPoint.position, 0.7f);
         foreach (Collider2D hit in hits)
         {
             if (hit.CompareTag("Ingredient"))
@@ -60,7 +60,7 @@ public class IngredientStation : MonoBehaviour, IInteractable
         // Collider2D 추가 및 설정
         CircleCollider2D collider = ingredientObj.AddComponent<CircleCollider2D>();
         collider.isTrigger = true;
-        collider.radius = 0.1f;
+        collider.radius = 0.7f;
 
         // Rigidbody2D 추가 및 설정
         Rigidbody2D rb = ingredientObj.AddComponent<Rigidbody2D>();
