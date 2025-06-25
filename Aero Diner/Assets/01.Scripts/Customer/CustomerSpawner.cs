@@ -199,12 +199,10 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
             return FindCustomerByRarity(CustomerRarity.Normal);
         }
 
-        if (random < normalCustomerChance + rareCustomerChance)
+        else
         {
             return FindCustomerByRarity(CustomerRarity.Rare);
         }
-
-        return FindCustomerByRarity(CustomerRarity.Special);
     }
 
     private CustomerData FindCustomerByRarity(CustomerRarity rarity)

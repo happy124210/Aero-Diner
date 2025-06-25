@@ -8,12 +8,12 @@ using UnityEngine.Pool;
 public class PoolManager : Singleton<PoolManager>
 {
     [Header("Pool 설정")]
-    [SerializeField] private const int POOL_CAPACITY = 20;
-    [SerializeField] private const int MAX_POOL_SIZE = 40;
+    private const int POOL_CAPACITY = 20;
+    private const int MAX_POOL_SIZE = 40;
     [SerializeField] private Transform poolContainer;
     
     [Header("리소스 데이터 경로")]
-    [SerializeField] private const string CUSTOMER_DATA_PATH = "Datas/Customer";
+    private const string CUSTOMER_DATA_PATH = "Datas/Customer";
     
     [Header("공통 프리팹")]
     [SerializeField] private GameObject customerPrefab;
@@ -74,7 +74,7 @@ public class PoolManager : Singleton<PoolManager>
         }
     }
 
-    #region  손님 풀 데이터
+    #region 손님 풀 데이터
 
     /// <summary>
     /// 손님 풀 생성
