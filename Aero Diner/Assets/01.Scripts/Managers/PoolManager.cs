@@ -107,7 +107,7 @@ public class PoolManager : Singleton<PoolManager>
         CustomerController customer = customerObj.GetComponent<CustomerController>();
 
         // 컴포넌트 없을 경우
-        if (customer == null)
+        if (!customer)
         {
             Debug.LogError("[ObjectPoolManager]: CustomerController 컴포넌트 없음 !!!");
             Destroy(customerObj);
@@ -122,7 +122,7 @@ public class PoolManager : Singleton<PoolManager>
     /// </summary>
     private void OnGetCustomer(CustomerController customer, CustomerData customerData)
     {
-        if (customer == null) return;
+        if (!customer) return;
         
         customer.gameObject.SetActive(true);
         customer.InitializeFromPool(customerData);
@@ -134,7 +134,7 @@ public class PoolManager : Singleton<PoolManager>
     /// </summary>
     private void OnReleaseCustomer(CustomerController customer, CustomerData customerData)
     {
-        if (customer == null) return;
+        if (!customer) return;
 
         if (activeCustomers.Contains(customer))
         {
@@ -150,7 +150,7 @@ public class PoolManager : Singleton<PoolManager>
     /// </summary>
     private void DestroyCustomer(CustomerController customer)
     {
-        if (customer == null) return;
+        if (!customer) return;
         
         Destroy(customer.gameObject);
     }
@@ -164,7 +164,7 @@ public class PoolManager : Singleton<PoolManager>
     /// <returns></returns>
     public CustomerController SpawnCustomer(CustomerData customerData, Vector3 position, Quaternion rotation = default)
     {
-        if (customerData == null)
+        if (!customerData)
         {
             Debug.LogError("[ObjectPoolManager]: 손님 데이터 없음 !!!");
         }
@@ -176,7 +176,7 @@ public class PoolManager : Singleton<PoolManager>
 
         CustomerController customer = customerPools[customerData].Get();
 
-        if (customer != null)
+        if (customer)
         {
             customer.transform.position = position;
             customer.transform.rotation = rotation == default ? Quaternion.identity : rotation;
@@ -208,6 +208,13 @@ public class PoolManager : Singleton<PoolManager>
             Destroy(customer.gameObject);
         }
     }
+
+    #endregion
+
+    #region public getters
+
+    public int ActiveCustomerCount => activeCustomers.Count;
+    public CustomerData[] AvailableCustomers => customerTypes;
 
     #endregion
 }

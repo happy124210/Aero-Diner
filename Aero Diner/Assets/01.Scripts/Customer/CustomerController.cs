@@ -1,7 +1,5 @@
-using System;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 /// <summary>
@@ -45,6 +43,14 @@ public class CustomerController : MonoBehaviour, IPoolable
     private NavMeshAgent navAgent;
     
     #region Unity Events
+
+    private void Awake()
+    {
+        // 임시
+        entrancePoint = transform.Find("Entrance Point");
+        exitPoint = transform.Find("Exit Point");
+        seatPoint = transform.Find("Approach Position");
+    }
 
     private void Start()
     {

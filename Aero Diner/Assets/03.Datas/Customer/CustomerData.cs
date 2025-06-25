@@ -1,5 +1,12 @@
 using UnityEngine;
 
+public enum CustomerRarity
+{
+    Normal,
+    Rare,
+    Special
+}
+
 /// <summary>
 /// 손님 데이터
 /// </summary>
@@ -8,6 +15,7 @@ public class CustomerData : ScriptableObject
 {
     [Header("손님 정보")]
     public string id;
+    public CustomerRarity rarity;
     public string customerName;
     public string displayName; // UI용 이름
     public float speed; // 이동 속도
