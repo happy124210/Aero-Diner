@@ -15,4 +15,17 @@ public class FoodData : ScriptableObject
     public string description;
     public StationType requireStation;
     public int foodCost;
+
+
+    public override bool Equals(object obj)
+    {
+        if (obj is FoodData other)
+            return this.foodName == other.foodName; // 필요 시 더 많은 필드 비교
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return foodName.GetHashCode();
+    }
 }
