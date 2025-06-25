@@ -1,0 +1,39 @@
+﻿using System;
+public enum SFXType
+{
+    BlankClick,
+    ButtonClick,
+    ItemPickup,
+    Itemlaydown,
+    Cutting
+}
+public enum UIEventType
+{
+    OpenPause, ClosePause,
+    OpenOption, CloseOption,
+    CloseSound, CloseVideo,
+    CloseControl,
+    ShowSoundTab, ShowVideoTab, ShowControlTab
+}
+
+public static class EventBus
+{
+    public static Action<SFXType> OnSFXRequested;
+    public static Action<UIEventType, object> OnUIEvent;
+    public static void PlaySFX(SFXType type)
+    {
+        OnSFXRequested?.Invoke(type);
+    }
+    public static void Raise(UIEventType eventType, object payload = null)
+    {
+        OnUIEvent?.Invoke(eventType, payload);
+    }
+
+
+    //게임 종료 시점 혹은 씬 변경 시점에 호출하여 메모리 누수 방지
+    public static void ClearAll()
+    {
+        OnSFXRequested = null;
+        OnUIEvent = null;
+    }
+}
