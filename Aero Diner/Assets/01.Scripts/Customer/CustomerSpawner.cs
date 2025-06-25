@@ -5,13 +5,19 @@ using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class CustomerSpawner : MonoBehaviour
+public class CustomerSpawner : Singleton<CustomerSpawner>
 {
     [Header("스폰 세팅")]
     [SerializeField] private float minSpawnInterval;
     [SerializeField] private float maxSpawnInterval;
     [SerializeField] private int maxCustomers;
     [SerializeField] private Transform[] spawnPoints;
+    
+    [Header("레스토랑 설정 - 임시 (나중에 RestaurantManager에서 관리)")]
+    [SerializeField] private Transform entrancePoint;
+    [SerializeField] private Transform exitPoint;
+    [SerializeField] private Transform[] seatPoints;
+    [SerializeField] private bool[] seatOccupied;
     
     [Header("손님 타입 리스트 (자동 로드됨)")]
     [SerializeField] private List<string> customerDataIds = new List<string>();
@@ -26,6 +32,8 @@ public class CustomerSpawner : MonoBehaviour
     
     private Coroutine spawnCoroutine;
 
+    #region Unity events
+    
     private void Awake()
     {
         CustomerData[] customerDatas = Resources.LoadAll<CustomerData>("Datas/Customer");
@@ -43,8 +51,96 @@ public class CustomerSpawner : MonoBehaviour
             StartSpawning();
         }
     }
+    
+    #endregion
 
-    private void StartSpawning()
+    #region 레스토랑 레이아웃 - 임시
+    
+    /// <summary>
+    /// 입구 위치 반환
+    /// </summary>
+    public Vector3 GetEntrancePosition()
+    {
+        return entrancePoint ? entrancePoint.position : Vector3.zero;
+    }
+    
+    /// <summary>
+    /// 출구 위치 반환
+    /// </summary>
+    public Vector3 GetExitPosition()
+    {
+        return exitPoint ? exitPoint.position : Vector3.zero;
+    }
+    
+    /// <summary>
+    /// 손님에게 좌석 할당
+    /// </summary>
+    public bool AssignSeatToCustomer(CustomerController customer)
+    {
+        if (seatPoints == null || seatPoints.Length == 0)
+        {
+            Debug.LogWarning("No seat points available!");
+            return false;
+        }
+        
+        // 비어있는 좌석 찾기
+        for (int i = 0; i < seatPoints.Length; i++)
+        {
+            if (!seatOccupied[i])
+            {
+                // 좌석 할당
+                seatOccupied[i] = true;
+                customer.SetAssignedSeatPosition(seatPoints[i].position);
+                
+                Debug.Log($"Seat {i} assigned to customer");
+                return true;
+            }
+        }
+        
+        Debug.Log("No available seats!");
+        return false;
+    }
+    
+    /// <summary>
+    /// 좌석 해제 (손님이 떠날 때)
+    /// </summary>
+    public void ReleaseSeat(Vector3 seatPosition)
+    {
+        if (seatPoints == null) return;
+        
+        for (int i = 0; i < seatPoints.Length; i++)
+        {
+            if (Vector3.Distance(seatPoints[i].position, seatPosition) < 0.1f)
+            {
+                seatOccupied[i] = false;
+                Debug.Log($"Seat {i} released");
+                break;
+            }
+        }
+    }
+    
+    /// <summary>
+    /// 사용 가능한 좌석 수 반환
+    /// </summary>
+    public int GetAvailableSeatCount()
+    {
+        if (seatOccupied == null) return 0;
+        
+        int availableCount = 0;
+        foreach (bool occupied in seatOccupied)
+        {
+            if (!occupied) availableCount++;
+        }
+        return availableCount;
+    }
+    
+    // public getters
+    public int TotalSeatCount => seatPoints?.Length ?? 0;
+    
+    #endregion
+    
+    
+    public void StartSpawning()
     {
         if (spawnCoroutine == null)
         {
@@ -52,7 +148,7 @@ public class CustomerSpawner : MonoBehaviour
         }
     }
     
-    private void StopSpawning()
+    public void StopSpawning()
     {
         if (spawnCoroutine != null)
         {
@@ -117,4 +213,29 @@ public class CustomerSpawner : MonoBehaviour
 
         return availableCustomers.FirstOrDefault(customerData => customerData && customerData.rarity == rarity);
     }
+    
+    #region Manual Control (디버그용)
+    
+    [ContextMenu("Spawn Random Customer")]
+    public void SpawnSingleCustomer()
+    {
+        SpawnRandomCustomer();
+    }
+    
+    [ContextMenu("Clear All Customers")]
+    public void ClearAllCustomers()
+    {
+        PoolManager.Instance.ReturnAllActiveCustomers();
+        
+        // 모든 좌석 해제
+        if (seatOccupied != null)
+        {
+            for (int i = 0; i < seatOccupied.Length; i++)
+            {
+                seatOccupied[i] = false;
+            }
+        }
+    }
+    
+    #endregion
 }
