@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class OptionBtn : MonoBehaviour
 {
+    [SerializeField] private SavePopupFader popupFader;
     public void OnClickOption()
     {
         EventBus.Raise(UIEventType.OpenOption);
@@ -22,5 +23,9 @@ public class OptionBtn : MonoBehaviour
     public void OnClickControlTab()
     {
         EventBus.Raise(UIEventType.ShowControlTab);
+    }
+    public void OnSaveClick()
+    {
+        popupFader.ShowPopup("설정이 저장되었습니다!");
     }
 }

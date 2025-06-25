@@ -17,8 +17,9 @@ public class BGMManager : Singleton<BGMManager>
         public AudioClip bgmClip;
     }
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         audioSource = GetComponent<AudioSource>();
     }
 
