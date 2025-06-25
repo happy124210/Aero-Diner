@@ -5,7 +5,7 @@ using UnityEngine;
 public class Shelf : MonoBehaviour, IPlaceableStation
 {
     [Header("재료 데이터 그룹")]
-    public PassiveSOGroup passiveGroup;
+    public ShelfSOGroup shelfGroup;
 
     [Header("생성할 재료 SO")]
     public FoodData selectedIngredient; // 플레이어가 내려놓은 재료 데이터 기반으로 갱신
@@ -14,7 +14,7 @@ public class Shelf : MonoBehaviour, IPlaceableStation
     public Transform spawnPoint;
 
     [Header("가공 허용 재료 그룹")]
-    public PassiveSOGroup NeededIngredients; // 플레이어가 내려놓은 재료를 기반으로 동적으로 채워짐
+    public ShelfSOGroup NeededIngredients; // 플레이어가 내려놓은 재료를 기반으로 동적으로 채워짐
 
     // 내부 상태 변수
     private GameObject placedIngredientObj; // 화면에 표시되는 재료 오브젝트
@@ -57,7 +57,7 @@ public class Shelf : MonoBehaviour, IPlaceableStation
     private GameObject CreateIngredientDisplay(FoodData data)
     {
         // 필수 데이터 누락 확인
-        if (passiveGroup == null || selectedIngredient == null || spawnPoint == null)
+        if (shelfGroup == null || selectedIngredient == null || spawnPoint == null)
         {
             Debug.LogError("필수 데이터가 누락되었습니다.");
             return null;
