@@ -1,18 +1,17 @@
 ﻿using UnityEngine;
 
-/// <summary>
-/// 플레이어가 재료를 들고, 내려놓는 기능을 담당하는 인벤토리
-/// </summary>
+
+//플레이어가 재료를 들고, 내려놓는 기능을 담당하는 인벤토리
 public class PlayerInventory : MonoBehaviour
 {
     [Header("아이템 슬롯 위치")]
     [SerializeField] private Transform itemSlotTransform;
 
-    /// <summary> 현재 들고 있는 재료 (null이면 비어있음) </summary>
+    ///현재 들고 있는 재료
     private FoodDisplay heldItem;
     public bool IsHoldingItem => heldItem != null;
 
-    /// <summary> 아이템을 들기 시도 </summary>
+    //아이템을 들기 시도
     public void TryPickup(IInteractable target)
     {
         if (IsHoldingItem || target == null) return;
@@ -38,7 +37,7 @@ public class PlayerInventory : MonoBehaviour
         Debug.Log($"[Inventory] {heldItem.foodData.foodName} 획득");
     }
 
-    /// <summary> 아이템을 내려놓기 시도 </summary>
+    //아이템을 내려놓기 시도
     public void DropItem(IInteractable target)
     {
         if (!IsHoldingItem) return;
