@@ -38,4 +38,16 @@ public class OptionBtn : MonoBehaviour
     {
         popupFader.ShowPopup("설정이 저장되었습니다!");
     }
+    public void GotoStartScene()
+    {
+        FadeManager.Instance.FadeOutAndLoadSceneWithLoading("StartScene");
+    }
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
 }
