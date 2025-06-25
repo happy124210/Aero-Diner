@@ -10,7 +10,21 @@ public class UIInputHandler : MonoBehaviour
 
         if (tracker.IsOptionOpen)
         {
-            UIExitPopup.Instance?.Show(); // 팝업 노출
+            bool keyChanged = KeyRebindManager.Instance?.HasUnsavedChanges() ?? false;
+            bool volumeChanged = VolumeHandler.Instance?.HasUnsavedChanges() ?? false;
+            bool videoChanged = VideoSettingPanel.Instance?.HasUnsavedChanges() ?? false;
+
+            if (keyChanged || volumeChanged || videoChanged)
+            {
+                UIExitPopup.Instance?.Show(); // 변경 사항 있음 → 팝업 노출
+            }
+            else
+            {
+                EventBus.Raise(UIEventType.CloseOption); // 변경 없음 → 바로 닫기
+                EventBus.Raise(UIEventType.CloseSound);
+                EventBus.Raise(UIEventType.CloseVideo);
+                EventBus.Raise(UIEventType.CloseControl);
+            }
         }
         else if (tracker.IsPauseOpen)
         {

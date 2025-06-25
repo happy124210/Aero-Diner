@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class OptionBtn : MonoBehaviour
 {
+    private bool IsKeyChanged() => KeyRebindManager.Instance?.HasUnsavedChanges() ?? false;
+    private bool IsVolumeChanged() => VolumeHandler.Instance?.HasUnsavedChanges() ?? false;
+    private bool IsVideoChanged() => VideoSettingPanel.Instance?.HasUnsavedChanges() ?? false;
     [SerializeField] private SavePopupFader popupFader;
     public void OnClickOption()
     {
@@ -12,17 +15,24 @@ public class OptionBtn : MonoBehaviour
 
     public void OnClickSoundTab()
     {
-        EventBus.Raise(UIEventType.ShowSoundTab);
+        if (IsKeyChanged() || IsVideoChanged())
+        {
+            UIExitPopup.Instance?.Show();
+        }
+        else { EventBus.Raise(UIEventType.ShowSoundTab); }
     }
 
     public void OnClickVideoTab()
     {
-        EventBus.Raise(UIEventType.ShowVideoTab);
+        Debug.Log("비디오탭 눌림");
+        if (IsKeyChanged() || IsVolumeChanged()) { Debug.Log("검사필"); UIExitPopup.Instance?.Show(); }
+        else { EventBus.Raise(UIEventType.ShowVideoTab); }
     }
 
     public void OnClickControlTab()
     {
-        EventBus.Raise(UIEventType.ShowControlTab);
+        if(IsVideoChanged() || IsVolumeChanged()) { UIExitPopup.Instance?.Show(); }
+       else { EventBus.Raise(UIEventType.ShowControlTab); }
     }
     public void OnSaveClick()
     {

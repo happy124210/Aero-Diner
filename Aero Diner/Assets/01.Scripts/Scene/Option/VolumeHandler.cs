@@ -65,7 +65,11 @@ public class VolumeHandler : MonoBehaviour
         sfxPercentageText.text = $"{Mathf.RoundToInt(value * 100)}%";
         SFXManager.Instance.SetVolume(value);
     }
-
+    public bool HasUnsavedChanges()
+    {
+        return !Mathf.Approximately(pendingBGMVolume, originalBGMVolume)
+            || !Mathf.Approximately(pendingSFXVolume, originalSFXVolume);
+    }
     /// <summary> 저장 버튼 클릭 시 호출 </summary>
     public void SaveVolumes()
     {

@@ -136,7 +136,11 @@ public class VideoSettingPanel : MonoBehaviour
 
         Debug.Log("[VideoSettingPanel] 변경 사항 롤백됨");
     }
-
+    public bool HasUnsavedChanges()
+    {
+        return screenModeIndex != originalScreenModeIndex
+            || resolutionIndex != originalResolutionIndex;
+    }
     /// <summary>
     /// 실제 해상도 적용
     /// </summary>
