@@ -78,6 +78,9 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         // 시각적 재료 오브젝트 생성 및 배치
         placedIngredientObj = CreateIngredientDisplay(data);
 
+        // 태그 설정
+        placedIngredientObj.tag = "Ingredient";
+
         // 재료 ID를 목록에 추가
         if (!currentIngredients.Contains(data.id))
             currentIngredients.Add(data.id);
