@@ -5,40 +5,28 @@ using UnityEngine;
 /// <summary>
 /// 생성 후 입구로 이동
 /// </summary>
-public class MoveToPosition : BaseNode
+public class MoveToEntrance : BaseNode
 {
-    public override string NodeName { get; }
+    public override string NodeName => "MoveToEntrance";
 
-    private readonly Func<Vector3> getDestination;
     private bool hasStartedMoving = false;
     
-    /// <summary>
-    /// MoveToPosition 생성자
-    /// </summary>
-    /// <param name="customer">손님 컨트롤러</param>
-    /// <param name="getDestination">목적지를 가져오는 함수</param>
-    /// <param name="nodeName">노드 이름</param>
-    public MoveToPosition(CustomerController customer, Func<Vector3> getDestination, 
-        string nodeName = "MoveToPosition")
-        : base(customer)
-    {
-        this.getDestination = getDestination;
-        NodeName = nodeName;
-    }
+    public MoveToEntrance(CustomerController customer) : base(customer) { }
     
     public override NodeState Execute()
     {
         if (!hasStartedMoving)
         {
-            Vector3 destination = getDestination();
+            // CustomerSpawner에서 입구 위치 가져오기
+            Vector3 destination = CustomerSpawner.Instance.GetEntrancePosition();
             
             if (destination == Vector3.zero)
             {
-                Debug.LogError($"Invalid destination for {NodeName}!");
+                Debug.LogError($"Invalid entrance position for {NodeName}!");
                 return NodeState.Failure;
             }
             
-            Debug.Log($"Customer moving to {destination}");
+            Debug.Log($"Customer moving to entrance at {destination}");
             customer.SetDestination(destination);
             hasStartedMoving = true;
             
@@ -49,7 +37,7 @@ public class MoveToPosition : BaseNode
         if (customer.HasReachedDestination())
         {
             customer.SetAnimationState(CustomerAnimState.Idle);
-            Debug.Log($"Customer arrived at destination ({NodeName})");
+            Debug.Log($"Customer arrived at entrance");
             return NodeState.Success;
         }
         
@@ -61,6 +49,56 @@ public class MoveToPosition : BaseNode
         hasStartedMoving = false;
     }
 }
+
+
+/// <summary>
+/// 좌석으로 이동 - 이미 할당된 좌석으로 이동
+/// </summary>
+public class MoveToSeat : BaseNode
+{
+    public override string NodeName => "MoveToSeat";
+
+    private bool hasStartedMoving = false;
+    
+    public MoveToSeat(CustomerController customer) : base(customer) { }
+    
+    public override NodeState Execute()
+    {
+        if (!hasStartedMoving)
+        {
+            //이미 할당된 좌석 위치 가져오기
+            Vector3 destination = customer.GetAssignedSeatPosition();
+            
+            if (destination == Vector3.zero)
+            {
+                Debug.LogError($"No seat assigned for customer! CheckAvailableSeat should run first.");
+                return NodeState.Failure;
+            }
+            
+            Debug.Log($"Customer moving to assigned seat at {destination}");
+            customer.SetDestination(destination);
+            hasStartedMoving = true;
+            
+            return NodeState.Running;
+        }
+        
+        // 목적지 도착 체크
+        if (customer.HasReachedDestination())
+        {
+            customer.SetAnimationState(CustomerAnimState.Idle);
+            Debug.Log($"Customer arrived at assigned seat");
+            return NodeState.Success;
+        }
+        
+        return NodeState.Running;
+    }
+    
+    public override void Reset()
+    {
+        hasStartedMoving = false;
+    }
+}
+
 
 /// <summary>
 /// 대기시간 잔여시간 체크
@@ -95,7 +133,7 @@ public class CheckWaitingTime : BaseNode
 }
 
 /// <summary>
-/// 빈 좌석이 있는지 체크
+/// 빈 좌석이 있는지 체크 및 할당
 /// </summary>
 public class CheckAvailableSeat : BaseNode
 {
@@ -105,19 +143,20 @@ public class CheckAvailableSeat : BaseNode
     
     public override NodeState Execute()
     {
-        // TODO: 실제 좌석 체크 로직
-        bool hasAvailableSeat = customer.HasAvailableSeat();
+        // CustomerSpawner를 통해 좌석 체크 및 할당
+        bool hasAvailableSeat = customer.HasAvailableSeat(); 
         
         if (hasAvailableSeat)
         {
-            Debug.Log("Available seat found!");
+            Debug.Log("Available seat found and assigned!");
             return NodeState.Success;
         }
         
-        Debug.Log("No available seats, waiting in line...");
+        Debug.Log("No available seats, customer will wait or leave...");
         return NodeState.Failure;
     }
 }
+
 
 
 /// <summary>
@@ -205,18 +244,19 @@ public class Payment : BaseNode
     }
 }
 
+
 /// <summary>
-/// 이탈
+/// 이탈 - 출구로 이동하고 좌석 해제
 /// </summary>
-public class LeaveRestaurant : BaseNode
+public class Leave : BaseNode
 {
-    public override string NodeName => "LeaveRestaurant";
+    public override string NodeName => "Leave";
     
     private enum State { Moving, Left }
     private State currentState = State.Moving;
     private bool hasStartedMoving = false;
     
-    public LeaveRestaurant(CustomerController customer) : base(customer) { }
+    public Leave(CustomerController customer) : base(customer) { }
     
     public override NodeState Execute()
     {
@@ -226,7 +266,15 @@ public class LeaveRestaurant : BaseNode
                 // 처음에만 목적지 설정
                 if (!hasStartedMoving)
                 {
-                    Vector3 exitPosition = customer.GetExitPosition();
+                    // CustomerSpawner에서 출구 위치 가져오기
+                    Vector3 exitPosition = CustomerSpawner.Instance.GetExitPosition();
+                    
+                    if (exitPosition == Vector3.zero)
+                    {
+                        Debug.LogError("Invalid exit position!");
+                        return NodeState.Failure;
+                    }
+                    
                     Debug.Log($"Customer starting to leave to {exitPosition}");
                     customer.SetDestination(exitPosition);
                     hasStartedMoving = true;
@@ -236,6 +284,15 @@ public class LeaveRestaurant : BaseNode
                 if (customer.HasReachedDestination())
                 {
                     Debug.Log("Customer reached exit");
+                    
+                    // 좌석 해제
+                    Vector3 assignedSeat = customer.GetAssignedSeatPosition();
+                    if (assignedSeat != Vector3.zero)
+                    {
+                        CustomerSpawner.Instance.ReleaseSeat(assignedSeat);
+                        Debug.Log($"Released seat at {assignedSeat}");
+                    }
+                    
                     currentState = State.Left;
                 }
                 
@@ -243,7 +300,7 @@ public class LeaveRestaurant : BaseNode
                 
             case State.Left:
                 Debug.Log("Customer left the restaurant");
-                customer.Despawn();
+                customer.Despawn(); // 풀로 반환
                 return NodeState.Success;
         }
         

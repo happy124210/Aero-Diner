@@ -141,29 +141,29 @@ public class CustomerController : MonoBehaviour, IPoolable
     {
         // 전체 고객 흐름을 하나의 Sequence로 구성
         var mainFlow = new Sequence(this,
-            new MoveToPosition(this, GetEntrancePosition, "MoveToEntrance"),
+            new MoveToEntrance(this),
             new CheckWaitingTime(this),
             new CheckAvailableSeat(this),
-            new MoveToPosition(this, GetAssignedSeatPosition, "MoveToSeat"),
+            new MoveToSeat(this),
             new Selector(this,
                 new Sequence(this,
                     new CheckWaitingTime(this),
                     new TakeOrder(this),
                     new Payment(this)
                 ),
-                new LeaveRestaurant(this) // 중간에 인내심 소진시 이탈
+                new Leave(this) // 중간에 인내심 소진시 이탈
             ),
-            new LeaveRestaurant(this) // 정상 완료 후 이탈
+            new Leave(this) // 정상 완료 후 이탈
         );
-        
+    
         // 전체 실패시에도 이탈 처리
         rootNode = new Selector(this,
             mainFlow,
-            new LeaveRestaurant(this)
+            new Leave(this)
         );
-        
+    
         rootNode.Reset();
-        
+    
         if (showDebugInfo)
             Debug.Log("Customer BT setup completed");
     }
@@ -181,21 +181,22 @@ public class CustomerController : MonoBehaviour, IPoolable
     
     public bool HasAvailableSeat()
     {
-        // TODO: 실제 좌석 매니저와 연동
-        // 임시로 랜덤 확률로 처리
-        bool hasSeats = Random.Range(0f, 1f) > 0.3f;
-        if (hasSeats)
-        {
-            // 좌석 할당
-            assignedSeatPosition = seatPoint.position;
-        }
-        return hasSeats;
+        // 임시로 좌석 체크
+        return CustomerSpawner.Instance.AssignSeatToCustomer(this);
+    }
+    
+    /// <summary>
+    /// CustomerSpawner에서 할당된 좌석 위치 설정
+    /// </summary>
+    public void SetAssignedSeatPosition(Vector3 seatPosition)
+    {
+        assignedSeatPosition = seatPosition;
+    
+        if (showDebugInfo)
+            Debug.Log($"Customer assigned to seat at {seatPosition}");
     }
     
     public Vector3 GetAssignedSeatPosition() => assignedSeatPosition;
-
-    public Vector3 GetEntrancePosition() => entrancePoint.position; // 입구 위치
-    public Vector3 GetExitPosition() => exitPoint.position; // 출구 위치
     
     public void PlaceOrder()
     {
