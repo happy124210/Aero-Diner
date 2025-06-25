@@ -208,6 +208,21 @@ public class PoolManager : Singleton<PoolManager>
             Destroy(customer.gameObject);
         }
     }
+    
+    /// <summary>
+    /// 모든 활성 손님 반환
+    /// </summary>
+    public void ReturnAllActiveCustomers()
+    {
+        List<CustomerController> customersToReturn = new List<CustomerController>(activeCustomers);
+        
+        foreach (var customer in customersToReturn)
+        {
+            DespawnCustomer(customer);
+        }
+        
+        Debug.Log("[ObjectPoolManager] : 모든 활성 손님을 풀로 반환!");
+    }
 
     #endregion
 
