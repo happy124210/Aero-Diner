@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 /// <summary>
@@ -12,14 +13,14 @@ public enum CustomerAnimState
     Walking,
 }
 
-public class CustomerController : MonoBehaviour
+public class CustomerController : MonoBehaviour, IPoolable
 {
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo;
     [SerializeField] public string currentNodeName;
     
     [Header("Customer Stats")]
-    [SerializeField] private CustomerData data;
+    [SerializeField] private CustomerData currentData;
     private float speed;
     private float maxWaitTime;
     private float eatTime;
@@ -85,16 +86,36 @@ public class CustomerController : MonoBehaviour
     }
 
     #endregion
-
+    
+    /// <summary>
+    /// 데이터로부터 손님 데이터 셋업
+    /// </summary>
     private void SetupCustomerData()
     {
-        speed = data.speed; 
-        maxWaitTime = data.waitTime;
-        eatTime = data.eatTime;
+        speed = currentData.speed; 
+        maxWaitTime = currentData.waitTime;
+        eatTime = currentData.eatTime;
         
         currentPatience = maxWaitTime;
     }
+
+    /// <summary>
+    /// 손님 데이터 초기화
+    /// </summary>
+    private void ResetCustomerData()
+    {
+        foodServed = false;
+        isEating = false;
+        eatingFinished = false;
+        paymentCompleted = false;
+        eatingTimer = 0f;
+        assignedSeatPosition = Vector3.zero;
+        currentPatience = 0f;
+    }
     
+    /// <summary>
+    /// NavMesh 필드 셋업
+    /// </summary>
     private void SetupNavMeshAgent()
     {
         navAgent = GetComponent<NavMeshAgent>();
@@ -249,8 +270,61 @@ public class CustomerController : MonoBehaviour
     public void Despawn() 
     { 
         Debug.Log("Customer despawned");
-        Destroy(gameObject); // TODO: ObjectPool로 변경
+        PoolManager.Instance.DespawnCustomer(this);
     }
+    
+    #endregion
+
+    #region IPoolable
+
+    /// <summary>
+    /// 풀에서 가져온 후 데이터로 초기화 (ObjectPoolManager가 호출)
+    /// </summary>
+    public void InitializeFromPool(CustomerData customerData)
+    {
+        currentData = customerData;
+        SetupCustomerData();
+        SetupBT();
+        
+        if (showDebugInfo) Debug.Log($"[CustomerController]: 손님 데이터 초기화 완료 {customerData.customerName}");
+    }
+    
+    public void OnGetFromPool()
+    {
+        if (showDebugInfo) Debug.Log("[CustomerController]: 풀에서 손님 데이터 가져옴");
+    }
+
+    public void OnReturnToPool()
+    {
+        if (showDebugInfo) Debug.Log("[CustomerController]: 풀으로 손님 데이터 반환");
+        
+        // BT 정리
+        rootNode?.Reset();
+        rootNode = null;
+        
+        // NavMeshAgent 정리
+        if (navAgent && navAgent.isOnNavMesh)
+        {
+            navAgent.ResetPath();
+            navAgent.velocity = Vector3.zero;
+        }
+        
+        SetAnimationState(CustomerAnimState.Idle);
+        
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
+    }
+
+    public void OnDestroyFromPool()
+    {
+        if (showDebugInfo) Debug.Log("[CustomerController]: 손님 데이터 풀에서 삭제");
+    }
+
+    #endregion
+    
+    #region public Getters
+    
+    public CustomerData CurrentData => currentData;
     
     #endregion
 }
