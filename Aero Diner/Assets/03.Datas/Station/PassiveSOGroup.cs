@@ -8,7 +8,7 @@ public class PassiveSOGroup : ScriptableObject
     [Serializable]
     public class Entry
     {
-        // FoodData는 재료 데이터로 ScriptableObject를 상속받았다고 가정합니다.
+        // FoodData는 재료 데이터로 ScriptableObject를 상속받았다고 가정
         public FoodData passiveData;
     }
 
@@ -45,11 +45,11 @@ public class PassiveSOGroup : ScriptableObject
             Entry newEntry = new Entry();
             newEntry.passiveData = data;
             passiveList.Add(newEntry);
-            Debug.Log($"Ingredient '{data.displayName}' added. Total Count: {GetCount()}");
+            Debug.Log($"Ingredient '{data.foodName}' added. Total Count: {GetCount()}");
         }
         else
         {
-            Debug.Log($"Ingredient '{data.displayName}' is already registered in the group.");
+            Debug.Log($"Ingredient '{data.foodName}' is already registered in the group.");
         }
     }
 }

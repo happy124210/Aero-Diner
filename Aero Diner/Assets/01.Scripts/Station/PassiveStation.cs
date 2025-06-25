@@ -78,13 +78,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         // 시각적 재료 오브젝트 생성 및 배치
         placedIngredientObj = CreateIngredientDisplay(data);
 
-        // 태그 설정
-        placedIngredientObj.tag = "Ingredient";
-
-        // 재료 ID를 목록에 추가
-        if (!currentIngredients.Contains(data.id))
-            currentIngredients.Add(data.id);
-
         // 만약 가공 허용 재료 그룹이 비어있거나 현재 재료가 포함되지 않은 경우 추가
         if (NeededIngredients != null && (NeededIngredients.GetCount() == 0 || !NeededIngredients.Contains(currentFoodData)))
         {
@@ -114,21 +107,34 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// </summary>
     private GameObject CreateIngredientDisplay(FoodData data)
     {
-        GameObject ingredientObj = new GameObject(data.displayName);
+        // 필수 데이터 누락 확인
+        if (passiveGroup == null || selectedIngredient == null || spawnPoint == null)
+        {
+            Debug.LogError("필수 데이터가 누락되었습니다.");
+            return null;
+        }
+
+        GameObject ingredientObj = new GameObject(data.foodName);
         ingredientObj.transform.SetParent(transform); // 스테이션의 자식으로 배치
         ingredientObj.transform.localPosition = Vector3.zero;
+        ingredientObj.tag = "Ingredient";
 
-        // SpriteRenderer를 추가하여 아이콘 표시
-        SpriteRenderer sr = ingredientObj.AddComponent<SpriteRenderer>();
-        sr.sprite = data.foodIcon ?? null;
-        if (data.foodIcon == null)
-            sr.color = Color.gray;
+        // SpriteRenderer 추가하여 processedIcon 적용 및 sortingOrder 55로 설정
+        SpriteRenderer spriteRenderer = ingredientObj.AddComponent<SpriteRenderer>();
+        spriteRenderer.sortingOrder = 55;
+        if (selectedIngredient.foodIcon != null)
+            spriteRenderer.sprite = selectedIngredient.foodIcon;
+        else
+            spriteRenderer.color = Color.gray;
 
         // 충돌 감지를 위한 Collider와 Rigidbody2D 추가
         ingredientObj.AddComponent<BoxCollider2D>();
         Rigidbody2D rb = ingredientObj.AddComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.gravityScale = 0f;
+
+        FoodDisplay foodDisplay = ingredientObj.AddComponent<FoodDisplay>();
+        foodDisplay.foodData = selectedIngredient;
 
         return ingredientObj;
     }
@@ -185,14 +191,14 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         Debug.Log("가공 완료된 재료 생성됨: " + data.displayName);
 
         // 결과물 생성: selectedIngredient(동적으로 할당된) 기반으로 처리
-        GameObject processedObj = CreateProcessedIngredientDisplay();
+        GameObject processedObj = CreateProcessedIngredientDisplay(data);
     }
 
     /// <summary>
     /// 가공된 재료 오브젝트를 생성하는 함수
     /// 플레이어가 내려놓은 재료 데이터(selectedIngredient)를 사용
     /// </summary>
-    private GameObject CreateProcessedIngredientDisplay()
+    private GameObject CreateProcessedIngredientDisplay(FoodData data)
     {
         // 필수 데이터 누락 확인
         if (passiveGroup == null || selectedIngredient == null || spawnPoint == null)
@@ -201,9 +207,10 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             return null;
         }
 
-        // 새 GameObject 생성, 이름은 FoodData에 정의된 foodName으로 지정
-        GameObject ingredientObj = new GameObject(selectedIngredient.foodName);
-        ingredientObj.transform.position = spawnPoint.position;
+        GameObject ingredientObj = new GameObject(data.foodName);
+        ingredientObj.transform.SetParent(transform); // 스테이션의 자식으로 배치
+        ingredientObj.transform.localPosition = Vector3.zero;
+        ingredientObj.tag = "Ingredient";
 
         // SpriteRenderer 추가하여 processedIcon 적용 및 sortingOrder 55로 설정
         SpriteRenderer spriteRenderer = ingredientObj.AddComponent<SpriteRenderer>();

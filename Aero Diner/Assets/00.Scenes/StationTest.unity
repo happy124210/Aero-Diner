@@ -430,6 +430,10 @@ PrefabInstance:
       value: PassiveStationTest
       objectReference: {fileID: 0}
     - target: {fileID: 8285986399468430413, guid: ceaa94eb96f86d64293175a5b2ff9a38, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8285986399468430413, guid: ceaa94eb96f86d64293175a5b2ff9a38, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -447,15 +451,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8285986399468430413, guid: ceaa94eb96f86d64293175a5b2ff9a38, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8285986399468430413, guid: ceaa94eb96f86d64293175a5b2ff9a38, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8285986399468430413, guid: ceaa94eb96f86d64293175a5b2ff9a38, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8285986399468430413, guid: ceaa94eb96f86d64293175a5b2ff9a38, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

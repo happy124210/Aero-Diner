@@ -90,6 +90,16 @@ public class IngredientStation : MonoBehaviour, IInteractable
             Debug.Log("재료 불일치: 내려놓기 차단");
             return false;
         }
+        //플레이어가 호출 할 때 참고용 코드
+        // bool canPlace = station.PlaceIngredient(playerHoldingData);
+        //if (canPlace)
+        //{
+        //    playerInventory.DropItem();
+        //}
+        //else
+        //{
+        //    Debug.Log("이 장소에는 해당 재료를 놓을 수 없습니다!");
+        //}
     }
     public void OnHoverEnter()
     {
