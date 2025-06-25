@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 188047736}
   - component: {fileID: 188047735}
+  - component: {fileID: 188047737}
   m_Layer: 0
   m_Name: PoolManager
   m_TagString: Untagged
@@ -171,6 +172,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &188047737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 188047734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57f19b05d0bc5e34488f3821311ef775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customerSpawner: {fileID: 2013838310}
+  gameRunning: 1
+  targetCustomersServed: 50
+  gameTimeLimit: 300
+  customersServed: 0
+  totalEarnings: 0
+  gameTime: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -341,6 +361,17 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
+--- !u!114 &2013838310 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 292030182100112306, guid: 5183b0fc9967fc047bc3c7808c2b903f, type: 3}
+  m_PrefabInstance: {fileID: 5395939919253236272}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31dc2934ff3253e49b9a8b945c1ddfa0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2034455225
 GameObject:
   m_ObjectHideFlags: 0
@@ -429,18 +460,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2152944337308122682, guid: 5183b0fc9967fc047bc3c7808c2b903f, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 2152944337308122682, guid: 5183b0fc9967fc047bc3c7808c2b903f, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -4
-      objectReference: {fileID: 0}
-    - target: {fileID: 3556503819698729024, guid: 5183b0fc9967fc047bc3c7808c2b903f, type: 3}
-      propertyPath: m_Name
-      value: Approach Position
-      objectReference: {fileID: 0}
     - target: {fileID: 6454659055799553593, guid: 5183b0fc9967fc047bc3c7808c2b903f, type: 3}
       propertyPath: m_Name
       value: RestaurantTest
@@ -484,10 +503,6 @@ PrefabInstance:
     - target: {fileID: 6656302665044664400, guid: 5183b0fc9967fc047bc3c7808c2b903f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8066342554624935315, guid: 5183b0fc9967fc047bc3c7808c2b903f, type: 3}
-      propertyPath: m_Name
-      value: Seat Position
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
