@@ -69,6 +69,28 @@ public class IngredientStation : ItemSlotStation
         foodDisplay.foodData = selectedIngredient;
     }
 
+    public void PlaceIngredient(FoodData data)
+    {
+        if (data == null)
+        {
+            Debug.LogWarning("전달된 재료 데이터가 없습니다.");
+            return;
+        }
+
+        if (data == selectedIngredient)
+        {
+            Debug.Log("재료가 일치합니다. 내려놓기 허용.");
+            // 필요한 추가 동작을 여기에 구현 (예: 플레이어 인벤토리에서 제거 등)
+        }
+
+        else
+        {
+            Debug.Log("재료가 일치하지 않습니다. 내려놓기 불가.");
+            // 효과음 또는 피드백 UI 등으로 알릴 수 있음
+        }
+    }
+
+
     public void OnHoverEnter()
     {
 
