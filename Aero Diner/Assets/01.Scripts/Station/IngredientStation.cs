@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using JetBrains.Annotations;
+using System.Collections.Generic;
 using UnityEngine;
+using static System.Collections.Specialized.BitVector32;
 
 /// <summary>
 /// 플레이어가 상호작용하면 재료를 생성해주는 스테이션
 /// </summary>
-public class IngredientStation : ItemSlotStation
+public class IngredientStation : MonoBehaviour, IInteractable
 {
     [Header("재료 데이터 그룹")]
     public IngredientSOGroup ingredientGroup;
@@ -18,7 +20,7 @@ public class IngredientStation : ItemSlotStation
     /// <summary>
     /// 플레이어가 J 키를 눌렀을 때 실행되는 상호작용 메서드
     /// </summary>
-    public override void Interact(PlayerInventory playerInventory)
+    public void Interact(PlayerInventory playerInventory)
     {
         if (ingredientGroup == null || selectedIngredient == null || spawnPoint == null)
         {
@@ -41,6 +43,7 @@ public class IngredientStation : ItemSlotStation
         GameObject ingredientObj = new GameObject(selectedIngredient.foodName);
         ingredientObj.transform.position = spawnPoint.position;
         ingredientObj.tag = "Ingredient";
+        ingredientObj.layer = 6;
 
         // SpriteRenderer 추가
         SpriteRenderer spriteRenderer = ingredientObj.AddComponent<SpriteRenderer>();
@@ -69,28 +72,25 @@ public class IngredientStation : ItemSlotStation
         foodDisplay.foodData = selectedIngredient;
     }
 
-    public void PlaceIngredient(FoodData data)
+    public bool PlaceIngredient(FoodData data)
     {
-        if (data == null)
+        if (data == null || selectedIngredient == null)
         {
-            Debug.LogWarning("전달된 재료 데이터가 없습니다.");
-            return;
+            Debug.Log("유효하지 않은 재료입니다.");
+            return false;
         }
 
-        if (data == selectedIngredient)
+        if (data.id == selectedIngredient.id)
         {
-            Debug.Log("재료가 일치합니다. 내려놓기 허용.");
-            // 필요한 추가 동작을 여기에 구현 (예: 플레이어 인벤토리에서 제거 등)
+            Debug.Log("재료 일치: 내려놓기 허용");
+            return true;
         }
-
         else
         {
-            Debug.Log("재료가 일치하지 않습니다. 내려놓기 불가.");
-            // 효과음 또는 피드백 UI 등으로 알릴 수 있음
+            Debug.Log("재료 불일치: 내려놓기 차단");
+            return false;
         }
     }
-
-
     public void OnHoverEnter()
     {
 

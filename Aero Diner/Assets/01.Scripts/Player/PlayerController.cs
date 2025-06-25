@@ -77,7 +77,6 @@ public class PlayerController : MonoBehaviour
 
         if (currentTarget != null && playerInventory != null)
         {
-            Debug.Log("상호작용 시도!");
             currentTarget.Interact(playerInventory);
         }
     }
@@ -106,7 +105,6 @@ public class PlayerController : MonoBehaviour
             if (currentTarget != null)
             {
                 playerInventory.DropItem(currentTarget);
-                Debug.Log("아이템을 내려놓음");
             }
             else
             {

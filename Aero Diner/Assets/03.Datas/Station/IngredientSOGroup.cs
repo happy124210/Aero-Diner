@@ -13,15 +13,7 @@ public class IngredientSOGroup : ScriptableObject
 
     public Entry[] ingredientList;
 
-    //public GameObject GetPrefabByData(ScriptableObject target)
-    //{
-    //    foreach (var entry in ingredientList)
-    //    {
-    //        if (entry.ingredientData == target)
-    //            return entry.prefab;
-    //    }
-    //    return null;
-    //}
+
 
     internal bool Contains(FoodData currentFoodData)
     {
