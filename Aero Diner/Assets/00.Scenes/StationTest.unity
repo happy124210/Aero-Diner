@@ -494,9 +494,17 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 3000274656318910034, guid: ceaa94eb96f86d64293175a5b2ff9a38, type: 3}
+      propertyPath: passiveGroup
+      value: 
+      objectReference: {fileID: 11400000, guid: 8550c91e57ac0324ab88624bdcef9a5d, type: 2}
     - target: {fileID: 4739141506358912804, guid: ceaa94eb96f86d64293175a5b2ff9a38, type: 3}
       propertyPath: m_Name
       value: PassiveStationTest
+      objectReference: {fileID: 0}
+    - target: {fileID: 8285986399468430413, guid: ceaa94eb96f86d64293175a5b2ff9a38, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8285986399468430413, guid: ceaa94eb96f86d64293175a5b2ff9a38, type: 3}
       propertyPath: m_LocalPosition.x
@@ -516,15 +524,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8285986399468430413, guid: ceaa94eb96f86d64293175a5b2ff9a38, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8285986399468430413, guid: ceaa94eb96f86d64293175a5b2ff9a38, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8285986399468430413, guid: ceaa94eb96f86d64293175a5b2ff9a38, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8285986399468430413, guid: ceaa94eb96f86d64293175a5b2ff9a38, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
