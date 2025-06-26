@@ -23,11 +23,9 @@ public enum StationType
 [CreateAssetMenu(fileName = "StationData", menuName = "CookingGame/StationData")]
 public class StationData : ScriptableObject
 {
-
     // 스테이션의 종류
     public StationType stationType;
 
     // 해당 스테이션에서 지원하는 레시피 목록
     public List<MenuData> availableRecipes;
-
 }

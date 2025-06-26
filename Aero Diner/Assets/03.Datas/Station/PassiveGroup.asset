@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   passiveList:
   - passiveData: {fileID: 11400000, guid: f02da3cce38effa4c95245798ef86752, type: 2}
+  - passiveData: {fileID: 11400000, guid: aa9b9bcc7cf708f43bffa37d9515f3df, type: 2}
+  - passiveData: {fileID: 11400000, guid: 12dc7a547849313489f8866c27edffc6, type: 2}
+  - passiveData: {fileID: 11400000, guid: efb9dca86fe9fa14e880869ef50db4cf, type: 2}

@@ -42,6 +42,12 @@ public class VideoSettingPanel : MonoBehaviour
         new Vector2Int(1680, 1050),
         new Vector2Int(1920, 1080)
     };
+    
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
 
     private void Start()
     {
@@ -54,11 +60,7 @@ public class VideoSettingPanel : MonoBehaviour
 
         UpdateUI();
     }
-    private void Awake()
-    {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
+    
     private int GetCurrentScreenModeIndex()
     {
         for (int i = 0; i < fullScreenModes.Length; i++)
@@ -122,6 +124,7 @@ public class VideoSettingPanel : MonoBehaviour
         resolutionIndex = resolutions.FindIndex(r => r.x == 1920 && r.y == 1080);
         if (resolutionIndex < 0) resolutionIndex = 0;
 
+        OnClickSave();
         UpdateUI();
     }
 
