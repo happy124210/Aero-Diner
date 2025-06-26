@@ -354,8 +354,7 @@ public class TakeOrder : BaseNode
     
     public override NodeState Execute()
     {
-        // 🔧 customer null 체크 추가
-        if (customer == null)
+        if (!customer)
         {
             Debug.LogError($"[{NodeName}]: customer가 null입니다!");
             return NodeState.Failure;
@@ -424,7 +423,7 @@ public class Payment : BaseNode
                 break;
                 
             case State.ProcessingPayment:
-                // 🔧 결제 처리 시간 추가 (코루틴 대신 타이머 사용)
+                // 결제 처리 시간 (타이머형식)
                 paymentTimer += Time.deltaTime;
                 if (paymentTimer >= paymentProcessTime)
                 {
