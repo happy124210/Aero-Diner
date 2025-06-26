@@ -395,8 +395,8 @@ public class Payment : BaseNode
     
     private enum State { Eating, ProcessingPayment, PaymentDone }
     private State currentState = State.Eating;
-    private float paymentProcessTime = 1f;
-    private float paymentTimer = 0f;
+    private const float PAYMENT_PROCESS_TIME = 1f;
+    private float paymentTimer;
     
     public Payment(CustomerController customer) : base(customer) { }
     
@@ -425,7 +425,7 @@ public class Payment : BaseNode
             case State.ProcessingPayment:
                 // 결제 처리 시간 (타이머형식)
                 paymentTimer += Time.deltaTime;
-                if (paymentTimer >= paymentProcessTime)
+                if (paymentTimer >= PAYMENT_PROCESS_TIME)
                 {
                     currentState = State.PaymentDone;
                 }
@@ -490,7 +490,7 @@ public class Leave : BaseNode
     /// </summary>
     private NodeState HandlePreparingToLeave()
     {
-        // 좌석 해제 (한 번만)
+        // 좌석 해제
         if (!seatReleased)
         {
             Vector3 assignedSeat = customer.GetAssignedSeatPosition();
