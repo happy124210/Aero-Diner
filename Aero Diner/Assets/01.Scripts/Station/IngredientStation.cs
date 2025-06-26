@@ -1,7 +1,4 @@
-﻿using JetBrains.Annotations;
-using System.Collections.Generic;
-using UnityEngine;
-using static System.Collections.Specialized.BitVector32;
+﻿using UnityEngine;
 
 /// <summary>
 /// 플레이어가 상호작용하면 재료를 생성해주는 스테이션
@@ -14,48 +11,34 @@ public class IngredientStation : MonoBehaviour, IInteractable
     [Header("생성할 재료 SO")]
     public FoodData selectedIngredient;
 
-    [Header("재료 생성 위치")]
-    public Transform spawnPoint;
-
     /// <summary>
-    /// 플레이어가 J 키를 눌렀을 때 실행되는 상호작용 메서드
+    /// 플레이어와 상호작용하면 재료 생성 + 즉시 인벤토리로 들어감
     /// </summary>
     public void Interact(PlayerInventory playerInventory)
     {
-        if (ingredientGroup == null || selectedIngredient == null || spawnPoint == null)
+        if (ingredientGroup == null || selectedIngredient == null || playerInventory == null)
         {
             Debug.LogError("필수 데이터가 누락되었습니다.");
             return;
         }
 
-        // 해당 위치에 "Ingredient" 태그를 가진 오브젝트가 있는지 확인
-        Collider2D[] hits = Physics2D.OverlapCircleAll(spawnPoint.position, 0.7f);
-        foreach (Collider2D hit in hits)
+        if (playerInventory.IsHoldingItem)
         {
-            if (hit.CompareTag("Ingredient"))
-            {
-                Debug.Log("이미 재료가 생성되어 있습니다.");
-                return;
-            }
+            Debug.Log("플레이어가 이미 아이템을 들고 있음");
+            return;
         }
 
         // GameObject 생성
         GameObject ingredientObj = new GameObject(selectedIngredient.foodName);
-        ingredientObj.transform.position = spawnPoint.position;
         ingredientObj.tag = "Ingredient";
         ingredientObj.layer = 6;
 
         // SpriteRenderer 추가
         SpriteRenderer spriteRenderer = ingredientObj.AddComponent<SpriteRenderer>();
         spriteRenderer.sortingOrder = 55;
-        if (selectedIngredient.foodIcon != null)
-        {
-            spriteRenderer.sprite = selectedIngredient.foodIcon;
-        }
-        else
-        {
+        spriteRenderer.sprite = selectedIngredient.foodIcon != null ? selectedIngredient.foodIcon : null;
+        if (spriteRenderer.sprite == null)
             spriteRenderer.color = Color.gray;
-        }
 
         // Collider2D 추가 및 설정
         CircleCollider2D collider = ingredientObj.AddComponent<CircleCollider2D>();
@@ -70,6 +53,19 @@ public class IngredientStation : MonoBehaviour, IInteractable
         // FoodDisplay 설정
         FoodDisplay foodDisplay = ingredientObj.AddComponent<FoodDisplay>();
         foodDisplay.foodData = selectedIngredient;
+
+        // new! 플레이어 인벤토리에 바로 등록 
+        Transform slot = playerInventory.GetItemSlotTransform();
+        ingredientObj.transform.SetParent(slot);
+        ingredientObj.transform.localPosition = Vector3.zero;
+        ingredientObj.transform.localRotation = Quaternion.identity;
+
+        rb.simulated = false;
+        collider.enabled = false;
+
+        playerInventory.SetHeldItem(foodDisplay); // heldItem에 등록
+
+        Debug.Log($"[{name}] {selectedIngredient.foodName} 생성 → 즉시 플레이어 손으로 이동");
     }
 
     public bool PlaceIngredient(FoodData data)
@@ -90,6 +86,8 @@ public class IngredientStation : MonoBehaviour, IInteractable
             Debug.Log("재료 불일치: 내려놓기 차단");
             return false;
         }
+    }
+
         //플레이어가 호출 할 때 참고용 코드
         // bool canPlace = station.PlaceIngredient(playerHoldingData);
         //if (canPlace)
@@ -100,7 +98,7 @@ public class IngredientStation : MonoBehaviour, IInteractable
         //{
         //    Debug.Log("이 장소에는 해당 재료를 놓을 수 없습니다!");
         //}
-    }
+    
     public void OnHoverEnter()
     {
 

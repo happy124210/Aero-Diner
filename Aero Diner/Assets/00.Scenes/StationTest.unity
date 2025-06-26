@@ -1163,8 +1163,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemSlotTransform: {fileID: 7388003066816920718}
-  itemSlotRenderer: {fileID: 5371352048400802706}
-  currentItemname: {fileID: 0}
+  heldItem: {fileID: 0}
 --- !u!4 &7284147955849305418
 Transform:
   m_ObjectHideFlags: 0
