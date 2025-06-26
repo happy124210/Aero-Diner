@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
@@ -23,7 +23,11 @@ public class FadeManager : Singleton<FadeManager>
         color.a = 1f;
         fadeImage.color = color;
     }
-
+    private IEnumerator Start()
+    {
+        yield return new WaitForEndOfFrame(); // 화면이 준비된 뒤 실행
+        FadeTo(0f, defaultFadeTime);          // 페이드 인
+    }
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;

@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class UIManager : MonoBehaviour
 
     private void HandleUIEvent(UIEventType eventType, object payload)
     {
+        string currentScene = SceneManager.GetActiveScene().name;
+        bool isStartScene = currentScene == "StartScene";
         switch (eventType)
         {
             case UIEventType.OpenPause:
@@ -39,11 +42,11 @@ public class UIManager : MonoBehaviour
                 controlPanel.SetActive(false);
                 break;
             case UIEventType.CloseOption:
-                pausePanel.SetActive(true);
-                optionPanel.SetActive(false);
-                soundPanel.SetActive(false);
-                videoPanel.SetActive(false);
-                controlPanel.SetActive(false);
+                if (!isStartScene && pausePanel) pausePanel.SetActive(true);
+                if (optionPanel) optionPanel.SetActive(false);
+                if (soundPanel) soundPanel.SetActive(false);
+                if (videoPanel) videoPanel.SetActive(false);
+                if (controlPanel) controlPanel.SetActive(false);
                 break;
 
             case UIEventType.ShowSoundTab:
