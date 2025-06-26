@@ -5,7 +5,7 @@ using UnityEngine;
 public class FoodDisplay : MonoBehaviour, IInteractable
 {
     public FoodData foodData;
-
+    public Shelf originShelf;
     public void Interact(PlayerInventory playerInventory)
     {
         if (playerInventory == null) return;
