@@ -1,0 +1,20 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Trashcan : MonoBehaviour, IInteractable
+{
+    public void Interact(PlayerInventory playerInventory)
+    {
+
+    }
+
+    public bool PlaceIngredient(FoodData data)
+    {
+        return true; // 어떤 재료든 내려놓기 허용
+
+    }
+
+    public void OnHoverEnter() { }
+    public void OnHoverExit() { }
+}

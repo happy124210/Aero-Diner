@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &9017150415857658997
 RectTransform:
   m_ObjectHideFlags: 0
@@ -56,7 +56,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -193,7 +193,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8741566498268049178
 Transform:
   m_ObjectHideFlags: 0
@@ -249,7 +249,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 50
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 0.6961997, g: 0.990566, b: 0.9428414, a: 1}
   m_FlipX: 0
@@ -271,6 +271,7 @@ GameObject:
   m_Component:
   - component: {fileID: 827439604232109475}
   - component: {fileID: 1972717361886391384}
+  - component: {fileID: 7523355939073356595}
   m_Layer: 0
   m_Name: Customer
   m_TagString: Untagged
@@ -310,6 +311,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   showDebugInfo: 1
   currentNodeName: 
+  currentData: {fileID: 11400000, guid: 1265474c0d37a144d83fccaf01ecfb60, type: 2}
+  entrancePoint: {fileID: 0}
+  exitPoint: {fileID: 0}
+  seatPoint: {fileID: 0}
+--- !u!195 &7523355939073356595
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6986737310238590579}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.3
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1
+  m_BaseOffset: 0.5
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &7847161955649975561
 GameObject:
   m_ObjectHideFlags: 0
