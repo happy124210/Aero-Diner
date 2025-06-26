@@ -74,6 +74,7 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
         Debug.Log($"[Shelf] '{data.displayName}' 배치 가능");
         return true;
     }
+
     /// <summary>
     /// 현재 가공 중인 재료 데이터를 바탕으로 시각적 재료 오브젝트를 생성
     /// </summary>
@@ -104,6 +105,7 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
         CircleCollider2D collider = ingredientObj.AddComponent<CircleCollider2D>();
         collider.isTrigger = true;
         collider.radius = 0.7f;
+
         Rigidbody2D rb = ingredientObj.AddComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.gravityScale = 0f;

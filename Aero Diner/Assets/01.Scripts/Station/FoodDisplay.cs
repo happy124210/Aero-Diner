@@ -6,6 +6,9 @@ public class FoodDisplay : MonoBehaviour, IInteractable
 {
     public FoodData foodData;
     public Shelf originShelf;
+    public AutomaticStation originAutomatic;
+    public PassiveStation originPassive;
+
     public void Interact(PlayerInventory playerInventory)
     {
         if (playerInventory == null) return;

@@ -124,6 +124,25 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         ProcessIngredient(data);
     }
 
+    //플레이어 인벤토리와 상호작용을 위한 체크함수.
+    public bool CanPlaceIngredient(FoodData data)
+    {
+        if (currentFoodData)
+        {
+            Debug.Log("[Shelf] 현재 선반에 이미 재료가 배치되어 있어 추가할 수 없습니다.");
+            return false;
+        }
+
+        if (NeededIngredients && !NeededIngredients.Contains(data))
+        {
+            Debug.Log($"[Shelf] '{data.displayName}'는 요구되는 재료 그룹에 포함되어 있지 않아 배치할 수 없습니다.");
+            return false;
+        }
+
+        Debug.Log($"[Shelf] '{data.displayName}' 배치 가능");
+        return true;
+    }
+
     /// <summary>
     /// 재료 데이터를 기반으로 화면에 보여질 재료 오브젝트를 생성
     /// </summary>
@@ -140,6 +159,7 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         ingredientObj.transform.SetParent(transform); // 스테이션의 자식으로 배치
         ingredientObj.transform.localPosition = Vector3.zero;
         ingredientObj.tag = "Ingredient";
+        ingredientObj.layer = 6;
 
         // SpriteRenderer 추가하여 processedIcon 적용 및 sortingOrder 55로 설정
         SpriteRenderer spriteRenderer = ingredientObj.AddComponent<SpriteRenderer>();
@@ -150,13 +170,17 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
             spriteRenderer.color = Color.gray;
 
         // 충돌 감지를 위한 Collider와 Rigidbody2D 추가
-        ingredientObj.AddComponent<BoxCollider2D>();
+        CircleCollider2D collider = ingredientObj.AddComponent<CircleCollider2D>();
+        collider.isTrigger = true;
+        collider.radius = 0.7f;
+
         Rigidbody2D rb = ingredientObj.AddComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.gravityScale = 0f;
 
         FoodDisplay foodDisplay = ingredientObj.AddComponent<FoodDisplay>();
         foodDisplay.foodData = selectedIngredient;
+        foodDisplay.originAutomatic = this;
 
         return ingredientObj;
     }
@@ -195,6 +219,7 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         ingredientObj.transform.SetParent(transform); // 스테이션의 자식으로 배치
         ingredientObj.transform.localPosition = Vector3.zero;
         ingredientObj.tag = "Ingredient";
+        ingredientObj.layer = 6;
 
         // SpriteRenderer 추가하여 processedIcon 적용 및 sortingOrder 55로 설정
         SpriteRenderer spriteRenderer = ingredientObj.AddComponent<SpriteRenderer>();
@@ -204,10 +229,20 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         else
             spriteRenderer.color = Color.gray;
 
+        // 충돌 감지를 위한 Collider와 Rigidbody2D 추가
+        CircleCollider2D collider = ingredientObj.AddComponent<CircleCollider2D>();
+        collider.isTrigger = true;
+        collider.radius = 0.7f;
+
+        Rigidbody2D rb = ingredientObj.AddComponent<Rigidbody2D>();
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.gravityScale = 0f;
+
         FoodDisplay foodDisplay = ingredientObj.AddComponent<FoodDisplay>();
         foodDisplay.foodData = selectedIngredient;
+        foodDisplay.originAutomatic = this;
 
-        return ingredientObj;
+        return ingredientObj; ;
     }
 
     /// <summary>
@@ -238,7 +273,6 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     {
         if (placedIngredientObj != null)
         {
-            Destroy(placedIngredientObj);
             placedIngredientObj = null;
         }
 
