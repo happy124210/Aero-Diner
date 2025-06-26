@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Shelf : MonoBehaviour, IPlaceableStation
+public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
 {
     [Header("재료 데이터 그룹")]
     public ShelfSOGroup shelfGroup;
@@ -19,6 +19,12 @@ public class Shelf : MonoBehaviour, IPlaceableStation
     // 내부 상태 변수
     private GameObject placedIngredientObj; // 화면에 표시되는 재료 오브젝트
     private FoodData currentFoodData;       // 현재 가공 대상 재료 데이터
+
+    public void Interact(PlayerInventory playerInventory)
+    {
+
+    }
+
 
     public void PlaceIngredient(FoodData data)
     {

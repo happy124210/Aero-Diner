@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Trashcan : MonoBehaviour
+public class Trashcan : MonoBehaviour, IInteractable
 {
+    public void Interact(PlayerInventory playerInventory)
+    {
+
+    }
 
     public bool PlaceIngredient(FoodData data)
     {
@@ -16,4 +20,7 @@ public class Trashcan : MonoBehaviour
         //}
 
     }
+
+    public void OnHoverEnter() { }
+    public void OnHoverExit() { }
 }
