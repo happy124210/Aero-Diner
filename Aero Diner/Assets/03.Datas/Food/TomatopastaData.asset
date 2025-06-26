@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca77332d7f9b4134e9c53ece37a21432, type: 3}
-  m_Name: DoughData
+  m_Name: 
   m_EditorClassIdentifier: 
-  id: f3
-  foodName: dough
-  displayName: "\uBC18\uC8FD"
-  icon: {fileID: 0}
-  cost: 0
-  isServe: 0
+  id: f5
+  foodName: TomatoPasta
+  displayName: "\uD1A0\uB9C8\uD1A0 \uD30C\uC2A4\uD0C0"
+  foodIcon: {fileID: 21300000, guid: 9b1ee1982c55ad74c93d1a70c128f4b0, type: 3}
+  processedIcon: {fileID: 21300000, guid: e5588e8978cf6974cab20bab11d0f31e, type: 3}
+  description: "\uD1A0\uB9C8\uD1A0 \uD30C\uC2A4\uD0C0 \uC785\uB2C8\uB2E4"
+  requireStation: 1
+  foodCost: 1000
