@@ -28,11 +28,6 @@ public class CustomerController : MonoBehaviour, IPoolable
     private Vector3 currentQueuePosition = Vector3.zero;
     private bool isMovingToNewQueuePosition;
     
-    [Header("Positions - 임시")]
-    [SerializeField] private Transform entrancePoint;
-    [SerializeField] private Transform exitPoint;
-    [SerializeField] private Transform seatPoint;
-    
     private INode rootNode;
     private Vector3 assignedSeatPosition;
     private float eatingTimer;
@@ -51,11 +46,6 @@ public class CustomerController : MonoBehaviour, IPoolable
 
     private void Awake()
     {
-        // 임시 레이아웃
-        entrancePoint = transform.Find("Entrance Point");
-        exitPoint = transform.Find("Exit Point");
-        seatPoint = transform.Find("Approach Position");
-        
         // NavMeshAgent 미리 가져오기
         navAgent = GetComponent<NavMeshAgent>();
         if (navAgent == null)
