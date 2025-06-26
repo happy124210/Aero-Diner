@@ -23,8 +23,8 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     [SerializeField] private List<string> customerDataIds = new List<string>();
     
     [Header("스폰 확률 - 임시")]
-    [SerializeField] private float normalCustomerChance = 0.6f;
-    [SerializeField] private float rareCustomerChance = 0.2f;
+    [SerializeField] private float normalCustomerChance = 1f;
+    [SerializeField] private float rareCustomerChance = 0f;
     
     [Header("Debug")]
     [SerializeField] private bool autoSpawn = true;

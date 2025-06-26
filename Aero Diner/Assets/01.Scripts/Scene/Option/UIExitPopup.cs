@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class UIExitPopup : MonoBehaviour
 {
@@ -6,20 +7,24 @@ public class UIExitPopup : MonoBehaviour
 
     [SerializeField] private GameObject popupRoot;
 
+    private Action pendingAction;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
 
-    public void Show()
+    public void Show(Action onConfirm = null)
     {
         popupRoot.SetActive(true);
+        pendingAction = onConfirm;
     }
 
     public void Hide()
     {
         popupRoot.SetActive(false);
+        pendingAction = null;
     }
 
     public void OnClickBack()
@@ -36,11 +41,7 @@ public class UIExitPopup : MonoBehaviour
 
         Hide();
 
-        // 옵션 패널 닫기 이벤트 (EventBus 구조 가정)
-        EventBus.Raise(UIEventType.CloseControl);
-        EventBus.Raise(UIEventType.CloseOption);
-        EventBus.Raise(UIEventType.CloseSound);
-        EventBus.Raise(UIEventType.CloseVideo);
+        pendingAction?.Invoke();
     }
 }
 

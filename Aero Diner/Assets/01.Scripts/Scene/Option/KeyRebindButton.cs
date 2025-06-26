@@ -84,7 +84,7 @@ public class KeyRebindButton : MonoBehaviour
             actionRef.action.ApplyBindingOverride(bindingIndex, originalOverridePath);
         else
             actionRef.action.RemoveBindingOverride(bindingIndex);
-
+        
         UpdateKeyText();
     }
 
