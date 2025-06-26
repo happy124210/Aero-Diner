@@ -12,8 +12,10 @@ public enum UIEventType
     OpenPause, ClosePause,
     OpenOption, CloseOption,
     CloseSound, CloseVideo,
-    CloseControl,
-    ShowSoundTab, ShowVideoTab, ShowControlTab
+    CloseControl, ShowSoundTab,
+    ShowVideoTab, ShowControlTab,
+
+    ShowStartWarningPanel, 
 }
 
 public static class EventBus

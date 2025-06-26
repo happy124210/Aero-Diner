@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class UIManager : MonoBehaviour
+public class UIManager : Singleton<UIManager>
 {
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject optionPanel;
@@ -64,6 +64,7 @@ public class UIManager : MonoBehaviour
                 videoPanel.SetActive(false);
                 controlPanel.SetActive(true);
                 break;
+
         }
     }
 }
