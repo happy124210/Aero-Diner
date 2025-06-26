@@ -266,9 +266,9 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
             return Vector3.zero;
         }
         
-        // 시작점에서 뒤로 일정 간격으로 배치
+        // 시작점에서 왼쪽으로 일정 간격으로 배치
         Vector3 basePosition = queueStartPosition.position;
-        return basePosition + Vector3.back * (queueIndex * queueSpacing);
+        return basePosition + Vector3.left * (queueIndex * queueSpacing);
     }
     
     /// <summary>
