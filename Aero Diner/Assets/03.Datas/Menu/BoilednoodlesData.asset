@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: m1
   menuName: BoiledNoodles
+  menuIcon: {fileID: 21300000, guid: 850a25d27da95fb48a2faeb05e3ce84e, type: 3}
+  description: "\uC0B6\uC740 \uBA74 \uC785\uB2C8\uB2E4"
   ingredients:
   - f1
   - f2
