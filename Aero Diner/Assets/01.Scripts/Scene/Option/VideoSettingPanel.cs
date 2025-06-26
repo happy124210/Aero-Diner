@@ -122,6 +122,7 @@ public class VideoSettingPanel : MonoBehaviour
         resolutionIndex = resolutions.FindIndex(r => r.x == 1920 && r.y == 1080);
         if (resolutionIndex < 0) resolutionIndex = 0;
 
+        OnClickSave();
         UpdateUI();
     }
 

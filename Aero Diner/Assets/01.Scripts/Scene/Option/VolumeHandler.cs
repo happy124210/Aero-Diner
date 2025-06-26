@@ -94,6 +94,8 @@ public class VolumeHandler : MonoBehaviour
 
         UpdateBGMVolumeUI(0.5f);
         UpdateSFXVolumeUI(0.5f);
+
+        SaveVolumes();
     }
 
     /// <summary> ESC로 옵션 창 닫을 때 호출 — 원래 값으로 롤백 </summary>
