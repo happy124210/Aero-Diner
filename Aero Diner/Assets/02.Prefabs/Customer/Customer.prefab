@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &9017150415857658997
 RectTransform:
   m_ObjectHideFlags: 0
@@ -193,7 +193,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8741566498268049178
 Transform:
   m_ObjectHideFlags: 0
@@ -311,7 +311,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   showDebugInfo: 1
   currentNodeName: 
-  data: {fileID: 11400000, guid: 1265474c0d37a144d83fccaf01ecfb60, type: 2}
+  currentData: {fileID: 11400000, guid: 1265474c0d37a144d83fccaf01ecfb60, type: 2}
   entrancePoint: {fileID: 0}
   exitPoint: {fileID: 0}
   seatPoint: {fileID: 0}
