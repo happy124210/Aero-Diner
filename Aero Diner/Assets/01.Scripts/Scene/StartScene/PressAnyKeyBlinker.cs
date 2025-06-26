@@ -58,7 +58,7 @@ public class PressAnyKeyBlinker : MonoBehaviour
                     menuPanel3.SetActive(true);
                 }
 
-                gameObject.SetActive(false);
+                pressAnyKeyImage.enabled = false;
             });
     }
 
