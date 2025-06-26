@@ -17,22 +17,45 @@ public class OptionBtn : MonoBehaviour
     {
         if (IsKeyChanged() || IsVideoChanged())
         {
-            UIExitPopup.Instance?.Show();
+            UIExitPopup.Instance?.Show(() =>
+            {
+                EventBus.Raise(UIEventType.ShowSoundTab);
+            });
         }
-        else { EventBus.Raise(UIEventType.ShowSoundTab); }
+        else
+        {
+            EventBus.Raise(UIEventType.ShowSoundTab);
+        }
     }
 
     public void OnClickVideoTab()
     {
-        Debug.Log("비디오탭 눌림");
-        if (IsKeyChanged() || IsVolumeChanged()) { Debug.Log("검사필"); UIExitPopup.Instance?.Show(); }
-        else { EventBus.Raise(UIEventType.ShowVideoTab); }
+        if (IsKeyChanged() || IsVolumeChanged())
+        {
+            UIExitPopup.Instance?.Show(() =>
+            {
+                EventBus.Raise(UIEventType.ShowVideoTab);
+            });
+        }
+        else
+        {
+            EventBus.Raise(UIEventType.ShowVideoTab);
+        }
     }
 
     public void OnClickControlTab()
     {
-        if(IsVideoChanged() || IsVolumeChanged()) { UIExitPopup.Instance?.Show(); }
-       else { EventBus.Raise(UIEventType.ShowControlTab); }
+        if (IsVolumeChanged() || IsVideoChanged())
+        {
+            UIExitPopup.Instance?.Show(() =>
+            {
+                EventBus.Raise(UIEventType.ShowControlTab);
+            });
+        }
+        else
+        {
+            EventBus.Raise(UIEventType.ShowControlTab);
+        }
     }
     public void OnSaveClick()
     {
