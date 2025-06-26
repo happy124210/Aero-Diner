@@ -9,10 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 117d233d9fc2bff418b6e4c7d9135079, type: 3}
-  m_Name: CuttingBoard
+  m_Script: {fileID: 11500000, guid: d09df1354ed6e32448b2b49289c0a40c, type: 3}
+  m_Name: CuttingmeetData
   m_EditorClassIdentifier: 
-  stationType: 0
-  availableRecipes:
-  - {fileID: 11400000, guid: 4ea4dc71205b4b5478ca1abb145fb913, type: 2}
-  - {fileID: 11400000, guid: 034c4487a2513af49b5d1770d4d3ff7f, type: 2}
+  id: m4
+  menuName: CuttingMeet
+  ingredients:
+  - f4
+  cookTime: 5
+  menuCost: 1000

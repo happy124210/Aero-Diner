@@ -232,7 +232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48ed6e64159907f4ca003162431cd853, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  passiveGroup: {fileID: 0}
+  passiveGroup: {fileID: 11400000, guid: 8550c91e57ac0324ab88624bdcef9a5d, type: 2}
   selectedIngredient: {fileID: 0}
   spawnPoint: {fileID: 8285986399468430413}
   NeededIngredients: {fileID: 0}
