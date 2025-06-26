@@ -309,7 +309,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef9a20ea1a69060438a4232c70708316, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showDebugInfo: 1
+  showDebugInfo: 0
   currentNodeName: 
   currentData: {fileID: 11400000, guid: 1265474c0d37a144d83fccaf01ecfb60, type: 2}
   entrancePoint: {fileID: 0}

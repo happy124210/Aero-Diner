@@ -1,0 +1,5 @@
+id,menuName,description,ingredients,cookTime,menuCost
+m1,BoiledNoodles,삶은 면 입니다,f1|f2,5,1000
+m2,TomatoPasta,토마토 파스타 입니다,m1|m3|m4,5,1500
+m3,CuttingTomato,자른 토마토 입니다,f3,5,1000
+m4,CuttingMeet,자른 고기 입니다,f4,5,1000
