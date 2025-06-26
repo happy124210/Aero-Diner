@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stationType: 0
   availableRecipes:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 4ea4dc71205b4b5478ca1abb145fb913, type: 2}
+  - {fileID: 11400000, guid: 034c4487a2513af49b5d1770d4d3ff7f, type: 2}

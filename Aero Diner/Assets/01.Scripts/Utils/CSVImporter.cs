@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -52,7 +52,7 @@ public class CSVImporter
         data.id = cols[0].Trim();
         data.menuName = cols[1].Trim();
         data.menuIcon = LoadIcon($"{data.menuName}-icon", "Menu");
-        data.menuName = cols[3].Trim();
+        data.description = cols[3].Trim();
         data.ingredients = ParseStringArray(cols[4]); // 파이프로 구분된 재료들
         data.cookTime = float.Parse(cols[3]);
         data.menuCost = float.Parse(cols[4]);

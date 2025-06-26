@@ -9,12 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca77332d7f9b4134e9c53ece37a21432, type: 3}
-  m_Name: DoughData
+  m_Script: {fileID: 11500000, guid: 117d233d9fc2bff418b6e4c7d9135079, type: 3}
+  m_Name: FryingPan
   m_EditorClassIdentifier: 
-  id: f3
-  foodName: dough
-  displayName: "\uBC18\uC8FD"
-  icon: {fileID: 0}
-  cost: 0
-  isServe: 0
+  stationType: 1
+  availableRecipes:
+  - {fileID: 11400000, guid: dade73e4017f0004da99a730ca752dc8, type: 2}
