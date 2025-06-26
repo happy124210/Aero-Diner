@@ -51,7 +51,9 @@ public class CSVImporter
         // 레시피 데이터 파싱
         data.id = cols[0].Trim();
         data.menuName = cols[1].Trim();
-        data.ingredients = ParseStringArray(cols[2]); // 파이프로 구분된 재료들
+        data.menuIcon = LoadIcon($"{data.menuName}-icon", "Menu");
+        data.menuName = cols[3].Trim();
+        data.ingredients = ParseStringArray(cols[4]); // 파이프로 구분된 재료들
         data.cookTime = float.Parse(cols[3]);
         data.menuCost = float.Parse(cols[4]);
         

@@ -36,8 +36,12 @@ public class PlayerInventory : MonoBehaviour
         if (col != null) col.enabled = false;
 
         Debug.Log($"[Inventory] {heldItem.foodData.foodName} 획득");
+
+        // 마지막에 선반 초기화 호출 (재료 오브젝트 파괴 방지)
+        if (food.originShelf != null)
+        {
             food.originShelf.OnPlayerPickup();
-        
+        }
     }
 
     //아이템을 내려놓기 시도
@@ -87,6 +91,20 @@ public class PlayerInventory : MonoBehaviour
                 else
                 {
                     Debug.Log("[Inventory] 선반에 재료를 배치할 수 없습니다.");
+                }
+                break;
+
+            case Trashcan trashcan:
+                if (trashcan.PlaceIngredient(heldItem.foodData))
+                {
+                    Destroy(heldItem.gameObject);
+                    heldItem = null;
+                    Debug.Log("[Inventory] 재료를 쓰레기통에 버렸습니다.");
+                    placed = true;
+                }
+                else
+                {
+                    Debug.Log("쓰레기통이 아닐지도?");
                 }
                 break;
 
