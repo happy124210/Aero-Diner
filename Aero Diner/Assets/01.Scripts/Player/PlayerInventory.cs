@@ -4,9 +4,10 @@
 //플레이어가 재료를 들고, 내려놓는 기능을 담당하는 인벤토리
 public class PlayerInventory : MonoBehaviour
 {
+    public Transform GetItemSlotTransform() => itemSlotTransform;
     [Header("아이템 슬롯 위치")]
     [SerializeField] private Transform itemSlotTransform;
-    
+
     ///현재 들고 있는 재료
     public FoodDisplay heldItem;
     public bool IsHoldingItem => heldItem != null;
@@ -35,6 +36,12 @@ public class PlayerInventory : MonoBehaviour
         if (col != null) col.enabled = false;
 
         Debug.Log($"[Inventory] {heldItem.foodData.foodName} 획득");
+
+        // 마지막에 선반 초기화 호출 (재료 오브젝트 파괴 방지)
+        if (food.originShelf != null)
+        {
+            food.originShelf.OnPlayerPickup();
+        }
     }
 
     //아이템을 내려놓기 시도
@@ -54,37 +61,63 @@ public class PlayerInventory : MonoBehaviour
 
         bool placed = false;
 
-        //IngredientStation 처리
-        if (target is IngredientStation station)
+        switch (target)
         {
-            bool matched = station.PlaceIngredient(heldItem.foodData);
+            case IngredientStation station:
+                if (station.PlaceIngredient(heldItem.foodData))
+                {
+                    Destroy(heldItem.gameObject);
+                    heldItem = null;
+                    Debug.Log($"[Inventory] 재료 일치 - 재료 소비됨");
+                    placed = true;
+                }
+                else
+                {
+                    Debug.Log("[Inventory] 재료 불일치 - 내려놓을 수 없음");
+                }
+                break;
 
-            if (matched)
-            {
-                // 해당 스테이션의 위치에 내려놓음
-                Destroy(heldItem.gameObject); // 직접 삭제
-                heldItem = null;
+            case Shelf shelf:
+                if (shelf.CanPlaceIngredient(heldItem.foodData))
+                {
+                    FoodData dataToPlace = heldItem.foodData;
+                    Destroy(heldItem.gameObject); // 손에 들고 있는 아이템 제거
+                    heldItem = null;
 
-                Debug.Log($"[Inventory] 재료 일치 - 재료 소비됨");
-                placed = true;
-            }
-            else
-            {
-                Debug.Log("[Inventory] 재료 불일치 - 내려놓을 수 없음");
-            }
-        }
-        else
-        {
-            //추후 다른 스테이션들에 대한 분기 확장 용도
-            Debug.Log($"[Inventory] {target.GetType().Name}은(는) 현재 내려놓기 미지원. 향후 확장 예정.");
+                    shelf.PlaceIngredient(dataToPlace); // 선반에 새로운 오브젝트 생성
+                    Debug.Log("[Inventory] 선반에 재료 배치됨");
+                    placed = true;
+                }
+                else
+                {
+                    Debug.Log("[Inventory] 선반에 재료를 배치할 수 없습니다.");
+                }
+                break;
+
+            case Trashcan trashcan:
+                if (trashcan.PlaceIngredient(heldItem.foodData))
+                {
+                    Destroy(heldItem.gameObject);
+                    heldItem = null;
+                    Debug.Log("[Inventory] 재료를 쓰레기통에 버렸습니다.");
+                    placed = true;
+                }
+                else
+                {
+                    Debug.Log("쓰레기통이 아닐지도?");
+                }
+                break;
+
+            default:
+                Debug.Log($"[Inventory] {target.GetType().Name}은(는) 현재 내려놓기 미지원. 향후 확장 예정.");
+                break;
         }
 
         if (!placed)
         {
-            Debug.Log("[Inventory] 내려놓기 실패");
         }
     }
-    public Transform GetItemSlotTransform() => itemSlotTransform;
+
     public void SetHeldItem(FoodDisplay item)
     {
         heldItem = item;

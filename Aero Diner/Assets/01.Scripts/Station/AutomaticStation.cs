@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /// 플레이어가 올바른 재료를 스테이션에 배치하면
 /// 자동으로 조리 타이머가 시작되고, 시간이 다 되면 결과물이 생성되는 자동 조리 스테이션
 /// </summary>
-public class AutomaticStation : MonoBehaviour, IPlaceableStation
+public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
 {
     [Header("재료 데이터 그룹")]
     public PassiveSOGroup passiveGroup;
@@ -63,6 +63,11 @@ public class AutomaticStation : MonoBehaviour, IPlaceableStation
                 ResetStation();
             }
         }
+    }
+
+    public void Interact(PlayerInventory playerInventory)
+    {
+
     }
 
     /// <summary>
