@@ -192,7 +192,7 @@ public class WaitInLine : BaseNode
     private enum State { JoiningQueue, WaitingInQueue, MovingInQueue }
     private State currentState = State.JoiningQueue;
     private float seatCheckTimer;
-    private const float SEAT_CHECK_INTERVAL = 2f;
+    private const float SEAT_CHECK_INTERVAL = 1f;
     
     public WaitInLine(CustomerController customer) : base(customer) { }
     

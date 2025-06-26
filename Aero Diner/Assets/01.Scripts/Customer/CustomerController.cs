@@ -363,8 +363,11 @@ public class CustomerController : MonoBehaviour, IPoolable
     /// <summary>
     /// 목적지 도달 체크
     /// </summary>
-    public bool HasReachedDestination() 
-    { 
+    public bool HasReachedDestination()
+    {
+        const float ARRIVAL_THRESHOLD = 0.5f;
+        const float VELOCITY_THRESHOLD = 0.1f;
+        
         if (!navAgent || !navAgent.isOnNavMesh) 
         {
             if (showDebugInfo) Debug.LogWarning($"[CustomerController]: {gameObject.name} NavMeshAgent 문제!");
@@ -372,8 +375,8 @@ public class CustomerController : MonoBehaviour, IPoolable
         }
         
         bool reached = !navAgent.pathPending && 
-                      navAgent.remainingDistance < 0.5f && 
-                      navAgent.velocity.sqrMagnitude < 0.1f;
+                      navAgent.remainingDistance < ARRIVAL_THRESHOLD && 
+                      navAgent.velocity.sqrMagnitude < VELOCITY_THRESHOLD;
         
         if (reached && showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 목적지 도착!");
             
