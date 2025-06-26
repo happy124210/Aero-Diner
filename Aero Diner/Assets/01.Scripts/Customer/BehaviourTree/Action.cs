@@ -266,6 +266,14 @@ public class Leave : BaseNode
                 // 처음에만 목적지 설정
                 if (!hasStartedMoving)
                 {
+                    // 자리 떠나자마자 해제 처리
+                    Vector3 assignedSeat = customer.GetAssignedSeatPosition();
+                    if (assignedSeat != Vector3.zero)
+                    {
+                        CustomerSpawner.Instance.ReleaseSeat(assignedSeat);
+                        Debug.Log($"Released seat at {assignedSeat}");
+                    }
+                    
                     // CustomerSpawner에서 출구 위치 가져오기
                     Vector3 exitPosition = CustomerSpawner.Instance.GetExitPosition();
                     
@@ -284,15 +292,6 @@ public class Leave : BaseNode
                 if (customer.HasReachedDestination())
                 {
                     Debug.Log("Customer reached exit");
-                    
-                    // 좌석 해제
-                    Vector3 assignedSeat = customer.GetAssignedSeatPosition();
-                    if (assignedSeat != Vector3.zero)
-                    {
-                        CustomerSpawner.Instance.ReleaseSeat(assignedSeat);
-                        Debug.Log($"Released seat at {assignedSeat}");
-                    }
-                    
                     currentState = State.Left;
                 }
                 

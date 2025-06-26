@@ -34,8 +34,10 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
 
     #region Unity events
     
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        
         CustomerData[] customerDatas = Resources.LoadAll<CustomerData>("Datas/Customer");
 
         foreach (CustomerData customerData in customerDatas)
