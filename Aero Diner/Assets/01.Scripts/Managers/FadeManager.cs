@@ -9,6 +9,8 @@ public class FadeManager : Singleton<FadeManager>
     public float defaultFadeTime = 1f;
     private Coroutine currentFade;
 
+    private bool isFadePlanned = false;
+
     protected override void Awake()
     {
         base.Awake();
@@ -19,14 +21,17 @@ public class FadeManager : Singleton<FadeManager>
             return;
         }
 
+        // 초기화: 완전 검은 화면
         Color color = fadeImage.color;
         color.a = 1f;
         fadeImage.color = color;
-    }
-    private IEnumerator Start()
-    {
-        yield return new WaitForEndOfFrame(); // 화면이 준비된 뒤 실행
-        FadeTo(0f, defaultFadeTime);          // 페이드 인
+
+        //최초 진입일 경우 페이드 인
+        if (SceneManager.GetActiveScene().name == "StartScene" || SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            Debug.Log("[FadeManager] 첫 씬에서 강제 페이드 인");
+            FadeTo(0f, defaultFadeTime);
+        }
     }
     private void OnEnable()
     {
@@ -40,9 +45,19 @@ public class FadeManager : Singleton<FadeManager>
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log($"[FadeManager] 씬 로드됨: {scene.name}, 페이드 인 시작");
-        if (fadeImage)
+        Debug.Log($"[FadeManager] 씬 로드됨: {scene.name}");
+        if (isFadePlanned && fadeImage != null)
+        {
+            Debug.Log("[FadeManager] 페이드 인 실행");
             FadeTo(0f, defaultFadeTime);
+        }
+        else
+        {
+            Debug.Log("[FadeManager] 일반 로드 → 페이드 인 생략");
+        }
+
+        //무조건 false로 리셋
+        isFadePlanned = false;
     }
 
     public void FadeTo(float targetAlpha, float duration = -1f)
@@ -72,12 +87,9 @@ public class FadeManager : Singleton<FadeManager>
         currentFade = null;
     }
 
-    /// <summary>
-    /// 로딩창 포함 씬 불러오기
-    /// </summary>
-    /// <param name="targetScene">불러올 씬 이름</param>
     public void FadeOutAndLoadSceneWithLoading(string targetScene)
     {
+        isFadePlanned = true; //페이드 계획 설정
         StartCoroutine(FadeAndLoadLoadingScene(targetScene));
     }
 
