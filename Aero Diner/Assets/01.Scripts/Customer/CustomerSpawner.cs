@@ -165,6 +165,9 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
             {
                 SpawnRandomCustomer();
             }
+            
+            float waitTime = Random.Range(minSpawnInterval, maxSpawnInterval);
+            yield return new WaitForSeconds(waitTime);
         }
     }
 
@@ -182,7 +185,8 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
         CustomerData customerData = SelectRandomCustomer();
         if (!customerData)
         {
-            // 데이터 없을 경우 처리
+            // 확률 선택 실패 시 일반 랜덤
+            customerData = PoolManager.Instance.AvailableCustomers[Random.Range(0, PoolManager.Instance.AvailableCustomers.Length)];
         }
 
         CustomerController selectedCustomer = PoolManager.Instance.SpawnCustomer(customerData, spawnPosition);

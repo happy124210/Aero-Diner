@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32044823781c38f4189df4d14d5e15bb, type: 3}
   m_Name: RareData
   m_EditorClassIdentifier: 
-  id: 
-  rarity: 0
-  customerName: 
-  displayName: 
-  speed: 0
-  waitTime: 0
-  eatTime: 0
+  id: c1
+  rarity: 1
+  customerName: rare
+  displayName: "\uD76C\uADC0 \uC190\uB2D8"
+  speed: 7
+  waitTime: 30
+  eatTime: 5

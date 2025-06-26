@@ -19,7 +19,7 @@ public class PoolManager : Singleton<PoolManager>
     [SerializeField] private GameObject customerPrefab;
     
     [Header("사용가능 데이터들 (자동 로드 됨)")]
-    [SerializeField, ReadOnly] private CustomerData[] customerTypes;
+    [SerializeField] private CustomerData[] customerTypes;
     
     [Header("Runtime 정보")]
     private Dictionary<CustomerData, ObjectPool<CustomerController>> customerPools = new();

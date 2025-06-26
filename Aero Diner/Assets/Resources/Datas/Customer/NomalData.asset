@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: NomalData
   m_EditorClassIdentifier: 
   id: c1
-  customerName: test
-  displayName: "\uD14C\uC2A4\uD2B8 \uC190\uB2D8"
+  rarity: 0
+  customerName: normal
+  displayName: "\uC77C\uBC18 \uC190\uB2D8"
   speed: 5
   waitTime: 30
   eatTime: 5
