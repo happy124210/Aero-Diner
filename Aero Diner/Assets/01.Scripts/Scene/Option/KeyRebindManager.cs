@@ -55,7 +55,9 @@ public class KeyRebindManager : MonoBehaviour
         foreach (var btn in rebindButtons)
         {
             btn.ResetToDefault();
+            btn.SaveBinding();
         }
+        isSaved = true;
         Debug.Log("모든 키 바인딩 기본값으로 리셋");
     }
 }
