@@ -42,7 +42,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     private bool isEating;
     private bool eatingFinished;
     private bool paymentCompleted;
-    private bool hasLeftRestaurant;
+    private bool hasLeftRestaurant; // 🔧 중복 이탈 방지
 
     // components
     private NavMeshAgent navAgent;
@@ -56,16 +56,17 @@ public class CustomerController : MonoBehaviour, IPoolable
         exitPoint = transform.Find("Exit Point");
         seatPoint = transform.Find("Approach Position");
         
-        // NavMeshAgent 미리 가져오기
+        // 🔧 NavMeshAgent 미리 가져오기 (런타임 생성 방지)
         navAgent = GetComponent<NavMeshAgent>();
         if (navAgent == null)
         {
-            Debug.LogError($"[CustomerController]: {gameObject.name}에 NavMeshAgent 없음!!!");
+            Debug.LogError($"[CustomerController]: {gameObject.name}에 NavMeshAgent가 없습니다! 프리팹에 미리 추가해주세요.");
         }
     }
 
     private void Start()
     {
+        // 🔧 순서 변경: NavMesh 먼저 설정
         SetupNavMeshAgent();
         SetupCustomerData();
         SetupBT();
@@ -73,6 +74,7 @@ public class CustomerController : MonoBehaviour, IPoolable
 
     private void Update()
     {
+        // 🔧 이미 떠난 손님은 업데이트하지 않음
         if (hasLeftRestaurant) return;
         
         // 결제 완료 전까지만 인내심 감소
@@ -80,7 +82,7 @@ public class CustomerController : MonoBehaviour, IPoolable
         {
             currentPatience -= Time.deltaTime;
             
-            // 인내심이 0 이하가 되면 즉시 BT 리셋 - 이탈
+            // 🔧 인내심이 0 이하가 되면 즉시 BT 리셋하여 이탈 유도
             if (currentPatience <= 0)
             {
                 if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 인내심 소진!");
@@ -119,13 +121,13 @@ public class CustomerController : MonoBehaviour, IPoolable
     #region Setup Functions
     
     /// <summary>
-    /// 손님 데이터 셋업
+    /// 🔧 데이터로부터 손님 데이터 셋업 - 순서 개선
     /// </summary>
     private void SetupCustomerData()
     {
-        if (!currentData)
+        if (currentData == null)
         {
-            Debug.LogError($"[CustomerController]: {gameObject.name} currentData 없음 !!!");
+            Debug.LogError($"[CustomerController]: {gameObject.name} currentData가 null입니다!");
             return;
         }
         
@@ -135,6 +137,7 @@ public class CustomerController : MonoBehaviour, IPoolable
         
         currentPatience = maxWaitTime;
         
+        // 🔧 다른 데이터들도 초기화
         ResetCustomerData();
         
         if (showDebugInfo) 
@@ -142,7 +145,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     }
 
     /// <summary>
-    /// 손님 데이터 초기화
+    /// 🔧 손님 데이터 초기화 - 실제로 사용하도록 수정
     /// </summary>
     private void ResetCustomerData()
     {
@@ -150,11 +153,11 @@ public class CustomerController : MonoBehaviour, IPoolable
         isEating = false;
         eatingFinished = false;
         paymentCompleted = false;
-        hasLeftRestaurant = false;
+        hasLeftRestaurant = false; // 🔧 추가
         eatingTimer = 0f;
         assignedSeatPosition = Vector3.zero;
         
-        // 큐 데이터
+        // 🔧 큐 관련 데이터도 초기화
         currentQueuePosition = Vector3.zero;
         isMovingToNewQueuePosition = false;
         
@@ -163,20 +166,20 @@ public class CustomerController : MonoBehaviour, IPoolable
     }
     
     /// <summary>
-    /// NavMesh 필드 셋업
+    /// 🔧 NavMesh 필드 셋업 - 안전성 강화
     /// </summary>
     private void SetupNavMeshAgent()
     {
-        if (!navAgent)
+        if (navAgent == null)
         {
-            Debug.LogError($"[CustomerController]: {gameObject.name} NavMeshAgent 없음 !!!");
+            Debug.LogError($"[CustomerController]: {gameObject.name} NavMeshAgent가 없습니다!");
             return;
         }
 
         // 2D NavMesh 설정
         navAgent.updateRotation = false;
         navAgent.updateUpAxis = false;
-        navAgent.speed = speed;
+        navAgent.speed = speed > 0 ? speed : 3.5f; // 기본값 설정
         navAgent.stoppingDistance = 0.1f;
         navAgent.angularSpeed = 120f;
         navAgent.acceleration = 8f;
@@ -186,27 +189,27 @@ public class CustomerController : MonoBehaviour, IPoolable
     }
     
     /// <summary>
-    /// 수정된 BT 구조
+    /// 🔧 수정된 BT 구조 - 줄서기 우선 로직으로 변경
     /// </summary>
     private void SetupBT()
     {
-        // 좌석 시도 플로우 - 실패해도 계속 진행
+        // 🔧 좌석 시도 플로우 - 실패해도 계속 진행
         var tryGetSeatFlow = new Selector(this,
             // 1. 바로 좌석 있으면 성공
             new CheckAvailableSeat(this),
             
-            // 2. 좌석 없으면 줄서기
+            // 2. 좌석 없으면 줄서기 (절대 포기하지 않음)
             new WaitInLine(this)  // WaitInLine 내부에서 좌석 획득까지 처리
         );
     
-        // 전체 손님 플로우 - 인내심 체크 최소화
+        // 🔧 전체 손님 플로우 - 인내심 체크 최소화
         var mainFlow = new Sequence(this,
             new MoveToEntrance(this),
-            tryGetSeatFlow,                    // 좌석 확보
+            tryGetSeatFlow,                    // 좌석 확보 (포기하지 않음)
             new MoveToSeat(this),
             new Selector(this,
                 new Sequence(this,
-                    new TakeOrder(this),
+                    new TakeOrder(this),       // 인내심 체크는 TakeOrder 내부에서
                     new Payment(this)
                 ),
                 new Leave(this) // 중간에 인내심 소진시 이탈
@@ -240,7 +243,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     public float GetRemainingPatience() => currentPatience;
     
     /// <summary>
-    /// 인내심이 있는지 체크
+    /// 🔧 인내심이 있는지 체크하는 메서드 추가
     /// </summary>
     public bool HasPatience() => currentPatience > 0;
     
@@ -348,19 +351,19 @@ public class CustomerController : MonoBehaviour, IPoolable
     private const float AGENT_DRIFT = 0.0001f;
     
     /// <summary>
-    /// 목적지 설정
+    /// 🔧 목적지 설정 - 안전성 강화
     /// </summary>
     public void SetDestination(Vector3 destination) 
     { 
-        if (!navAgent)
+        if (navAgent == null)
         {
-            Debug.LogError($"[CustomerController]: {gameObject.name} NavMeshAgent 없음 !!!");
+            Debug.LogError($"[CustomerController]: {gameObject.name} NavMeshAgent가 null입니다!");
             return;
         }
         
         if (!navAgent.isOnNavMesh)
         {
-            Debug.LogWarning($"[CustomerController]: {gameObject.name}이 NavMesh 위에 있지 않음 !!!");
+            Debug.LogWarning($"[CustomerController]: {gameObject.name}이 NavMesh 위에 있지 않습니다!");
             return;
         }
         
@@ -378,11 +381,11 @@ public class CustomerController : MonoBehaviour, IPoolable
     }
     
     /// <summary>
-    /// 목적지 도달 체크 - 안전성 강화
+    /// 🔧 목적지 도달 체크 - 안전성 강화
     /// </summary>
     public bool HasReachedDestination() 
     { 
-        if (!navAgent || !navAgent.isOnNavMesh) 
+        if (navAgent == null || !navAgent.isOnNavMesh) 
         {
             if (showDebugInfo) Debug.LogWarning($"[CustomerController]: {gameObject.name} NavMeshAgent 문제!");
             return false;
@@ -405,7 +408,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     }
     
     /// <summary>
-    /// 손님 디스폰
+    /// 🔧 Despawn - 안전성 강화
     /// </summary>
     public void Despawn() 
     { 
@@ -426,18 +429,18 @@ public class CustomerController : MonoBehaviour, IPoolable
     #region IPoolable
 
     /// <summary>
-    /// 풀에서 가져온 후 데이터로 초기화
+    /// 🔧 풀에서 가져온 후 데이터로 초기화 - 순서 개선
     /// </summary>
     public void InitializeFromPool(CustomerData customerData)
     {
-        if (!customerData)
+        if (customerData == null)
         {
             Debug.LogError($"[CustomerController]: {gameObject.name} customerData가 null입니다!");
             return;
         }
         
         currentData = customerData;
-        hasLeftRestaurant = false;
+        hasLeftRestaurant = false; // 🔧 우선 리셋
         
         SetupNavMeshAgent();
         SetupCustomerData();
@@ -453,13 +456,13 @@ public class CustomerController : MonoBehaviour, IPoolable
     }
 
     /// <summary>
-    /// 풀로 반환 시 정리
+    /// 🔧 풀로 반환 시 정리 - Queue 시스템만 사용
     /// </summary>
     public void OnReturnToPool()
     {
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 풀로 반환");
         
-        // 예약된 작업들 취소
+        // 🔧 예약된 작업들 취소
         CancelInvoke();
         StopAllCoroutines();
         
@@ -475,7 +478,7 @@ public class CustomerController : MonoBehaviour, IPoolable
             navAgent.isStopped = true;
         }
         
-        // Queue 정리
+        // 🔧 Queue 시스템에서 제거 - null 체크 추가
         if (CustomerSpawner.Instance != null)
         {
             CustomerSpawner.Instance.RemoveCustomerFromQueue(this);
@@ -487,6 +490,7 @@ public class CustomerController : MonoBehaviour, IPoolable
             CustomerSpawner.Instance.ReleaseSeat(assignedSeatPosition);
         }
         
+        // 🔧 큐 관련 데이터 정리
         currentQueuePosition = Vector3.zero;
         isMovingToNewQueuePosition = false;
         
@@ -495,7 +499,7 @@ public class CustomerController : MonoBehaviour, IPoolable
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
         
-        // 데이터 완전 초기화
+        // 🔧 데이터 완전 초기화
         ResetCustomerData();
         currentData = null;
     }
@@ -504,7 +508,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     {
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 풀에서 삭제");
         
-        // 정리 작업
+        // 🔧 정리 작업
         CancelInvoke();
         StopAllCoroutines();
     }

@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 public class CustomerSpawner : Singleton<CustomerSpawner>
 {
     [Header("스폰 세팅")]
-    [SerializeField] private float minSpawnInterval = 3f;
+    [SerializeField] private float minSpawnInterval = 2f;
     [SerializeField] private float maxSpawnInterval = 5f;
     [SerializeField] private int maxCustomers = 10;
     [SerializeField] private Transform[] spawnPoints;
@@ -22,11 +22,7 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     [SerializeField] private Transform[] seatPoints;
     [SerializeField] private bool[] seatOccupied;
     
-    // 줄서기
-    [SerializeField] private Transform[] linePoints;
-    [SerializeField] private bool[] lineOccupied;
-    
-    [Header("Queue Management")]
+    [Header("줄 서기")]
     [SerializeField] private Transform queueStartPosition;
     [SerializeField] private float queueSpacing = 1f;
     [SerializeField] private int maxQueueLength = 6;
@@ -40,8 +36,8 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     [SerializeField] private List<string> customerDataIds = new List<string>();
     
     [Header("스폰 확률 - 임시")]
-    [SerializeField] private float normalCustomerChance = 1f;
-    [SerializeField] private float rareCustomerChance = 0f;
+    [SerializeField] private float normalCustomerChance = 0.6f;
+    [SerializeField] private float rareCustomerChance = 0.2f;
     
     [Header("Debug")]
     [SerializeField] private bool autoSpawn = true;
@@ -83,7 +79,7 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     #region 초기화
     
     /// <summary>
-    /// 배열 초기화
+    /// 배열들 초기화
     /// </summary>
     private void InitializeArrays()
     {
@@ -96,17 +92,11 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
             }
         }
         
-        if (linePoints != null && linePoints.Length > 0)
-        {
-            lineOccupied = new bool[linePoints.Length];
-            for (int i = 0; i < lineOccupied.Length; i++)
-            {
-                lineOccupied[i] = false;
-            }
-        }
+        waitingQueue.Clear();
+        customerQueuePositions.Clear();
         
         if (showDebugInfo)
-            Debug.Log($"[CustomerSpawner]: 배열 초기화 완료 - 좌석: {seatPoints?.Length ?? 0}, 줄: {linePoints?.Length ?? 0}");
+            Debug.Log($"[CustomerSpawner]: 배열 초기화 완료 - 좌석: {seatPoints?.Length ?? 0}, 최대 큐 길이: {maxQueueLength}");
     }
     
     #endregion
@@ -134,7 +124,6 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     /// </summary>
     public bool AssignSeatToCustomer(CustomerController customer)
     {
-        // 좌석 할당 동시에 못 하게
         if (isAssigningSeat)
         {
             return false;
@@ -146,7 +135,7 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
         {
             if (seatPoints == null || seatPoints.Length == 0 || seatOccupied == null)
             {
-                Debug.LogWarning("[CustomerSpawner]: 사용가능 좌석 없음 - 배열이 초기화되지 않음");
+                Debug.LogWarning("[CustomerSpawner]: 사용가능 좌석 없음 !!!");
                 return false;
             }
             
@@ -190,6 +179,8 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
         // 줄 위치 계산 및 할당
         Vector3 queuePosition = CalculateQueuePosition(waitingQueue.Count - 1);
         customerQueuePositions[customer] = queuePosition;
+        
+        customer.UpdateQueuePosition(queuePosition);
         
         if (showDebugInfo) Debug.Log($"[CustomerSpawner]: 줄 {waitingQueue.Count}번째에 합류 (위치: {queuePosition})");
         
@@ -251,7 +242,7 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
         for (int i = 0; i < queueArray.Length; i++)
         {
             var customer = queueArray[i];
-            if (!customer) continue; // 🔧 null 체크
+            if (!customer) continue;
             
             Vector3 newPosition = CalculateQueuePosition(i);
             customerQueuePositions[customer] = newPosition;
@@ -264,7 +255,8 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     }
     
     /// <summary>
-    /// 줄 위치 계산
+    /// 줄 위치 계산 - 동적 Queue 시스템
+    /// queueStartPosition에서 시작해서 뒤로 queueSpacing만큼 간격으로 배치
     /// </summary>
     private Vector3 CalculateQueuePosition(int queueIndex)
     {
@@ -286,7 +278,7 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     {
         if (waitingQueue.Count > 0)
         {
-            return waitingQueue.Peek(); // 첫 번째 손님 반환 (제거하지 않음)
+            return waitingQueue.Peek(); // 첫 번째 손님 반환
         }
         return null;
     }
@@ -313,7 +305,7 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     }
     
     /// <summary>
-    /// 좌석 해제 - 안전성 강화
+    /// 좌석 해제
     /// </summary>
     public void ReleaseSeat(Vector3 seatPosition)
     {
@@ -344,56 +336,24 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
         }
         return availableCount;
     }
-    
-    
+
     /// <summary>
-    /// 줄서기 위치 해제
-    /// </summary>
-    public void ReleaseLinePosition(Vector3 linePosition)
-    {
-        if (linePoints == null || lineOccupied == null) return;
-        
-        for (int i = 0; i < linePoints.Length; i++)
-        {
-            if (linePoints[i] != null && Vector3.Distance(linePoints[i].position, linePosition) < 0.1f)
-            {
-                lineOccupied[i] = false;
-                if (showDebugInfo) Debug.Log($"[CustomerSpawner]: 줄서기 위치 {i} 해제됨");
-                break;
-            }
-        }
-    }
-    
-    /// <summary>
-    /// 사용 가능한 줄서기 위치 수
-    /// </summary>
-    public int GetAvailableLinePositionCount()
-    {
-        return lineOccupied?.Count(occupied => !occupied) ?? 0;
-    }
-    
-    /// <summary>
-    /// 모든 줄서기 위치 해제
+    /// 모든 대기줄 정리
     /// </summary>
     public void ClearAllWaitingLines()
     {
-        if (lineOccupied != null)
-        {
-            for (int i = 0; i < lineOccupied.Length; i++)
-            {
-                lineOccupied[i] = false;
-            }
-        }
-        
-        // 큐 시스템도 정리
+        // Queue 시스템 정리
         waitingQueue.Clear();
         customerQueuePositions.Clear();
         
         if (showDebugInfo) Debug.Log("[CustomerSpawner]: 모든 대기줄 정리됨");
     }
     
-    // public getters
+    // public getters - Queue 시스템 전용
     public int TotalSeatCount => seatPoints?.Length ?? 0;
+    public int CurrentQueueLength => waitingQueue.Count;
+    public int MaxQueueLength => maxQueueLength;
+    public bool IsQueueFull => waitingQueue.Count >= maxQueueLength;
     
     #endregion
     
