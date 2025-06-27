@@ -161,7 +161,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// <summary>
     /// J 키를 누르는 동안 호출
     /// </summary>
-    public void Interact(PlayerInventory playerInventory)
+    public void Interact(PlayerInventory playerInventory, InteractionType interactionType)
     {
         // 재료가 없거나 화면상의 오브젝트가 없으면 타이머 리셋 후 종료
         if (currentFoodData == null || placedIngredientObj == null)
@@ -182,17 +182,24 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             return;
         }
 
-        // 조리 타이머 감소 후 UI 업데이트
-        currentCookingTime -= Time.deltaTime;
-        UpdateCookingTimeText();
-
-        // 타이머 종료 시 재료 가공 처리
-        if (currentCookingTime <= 0f)
+        if (interactionType == InteractionType.Use)
         {
-            ProcessIngredient(currentMenuData);
-            currentFoodData = null;
-            currentCookingTime = cookingTime;
-            currentIngredients.Clear();
+            // 조리 타이머 감소 후 UI 업데이트
+            currentCookingTime -= Time.deltaTime;
+            UpdateCookingTimeText();
+
+            // 타이머 종료 시 재료 가공 처리
+            if (currentCookingTime <= 0f)
+            {
+                ProcessIngredient(currentMenuData);
+                currentFoodData = null;
+                currentCookingTime = cookingTime;
+                currentIngredients.Clear();
+            }
+        }
+        else
+        {
+            Debug.Log("[PassiveStation] InteractionType.Use가 아니므로 무시됩니다.");
         }
     }
 
@@ -226,14 +233,11 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             return false;
         }
 
-        if (neededIngredients != null && !neededIngredients.Contains(data))
-        {
-            Debug.Log($"[Shelf] '{data.displayName}'는 요구되는 재료 그룹에 포함되어 있지 않아 배치할 수 없습니다.");
-            return false;
-        }
+        //허용 목록이 비어있거나 포함되어 있으면 배치 허용
+        if (neededIngredients == null || neededIngredients.GetCount() == 0 || neededIngredients.Contains(data))
+            return true;
 
-        Debug.Log($"[Shelf] '{data.displayName}' 배치 가능");
-        return true;
+        return false;
     }
 
     /// <summary>
@@ -294,7 +298,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     {
         if (placedIngredientObj != null)
         {
-            Destroy(placedIngredientObj);
             placedIngredientObj = null;
         }
 

@@ -758,18 +758,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5477133094914473198, guid: e10424358903518488a54f5771ad2347, type: 3}
-      propertyPath: m_Color.b
-      value: 0.16862746
-      objectReference: {fileID: 0}
-    - target: {fileID: 5477133094914473198, guid: e10424358903518488a54f5771ad2347, type: 3}
-      propertyPath: m_Color.g
-      value: 0.83137256
-      objectReference: {fileID: 0}
-    - target: {fileID: 5477133094914473198, guid: e10424358903518488a54f5771ad2347, type: 3}
-      propertyPath: m_Color.r
-      value: 0.8264728
-      objectReference: {fileID: 0}
     - target: {fileID: 9105805640978016393, guid: e10424358903518488a54f5771ad2347, type: 3}
       propertyPath: m_Name
       value: Shelf
@@ -847,6 +835,7 @@ MonoBehaviour:
   slotOffsetDown: {x: 0, y: -0.5}
   slotOffsetLeft: {x: -0.5, y: 0}
   slotOffsetRight: {x: 0.5, y: 0}
+  interactionType: 0
 --- !u!1001 &4922761495561489900
 PrefabInstance:
   m_ObjectHideFlags: 0

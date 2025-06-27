@@ -64,7 +64,7 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     }
 
     // 자동 스테이션은 플레이어 입력 없이 동작하므로 비워둠
-    public void Interact(PlayerInventory playerInventory) { }
+    public void Interact(PlayerInventory playerInventory, InteractionType interactionType) { }
 
     /// <summary>
     /// 플레이어가 재료를 내려놓았을 때 호출됨
@@ -188,17 +188,15 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     {
         if (currentFoodData != null)
         {
-            Debug.Log("[AutomaticStation] 이미 재료가 배치되어 있어 추가할 수 없습니다.");
+            Debug.Log("[Shelf] 현재 선반에 이미 재료가 배치되어 있어 추가할 수 없습니다.");
             return false;
         }
 
-        if (neededIngredients != null && !neededIngredients.Contains(data))
-        {
-            Debug.Log($"[AutomaticStation] '{data.displayName}'는 요구되는 재료 그룹에 포함되어 있지 않습니다.");
-            return false;
-        }
+        //허용 목록이 비어있거나 포함되어 있으면 배치 허용
+        if (neededIngredients == null || neededIngredients.GetCount() == 0 || neededIngredients.Contains(data))
+            return true;
 
-        return true;
+        return false;
     }
 
     /// <summary>
@@ -278,7 +276,6 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     {
         if (placedIngredientObj != null)
         {
-            Destroy(placedIngredientObj);
             placedIngredientObj = null;
         }
 

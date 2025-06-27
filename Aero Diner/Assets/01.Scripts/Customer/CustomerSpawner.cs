@@ -1,9 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class CustomerSpawner : Singleton<CustomerSpawner>
@@ -29,7 +27,7 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     
     // 줄서기 큐 (앞에서부터 순서대로)
     private Queue<CustomerController> waitingQueue = new Queue<CustomerController>();
-    private Dictionary<CustomerController, Vector3> customerQueuePositions = new Dictionary<CustomerController, Vector3>();
+    private readonly Dictionary<CustomerController, Vector3> customerQueuePositions = new Dictionary<CustomerController, Vector3>();
     private bool isAssigningSeat;
     
     [Header("손님 타입 리스트 (자동 로드됨)")]
@@ -286,7 +284,7 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     /// <summary>
     /// 스폰 가능 여부
     /// </summary>
-    public bool CanSpawnNewCustomer()
+    private bool CanSpawnNewCustomer()
     {
         // 좌석이 있으면 바로 스폰 가능
         if (GetAvailableSeatCount() > 0)
@@ -340,7 +338,7 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     /// <summary>
     /// 모든 대기줄 정리
     /// </summary>
-    public void ClearAllWaitingLines()
+    private void ClearAllWaitingLines()
     {
         // Queue 시스템 정리
         waitingQueue.Clear();
@@ -392,7 +390,7 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
         }
     }
 
-    public void SpawnRandomCustomer()
+    private void SpawnRandomCustomer()
     {
         if (spawnPoints == null || spawnPoints.Length == 0)
         {
@@ -440,9 +438,8 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     private CustomerData FindCustomerByRarity(CustomerRarity rarity)
     {
         var availableCustomers = PoolManager.Instance.AvailableCustomers;
-        if (availableCustomers == null) return null;
 
-        return availableCustomers.FirstOrDefault(customerData => customerData && customerData.rarity == rarity);
+        return availableCustomers?.FirstOrDefault(customerData => customerData && customerData.rarity == rarity);
     }
     
     #endregion
