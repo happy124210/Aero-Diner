@@ -2,16 +2,10 @@
 
 public class UITracker : MonoBehaviour
 {
-    public static UITracker Instance;
 
     public bool IsPauseOpen { get; private set; }
     public bool IsOptionOpen { get; private set; }
 
-    private void Awake()
-    {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
 
     private void OnEnable()
     {

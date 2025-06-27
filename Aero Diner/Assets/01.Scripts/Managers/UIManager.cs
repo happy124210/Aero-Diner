@@ -1,14 +1,26 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class UIManager : Singleton<UIManager>
 {
-    [SerializeField] private GameObject pausePanel;
-    [SerializeField] private GameObject optionPanel;
-    [SerializeField] private GameObject soundPanel;
-    [SerializeField] private GameObject videoPanel;
-    [SerializeField] private GameObject controlPanel;
+    [Header("패널들")]
+    public GameObject pausePanel;
+    public GameObject optionPanel;
+    public GameObject soundPanel;
+    public GameObject videoPanel;
+    public GameObject controlPanel;
+
+    [Header("설정 컴포넌트들")]
+    public VolumeHandler volumeHandler;
+    public VideoSettingPanel videoSettingPanel;
+    public KeyRebindManager keyRebindManager;
+    public UIExitPopup uiExitPopup;
+    public SavePopupFader savePopupFader;
+    public UIInputHandler uiInputHandler;
+    public UITracker uiTracker;
+    public OptionBtn optionBtn;
+
+
 
     private void OnEnable()
     {
@@ -24,47 +36,44 @@ public class UIManager : Singleton<UIManager>
     {
         string currentScene = SceneManager.GetActiveScene().name;
         bool isStartScene = currentScene == "StartScene";
+
         switch (eventType)
         {
             case UIEventType.OpenPause:
                 if (pausePanel) pausePanel.SetActive(true);
                 break;
-
             case UIEventType.ClosePause:
                 if (pausePanel) pausePanel.SetActive(false);
                 break;
-
             case UIEventType.OpenOption:
-                pausePanel.SetActive(false);
-                optionPanel.SetActive(true);
-                soundPanel.SetActive(true); // 기본 탭: 사운드
-                videoPanel.SetActive(false);
-                controlPanel.SetActive(false);
+                pausePanel?.SetActive(false);
+                optionPanel?.SetActive(true);
+                soundPanel?.SetActive(true);
+                videoPanel?.SetActive(false);
+                controlPanel?.SetActive(false);
                 break;
             case UIEventType.CloseOption:
-                if (!isStartScene && pausePanel) pausePanel.SetActive(true);
-                if (optionPanel) optionPanel.SetActive(false);
-                if (soundPanel) soundPanel.SetActive(false);
-                if (videoPanel) videoPanel.SetActive(false);
-                if (controlPanel) controlPanel.SetActive(false);
+                if (!isStartScene) pausePanel?.SetActive(true);
+                optionPanel?.SetActive(false);
+                soundPanel?.SetActive(false);
+                videoPanel?.SetActive(false);
+                controlPanel?.SetActive(false);
                 break;
-
             case UIEventType.ShowSoundTab:
-                soundPanel.SetActive(true);
-                videoPanel.SetActive(false);
-                controlPanel.SetActive(false);
+                soundPanel?.SetActive(true);
+                videoPanel?.SetActive(false);
+                controlPanel?.SetActive(false);
                 break;
             case UIEventType.ShowVideoTab:
-                soundPanel.SetActive(false);
-                videoPanel.SetActive(true);
-                controlPanel.SetActive(false);
+                soundPanel?.SetActive(false);
+                videoPanel?.SetActive(true);
+                controlPanel?.SetActive(false);
                 break;
             case UIEventType.ShowControlTab:
-                soundPanel.SetActive(false);
-                videoPanel.SetActive(false);
-                controlPanel.SetActive(true);
+                soundPanel?.SetActive(false);
+                videoPanel?.SetActive(false);
+                controlPanel?.SetActive(true);
                 break;
-
         }
     }
 }

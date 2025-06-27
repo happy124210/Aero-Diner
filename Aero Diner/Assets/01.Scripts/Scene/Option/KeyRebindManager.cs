@@ -4,15 +4,10 @@ using UnityEngine;
 public class KeyRebindManager : MonoBehaviour
 {
     [SerializeField] private List<KeyRebindButton> rebindButtons;
-    public static KeyRebindManager Instance { get; private set; }
 
     private bool isSaved = false;
 
-    private void Awake()
-    {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
+
     public bool HasUnsavedChanges()
     {
         foreach (var btn in rebindButtons)
