@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
 
-public class UIManager : MonoBehaviour
+public class UIManager : Singleton<UIManager>
 {
-    public static UIManager Instance { get; private set; }
-
     [Header("패널들")]
     public GameObject pausePanel;
     public GameObject optionPanel;
@@ -21,11 +19,7 @@ public class UIManager : MonoBehaviour
     public UITracker uiTracker;
     public OptionBtn optionBtn;
 
-    private void Awake()
-    {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
+
 
     private void OnEnable()
     {
