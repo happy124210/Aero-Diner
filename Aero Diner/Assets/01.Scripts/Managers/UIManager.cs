@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -33,7 +34,7 @@ public class UIManager : Singleton<UIManager>
 
     private void HandleUIEvent(UIEventType eventType, object payload)
     {
-        string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+        string currentScene = SceneManager.GetActiveScene().name;
         bool isStartScene = currentScene == "StartScene";
 
         switch (eventType)
