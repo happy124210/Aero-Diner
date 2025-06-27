@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7093391528172663533}
   - component: {fileID: 8804818452520398763}
   m_Layer: 5
-  m_Name: Timer Background
+  m_Name: Img_TimerBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -66,7 +66,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 3
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 6720717089773933260}
   - component: {fileID: 8232539174551608229}
   m_Layer: 5
-  m_Name: Patience Canvas
+  m_Name: Group_Customer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -137,7 +137,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 100
   m_TargetDisplay: 0
 --- !u!114 &6720717089773933260
 MonoBehaviour:
@@ -191,7 +191,7 @@ GameObject:
   - component: {fileID: 1507025387112830209}
   - component: {fileID: 3569666337585117268}
   m_Layer: 5
-  m_Name: Patience Timer
+  m_Name: Img_PatienceTimer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -266,7 +266,7 @@ GameObject:
   - component: {fileID: 2689966083514787966}
   - component: {fileID: 3525487760294110372}
   m_Layer: 5
-  m_Name: Order Bubble
+  m_Name: Img_OrderBubble
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -377,7 +377,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef9a20ea1a69060438a4232c70708316, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentData: {fileID: 11400000, guid: 1265474c0d37a144d83fccaf01ecfb60, type: 2}
+  currentData: {fileID: 0}
+  customerUI: {fileID: 5070177583603407402}
+  orderBubble: {fileID: 3525487760294110372}
+  patienceTimer: {fileID: 3569666337585117268}
   showDebugInfo: 0
   currentNodeName: 
 --- !u!195 &7523355939073356595
@@ -498,7 +501,7 @@ GameObject:
   - component: {fileID: 5648719012458928633}
   - component: {fileID: 2427870675454214473}
   m_Layer: 5
-  m_Name: Debug Text
+  m_Name: Tmp_DebugText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

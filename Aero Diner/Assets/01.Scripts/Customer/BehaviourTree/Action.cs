@@ -15,7 +15,7 @@ public class MoveToEntrance : BaseNode
     {
         if (!customer)
         {
-            Debug.LogError($"[{NodeName}]: customer가 null입니다!");
+            Debug.LogError($"[{NodeName}]: customerController 없음 !!!");
             return NodeState.Failure;
         }
         
@@ -25,11 +25,10 @@ public class MoveToEntrance : BaseNode
             
             if (destination == Vector3.zero)
             {
-                Debug.LogError($"[{NodeName}]: Invalid entrance position!");
+                Debug.LogError($"[{NodeName}]: 입구 위치 없음 !!!");
                 return NodeState.Failure;
             }
             
-            Debug.Log($"[{NodeName}]: Customer moving to entrance at {destination}");
             customer.SetDestination(destination);
             hasStartedMoving = true;
             
@@ -40,7 +39,6 @@ public class MoveToEntrance : BaseNode
         if (customer.HasReachedDestination())
         {
             customer.SetAnimationState(CustomerAnimState.Idle);
-            Debug.Log($"[{NodeName}]: Customer arrived at entrance");
             return NodeState.Success;
         }
         
@@ -53,6 +51,164 @@ public class MoveToEntrance : BaseNode
     }
 }
 
+/// <summary>
+/// 줄서기 노드
+/// </summary>
+public class WaitInLine : BaseNode
+{
+    public override string NodeName => "WaitInLine";
+    
+    private enum State { JoiningQueue, WaitingInQueue, MovingInQueue }
+    private State currentState = State.JoiningQueue;
+    private float seatCheckTimer;
+    private const float SEAT_CHECK_INTERVAL = 1f;
+    
+    public WaitInLine(CustomerController customer) : base(customer) { }
+    
+    public override NodeState Execute()
+    {
+        if (!customer)
+        {
+            Debug.LogError($"[{NodeName}]: customer가 null입니다!");
+            return NodeState.Failure;
+        }
+        
+        // 인내심 체크
+        if (!customer.HasPatience())
+        {
+            Debug.Log($"[{NodeName}]: 줄 기다리는 중에 인내심 소진됨");
+            return NodeState.Failure;
+        }
+        
+        switch (currentState)
+        {
+            case State.JoiningQueue:
+                return HandleJoiningQueue();
+                
+            case State.WaitingInQueue:
+                return HandleWaitingInQueue();
+                
+            case State.MovingInQueue:
+                return HandleMovingInQueue();
+        }
+        
+        return NodeState.Failure;
+    }
+    
+    private NodeState HandleJoiningQueue()
+    {
+        if (!CustomerSpawner.Instance)
+        {
+            Debug.LogError($"[{NodeName}]: CustomerSpawner.Instance가 null입니다!");
+            return NodeState.Failure;
+        }
+        
+        // 줄에 합류 시도
+        bool joinedQueue = CustomerSpawner.Instance.AddCustomerToQueue(customer);
+        
+        if (!joinedQueue)
+        {
+            Debug.LogWarning($"[{NodeName}]: 줄이 꽉 찼음");
+            return NodeState.Failure;
+        }
+        
+        Vector3 queuePosition = customer.GetCurrentQueuePosition();
+        if (queuePosition == Vector3.zero)
+        {
+            Debug.LogError($"[{NodeName}]: 줄 위치를 얻지 못함!");
+            return NodeState.Failure;
+        }
+        
+        Debug.Log($"[{NodeName}]: 줄로 이동 중... {queuePosition}");
+        customer.SetDestination(queuePosition);
+        currentState = State.WaitingInQueue;
+        
+        return NodeState.Running;
+    }
+    
+    /// <summary>
+    /// 줄 기다리는 큐 담당
+    /// </summary>
+    private NodeState HandleWaitingInQueue()
+    {
+        // 줄 위치 도착 체크
+        if (!customer.HasReachedDestination())
+        {
+            // 타이머 시작
+            customer.StartPatienceTimer();
+            return NodeState.Running;
+        }
+        
+        // 줄에서 앞으로 이동해야 하는지 체크
+        if (!customer.HasReachedQueuePosition())
+        {
+            currentState = State.MovingInQueue;
+            return NodeState.Running;
+        }
+        
+        customer.SetAnimationState(CustomerAnimState.Idle);
+        
+        // 주기적으로 좌석 확인 (줄의 맨 앞에 있을 때만)
+        seatCheckTimer += Time.deltaTime;
+        
+        if (seatCheckTimer >= SEAT_CHECK_INTERVAL)
+        {
+            seatCheckTimer = 0f;
+
+            if (!CustomerSpawner.Instance)
+            {
+                Debug.LogError($"[{NodeName}]: CustomerSpawner.Instance가 null입니다!");
+                return NodeState.Failure;
+            }
+            
+            // 내가 줄의 맨 앞에 있는지 확인
+            var nextCustomer = CustomerSpawner.Instance.GetNextCustomerInQueue();
+            if (nextCustomer == customer)
+            {
+                Debug.Log($"[{NodeName}]: 줄 맨 앞에서 좌석 확인 중");
+                
+                // 좌석 확인
+                if (customer.HasAvailableSeat())
+                {
+                    customer.StopPatienceTimer();
+                    Debug.Log($"[{NodeName}]: 줄에서 좌석 발견. 좌석으로 이동.");
+                    
+                    // 줄에서 제거
+                    CustomerSpawner.Instance.RemoveCustomerFromQueue(customer);
+                    
+                    return NodeState.Success; // 좌석 찾음
+                }
+                
+                Debug.Log($"[{NodeName}]: 아직 좌석 없음, 계속 대기");
+            }
+            else
+            {
+                Debug.Log($"[{NodeName}]: 줄에서 대기 중");
+            }
+        }
+        
+        return NodeState.Running; // 계속 기다리기
+    }
+    
+    private NodeState HandleMovingInQueue()
+    {
+        // 새로운 줄 위치로 이동 완료 체크
+        if (customer.HasReachedQueuePosition())
+        {
+            Debug.Log($"[{NodeName}]: 새로운 줄 위치 도착");
+            currentState = State.WaitingInQueue;
+            seatCheckTimer = 0f; // 좌석 체크 타이머 리셋
+        }
+        
+        return NodeState.Running;
+    }
+    
+    public override void Reset()
+    {
+        currentState = State.JoiningQueue;
+        seatCheckTimer = 0f;
+    }
+}
 
 /// <summary>
 /// 할당된 좌석으로 이동
@@ -109,42 +265,6 @@ public class MoveToSeat : BaseNode
 }
 
 /// <summary>
-/// 대기시간 잔여시간 체크
-/// </summary>
-public class CheckWaitingTime : BaseNode
-{
-    public override string NodeName => "CheckWaitingTime";
-    
-    public CheckWaitingTime(CustomerController customer) : base(customer) { }
-    
-    public override NodeState Execute()
-    {
-        // customer null 체크 추가
-        if (!customer)
-        {
-            Debug.LogError($"[{NodeName}]: customerController 없음 !!!");
-            return NodeState.Failure;
-        }
-        
-        // 결제 완료 후에는 인내심 체크 생략
-        if (customer.IsPaymentCompleted())
-        {
-            Debug.Log($"[{NodeName}]: 결제 완료");
-            return NodeState.Success;
-        }
-        
-        // 인내심 체크
-        if (!customer.HasPatience())
-        {
-            Debug.Log($"[{NodeName}]: 인내심 한계");
-            return NodeState.Failure;
-        }
-        
-        return NodeState.Success;
-    }
-}
-
-/// <summary>
 /// 빈 좌석이 있는지 체크 및 할당
 /// </summary>
 public class CheckAvailableSeat : BaseNode
@@ -181,168 +301,8 @@ public class CheckAvailableSeat : BaseNode
     }
 }
 
-
 /// <summary>
-/// 줄서기 노드
-/// </summary>
-public class WaitInLine : BaseNode
-{
-    public override string NodeName => "WaitInLine";
-    
-    private enum State { JoiningQueue, WaitingInQueue, MovingInQueue }
-    private State currentState = State.JoiningQueue;
-    private float seatCheckTimer;
-    private const float SEAT_CHECK_INTERVAL = 1f;
-    
-    public WaitInLine(CustomerController customer) : base(customer) { }
-    
-    public override NodeState Execute()
-    {
-        // customer null 체크 추가
-        if (!customer)
-        {
-            Debug.LogError($"[{NodeName}]: customer가 null입니다!");
-            return NodeState.Failure;
-        }
-        
-        // 인내심 체크
-        if (!customer.HasPatience())
-        {
-            Debug.Log($"[{NodeName}]: Customer out of patience while waiting in line!");
-            return NodeState.Failure;
-        }
-        
-        switch (currentState)
-        {
-            case State.JoiningQueue:
-                return HandleJoiningQueue();
-                
-            case State.WaitingInQueue:
-                return HandleWaitingInQueue();
-                
-            case State.MovingInQueue:
-                return HandleMovingInQueue();
-        }
-        
-        return NodeState.Failure;
-    }
-    
-    private NodeState HandleJoiningQueue()
-    {
-        if (!CustomerSpawner.Instance)
-        {
-            Debug.LogError($"[{NodeName}]: CustomerSpawner.Instance가 null입니다!");
-            return NodeState.Failure;
-        }
-        
-        // 줄에 합류 시도
-        bool joinedQueue = CustomerSpawner.Instance.AddCustomerToQueue(customer);
-        
-        if (!joinedQueue)
-        {
-            Debug.LogWarning($"[{NodeName}]: 줄이 꽉 찼음");
-            return NodeState.Failure;
-        }
-        
-        // 줄 위치가 제대로 설정될 때까지 대기
-        Vector3 queuePosition = customer.GetCurrentQueuePosition();
-        if (queuePosition == Vector3.zero)
-        {
-            Debug.LogError($"[{NodeName}]: 줄 위치를 얻지 못함!");
-            return NodeState.Failure;
-        }
-        
-        Debug.Log($"[{NodeName}]: 줄로 이동 중... {queuePosition}");
-        customer.SetDestination(queuePosition);
-        currentState = State.WaitingInQueue;
-        
-        return NodeState.Running;
-    }
-    
-    /// <summary>
-    /// 줄 기다리는 큐 담당
-    /// </summary>
-    private NodeState HandleWaitingInQueue()
-    {
-        // 줄 위치 도착 체크
-        if (!customer.HasReachedDestination())
-        {
-            return NodeState.Running;
-        }
-        
-        // 줄에서 앞으로 이동해야 하는지 체크
-        if (!customer.HasReachedQueuePosition())
-        {
-            currentState = State.MovingInQueue;
-            return NodeState.Running;
-        }
-        
-        customer.SetAnimationState(CustomerAnimState.Idle);
-        
-        // 주기적으로 좌석 확인 (줄의 맨 앞에 있을 때만)
-        seatCheckTimer += Time.deltaTime;
-        
-        if (seatCheckTimer >= SEAT_CHECK_INTERVAL)
-        {
-            seatCheckTimer = 0f;
-            
-            // 🔧 CustomerSpawner null 체크
-            if (!CustomerSpawner.Instance)
-            {
-                Debug.LogError($"[{NodeName}]: CustomerSpawner.Instance가 null입니다!");
-                return NodeState.Failure;
-            }
-            
-            // 내가 줄의 맨 앞에 있는지 확인
-            var nextCustomer = CustomerSpawner.Instance.GetNextCustomerInQueue();
-            if (nextCustomer == customer)
-            {
-                Debug.Log($"[{NodeName}]: 줄 맨 앞에서 좌석 확인 중");
-                
-                // 좌석 확인
-                if (customer.HasAvailableSeat())
-                {
-                    Debug.Log($"[{NodeName}]: 줄에서 좌석 발견. 좌석으로 이동.");
-                    
-                    // 줄에서 제거
-                    CustomerSpawner.Instance.RemoveCustomerFromQueue(customer);
-                    
-                    return NodeState.Success; // 좌석 찾음
-                }
-                
-                Debug.Log($"[{NodeName}]: 아직 좌석 없음, 계속 대기");
-            }
-            else
-            {
-                Debug.Log($"[{NodeName}]: 줄에서 대기 중");
-            }
-        }
-        
-        return NodeState.Running; // 계속 기다리기
-    }
-    
-    private NodeState HandleMovingInQueue()
-    {
-        // 새로운 줄 위치로 이동 완료 체크
-        if (customer.HasReachedQueuePosition())
-        {
-            Debug.Log($"[{NodeName}]: 새로운 줄 위치 도착");
-            currentState = State.WaitingInQueue;
-            seatCheckTimer = 0f; // 타이머 리셋
-        }
-        
-        return NodeState.Running;
-    }
-    
-    public override void Reset()
-    {
-        currentState = State.JoiningQueue;
-        seatCheckTimer = 0f;
-    }
-}
-
-/// <summary>
-/// 주문받기
+/// 주문하기
 /// </summary>
 public class TakeOrder : BaseNode
 {
@@ -373,6 +333,7 @@ public class TakeOrder : BaseNode
         if (customer.IsFoodServed())
         {
             Debug.Log($"[{NodeName}]: Food served! Starting to eat...");
+            customer.StopPatienceTimer();
             customer.StartEating();
             return NodeState.Success;
         }
@@ -402,7 +363,6 @@ public class Payment : BaseNode
     
     public override NodeState Execute()
     {
-        // customer null 체크 추가
         if (!customer)
         {
             Debug.LogError($"[{NodeName}]: customer가 null입니다!");
