@@ -9,6 +9,8 @@ public class UIManager : Singleton<UIManager>
     public GameObject soundPanel;
     public GameObject videoPanel;
     public GameObject controlPanel;
+    public GameObject menuPanel3;
+    public GameObject menuPanel4;
 
     [Header("설정 컴포넌트들")]
     public VolumeHandler volumeHandler;
@@ -73,6 +75,27 @@ public class UIManager : Singleton<UIManager>
                 soundPanel?.SetActive(false);
                 videoPanel?.SetActive(false);
                 controlPanel?.SetActive(true);
+                break;
+            case UIEventType.ShowStartMenuWithSave:
+                menuPanel4.SetActive(true);
+                break;
+
+            case UIEventType.ShowStartMenuNoSave:
+                menuPanel3.SetActive(true);
+                break;
+            // UIManager.cs 내부 HandleUIEvent(UIEventType eventType, object payload)
+            case UIEventType.LoadMainScene:
+                FadeManager.Instance.FadeOutAndLoadSceneWithLoading("MainScene");
+                break;
+
+            case UIEventType.QuitGame:
+                Debug.Log("게임 종료 요청됨");
+
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit();
+#endif
                 break;
         }
     }

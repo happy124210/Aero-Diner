@@ -5,14 +5,10 @@ using UnityEngine.UI;
 
 public class PressAnyKeyBlinker : MonoBehaviour
 {
-    [SerializeField] private Image pressAnyKeyImage; 
+    [SerializeField] private Image pressAnyKeyImage;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private float blinkInterval = 0.5f;
     [SerializeField] private float fadeOutDuration = 1f;
-
-    [Header("Menu Panels")]
-    [SerializeField] private GameObject menuPanel3;
-    [SerializeField] private GameObject menuPanel4;
 
     private bool inputDetected = false;
 
@@ -29,7 +25,7 @@ public class PressAnyKeyBlinker : MonoBehaviour
         {
             inputDetected = true;
             StopAllCoroutines();
-            FadeOutAndShowMenu();
+            FadeOutAndRaiseUIEvent();
         }
     }
 
@@ -42,20 +38,20 @@ public class PressAnyKeyBlinker : MonoBehaviour
         }
     }
 
-    private void FadeOutAndShowMenu()
+    private void FadeOutAndRaiseUIEvent()
     {
         canvasGroup.DOFade(0f, fadeOutDuration)
             .OnComplete(() =>
             {
-                Debug.Log("Fade 완료. 메뉴 표시 시작");
+                Debug.Log("Fade 완료. 이벤트 발생");
 
                 if (HasSavedGame())
                 {
-                    menuPanel4.SetActive(true);
+                    EventBus.Raise(UIEventType.ShowStartMenuWithSave);
                 }
                 else
                 {
-                    menuPanel3.SetActive(true);
+                    EventBus.Raise(UIEventType.ShowStartMenuNoSave);
                 }
 
                 pressAnyKeyImage.enabled = false;
