@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class VideoSettingPanel : MonoBehaviour
 {
-    public static VideoSettingPanel Instance { get; private set; }
 
     public TMP_Text screenModeText;
     public TMP_Text resolutionText;
@@ -43,12 +42,6 @@ public class VideoSettingPanel : MonoBehaviour
         new Vector2Int(1920, 1080)
     };
     
-    private void Awake()
-    {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
-
     private void Start()
     {
         // 현재 설정값을 기준으로 original 저장

@@ -5,7 +5,7 @@ public class UIInputHandler : MonoBehaviour
 {
     public void HandleEscapeLikeAction()
     {
-        var tracker = UITracker.Instance;
+        var tracker = UIManager.Instance.uiTracker;
         if (tracker == null) return;
 
         string currentScene = SceneManager.GetActiveScene().name;
@@ -13,13 +13,13 @@ public class UIInputHandler : MonoBehaviour
 
         if (tracker.IsOptionOpen)
         {
-            bool keyChanged = KeyRebindManager.Instance?.HasUnsavedChanges() ?? false;
-            bool volumeChanged = VolumeHandler.Instance?.HasUnsavedChanges() ?? false;
-            bool videoChanged = VideoSettingPanel.Instance?.HasUnsavedChanges() ?? false;
+            bool keyChanged = UIManager.Instance.keyRebindManager?.HasUnsavedChanges() ?? false;
+            bool volumeChanged = UIManager.Instance.volumeHandler?.HasUnsavedChanges() ?? false;
+            bool videoChanged = UIManager.Instance.videoSettingPanel?.HasUnsavedChanges() ?? false;
 
             if (keyChanged || volumeChanged || videoChanged)
             {
-                UIExitPopup.Instance?.Show(); // 변경 사항 있음 → 팝업 노출
+                UIManager.Instance.uiExitPopup?.Show(); // 변경 사항 있음 → 팝업 노출
             }
             else
             {
