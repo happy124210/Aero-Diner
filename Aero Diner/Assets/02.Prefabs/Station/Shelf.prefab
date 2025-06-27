@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6596894776364320055}
   - component: {fileID: 4392329725694600481}
   - component: {fileID: 1215068463477411717}
+  - component: {fileID: -9037808772910123558}
   m_Layer: 6
   m_Name: Shelf
   m_TagString: Untagged
@@ -55,7 +56,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 7ef81b702dce0a44eb708e18f06e5579, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -175,3 +176,15 @@ MonoBehaviour:
   selectedIngredient: {fileID: 0}
   spawnPoint: {fileID: 1153726550070249425}
   NeededIngredients: {fileID: 0}
+--- !u!114 &-9037808772910123558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9105805640978016393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd01cdc2607e29c4182ce745cd92390b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

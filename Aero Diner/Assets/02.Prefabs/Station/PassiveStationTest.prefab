@@ -113,6 +113,7 @@ GameObject:
   - component: {fileID: 3284343753935805855}
   - component: {fileID: 3421317996121004805}
   - component: {fileID: 2432795166431069906}
+  - component: {fileID: -7227277338672123322}
   m_Layer: 0
   m_Name: PassiveStationTest
   m_TagString: Untagged
@@ -156,7 +157,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 7ef81b702dce0a44eb708e18f06e5579, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -209,6 +210,18 @@ MonoBehaviour:
   cookingTimeText: {fileID: 4805510606707190700}
   stationData: {fileID: 11400000, guid: 8a9bb9db9ee36e24b9789a8bb97960dd, type: 2}
   currentIngredients: []
+--- !u!114 &-7227277338672123322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5348597314843740815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd01cdc2607e29c4182ce745cd92390b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8704316150362267625
 GameObject:
   m_ObjectHideFlags: 0

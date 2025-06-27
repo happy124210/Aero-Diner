@@ -644,10 +644,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: CuttingBoardTest
       objectReference: {fileID: 0}
-    - target: {fileID: 9125026158998717230, guid: 273e89e9134cc50498f07300b2128031, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 29212bcc3241ed947ac9d86dcacee951, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1245,11 +1241,11 @@ SceneRoots:
   - {fileID: 89275398}
   - {fileID: 1564702604}
   - {fileID: 610197399}
+  - {fileID: 5666176359503990407}
   - {fileID: 3545229915235075790}
   - {fileID: 2871901657900662533}
   - {fileID: 143408224237429435}
   - {fileID: 1172210665401130925}
-  - {fileID: 5666176359503990407}
   - {fileID: 3106911126239462928}
   - {fileID: 8662886154961164394}
   - {fileID: 4922761495561489900}

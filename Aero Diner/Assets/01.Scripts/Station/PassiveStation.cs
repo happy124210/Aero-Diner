@@ -45,12 +45,16 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     private GameObject placedIngredientObj; // 화면에 표시되는 재료 오브젝트
     private FoodData currentFoodData;       // 현재 가공 대상 재료 데이터
     private MenuData currentMenuData;       // 가공 된 대상 재료 데이터
-    private Material runtimeOutlineMat;
 
+    private OutlineShaderController outline;
+
+    private void Awake()
+    {
+        outline = GetComponent<OutlineShaderController>();
+    }
 
     private void Start()
     {
-        runtimeOutlineMat = GetComponent<SpriteRenderer>().material; // Shader Graph 머티리얼 가져옴
         // 조리 타이머 초기화 및 UI 갱신
         currentCookingTime = cookingTime;
         UpdateCookingTimeText();
@@ -311,11 +315,10 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
 
     public void OnHoverEnter()
     {
-        runtimeOutlineMat.SetFloat("_OutlineThreshold", 0.95f); // 외곽선 보이게
+        outline?.EnableOutline();
     }
-
     public void OnHoverExit()
     {
-        runtimeOutlineMat.SetFloat("_OutlineThreshold", 1.0f); // 외곽선 감추기
+        outline?.DisableOutline();
     }
 }

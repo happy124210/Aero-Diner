@@ -2,6 +2,7 @@
 using System.Linq;               // LINQ 확장 메서드를 사용하기 위해
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 /// <summary>
 /// 플레이어가 올바른 재료를 스테이션에 배치하면
@@ -40,6 +41,14 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     private MenuData currentMenuData;       // 가공 된 대상 재료 데이터
     private bool isCooking = false;         // 현재 조리 중인지 여부
     public MenuData cookedIngredient;       // 조리 시작 시 TrySetRecipe() 결과 저장
+
+    private OutlineShaderController outline;
+
+    private void Awake()
+    {
+        outline = GetComponent<OutlineShaderController>();
+    }
+
 
     private void Start()
     {
@@ -283,13 +292,12 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         Debug.Log("플레이어가 재료를 들었고, 스테이션이 초기화되었습니다.");
     }
 
-    public void OnHoverEnter() 
+    public void OnHoverEnter()
     {
-
+        outline?.EnableOutline();
     }
-
-    public void OnHoverExit() 
+    public void OnHoverExit()
     {
-
+        outline?.DisableOutline();
     }
 }
