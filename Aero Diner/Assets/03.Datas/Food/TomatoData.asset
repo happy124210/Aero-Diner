@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca77332d7f9b4134e9c53ece37a21432, type: 3}
   m_Name: TomatoData
   m_EditorClassIdentifier: 
-  id: f5
-  foodName: tomato
-  displayName: "\uCFE0\uD0A4"
-  foodIcon: {fileID: 21300000, guid: 7c0aa3f597d8c5a4780f3b0d3016d1aa, type: 3}
-  processedIcon: {fileID: 21300000, guid: 7c0aa3f597d8c5a4780f3b0d3016d1aa, type: 3}
+  id: f3
+  foodName: Tomato
+  displayName: "\uD1A0\uB9C8\uD1A0"
+  foodIcon: {fileID: 21300000, guid: b848a9701d637ec47820f6d8c84f8176, type: 3}
+  processedIcon: {fileID: 21300000, guid: fdc0a8ab621099542ba0ab4a4bc6058a, type: 3}
   description: "\uD1A0\uB9C8\uD1A0 \uC785\uB2C8\uB2E4"
   requireStation: 0
-  foodCost: 0
+  foodCost: 500
