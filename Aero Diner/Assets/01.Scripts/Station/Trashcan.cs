@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Trashcan : MonoBehaviour, IInteractable
 {
-    public void Interact(PlayerInventory playerInventory)
+    public void Interact(PlayerInventory playerInventory, InteractionType interactionType)
     {
 
     }
