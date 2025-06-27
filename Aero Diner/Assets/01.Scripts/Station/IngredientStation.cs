@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UIElements;
 
 /// <summary>
 /// 플레이어가 상호작용하면 재료를 생성해주는 스테이션
@@ -10,6 +11,13 @@ public class IngredientStation : MonoBehaviour, IInteractable
 
     [Header("생성할 재료 SO")]
     public FoodData selectedIngredient;
+
+    private OutlineShaderController outline;
+
+    private void Awake()
+    {
+        outline = GetComponent<OutlineShaderController>();
+    }
 
     /// <summary>
     /// 플레이어와 상호작용하면 재료 생성 + 즉시 인벤토리로 들어감
@@ -101,10 +109,10 @@ public class IngredientStation : MonoBehaviour, IInteractable
     
     public void OnHoverEnter()
     {
-
+        outline?.EnableOutline();
     }
     public void OnHoverExit()
     {
-
+        outline?.DisableOutline();
     }
 }

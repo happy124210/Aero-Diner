@@ -249,6 +249,7 @@ GameObject:
   - component: {fileID: 8737148127001274840}
   - component: {fileID: 1924649780321501652}
   - component: {fileID: 403828158715937773}
+  - component: {fileID: -7478870573419582701}
   m_Layer: 6
   m_Name: FryingPanTest
   m_TagString: Untagged
@@ -292,7 +293,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 7ef81b702dce0a44eb708e18f06e5579, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -417,3 +418,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &-7478870573419582701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7023207691233901051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd01cdc2607e29c4182ce745cd92390b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

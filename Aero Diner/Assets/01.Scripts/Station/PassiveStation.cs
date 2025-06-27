@@ -46,6 +46,13 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     private FoodData currentFoodData;       // 현재 가공 대상 재료 데이터
     private MenuData currentMenuData;       // 가공 된 대상 재료 데이터
 
+    private OutlineShaderController outline;
+
+    private void Awake()
+    {
+        outline = GetComponent<OutlineShaderController>();
+    }
+
     private void Start()
     {
         // 조리 타이머 초기화 및 UI 갱신
@@ -306,13 +313,12 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         Debug.Log("플레이어가 재료를 들었고, 스테이션이 초기화되었습니다.");
     }
 
-    public void OnHoverEnter() 
+    public void OnHoverEnter()
     {
-
+        outline?.EnableOutline();
     }
-
-    public void OnHoverExit() 
+    public void OnHoverExit()
     {
-
+        outline?.DisableOutline();
     }
 }

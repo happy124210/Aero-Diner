@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6743092984677593411}
   - component: {fileID: 7599695034464976919}
   - component: {fileID: 956064864607723503}
+  - component: {fileID: 2056114150892759397}
   m_Layer: 6
   m_Name: MeetStationTest
   m_TagString: Untagged
@@ -55,7 +56,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 7ef81b702dce0a44eb708e18f06e5579, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -101,7 +102,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ingredientGroup: {fileID: 11400000, guid: 5f7e84b54ed034643b4536bf49b41243, type: 2}
   selectedIngredient: {fileID: 11400000, guid: f02da3cce38effa4c95245798ef86752, type: 2}
-  spawnPoint: {fileID: 8150842340805814711}
 --- !u!61 &7599695034464976919
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -174,3 +174,15 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &2056114150892759397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3372760447361514151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd01cdc2607e29c4182ce745cd92390b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

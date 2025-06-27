@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class Trashcan : MonoBehaviour, IInteractable
 {
+    private OutlineShaderController outline;
+
+    private void Awake()
+    {
+        outline = GetComponent<OutlineShaderController>();
+    }
+
+
     public void Interact(PlayerInventory playerInventory, InteractionType interactionType)
     {
 
@@ -15,6 +23,12 @@ public class Trashcan : MonoBehaviour, IInteractable
 
     }
 
-    public void OnHoverEnter() { }
-    public void OnHoverExit() { }
+    public void OnHoverEnter()
+    {
+        outline?.EnableOutline();
+    }
+    public void OnHoverExit()
+    {
+        outline?.DisableOutline();
+    }
 }

@@ -20,6 +20,14 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
     private GameObject placedIngredientObj; // 화면에 표시되는 재료 오브젝트
     private FoodData currentFoodData;       // 현재 가공 대상 재료 데이터
 
+    private OutlineShaderController outline;
+
+    private void Awake()
+    {
+        outline = GetComponent<OutlineShaderController>();
+    }
+
+
     public void Interact(PlayerInventory playerInventory, InteractionType interactionType)
     {
 
@@ -135,11 +143,10 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
 
     public void OnHoverEnter()
     {
-
+        outline?.EnableOutline();
     }
-
     public void OnHoverExit()
     {
-
+        outline?.DisableOutline();
     }
 }
