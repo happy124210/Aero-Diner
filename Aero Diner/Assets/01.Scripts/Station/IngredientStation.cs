@@ -14,7 +14,7 @@ public class IngredientStation : MonoBehaviour, IInteractable
     /// <summary>
     /// 플레이어와 상호작용하면 재료 생성 + 즉시 인벤토리로 들어감
     /// </summary>
-    public void Interact(PlayerInventory playerInventory)
+    public void Interact(PlayerInventory playerInventory, InteractionType interactionType)
     {
         if (ingredientGroup == null || selectedIngredient == null || playerInventory == null)
         {

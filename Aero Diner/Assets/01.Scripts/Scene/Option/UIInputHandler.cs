@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 public class UIInputHandler : MonoBehaviour
 {
@@ -7,6 +7,9 @@ public class UIInputHandler : MonoBehaviour
     {
         var tracker = UITracker.Instance;
         if (tracker == null) return;
+
+        string currentScene = SceneManager.GetActiveScene().name;
+        bool isStartScene = currentScene == "StartScene";
 
         if (tracker.IsOptionOpen)
         {
@@ -20,7 +23,8 @@ public class UIInputHandler : MonoBehaviour
             }
             else
             {
-                EventBus.Raise(UIEventType.CloseOption); // 변경 없음 → 바로 닫기
+                // 옵션창 닫기
+                EventBus.Raise(UIEventType.CloseOption);
                 EventBus.Raise(UIEventType.CloseSound);
                 EventBus.Raise(UIEventType.CloseVideo);
                 EventBus.Raise(UIEventType.CloseControl);
@@ -32,7 +36,14 @@ public class UIInputHandler : MonoBehaviour
         }
         else
         {
-            EventBus.Raise(UIEventType.OpenPause);
+            if (!isStartScene) // StartScene이 아닐 때만 Pause 열기
+            {
+                EventBus.Raise(UIEventType.OpenPause);
+            }
+            else
+            {
+                Debug.Log("StartScene에서는 PausePanel을 열지 않습니다.");
+            }
         }
     }
 

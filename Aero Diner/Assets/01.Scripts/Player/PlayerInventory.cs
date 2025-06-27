@@ -30,23 +30,24 @@ public class PlayerInventory : MonoBehaviour
 
         // 충돌 및 중력 제거
         var rb = heldItem.GetComponent<Rigidbody2D>();
-        if (rb != null) rb.simulated = false;
+        if (rb) rb.simulated = false;
 
         var col = heldItem.GetComponent<Collider2D>();
-        if (col != null) col.enabled = false;
+        if (col) col.enabled = false;
 
         Debug.Log($"[Inventory] {heldItem.foodData.foodName} 획득");
 
-        // 마지막에 선반 초기화 호출 (재료 오브젝트 파괴 방지)
-        if (food.originShelf != null)
-        {
-            food.originShelf.OnPlayerPickup();
-        }
+        // 마지막에 스테이션 초기화 호출 (재료 오브젝트 파괴 방지)
+        if (food.originShelf) { food.originShelf.OnPlayerPickup(); }
+
+        if (food.originPassive) { food.originPassive.OnPlayerPickup(); }
+        if (food.originAutomatic) {food.originAutomatic.OnPlayerPickup(); }
     }
 
     //아이템을 내려놓기 시도
     public void DropItem(IInteractable target)
     {
+        Debug.Log($"[Inventory] target 타입: {target.GetType().Name}");
         if (!IsHoldingItem)
         {
             Debug.Log("[Inventory] 들고 있는 아이템이 없습니다.");
@@ -107,14 +108,37 @@ public class PlayerInventory : MonoBehaviour
                     Debug.Log("쓰레기통이 아닐지도?");
                 }
                 break;
-
-            default:
-                Debug.Log($"[Inventory] {target.GetType().Name}은(는) 현재 내려놓기 미지원. 향후 확장 예정.");
+            case PassiveStation station:
+                if (station.CanPlaceIngredient(heldItem.foodData))
+                {
+                    FoodData dataToPlace = heldItem.foodData;
+                    Destroy(heldItem.gameObject);
+                    heldItem = null;
+                    station.PlaceIngredient(dataToPlace);
+                    Debug.Log("[Inventory] PassiveStation에 재료 배치됨");
+                    placed = true;
+                }
+                else
+                {
+                    Debug.Log("[Inventory] PassiveStation에 재료 배치 실패");
+                }
+                break;
+                case AutomaticStation automatic:
+                if(automatic.CanPlaceIngredient(heldItem.foodData))
+                {
+                    FoodData dataToPlace = heldItem.foodData;
+                    Destroy(heldItem.gameObject);
+                    heldItem = null;
+                    automatic.PlaceIngredient(dataToPlace);
+                    Debug.Log("[Inventory] AutoStation에 재료 배치됨");
+                    placed = true;
+                }
                 break;
         }
 
         if (!placed)
         {
+            Debug.Log("감지는 되었으나 배치 실패");
         }
     }
 
