@@ -310,9 +310,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1803297834}
-        m_TargetAssemblyTypeName: StartSceneUI, Assembly-CSharp
-        m_MethodName: 
+      - m_Target: {fileID: 1770557522}
+        m_TargetAssemblyTypeName: OptionBtn, Assembly-CSharp
+        m_MethodName: OnClickStartGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -822,6 +822,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 757814427002156560, guid: 4a1d7a994acf8684b8b119d290d56d58, type: 3}
+      propertyPath: menuPanel3
+      value: 
+      objectReference: {fileID: 564663648}
+    - target: {fileID: 757814427002156560, guid: 4a1d7a994acf8684b8b119d290d56d58, type: 3}
+      propertyPath: menuPanel4
+      value: 
+      objectReference: {fileID: 1011763728}
     - target: {fileID: 2022429394835829759, guid: 4a1d7a994acf8684b8b119d290d56d58, type: 3}
       propertyPath: m_Name
       value: UIManager
@@ -1463,7 +1471,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 573502828}
-  - component: {fileID: 573502826}
   - component: {fileID: 573502829}
   m_Layer: 0
   m_Name: StartSceneBG
@@ -1472,18 +1479,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &573502826
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 573502825}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 269f3037717afeb468c1377514412b27, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &573502828
 Transform:
   m_ObjectHideFlags: 0
@@ -3516,7 +3511,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4397824773119109020, guid: 4a1d7a994acf8684b8b119d290d56d58, type: 3}
   m_PrefabInstance: {fileID: 267712673}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1803297834}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 74a15ea6a5f2846489b622b8bca3b80d, type: 3}
@@ -3656,11 +3651,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1781077106}
   m_CullTransparentMesh: 1
---- !u!1 &1803297834 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2022429394835829759, guid: 4a1d7a994acf8684b8b119d290d56d58, type: 3}
-  m_PrefabInstance: {fileID: 267712673}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1852927957
 GameObject:
   m_ObjectHideFlags: 0
