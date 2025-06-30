@@ -16,7 +16,6 @@ public class PressAnyKeyBlinker : MonoBehaviour
     {
         if (pressAnyKeyImage == null)
         {
-            Debug.LogError("[Blinker] pressAnyKeyImage is null!");
             return;
         }
 

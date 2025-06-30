@@ -65,43 +65,77 @@ public class UIManager : Singleton<UIManager>
 
             // Option 패널 열기/닫기
             case UIEventType.OpenOption:
-                UIRoot.Instance.pausePanel?.SetActive(false);
-                UIRoot.Instance.optionPanel?.SetActive(true);
+                UIRoot.Instance.pausePanel.SetActive(false);
+                UIRoot.Instance.optionPanel.SetActive(true);
+                UIRoot.Instance.volumePanel.gameObject.SetActive(true);
                 break;
             case UIEventType.CloseOption:
-                UIRoot.Instance.optionPanel?.SetActive(false);
+                UIRoot.Instance.optionPanel.SetActive(false);
                 if (SceneManager.GetActiveScene().name != "StartScene")
-                    UIRoot.Instance.pausePanel?.SetActive(true);
+                    UIRoot.Instance.pausePanel.SetActive(true);
                 break;
 
             // 하위 탭 패널들 (선택적으로 확장 가능)
             case UIEventType.ShowSoundTab:
-                UIRoot.Instance.volumeHandler?.gameObject.SetActive(true);
-                UIRoot.Instance.videoSettingPanel?.gameObject.SetActive(false);
-                UIRoot.Instance.keyRebindManager?.gameObject.SetActive(false);
+                UIRoot.Instance.volumePanel.gameObject.SetActive(true);
+                UIRoot.Instance.videoPanel.gameObject.SetActive(false);
+                UIRoot.Instance.keysettingPanel.gameObject.SetActive(false);
                 break;
             case UIEventType.ShowVideoTab:
-                UIRoot.Instance.volumeHandler?.gameObject.SetActive(false);
-                UIRoot.Instance.videoSettingPanel?.gameObject.SetActive(true);
-                UIRoot.Instance.keyRebindManager?.gameObject.SetActive(false);
+                UIRoot.Instance.volumePanel.gameObject.SetActive(false);
+                UIRoot.Instance.videoPanel.gameObject.SetActive(true);
+                UIRoot.Instance.keysettingPanel.gameObject.SetActive(false);
                 break;
             case UIEventType.ShowControlTab:
-                UIRoot.Instance.volumeHandler?.gameObject.SetActive(false);
-                UIRoot.Instance.videoSettingPanel?.gameObject.SetActive(false);
-                UIRoot.Instance.keyRebindManager?.gameObject.SetActive(true);
+                UIRoot.Instance.volumePanel.gameObject.SetActive(false);
+                UIRoot.Instance.videoPanel.gameObject.SetActive(false);
+                UIRoot.Instance.keysettingPanel.gameObject.SetActive(true);
                 break;
 
             // 수익 UI 업데이트
             case UIEventType.UpdateEarnings:
                 currentSceneUI?.GetComponentInChildren<EarningsDisplay>()?.AnimateEarnings((float)payload);
                 break;
+            
+                //StartScene 이벤트
 
+            case UIEventType.ShowStartMenuWithSave:
+                {
+                    var menuPanel4 = currentSceneUI?.GetComponentInChildren<MenuPanel4>(true);
+                    if (menuPanel4 != null)
+                    {
+                        menuPanel4.gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("MenuPanel4 not found in currentSceneUI");
+                    }
+                    break;
+                }
+
+            case UIEventType.ShowStartMenuNoSave:
+                {
+                    var menuPanel3 = currentSceneUI?.GetComponentInChildren<MenuPanel3>(true);
+                    if (menuPanel3 != null)
+                    {
+                        menuPanel3.gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("MenuPanel3 not found in currentSceneUI");
+                    }
+                    break;
+                }
             // 라운드 타이머
             case UIEventType.ShowRoundTimer:
             case UIEventType.HideRoundTimer:
                 var timer = currentSceneUI?.GetComponentInChildren<RoundTimerUI>(true)?.gameObject;
                 if (timer != null)
                     timer.SetActive(eventType == UIEventType.ShowRoundTimer);
+                break;
+
+            case UIEventType.LoadMainScene:
+                FadeManager.Instance.FadeOutAndLoadSceneWithLoading("MainScene");
                 break;
 
             // 게임 종료
