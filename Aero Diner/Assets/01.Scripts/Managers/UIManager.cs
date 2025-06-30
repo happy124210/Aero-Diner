@@ -22,7 +22,11 @@ public class UIManager : Singleton<UIManager>
     public UITracker uiTracker;
     public OptionBtn optionBtn;
 
+    [Header("기타 UI")]
+    public GameObject roundTimerPanel;
 
+
+    [SerializeField] private EarningsDisplay earningsDisplay;
 
     private void OnEnable()
     {
@@ -110,6 +114,17 @@ public class UIManager : Singleton<UIManager>
 
             case UIEventType.QuitGame:
                 Debug.Log("게임 종료 요청됨");
+                break;
+            case UIEventType.ShowRoundTimer:
+                roundTimerPanel?.SetActive(true);
+                break;
+
+            case UIEventType.HideRoundTimer:
+                roundTimerPanel?.SetActive(false);
+                break;
+            case UIEventType.UpdateEarnings:
+                earningsDisplay?.AnimateEarnings((float)payload);
+                break;
 
 #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
