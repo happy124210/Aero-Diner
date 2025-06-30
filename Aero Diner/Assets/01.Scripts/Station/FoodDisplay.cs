@@ -6,7 +6,7 @@ public class FoodDisplay : MonoBehaviour, IInteractable
 {
     public ScriptableObject rawData;
     public IngredientStation originIngredient;
-    public Shelf originShelf;
+    public IPlaceableStation origin;
     public AutomaticStation originAutomatic;
     public PassiveStation originPassive;
 

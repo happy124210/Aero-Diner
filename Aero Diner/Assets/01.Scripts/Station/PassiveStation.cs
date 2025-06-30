@@ -57,7 +57,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         UpdateCookingTimeText(); // UI 초기화
     }
 
-    public void PlaceIngredient(ScriptableObject obj)
+    public void PlaceObject(ScriptableObject obj)
     {
         // 유효하지 않은 데이터거나 등록 불가한 재료일 경우 경고 출력 후 무시
         if (obj is not IIngredientData data || !CanPlaceIngredient(data))
@@ -80,6 +80,11 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             isCooking = false;
             Debug.Log("조건에 맞는 레시피가 부족하여 대기 중...");
         }
+    }
+
+    public void OnPlayerPickup()
+    {
+        // TODO: 수동형 설비 pickup 구현 !!!
     }
 
     private void RegisterIngredient(IIngredientData data)

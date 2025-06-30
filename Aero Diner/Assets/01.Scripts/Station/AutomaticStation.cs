@@ -80,7 +80,7 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// <summary>
     /// 플레이어가 재료를 놓았을 때 호출됨
     /// </summary>
-    public void PlaceIngredient(ScriptableObject obj)
+    public void PlaceObject(ScriptableObject obj)
     {
         // 잘못된 데이터거나 등록 불가한 재료일 경우 경고 출력 후 무시
         if (obj is not IIngredientData data || !CanPlaceIngredient(data))
@@ -104,6 +104,11 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
             isCooking = false;
             Debug.Log("조리 대기 중...");
         }
+    }
+
+    public void OnPlayerPickup()
+    {
+        //TODO: 자동설비 Pickup 구현 !!!
     }
 
     /// <summary>
