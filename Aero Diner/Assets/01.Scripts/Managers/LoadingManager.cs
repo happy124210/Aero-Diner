@@ -32,6 +32,7 @@ public class LoadingManager : MonoBehaviour
         // 여기서 페이드 아웃 (어두워지기)
         yield return StartCoroutine(FadeManager.Instance.FadeToCoroutine(1f));
         // 다 어두워졌으면 씬 전환
+        FadeManager.Instance.SetFadePlanned(true);
         asyncOp.allowSceneActivation = true;
     }
 }

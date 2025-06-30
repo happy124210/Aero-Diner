@@ -1,26 +1,30 @@
 ﻿using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 public class UIInputHandler : MonoBehaviour
 {
     public void HandleEscapeLikeAction()
     {
-        var tracker = UITracker.Instance;
+        var tracker = UIManager.Instance.uiTracker;
         if (tracker == null) return;
+
+        string currentScene = SceneManager.GetActiveScene().name;
+        bool isStartScene = currentScene == "StartScene";
 
         if (tracker.IsOptionOpen)
         {
-            bool keyChanged = KeyRebindManager.Instance?.HasUnsavedChanges() ?? false;
-            bool volumeChanged = VolumeHandler.Instance?.HasUnsavedChanges() ?? false;
-            bool videoChanged = VideoSettingPanel.Instance?.HasUnsavedChanges() ?? false;
+            bool keyChanged = UIManager.Instance.keyRebindManager?.HasUnsavedChanges() ?? false;
+            bool volumeChanged = UIManager.Instance.volumeHandler?.HasUnsavedChanges() ?? false;
+            bool videoChanged = UIManager.Instance.videoSettingPanel?.HasUnsavedChanges() ?? false;
 
             if (keyChanged || volumeChanged || videoChanged)
             {
-                UIExitPopup.Instance?.Show(); // 변경 사항 있음 → 팝업 노출
+                UIManager.Instance.uiExitPopup?.Show(); // 변경 사항 있음 → 팝업 노출
             }
             else
             {
-                EventBus.Raise(UIEventType.CloseOption); // 변경 없음 → 바로 닫기
+                // 옵션창 닫기
+                EventBus.Raise(UIEventType.CloseOption);
                 EventBus.Raise(UIEventType.CloseSound);
                 EventBus.Raise(UIEventType.CloseVideo);
                 EventBus.Raise(UIEventType.CloseControl);
@@ -32,7 +36,14 @@ public class UIInputHandler : MonoBehaviour
         }
         else
         {
-            EventBus.Raise(UIEventType.OpenPause);
+            if (!isStartScene) // StartScene이 아닐 때만 Pause 열기
+            {
+                EventBus.Raise(UIEventType.OpenPause);
+            }
+            else
+            {
+                Debug.Log("StartScene에서는 PausePanel을 열지 않습니다.");
+            }
         }
     }
 

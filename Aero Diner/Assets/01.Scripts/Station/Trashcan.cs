@@ -4,17 +4,36 @@ using UnityEngine;
 
 public class Trashcan : MonoBehaviour, IInteractable
 {
-    public void Interact(PlayerInventory playerInventory)
+    private OutlineShaderController outline;
+
+    private void Awake()
+    {
+        outline = GetComponent<OutlineShaderController>();
+    }
+
+
+    public void Interact(PlayerInventory playerInventory, InteractionType interactionType)
     {
 
     }
 
-    public bool PlaceIngredient(FoodData data)
+    public bool PlaceIngredient(ScriptableObject dataRaw)
     {
-        return true; // 어떤 재료든 내려놓기 허용
+        // IIngredientData인지만 검사
+        if (dataRaw is CookingSOGroup.IIngredientData)
+            return true;
 
+        return false;
     }
 
-    public void OnHoverEnter() { }
-    public void OnHoverExit() { }
+
+
+    public void OnHoverEnter()
+    {
+        outline?.EnableOutline();
+    }
+    public void OnHoverExit()
+    {
+        outline?.DisableOutline();
+    }
 }

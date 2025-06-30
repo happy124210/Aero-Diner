@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UIElements;
 
 /// <summary>
 /// 플레이어가 상호작용하면 재료를 생성해주는 스테이션
@@ -11,10 +12,17 @@ public class IngredientStation : MonoBehaviour, IInteractable
     [Header("생성할 재료 SO")]
     public FoodData selectedIngredient;
 
+    private OutlineShaderController outline;
+
+    private void Awake()
+    {
+        outline = GetComponent<OutlineShaderController>();
+    }
+
     /// <summary>
     /// 플레이어와 상호작용하면 재료 생성 + 즉시 인벤토리로 들어감
     /// </summary>
-    public void Interact(PlayerInventory playerInventory)
+    public void Interact(PlayerInventory playerInventory, InteractionType interactionType)
     {
         if (ingredientGroup == null || selectedIngredient == null || playerInventory == null)
         {
@@ -28,44 +36,39 @@ public class IngredientStation : MonoBehaviour, IInteractable
             return;
         }
 
-        // GameObject 생성
-        GameObject ingredientObj = new GameObject(selectedIngredient.foodName);
-        ingredientObj.tag = "Ingredient";
-        ingredientObj.layer = 6;
+        // IIngredientData로 이름과 아이콘 가져오기
+        var ingredientData = selectedIngredient as CookingSOGroup.IIngredientData;
+        string displayName = ingredientData.GetDisplayName();
+        Sprite displayIcon = ingredientData.Icon;
 
-        // SpriteRenderer 추가
-        SpriteRenderer spriteRenderer = ingredientObj.AddComponent<SpriteRenderer>();
-        spriteRenderer.sortingOrder = 55;
-        spriteRenderer.sprite = selectedIngredient.foodIcon != null ? selectedIngredient.foodIcon : null;
-        if (spriteRenderer.sprite == null)
-            spriteRenderer.color = Color.gray;
-
-        // Collider2D 추가 및 설정
-        CircleCollider2D collider = ingredientObj.AddComponent<CircleCollider2D>();
-        collider.isTrigger = true;
-        collider.radius = 0.7f;
-
-        // Rigidbody2D 추가 및 설정
-        Rigidbody2D rb = ingredientObj.AddComponent<Rigidbody2D>();
-        rb.bodyType = RigidbodyType2D.Kinematic;
-        rb.simulated = true;
-
-        // FoodDisplay 설정
-        FoodDisplay foodDisplay = ingredientObj.AddComponent<FoodDisplay>();
-        foodDisplay.foodData = selectedIngredient;
-
-        // new! 플레이어 인벤토리에 바로 등록 
+        // VisualObjectFactory로 시각 오브젝트 생성 (부모: 플레이어 손 슬롯)
         Transform slot = playerInventory.GetItemSlotTransform();
-        ingredientObj.transform.SetParent(slot);
-        ingredientObj.transform.localPosition = Vector3.zero;
-        ingredientObj.transform.localRotation = Quaternion.identity;
+        GameObject pickupObj = VisualObjectFactory.CreateIngredientVisual(
+            parent: slot,
+            name: displayName,
+            icon: displayIcon
+        );
+        if (pickupObj == null)
+        {
+            Debug.LogError("비주얼 오브젝트 생성 실패");
+            return;
+        }
 
-        rb.simulated = false;
-        collider.enabled = false;
+        // FoodDisplay 세팅
+        var display = pickupObj.AddComponent<FoodDisplay>();
+        display.rawData = selectedIngredient;
+        display.originIngredient = this;
 
-        playerInventory.SetHeldItem(foodDisplay); // heldItem에 등록
+        // Collider / Rigidbody 비활성화
+        var col = pickupObj.GetComponent<Collider2D>();
+        if (col != null) col.enabled = false;
+        var rb = pickupObj.GetComponent<Rigidbody2D>();
+        if (rb != null) rb.simulated = false;
 
-        Debug.Log($"[{name}] {selectedIngredient.foodName} 생성 → 즉시 플레이어 손으로 이동");
+        // 인벤토리에 등록
+        playerInventory.SetHeldItem(display);
+
+        Debug.Log($"[{name}] {displayName} 생성 → 즉시 플레이어 손으로 이동");
     }
 
     public bool PlaceIngredient(FoodData data)
@@ -87,24 +90,13 @@ public class IngredientStation : MonoBehaviour, IInteractable
             return false;
         }
     }
-
-        //플레이어가 호출 할 때 참고용 코드
-        // bool canPlace = station.PlaceIngredient(playerHoldingData);
-        //if (canPlace)
-        //{
-        //    playerInventory.DropItem();
-        //}
-        //else
-        //{
-        //    Debug.Log("이 장소에는 해당 재료를 놓을 수 없습니다!");
-        //}
     
     public void OnHoverEnter()
     {
-
+        outline?.EnableOutline();
     }
     public void OnHoverExit()
     {
-
+        outline?.DisableOutline();
     }
 }

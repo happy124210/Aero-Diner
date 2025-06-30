@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Vector2 slotOffsetLeft = new Vector2(-0.5f, 0);
     [SerializeField] private Vector2 slotOffsetRight = new Vector2(0.5f, 0);
 
+    public InteractionType interactionType;
     public IInteractable currentTarget;
     private IInteractable previousTarget;
 
@@ -71,14 +72,13 @@ public class PlayerController : MonoBehaviour
             currentTarget = newTarget;
         }
     }
+
     public void OnInteract(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
 
-        if (currentTarget != null && playerInventory != null)
-        {
-            currentTarget.Interact(playerInventory);
-        }
+        var target = FindBestInteractable(InteractionType.Use);
+        target?.Interact(playerInventory, InteractionType.Use);
     }
     private void UpdateItemSlotPosition()
     {
@@ -108,15 +108,52 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                Debug.Log("내려놓을 대상이 없습니다."); // 또는 피드백 UI
+                Debug.Log("내려놓을 대상이 없습니다.");
             }
         }
         else
         {
-            playerInventory.TryPickup(currentTarget);
+            var pickupTarget = FindBestInteractable(InteractionType.Pickup);
+            playerInventory.TryPickup(pickupTarget);
         }
     }
+    //j키와 k키 상호작용 분리를 위한 함수
+    private IInteractable FindBestInteractable(InteractionType interactionType)
+    {
+        Vector2 origin = transform.position;
+        Vector2 direction = lastMoveDir;
+        float distance = interactionRadius;
 
+        RaycastHit2D[] hits = Physics2D.RaycastAll(origin, direction, distance, interactableLayer);
+
+        IInteractable fallback = null;
+
+        foreach (var hit in hits)
+        {
+            var interactable = hit.collider.GetComponent<IInteractable>();
+            if (interactable == null) continue;
+
+            //여기서 상호작용 분리
+            switch (interactionType)
+            {
+                case InteractionType.Use:
+                    if (interactable is PassiveStation || interactable is AutomaticStation || interactable is IngredientStation)
+                        return interactable;
+                    break;
+
+                case InteractionType.Pickup:
+                    if (interactable is FoodDisplay)
+                        return interactable;
+                    break;
+            }
+
+            // Fallback 후보 (없을 경우 대비)
+            if (fallback == null)
+                fallback = interactable;
+        }
+
+        return fallback;
+    }
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
