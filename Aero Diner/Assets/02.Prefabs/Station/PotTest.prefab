@@ -104,12 +104,13 @@ MonoBehaviour:
   passiveGroup: {fileID: 11400000, guid: 8550c91e57ac0324ab88624bdcef9a5d, type: 2}
   selectedIngredient: {fileID: 0}
   spawnPoint: {fileID: 2774030668669965791}
-  neededIngredients: {fileID: 11400000, guid: 8550c91e57ac0324ab88624bdcef9a5d, type: 2}
+  neededIngredients: {fileID: 0}
   cookedIngredient: {fileID: 0}
-  cookingTime: 5
+  cookingTime: 0.1
   cookingTimeText: {fileID: 612245578671281057}
   stationData: {fileID: 11400000, guid: 510f50279063a1846bfed3e14972ddc8, type: 2}
   currentIngredients: []
+  availableMatchedRecipes: []
 --- !u!61 &5561977985819187709
 BoxCollider2D:
   m_ObjectHideFlags: 0

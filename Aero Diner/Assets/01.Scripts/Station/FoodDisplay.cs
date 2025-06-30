@@ -9,6 +9,10 @@ public class FoodDisplay : MonoBehaviour, IInteractable
     public AutomaticStation originAutomatic;
     public PassiveStation originPassive;
 
+    // IIngredientData로 접근할 수 있도록 추가
+    public CookingSOGroup.IIngredientData data => foodData;
+
+
     public void Interact(PlayerInventory playerInventory, InteractionType interactionType)
     {
         if (playerInventory == null) return;

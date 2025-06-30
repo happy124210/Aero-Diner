@@ -107,6 +107,7 @@ MonoBehaviour:
   cookingTimeText: {fileID: 2888241244538322905}
   stationData: {fileID: 11400000, guid: d0cfd544b707b4749a079638ce41a558, type: 2}
   currentIngredients: []
+  availableMatchedRecipes: []
   cookedIngredient: {fileID: 0}
 --- !u!114 &6556212873242834424
 MonoBehaviour:

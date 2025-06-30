@@ -10,6 +10,8 @@ public class PlayerInventory : MonoBehaviour
 
     ///현재 들고 있는 재료
     public FoodDisplay heldItem;
+    private PlayerInventory playerInventory;
+
     public bool IsHoldingItem => heldItem != null;
 
     //아이템을 들기 시도
@@ -35,13 +37,13 @@ public class PlayerInventory : MonoBehaviour
         var col = heldItem.GetComponent<Collider2D>();
         if (col) col.enabled = false;
 
-        Debug.Log($"[Inventory] {heldItem.foodData.foodName} 획득");
+        //Debug.Log($"[Inventory] {heldItem.foodData.foodName} 획득");
 
         // 마지막에 스테이션 초기화 호출 (재료 오브젝트 파괴 방지)
         if (food.originShelf) { food.originShelf.OnPlayerPickup(); }
 
-        if (food.originPassive) { food.originPassive.OnPlayerPickup(); }
-        if (food.originAutomatic) {food.originAutomatic.OnPlayerPickup(); }
+        if (food.originPassive) { food.originPassive.OnPlayerPickup(playerInventory); }
+        if (food.originAutomatic) {food.originAutomatic.OnPlayerPickup(playerInventory); }
     }
 
     //아이템을 내려놓기 시도
@@ -124,7 +126,7 @@ public class PlayerInventory : MonoBehaviour
                 }
                 break;
                 case AutomaticStation automatic:
-                if(automatic.CanPlaceIngredient(heldItem.foodData))
+                if(automatic.CanPlaceIngredient(heldItem.data))
                 {
                     FoodData dataToPlace = heldItem.foodData;
                     Destroy(heldItem.gameObject);

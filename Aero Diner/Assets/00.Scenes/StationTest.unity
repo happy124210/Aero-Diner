@@ -327,6 +327,136 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05f2fb9aa98c844428820a88dc2d71f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &1949527758
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1053413695751082174, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -6.38
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053413695751082174, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -4.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053413695751082174, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053413695751082174, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053413695751082174, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053413695751082174, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053413695751082174, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053413695751082174, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053413695751082174, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053413695751082174, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7023207691233901051, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_Name
+      value: FryingPanTest (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737148127001274840, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: stationData
+      value: 
+      objectReference: {fileID: 11400000, guid: 510f50279063a1846bfed3e14972ddc8, type: 2}
+    - target: {fileID: 8737148127001274840, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: neededIngredients
+      value: 
+      objectReference: {fileID: 11400000, guid: 8aca67cf6037bb948aef6cc1f50c76a1, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+--- !u!1001 &2112462655
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1053413695751082174, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -6.38
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053413695751082174, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.78
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053413695751082174, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053413695751082174, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053413695751082174, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053413695751082174, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053413695751082174, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053413695751082174, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053413695751082174, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053413695751082174, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7023207691233901051, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: m_Name
+      value: FryingPanTest (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8737148127001274840, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: stationData
+      value: 
+      objectReference: {fileID: 11400000, guid: 8a9bb9db9ee36e24b9789a8bb97960dd, type: 2}
+    - target: {fileID: 8737148127001274840, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: neededIngredients
+      value: 
+      objectReference: {fileID: 11400000, guid: 8aca67cf6037bb948aef6cc1f50c76a1, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
 --- !u!1001 &143408224237429435
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -884,6 +1014,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: FryingPanTest
       objectReference: {fileID: 0}
+    - target: {fileID: 8737148127001274840, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: stationData
+      value: 
+      objectReference: {fileID: 11400000, guid: d0cfd544b707b4749a079638ce41a558, type: 2}
+    - target: {fileID: 8737148127001274840, guid: c8d496adaccd4c747b6e75cc80ef6fad, type: 3}
+      propertyPath: neededIngredients
+      value: 
+      objectReference: {fileID: 11400000, guid: 8aca67cf6037bb948aef6cc1f50c76a1, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1249,5 +1387,7 @@ SceneRoots:
   - {fileID: 3106911126239462928}
   - {fileID: 8662886154961164394}
   - {fileID: 4922761495561489900}
+  - {fileID: 2112462655}
+  - {fileID: 1949527758}
   - {fileID: 7892315985300904554}
   - {fileID: 3758426055064081658}

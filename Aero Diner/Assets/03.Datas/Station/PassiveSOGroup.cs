@@ -8,8 +8,7 @@ public class PassiveSOGroup : ScriptableObject
     [Serializable]
     public class Entry
     {
-        // FoodData는 재료 데이터로 ScriptableObject를 상속받았다고 가정
-        public FoodData passiveData;
+        public FoodData foodData;
     }
 
     public List<Entry> passiveList = new List<Entry>();
@@ -21,7 +20,7 @@ public class PassiveSOGroup : ScriptableObject
     {
         foreach (var entry in passiveList)
         {
-            if (entry.passiveData == data)
+            if (entry.foodData == data)
                 return true;
         }
         return false;
@@ -43,7 +42,7 @@ public class PassiveSOGroup : ScriptableObject
         if (!Contains(data))
         {
             Entry newEntry = new Entry();
-            newEntry.passiveData = data;
+            newEntry.foodData = data;
             passiveList.Add(newEntry);
             Debug.Log($"Ingredient '{data.foodName}' added. Total Count: {GetCount()}");
         }

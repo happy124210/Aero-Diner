@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bce26243177658b4898dadb255f8f5d2, type: 3}
+  m_Name: CookingGroup
+  m_EditorClassIdentifier: 
+  automaticList:
+  - rawIngredientList:
+    - {fileID: 11400000, guid: efb9dca86fe9fa14e880869ef50db4cf, type: 2}
+    - {fileID: 11400000, guid: aa9b9bcc7cf708f43bffa37d9515f3df, type: 2}
+    menuData: {fileID: 11400000, guid: f84132e9b5f2b5a43b0491a6c548972d, type: 2}
+  - rawIngredientList:
+    - {fileID: 11400000, guid: f02da3cce38effa4c95245798ef86752, type: 2}
+    menuData: {fileID: 11400000, guid: 4ea4dc71205b4b5478ca1abb145fb913, type: 2}
+  - rawIngredientList:
+    - {fileID: 11400000, guid: 12dc7a547849313489f8866c27edffc6, type: 2}
+    menuData: {fileID: 11400000, guid: 034c4487a2513af49b5d1770d4d3ff7f, type: 2}
+  - rawIngredientList:
+    - {fileID: 11400000, guid: f84132e9b5f2b5a43b0491a6c548972d, type: 2}
+    - {fileID: 11400000, guid: 4ea4dc71205b4b5478ca1abb145fb913, type: 2}
+    - {fileID: 11400000, guid: 034c4487a2513af49b5d1770d4d3ff7f, type: 2}
+    menuData: {fileID: 11400000, guid: dade73e4017f0004da99a730ca752dc8, type: 2}
