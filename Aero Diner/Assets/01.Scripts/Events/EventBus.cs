@@ -10,15 +10,19 @@ public enum SFXType
 }
 public enum UIEventType
 {
+    //pause, Option
     OpenPause, ClosePause,
     OpenOption, CloseOption,
     CloseSound, CloseVideo,
     CloseControl, ShowSoundTab,
     ShowVideoTab, ShowControlTab,
-
+    //StartScene
     ShowStartWarningPanel, ShowStartMenuWithSave,
     ShowStartMenuNoSave, LoadMainScene,
-    QuitGame
+    QuitGame,
+    //MainSceneUI
+    ShowRoundTimer, HideRoundTimer,
+    UpdateEarnings
 }
 
 public static class EventBus

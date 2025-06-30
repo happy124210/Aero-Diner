@@ -20,6 +20,10 @@ public class CustomerController : MonoBehaviour, IPoolable
     private float maxPatience;
     private float eatTime;
     private float currentPatience;
+    private Table assignedTable;
+    
+    [Header("Order")]
+    [SerializeField] private MenuData currentOrder;
     
     [Header("Customer UI")]
     [SerializeField] private Canvas customerUI;
@@ -31,22 +35,17 @@ public class CustomerController : MonoBehaviour, IPoolable
     [SerializeField] private bool showDebugInfo;
     [SerializeField] public string currentNodeName;
     
-    // 큐 관리
-    private Vector3 currentQueuePosition = Vector3.zero;
-    private bool isMovingToNewQueuePosition;
-    
     // 상태 체크용 bool변수들
-    private bool foodServed;
+    private bool isServed;
     private bool isEating;
-    private bool eatingFinished;
-    private bool paymentCompleted;
+    private bool isEatingFinished;
+    private bool isPaymentCompleted;
     private bool hasLeftRestaurant;
 
     // components
     private NavMeshAgent navAgent;
     
     private CustomerState currentState;
-    private Vector3 assignedSeatPosition;
     private float eatingTimer;
 
 
@@ -101,7 +100,7 @@ public class CustomerController : MonoBehaviour, IPoolable
             if (eatingTimer >= eatTime)
             {
                 isEating = false;
-                eatingFinished = true;
+                isEatingFinished = true;
                 if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 식사 완료!");
             }
         }
@@ -138,17 +137,12 @@ public class CustomerController : MonoBehaviour, IPoolable
     /// </summary>
     private void ResetCustomerData()
     {
-        foodServed = false;
+        isServed = false;
         isEating = false;
-        eatingFinished = false;
-        paymentCompleted = false;
+        isEatingFinished = false;
+        isPaymentCompleted = false;
         hasLeftRestaurant = false;
         eatingTimer = 0f;
-        assignedSeatPosition = Vector3.zero;
-        
-        // 큐 데이터 초기화
-        currentQueuePosition = Vector3.zero;
-        isMovingToNewQueuePosition = false;
         
         // UI 초기화
         HideAllUI();
@@ -198,35 +192,47 @@ public class CustomerController : MonoBehaviour, IPoolable
     
 #region Customer Actions & State
     
-    public bool HasAvailableSeat()
+    /// <summary>
+    /// 줄 위치 업데이트
+    /// </summary>
+    public void UpdateQueuePosition(Vector3 newPosition)
     {
-        // 임시로 좌석 체크
-        HideAllUI();
-        return CustomerSpawner.Instance.AssignSeatToCustomer(this);
+        SetDestination(newPosition);
     }
     
     /// <summary>
-    /// CustomerSpawner에서 할당된 좌석 위치 설정
+    /// 줄서기 시작
     /// </summary>
-    public void SetAssignedSeatPosition(Vector3 seatPosition)
+    public void StartWaitingInLine(Vector3 queuePosition)
     {
-        assignedSeatPosition = seatPosition;
-    
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 좌석 할당됨 {seatPosition}");
+        SetDestination(queuePosition);
+        ChangeState(new WaitingInLineState());
+        StartPatienceTimer();
+    }
+
+    /// <summary>
+    /// 할당된 좌석으로 이동
+    /// </summary>
+    public void MoveToAssignedSeat()
+    {
+        StopPatienceTimer();
+        ChangeState(new MovingToSeatState());
     }
     
-    public Vector3 GetAssignedSeatPosition() => assignedSeatPosition;
-    
     /// <summary>
-    /// 줄 위치 업데이트 (CustomerSpawner가 호출)
+    /// 할당된 테이블 설정
     /// </summary>
-    public void UpdateQueuePosition(Vector3 newQueuePosition)
+    public void SetAssignedTable(Table table)
     {
-        currentQueuePosition = newQueuePosition;
-        isMovingToNewQueuePosition = true;
-        
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 새로운 줄 위치로 이동: {newQueuePosition}");
-        SetDestination(newQueuePosition);
+        assignedTable = table;
+    }
+
+    /// <summary>
+    /// 할당된 좌석 위치 반환
+    /// </summary>
+    public Vector3 GetAssignedSeatPosition()
+    {
+        return assignedTable ? assignedTable.GetSeatPosition() : Vector3.zero;
     }
     
     public void PlaceOrder()
@@ -241,32 +247,32 @@ public class CustomerController : MonoBehaviour, IPoolable
     
     private void ServeFood()
     {
-        foodServed = true;
+        isServed = true;
         StopPatienceTimer();
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 음식 서빙됨!");
     }
     
-    public bool IsFoodServed() => foodServed;
+    public bool IsFoodServed() => isServed;
     
     public void StartEating()
     {
         isEating = true;
         eatingTimer = 0f;
-        eatingFinished = false;
+        isEatingFinished = false;
         SetAnimationState(CustomerAnimState.Idle);
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 식사 시작");
     }
     
-    public bool IsEatingFinished() => eatingFinished;
-    public bool IsPaymentCompleted() => paymentCompleted;
+    public bool IsEatingFinished() => isEatingFinished;
+    public bool IsPaymentCompleted() => isPaymentCompleted;
     
     public void ProcessPayment()
     {
         // TODO: 실제 결제 시스템과 연동
         int payment = Random.Range(100, 500);
-        RestaurantGameManager.Instance.OnCustomerPaid(payment);
+        RestaurantManager.Instance.OnCustomerPaid(payment);
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} {payment} 코인 결제!");
-        paymentCompleted = true;
+        isPaymentCompleted = true;
         
         // TODO: 결제 이펙트
     }
@@ -311,8 +317,8 @@ public class CustomerController : MonoBehaviour, IPoolable
     /// </summary>
     public bool HasReachedDestination()
     {
-        const float ARRIVAL_THRESHOLD = 0.5f;
-        const float VELOCITY_THRESHOLD = 0.1f;
+        const float arrivalThreshold = 0.5f;
+        const float velocityThreshold = 0.1f;
         
         if (!navAgent || !navAgent.isOnNavMesh) 
         {
@@ -321,8 +327,8 @@ public class CustomerController : MonoBehaviour, IPoolable
         }
         
         bool reached = !navAgent.pathPending && 
-                      navAgent.remainingDistance < ARRIVAL_THRESHOLD && 
-                      navAgent.velocity.sqrMagnitude < VELOCITY_THRESHOLD;
+                      navAgent.remainingDistance < arrivalThreshold && 
+                      navAgent.velocity.sqrMagnitude < velocityThreshold;
         
         if (reached && showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 목적지 도착!");
             
@@ -432,6 +438,20 @@ public class CustomerController : MonoBehaviour, IPoolable
         customerUI.gameObject.SetActive(false);
     }
     
+    // public
+    public void StartPatienceTimer()
+    {
+        isPatienceDecreasing = true;
+        ShowPatienceTimer();
+    }
+
+    public void StopPatienceTimer()
+    {
+        isPatienceDecreasing = false;
+        currentPatience = maxPatience;
+        HidePatienceTimer();
+    }
+    
     #endregion
 
 #region IPoolable
@@ -486,22 +506,10 @@ public class CustomerController : MonoBehaviour, IPoolable
             navAgent.isStopped = true;
         }
         
-        // Queue 시스템에서 제거
-        if (CustomerSpawner.Instance != null)
-        {
-            CustomerSpawner.Instance.RemoveCustomerFromQueue(this);
-        }
-        
-        // 할당받은 좌석이 있다면 좌석 해제
-        if (assignedSeatPosition != Vector3.zero && CustomerSpawner.Instance != null)
-        {
-            CustomerSpawner.Instance.ReleaseSeat(assignedSeatPosition);
-        }
-        
-        // 큐 데이터 정리
-        currentQueuePosition = Vector3.zero;
-        isMovingToNewQueuePosition = false;
-        
+        // 대기/좌석 정리
+        TableManager.Instance.RemoveCustomerFromQueue(this);
+        TableManager.Instance.ReleaseSeat(this);
+
         // Animation 정리
         SetAnimationState(CustomerAnimState.Idle);
         transform.localPosition = Vector3.zero;
@@ -526,19 +534,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     
     public CustomerData CurrentData => currentData;
     public bool HasPatience() => currentPatience > 0;
-    
-    public void StartPatienceTimer()
-    {
-        isPatienceDecreasing = true;
-        ShowPatienceTimer();
-    }
-
-    public void StopPatienceTimer()
-    {
-        isPatienceDecreasing = false;
-        currentPatience = maxPatience;
-        HidePatienceTimer();
-    }
+    public Table GetAssignedTable() => assignedTable;
     
     #endregion
     
