@@ -12,11 +12,13 @@ public class RestaurantGameManager : Singleton<RestaurantGameManager>
     [Header("Game State")]
     [SerializeField] private bool gameRunning = true;
     [SerializeField] private int targetCustomersServed;
-    [SerializeField] private float gameTimeLimit;
-    
+
     [Header("Statistics")]
     [SerializeField] private int customersServed;
     [SerializeField] private int totalEarnings;
+
+    //시간 UI 관련하여 수정
+    [Tooltip("현재까지 경과한 시간")]
     [SerializeField] private float gameTime;
     
     [Header("Menu")]
@@ -26,6 +28,16 @@ public class RestaurantGameManager : Singleton<RestaurantGameManager>
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo = true;
     
+
+    [Header("라운드 시간 설정")]
+    [Tooltip("1라운드(하루)의 제한 시간 (초 단위)")]
+    [SerializeField] private float gameTimeLimit = 180f;
+
+    //UI에 필요한 getter 추가
+    public float CurrentGameTime => gameTime;
+    public float GameTimeLimit => gameTimeLimit;
+    public float TotalEarnings => totalEarnings;
+
     private void Start()
     {
         StartGame();
@@ -123,7 +135,10 @@ public class RestaurantGameManager : Singleton<RestaurantGameManager>
         {
             customerSpawner.StartSpawning();
         }
-        
+
+        //라운드 타이머 UI 표시 요청
+        EventBus.Raise(UIEventType.ShowRoundTimer);
+
         Debug.Log("Restaurant game started!");
     }
     
@@ -135,7 +150,11 @@ public class RestaurantGameManager : Singleton<RestaurantGameManager>
         {
             customerSpawner.StopSpawning();
         }
-        
+
+        //라운드 타이머 UI 숨기기
+        EventBus.Raise(UIEventType.HideRoundTimer);
+
+
         Debug.Log($"Game ended: {reason}");
         Debug.Log($"Final Stats - Served: {customersServed}, Earnings: {totalEarnings}, Time: {gameTime:F1}s");
     }
@@ -159,7 +178,8 @@ public class RestaurantGameManager : Singleton<RestaurantGameManager>
     {
         customersServed++;
         totalEarnings += amount;
-        
+        //이벤트 호출
+        EventBus.Raise(UIEventType.UpdateEarnings, totalEarnings);
         Debug.Log($"Customer paid {amount}! Total served: {customersServed}, Total earnings: {totalEarnings}");
     }
     
