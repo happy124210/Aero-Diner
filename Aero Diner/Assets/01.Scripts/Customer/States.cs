@@ -18,7 +18,7 @@ public class MovingToEntranceState : CustomerState
         if (customer.HasReachedDestination())
         {
             // 좌석 있으면 바로 이동, 없으면 줄서기
-            return customer.HasAvailableSeat() 
+            return TableManager.Instance.HasAvailableSeat() 
                 ? new MovingToSeatState() 
                 : new WaitingInLineState();
         }
@@ -59,7 +59,7 @@ public class WaitingInLineState : CustomerState
             
             // 내가 줄 맨 앞이고 좌석 있으면 이동
             if (CustomerSpawner.Instance.GetNextCustomerInQueue() == customer 
-                && customer.HasAvailableSeat())
+                && TableManager.Instance.HasAvailableSeat())
             {
                 return new MovingToSeatState();
             }
@@ -202,11 +202,7 @@ public class LeavingState : CustomerState
     {
         Vector3 exit = CustomerSpawner.Instance.GetExitPosition();
         customer.SetDestination(exit);
-        
-        // 좌석 해제
-        Vector3 seat = customer.GetAssignedSeatPosition();
-        if (seat != Vector3.zero)
-            CustomerSpawner.Instance.ReleaseSeat(seat);
+        TableManager.Instance.ReleaseSeat(customer);
     }
     
     public override CustomerState Update(CustomerController customer)

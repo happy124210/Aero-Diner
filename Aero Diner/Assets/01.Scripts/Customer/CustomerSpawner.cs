@@ -16,10 +16,6 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     [SerializeField] private Transform entrancePoint;
     [SerializeField] private Transform exitPoint;
     
-    // 좌석
-    [SerializeField] private Transform[] seatPoints;
-    [SerializeField] private bool[] seatOccupied;
-    
     [Header("줄 서기")]
     [SerializeField] private Transform queueStartPosition;
     [SerializeField] private float queueSpacing = 1f;
@@ -81,20 +77,8 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     /// </summary>
     private void InitializeArrays()
     {
-        if (seatPoints != null && seatPoints.Length > 0)
-        {
-            seatOccupied = new bool[seatPoints.Length];
-            for (int i = 0; i < seatOccupied.Length; i++)
-            {
-                seatOccupied[i] = false;
-            }
-        }
-        
         waitingQueue.Clear();
         customerQueuePositions.Clear();
-        
-        if (showDebugInfo)
-            Debug.Log($"[CustomerSpawner]: 배열 초기화 완료 - 좌석: {seatPoints?.Length ?? 0}, 최대 큐 길이: {maxQueueLength}");
     }
     
     #endregion
@@ -115,49 +99,6 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     public Vector3 GetExitPosition()
     {
         return exitPoint ? exitPoint.position : Vector3.zero;
-    }
-    
-    /// <summary>
-    /// 손님에게 좌석 할당
-    /// </summary>
-    public bool AssignSeatToCustomer(CustomerController customer)
-    {
-        if (isAssigningSeat)
-        {
-            return false;
-        }
-        
-        isAssigningSeat = true;
-        
-        try
-        {
-            if (seatPoints == null || seatPoints.Length == 0 || seatOccupied == null)
-            {
-                Debug.LogWarning("[CustomerSpawner]: 사용가능 좌석 없음 !!!");
-                return false;
-            }
-            
-            // 비어있는 좌석 찾기
-            for (int i = 0; i < seatPoints.Length; i++)
-            {
-                if (!seatOccupied[i] && seatPoints[i])
-                {
-                    // 좌석 할당
-                    seatOccupied[i] = true;
-                    customer.SetAssignedSeatPosition(seatPoints[i].position);
-                    
-                    if (showDebugInfo) Debug.Log($"[CustomerSpawner]: 좌석 {i}번 할당");
-                    return true;
-                }
-            }
-            
-            if (showDebugInfo) Debug.Log("[CustomerSpawner]: 사용가능 좌석 없음");
-            return false;
-        }
-        finally
-        {
-            isAssigningSeat = false;
-        }
     }
     
     /// <summary>
@@ -287,7 +228,7 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     private bool CanSpawnNewCustomer()
     {
         // 좌석이 있으면 바로 스폰 가능
-        if (GetAvailableSeatCount() > 0)
+        if (TableManager.Instance.HasAvailableSeat())
         {
             return true;
         }
@@ -300,39 +241,6 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
         
         // 둘 다 없으면 스폰 불가
         return false;
-    }
-    
-    /// <summary>
-    /// 좌석 해제
-    /// </summary>
-    public void ReleaseSeat(Vector3 seatPosition)
-    {
-        if (seatPoints == null || seatOccupied == null) return;
-        
-        for (int i = 0; i < seatPoints.Length; i++)
-        {
-            if (seatPoints[i] && Vector3.Distance(seatPoints[i].position, seatPosition) < 0.1f)
-            {
-                seatOccupied[i] = false;
-                if (showDebugInfo) Debug.Log($"[CustomerSpawner]: 좌석 {i}번 해제됨");
-                break;
-            }
-        }
-    }
-    
-    /// <summary>
-    /// 사용 가능한 좌석 수 반환
-    /// </summary>
-    public int GetAvailableSeatCount()
-    {
-        if (seatOccupied == null) return 0;
-        
-        int availableCount = 0;
-        foreach (bool occupied in seatOccupied)
-        {
-            if (!occupied) availableCount++;
-        }
-        return availableCount;
     }
 
     /// <summary>
@@ -347,8 +255,8 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
         if (showDebugInfo) Debug.Log("[CustomerSpawner]: 모든 대기줄 정리됨");
     }
     
-    // public getters - Queue 시스템 전용
-    public int TotalSeatCount => seatPoints?.Length ?? 0;
+    
+    // public getters
     public int CurrentQueueLength => waitingQueue.Count;
     public int MaxQueueLength => maxQueueLength;
     public bool IsQueueFull => waitingQueue.Count >= maxQueueLength;
@@ -456,16 +364,6 @@ public class CustomerSpawner : Singleton<CustomerSpawner>
     public void ClearAllCustomers()
     {
         PoolManager.Instance.ReturnAllActiveCustomers();
-        
-        // 모든 좌석 해제
-        if (seatOccupied != null)
-        {
-            for (int i = 0; i < seatOccupied.Length; i++)
-            {
-                seatOccupied[i] = false;
-            }
-        }
-        
         ClearAllWaitingLines();
         
         if (showDebugInfo) Debug.Log("[CustomerSpawner]: 모든 손님 정리됨");

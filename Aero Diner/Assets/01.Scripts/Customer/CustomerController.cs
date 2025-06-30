@@ -20,6 +20,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     private float maxPatience;
     private float eatTime;
     private float currentPatience;
+    private Table assignedTable;
     
     [Header("Customer UI")]
     [SerializeField] private Canvas customerUI;
@@ -46,7 +47,6 @@ public class CustomerController : MonoBehaviour, IPoolable
     private NavMeshAgent navAgent;
     
     private CustomerState currentState;
-    private Vector3 assignedSeatPosition;
     private float eatingTimer;
 
 
@@ -144,7 +144,6 @@ public class CustomerController : MonoBehaviour, IPoolable
         paymentCompleted = false;
         hasLeftRestaurant = false;
         eatingTimer = 0f;
-        assignedSeatPosition = Vector3.zero;
         
         // 큐 데이터 초기화
         currentQueuePosition = Vector3.zero;
@@ -198,24 +197,6 @@ public class CustomerController : MonoBehaviour, IPoolable
     
 #region Customer Actions & State
     
-    public bool HasAvailableSeat()
-    {
-        // 임시로 좌석 체크
-        return CustomerSpawner.Instance.AssignSeatToCustomer(this);
-    }
-    
-    /// <summary>
-    /// CustomerSpawner에서 할당된 좌석 위치 설정
-    /// </summary>
-    public void SetAssignedSeatPosition(Vector3 seatPosition)
-    {
-        assignedSeatPosition = seatPosition;
-    
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 좌석 할당됨 {seatPosition}");
-    }
-    
-    public Vector3 GetAssignedSeatPosition() => assignedSeatPosition;
-    
     /// <summary>
     /// 줄 위치 업데이트 (CustomerSpawner가 호출)
     /// </summary>
@@ -226,6 +207,22 @@ public class CustomerController : MonoBehaviour, IPoolable
         
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 새로운 줄 위치로 이동: {newQueuePosition}");
         SetDestination(newQueuePosition);
+    }
+    
+    /// <summary>
+    /// 할당된 테이블 설정
+    /// </summary>
+    public void SetAssignedTable(Table table)
+    {
+        assignedTable = table;
+    }
+
+    /// <summary>
+    /// 할당된 좌석 위치 반환
+    /// </summary>
+    public Vector3 GetAssignedSeatPosition()
+    {
+        return assignedTable ? assignedTable.GetSeatPosition() : Vector3.zero;
     }
     
     public void PlaceOrder()
@@ -431,6 +428,20 @@ public class CustomerController : MonoBehaviour, IPoolable
         customerUI.gameObject.SetActive(false);
     }
     
+    // public
+    public void StartPatienceTimer()
+    {
+        isPatienceDecreasing = true;
+        ShowPatienceTimer();
+    }
+
+    public void StopPatienceTimer()
+    {
+        isPatienceDecreasing = false;
+        currentPatience = maxPatience;
+        HidePatienceTimer();
+    }
+    
     #endregion
 
 #region IPoolable
@@ -492,9 +503,9 @@ public class CustomerController : MonoBehaviour, IPoolable
         }
         
         // 할당받은 좌석이 있다면 좌석 해제
-        if (assignedSeatPosition != Vector3.zero && CustomerSpawner.Instance != null)
+        if (CustomerSpawner.Instance != null)
         {
-            CustomerSpawner.Instance.ReleaseSeat(assignedSeatPosition);
+            TableManager.Instance.ReleaseSeat(this);
         }
         
         // 큐 데이터 정리
@@ -525,19 +536,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     
     public CustomerData CurrentData => currentData;
     public bool HasPatience() => currentPatience > 0;
-    
-    public void StartPatienceTimer()
-    {
-        isPatienceDecreasing = true;
-        ShowPatienceTimer();
-    }
-
-    public void StopPatienceTimer()
-    {
-        isPatienceDecreasing = false;
-        currentPatience = maxPatience;
-        HidePatienceTimer();
-    }
+    public Table GetAssignedTable() => assignedTable;
     
     #endregion
     

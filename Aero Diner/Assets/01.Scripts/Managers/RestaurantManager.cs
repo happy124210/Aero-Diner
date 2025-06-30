@@ -93,7 +93,7 @@ public class RestaurantGameManager : Singleton<RestaurantGameManager>
         GUILayout.Label("=== Restaurant Status ===");
         GUILayout.Label($"Game Running: {gameRunning}");
         GUILayout.Label($"Active Customers: {PoolManager.Instance.ActiveCustomerCount}");
-        GUILayout.Label($"Available Seats: {CustomerSpawner.Instance.GetAvailableSeatCount()}/{CustomerSpawner.Instance.TotalSeatCount}");
+        GUILayout.Label($"Available Seats: {TableManager.Instance.GetAvailableSeatCount()}/{TableManager.Instance.TotalSeatCount}");
         GUILayout.Label($"Customers Served: {customersServed}/{targetCustomersServed}");
         GUILayout.Label($"Total Earnings: {totalEarnings}");
         GUILayout.Label($"Game Time: {gameTime:F1}s / {gameTimeLimit}s");
