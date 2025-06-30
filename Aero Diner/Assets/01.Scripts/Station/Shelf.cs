@@ -33,7 +33,7 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
     public void Interact(PlayerInventory playerInventory, InteractionType interactionType) { }
 
     // IPlaceableStation 인터페이스 구현
-    public void PlaceObject(ScriptableObject dataRaw)
+    public void PlaceIngredient(ScriptableObject dataRaw)
     {
         // IIngredientData인지 확인
         if (dataRaw is not CookingSOGroup.IIngredientData data)
@@ -127,7 +127,7 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
         // FoodDisplay 세팅 (원본 데이터만 연결)
         var display = obj.AddComponent<FoodDisplay>();
         display.rawData = dataRaw;
-        display.origin = this;
+        display.originShelf = this;
         return obj;
     }
 

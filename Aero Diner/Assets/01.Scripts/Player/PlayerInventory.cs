@@ -42,7 +42,7 @@ public class PlayerInventory : MonoBehaviour
         Debug.Log($"[Inventory] {heldItem.data?.GetDisplayName()} 획득");
 
         // 마지막에 스테이션 초기화 호출 (재료 오브젝트 파괴 방지)
-        if (food.origin != null) { food.origin.OnPlayerPickup(); }
+        if (food.originShelf) { food.originShelf.OnPlayerPickup(); }
 
         if (food.originPassive) { food.originPassive.OnPlayerPickup(playerInventory); }
         if (food.originAutomatic) { food.originAutomatic.OnPlayerPickup(playerInventory); }
@@ -86,7 +86,7 @@ public class PlayerInventory : MonoBehaviour
                 {
                     if (shelf.CanPlaceIngredient(heldItem.rawData))
                     {
-                        shelf.PlaceObject(heldItem.rawData);
+                        shelf.PlaceIngredient(heldItem.rawData);
                         Destroy(heldItem.gameObject);
                         heldItem = null;
                         Debug.Log("[Inventory] 선반에 아이템 배치됨");
@@ -117,7 +117,7 @@ public class PlayerInventory : MonoBehaviour
                         && station.CanPlaceIngredient(ingredientData))
                     {
                         // ② ScriptableObject 원본(rawData)으로 배치 호출
-                        station.PlaceObject(heldItem.rawData);
+                        station.PlaceIngredient(heldItem.rawData);
 
                         Destroy(heldItem.gameObject);
                         heldItem = null;
@@ -137,7 +137,7 @@ public class PlayerInventory : MonoBehaviour
                         && automatic.CanPlaceIngredient(ingredientData))
                     {
                         // 실제 배치 호출 (메뉴·재료 모두 처리됨)
-                        automatic.PlaceObject(heldItem.rawData);
+                        automatic.PlaceIngredient(heldItem.rawData);
 
                         Destroy(heldItem.gameObject);
                         heldItem = null;
@@ -151,22 +151,6 @@ public class PlayerInventory : MonoBehaviour
                     break;
 
                 }
-            
-            case Table table:
-                if (table.CanPlaceFood())
-                {
-                    table.PlaceObject(heldItem.rawData);
-                    Destroy(heldItem.gameObject);
-                    heldItem = null;
-                    Debug.Log("[Inventory] 테이블에 아이템 배치됨");
-                    placed = true;
-                }
-                else
-                {
-                    Debug.Log("[Inventory] 테이블에 재료를 배치할 수 없습니다.");
-                }
-                break;
-            
         }
 
         if (!placed)

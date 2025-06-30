@@ -237,23 +237,19 @@ public class CustomerController : MonoBehaviour, IPoolable
     
     public void PlaceOrder()
     {
-        MenuData[] availableMenus = RestaurantManager.Instance.GetAvailableMenus();
-    
-        if (availableMenus != null && availableMenus.Length > 0)
-        {
-            currentOrder = availableMenus[Random.Range(0, availableMenus.Length)];
-            ShowOrderBubble();
-        }
+        ShowOrderBubble();
+        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 주문 완료!");
+        
+        // TODO: 주문하고 음식 받기
+        // 임시로 2-5초 후 음식 서빙
+        Invoke(nameof(ServeFood), Random.Range(2f, 5f));
     }
     
-    private void ReceiveFood(MenuData servedMenu)
+    private void ServeFood()
     {
-        if (isServed) return;
-
-        if (currentOrder.id == servedMenu.id)
-        {
-            isServed = true;
-        }
+        isServed = true;
+        StopPatienceTimer();
+        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 음식 서빙됨!");
     }
     
     public bool IsFoodServed() => isServed;
@@ -266,17 +262,17 @@ public class CustomerController : MonoBehaviour, IPoolable
         SetAnimationState(CustomerAnimState.Idle);
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 식사 시작");
     }
-
+    
     public bool IsEatingFinished() => isEatingFinished;
     public bool IsPaymentCompleted() => isPaymentCompleted;
     
     public void ProcessPayment()
     {
-        int payment = Mathf.RoundToInt(currentOrder.menuCost);
+        // TODO: 실제 결제 시스템과 연동
+        int payment = Random.Range(100, 500);
         RestaurantManager.Instance.OnCustomerPaid(payment);
-        isPaymentCompleted = true;
-        
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} {payment} 코인 결제!");
+        isPaymentCompleted = true;
         
         // TODO: 결제 이펙트
     }

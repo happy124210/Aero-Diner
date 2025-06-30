@@ -43,7 +43,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
     public float TotalEarnings => totalEarnings;
     public Vector3 GetEntrancePoint() => entrancePoint.position;
     public Vector3 GetExitPoint() => exitPoint.position;
-    public MenuData[] GetAvailableMenus() => availableMenus;
     
     private void Start()
     {
