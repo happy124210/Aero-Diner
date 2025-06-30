@@ -89,9 +89,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tables:
   - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  seatOccupied: 
+  seatOccupied: 00
   queueStartPosition: {fileID: 0}
   queueSpacing: 1
   maxQueueLength: 6
