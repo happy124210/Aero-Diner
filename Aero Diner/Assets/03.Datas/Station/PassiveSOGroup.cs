@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PassiveGroup", menuName = "CookingGame/PassiveGroup")]
@@ -8,8 +9,7 @@ public class PassiveSOGroup : ScriptableObject
     [Serializable]
     public class Entry
     {
-        // FoodData는 재료 데이터로 ScriptableObject를 상속받았다고 가정
-        public FoodData passiveData;
+        public FoodData foodData;
     }
 
     public List<Entry> passiveList = new List<Entry>();
@@ -21,7 +21,7 @@ public class PassiveSOGroup : ScriptableObject
     {
         foreach (var entry in passiveList)
         {
-            if (entry.passiveData == data)
+            if (entry.foodData == data)
                 return true;
         }
         return false;
@@ -43,7 +43,7 @@ public class PassiveSOGroup : ScriptableObject
         if (!Contains(data))
         {
             Entry newEntry = new Entry();
-            newEntry.passiveData = data;
+            newEntry.foodData = data;
             passiveList.Add(newEntry);
             Debug.Log($"Ingredient '{data.foodName}' added. Total Count: {GetCount()}");
         }
@@ -51,5 +51,10 @@ public class PassiveSOGroup : ScriptableObject
         {
             Debug.Log($"Ingredient '{data.foodName}' is already registered in the group.");
         }
+    }
+
+    public bool ContainsID(string id)
+    {
+        return passiveList.Any(e => e.foodData != null && e.foodData.id == id);
     }
 }

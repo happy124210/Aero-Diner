@@ -50,16 +50,6 @@ MonoBehaviour:
   maxCustomers: 10
   spawnPoints:
   - {fileID: 1699959310969922015}
-  entrancePoint: {fileID: 324621470884776571}
-  exitPoint: {fileID: 5825409973683639667}
-  seatPoints:
-  - {fileID: 8177375270696540754}
-  - {fileID: 0}
-  - {fileID: 0}
-  seatOccupied: 000000
-  queueStartPosition: {fileID: 99934688092184859}
-  queueSpacing: 1
-  maxQueueLength: 6
   customerDataIds: []
   normalCustomerChance: 1
   rareCustomerChance: 0
@@ -544,7 +534,9 @@ GameObject:
   - component: {fileID: 4166292787282654466}
   - component: {fileID: 7152460283063495621}
   - component: {fileID: 1836848469579017435}
-  m_Layer: 0
+  - component: {fileID: 684034555856984185}
+  - component: {fileID: 5636508015531254830}
+  m_Layer: 6
   m_Name: Table
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -648,10 +640,72 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   seatPosition: {fileID: 8177375270696540754}
-  currentDisplay: {fileID: 0}
+  currentFood: {fileID: 0}
   assignedCustomer: {fileID: 0}
   seatIndex: -1
   showDebugInfo: 1
+--- !u!50 &684034555856984185
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3381791121856165617}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!58 &5636508015531254830
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3381791121856165617}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!1 &3681063329846726245
 GameObject:
   m_ObjectHideFlags: 0
@@ -960,7 +1014,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8177375270696540754}
   - component: {fileID: 2497214148136330048}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Seat Position
   m_TagString: Untagged
   m_Icon: {fileID: 0}

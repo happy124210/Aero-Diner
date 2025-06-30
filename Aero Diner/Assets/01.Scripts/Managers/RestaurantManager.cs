@@ -4,10 +4,14 @@ using UnityEngine;
 /// <summary>
 /// 레스토랑 게임 매니저 (임시)
 /// </summary>
-public class RestaurantGameManager : Singleton<RestaurantGameManager>
+public class RestaurantManager : Singleton<RestaurantManager>
 {
     [Header("Managers")]
     [SerializeField] private CustomerSpawner customerSpawner;
+    
+    [Header("Layouts")]
+    [SerializeField] private Transform entrancePoint;
+    [SerializeField] private Transform exitPoint;
     
     [Header("Game State")]
     [SerializeField] private bool gameRunning = true;
@@ -36,7 +40,10 @@ public class RestaurantGameManager : Singleton<RestaurantGameManager>
     //UI에 필요한 getter 추가
     public float CurrentGameTime => gameTime;
     public float GameTimeLimit => gameTimeLimit;
-
+    public float TotalEarnings => totalEarnings;
+    public Vector3 GetEntrancePoint() => entrancePoint.position;
+    public Vector3 GetExitPoint() => exitPoint.position;
+    
     private void Start()
     {
         StartGame();
@@ -92,7 +99,7 @@ public class RestaurantGameManager : Singleton<RestaurantGameManager>
         GUILayout.Label("=== Restaurant Status ===");
         GUILayout.Label($"Game Running: {gameRunning}");
         GUILayout.Label($"Active Customers: {PoolManager.Instance.ActiveCustomerCount}");
-        GUILayout.Label($"Available Seats: {CustomerSpawner.Instance.GetAvailableSeatCount()}/{CustomerSpawner.Instance.TotalSeatCount}");
+        GUILayout.Label($"Available Seats: {TableManager.Instance.GetAvailableSeatCount()}/{TableManager.Instance.TotalSeatCount}");
         GUILayout.Label($"Customers Served: {customersServed}/{targetCustomersServed}");
         GUILayout.Label($"Total Earnings: {totalEarnings}");
         GUILayout.Label($"Game Time: {gameTime:F1}s / {gameTimeLimit}s");
@@ -104,12 +111,6 @@ public class RestaurantGameManager : Singleton<RestaurantGameManager>
         {
             if (customerSpawner)
                 customerSpawner.SpawnSingleCustomer();
-        }
-        
-        if (GUILayout.Button("Clear All Customers"))
-        {
-            if (customerSpawner)
-                customerSpawner.ClearAllCustomers();
         }
         
         if (GUILayout.Button(gameRunning ? "Stop Game" : "Start Game"))
@@ -163,7 +164,7 @@ public class RestaurantGameManager : Singleton<RestaurantGameManager>
         // 모든 손님 정리
         if (customerSpawner)
         {
-            customerSpawner.ClearAllCustomers();
+            TableManager.Instance.ReleaseAllSeatsAndQueue();
         }
         
         // 게임 재시작

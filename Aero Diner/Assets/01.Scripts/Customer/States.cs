@@ -9,20 +9,26 @@ public class MovingToEntranceState : CustomerState
     
     public override void Enter(CustomerController customer)
     {
-        Vector3 entrance = CustomerSpawner.Instance.GetEntrancePosition();
+        Vector3 entrance = RestaurantManager.Instance.GetEntrancePoint();
         customer.SetDestination(entrance);
     }
     
     public override CustomerState Update(CustomerController customer)
     {
-        if (customer.HasReachedDestination())
+        if (TableManager.Instance.TryAssignSeat(customer))
         {
-            // 좌석 있으면 바로 이동, 없으면 줄서기
-            return customer.HasAvailableSeat() 
-                ? new MovingToSeatState() 
-                : new WaitingInLineState();
+            // 좌석 할당 성공 시
+            if (customer.GetAssignedTable())
+            {
+                // 바로 좌석으로 이동
+                return new MovingToSeatState();
+            }
+            
+            // 없으면 줄 서기 상태
+            return new WaitingInLineState();
         }
-        return this;
+        
+        return new LeavingState();
     }
     
     public override void Exit(CustomerController customer) { }
@@ -35,44 +41,18 @@ public class WaitingInLineState : CustomerState
 {
     public override string StateName => "WaitingInLine";
     
-    private const float SEAT_CHECK_INTERVAL = 0.5f;
-    private float seatCheckTimer;
-    
-    public override void Enter(CustomerController customer)
-    {
-        // 줄에 합류 후 타이머 시작
-        CustomerSpawner.Instance.AddCustomerToQueue(customer);
-        customer.StartPatienceTimer();
-    }
+    public override void Enter(CustomerController customer) { }
     
     public override CustomerState Update(CustomerController customer)
     {
         // 인내심 소진 체크
         if (!customer.HasPatience())
             return new LeavingState();
-            
-        // 주기적으로 좌석 체크
-        seatCheckTimer += Time.deltaTime;
-        if (seatCheckTimer >= SEAT_CHECK_INTERVAL)
-        {
-            seatCheckTimer = 0f;
-            
-            // 내가 줄 맨 앞이고 좌석 있으면 이동
-            if (CustomerSpawner.Instance.GetNextCustomerInQueue() == customer 
-                && customer.HasAvailableSeat())
-            {
-                return new MovingToSeatState();
-            }
-        }
         
         return this;
     }
     
-    public override void Exit(CustomerController customer)
-    {
-        CustomerSpawner.Instance.RemoveCustomerFromQueue(customer);
-        customer.StopPatienceTimer();
-    }
+    public override void Exit(CustomerController customer) { }
 }
 
 /// <summary>
@@ -200,13 +180,9 @@ public class LeavingState : CustomerState
     
     public override void Enter(CustomerController customer)
     {
-        Vector3 exit = CustomerSpawner.Instance.GetExitPosition();
+        Vector3 exit = RestaurantManager.Instance.GetExitPoint();
         customer.SetDestination(exit);
-        
-        // 좌석 해제
-        Vector3 seat = customer.GetAssignedSeatPosition();
-        if (seat != Vector3.zero)
-            CustomerSpawner.Instance.ReleaseSeat(seat);
+        TableManager.Instance.ReleaseSeat(customer);
     }
     
     public override CustomerState Update(CustomerController customer)
