@@ -71,6 +71,7 @@ public class WaitingInLineState : CustomerState
     public override void Exit(CustomerController customer)
     {
         CustomerSpawner.Instance.RemoveCustomerFromQueue(customer);
+        customer.StopPatienceTimer();
     }
 }
 
@@ -97,7 +98,6 @@ public class MovingToSeatState : CustomerState
 
     public override void Exit(CustomerController customer)
     {
-        customer.StopPatienceTimer();
     }
 }
 

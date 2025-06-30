@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -17,6 +18,13 @@ public class RestaurantGameManager : Singleton<RestaurantGameManager>
     [SerializeField] private int customersServed;
     [SerializeField] private int totalEarnings;
     [SerializeField] private float gameTime;
+    
+    [Header("Menu")]
+    [SerializeField] private MenuData[] availableMenus;
+    private Dictionary<string, MenuData> menuDatabase = new Dictionary<string, MenuData>();
+    
+    [Header("Debug")]
+    [SerializeField] private bool showDebugInfo = true;
     
     private void Start()
     {
@@ -42,6 +50,26 @@ public class RestaurantGameManager : Singleton<RestaurantGameManager>
             }
         }
     }
+    
+    /// <summary>
+    /// 메뉴 데이터 로드
+    /// </summary>
+    private void LoadMenuData()
+    {
+        // 딕셔너리에 메뉴 등록
+        menuDatabase.Clear();
+        
+        foreach (var menu in availableMenus)
+        {
+            if (menu != null && !string.IsNullOrEmpty(menu.id))
+            {
+                menuDatabase[menu.id] = menu;
+            }
+        }
+
+        if (showDebugInfo) Debug.Log($"[RestaurantManager]: {menuDatabase.Count}개 메뉴 로드 완료");
+    }
+    
     
     private void OnGUI()
     {
