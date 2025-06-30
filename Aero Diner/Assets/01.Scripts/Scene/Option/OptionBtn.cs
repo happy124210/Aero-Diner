@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class OptionBtn : MonoBehaviour
 {
-    private bool IsKeyChanged() => KeyRebindManager.Instance?.HasUnsavedChanges() ?? false;
-    private bool IsVolumeChanged() => VolumeHandler.Instance?.HasUnsavedChanges() ?? false;
-    private bool IsVideoChanged() => VideoSettingPanel.Instance?.HasUnsavedChanges() ?? false;
+    private bool IsKeyChanged() => UIManager.Instance.keyRebindManager?.HasUnsavedChanges() ?? false;
+    private bool IsVolumeChanged() => UIManager.Instance.volumeHandler?.HasUnsavedChanges() ?? false;
+    private bool IsVideoChanged() => UIManager.Instance.videoSettingPanel?.HasUnsavedChanges() ?? false;
     [SerializeField] private SavePopupFader popupFader;
     public void OnClickOption()
     {
@@ -17,7 +17,7 @@ public class OptionBtn : MonoBehaviour
     {
         if (IsKeyChanged() || IsVideoChanged())
         {
-            UIExitPopup.Instance?.Show(() =>
+            UIManager.Instance.uiExitPopup?.Show(() =>
             {
                 EventBus.Raise(UIEventType.ShowSoundTab);
             });
@@ -32,7 +32,7 @@ public class OptionBtn : MonoBehaviour
     {
         if (IsKeyChanged() || IsVolumeChanged())
         {
-            UIExitPopup.Instance?.Show(() =>
+            UIManager.Instance.uiExitPopup?.Show(() =>
             {
                 EventBus.Raise(UIEventType.ShowVideoTab);
             });
@@ -47,7 +47,7 @@ public class OptionBtn : MonoBehaviour
     {
         if (IsVolumeChanged() || IsVideoChanged())
         {
-            UIExitPopup.Instance?.Show(() =>
+            UIManager.Instance.uiExitPopup?.Show(() =>
             {
                 EventBus.Raise(UIEventType.ShowControlTab);
             });
@@ -65,12 +65,13 @@ public class OptionBtn : MonoBehaviour
     {
         FadeManager.Instance.FadeOutAndLoadSceneWithLoading("StartScene");
     }
+    public void OnClickStartGame()
+    {
+        EventBus.Raise(UIEventType.LoadMainScene);
+    }
+
     public void QuitGame()
     {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
+        EventBus.Raise(UIEventType.QuitGame);
     }
 }

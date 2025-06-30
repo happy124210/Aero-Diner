@@ -4,13 +4,8 @@ using UnityEngine.UI;
 
 public class VolumeHandler : MonoBehaviour
 {
-    public static VolumeHandler Instance { get; private set; }
 
-    private void Awake()
-    {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
+
     [Header("BGM 설정")]
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private TMP_Text bgmPercentageText;

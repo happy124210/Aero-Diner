@@ -16,7 +16,9 @@ public enum UIEventType
     CloseControl, ShowSoundTab,
     ShowVideoTab, ShowControlTab,
 
-    ShowStartWarningPanel, 
+    ShowStartWarningPanel, ShowStartMenuWithSave,
+    ShowStartMenuNoSave, LoadMainScene,
+    QuitGame
 }
 
 public static class EventBus
