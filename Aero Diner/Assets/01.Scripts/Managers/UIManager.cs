@@ -27,13 +27,33 @@ public class UIManager : Singleton<UIManager>
     private void OnEnable()
     {
         EventBus.OnUIEvent += HandleUIEvent;
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDisable()
     {
         EventBus.OnUIEvent -= HandleUIEvent;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
-
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "LoadingScene")
+        {
+            DisableAllPanels();
+        }
+    }
+    private void DisableAllPanels()
+    {
+        pausePanel?.SetActive(false);
+        optionPanel?.SetActive(false);
+        soundPanel?.SetActive(false);
+        videoPanel?.SetActive(false);
+        controlPanel?.SetActive(false);
+        menuPanel3?.SetActive(false);
+        menuPanel4?.SetActive(false);
+        uiExitPopup?.gameObject.SetActive(false);
+        savePopupFader?.gameObject.SetActive(false);
+    }
     private void HandleUIEvent(UIEventType eventType, object payload)
     {
         string currentScene = SceneManager.GetActiveScene().name;

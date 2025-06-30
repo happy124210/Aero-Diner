@@ -108,4 +108,8 @@ public class FadeManager : Singleton<FadeManager>
 
         yield return StartCoroutine(FadeRoutine(targetAlpha, duration));
     }
+    public void SetFadePlanned(bool planned)
+    {
+        isFadePlanned = planned;
+    }
 }

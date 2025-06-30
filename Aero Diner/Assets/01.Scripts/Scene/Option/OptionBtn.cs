@@ -65,12 +65,13 @@ public class OptionBtn : MonoBehaviour
     {
         FadeManager.Instance.FadeOutAndLoadSceneWithLoading("StartScene");
     }
+    public void OnClickStartGame()
+    {
+        EventBus.Raise(UIEventType.LoadMainScene);
+    }
+
     public void QuitGame()
     {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
+        EventBus.Raise(UIEventType.QuitGame);
     }
 }
