@@ -27,7 +27,6 @@ public class RestaurantGameManager : Singleton<RestaurantGameManager>
     //UI에 필요한 getter 추가
     public float CurrentGameTime => gameTime;
     public float GameTimeLimit => gameTimeLimit;
-    public float TotalEarnings => totalEarnings;
 
     private void Start()
     {

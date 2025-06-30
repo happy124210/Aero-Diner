@@ -115,6 +115,7 @@ public class UIManager : Singleton<UIManager>
             case UIEventType.QuitGame:
                 Debug.Log("게임 종료 요청됨");
                 break;
+
             case UIEventType.ShowRoundTimer:
                 roundTimerPanel?.SetActive(true);
                 break;
@@ -122,6 +123,7 @@ public class UIManager : Singleton<UIManager>
             case UIEventType.HideRoundTimer:
                 roundTimerPanel?.SetActive(false);
                 break;
+
             case UIEventType.UpdateEarnings:
                 earningsDisplay?.AnimateEarnings((float)payload);
                 break;
