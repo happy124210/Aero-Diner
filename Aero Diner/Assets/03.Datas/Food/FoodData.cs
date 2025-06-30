@@ -4,7 +4,7 @@
 /// 음식/재료 데이터
 /// </summary>
 [CreateAssetMenu(fileName = "New Food Data", menuName = "Game Data/Food Data")]
-public class FoodData : ScriptableObject
+public class FoodData : ScriptableObject, CookingSOGroup.IIngredientData
 {
     [Header("음식 정보")]
     public string id;
@@ -15,6 +15,10 @@ public class FoodData : ScriptableObject
     public string description;
     public StationType requireStation;
     public int foodCost;
+
+    public string GetID() => id;
+    public string GetDisplayName() => foodName;
+    public Sprite Icon => foodIcon;
 
 
     public override bool Equals(object obj)

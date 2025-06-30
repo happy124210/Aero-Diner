@@ -17,11 +17,16 @@ public class Trashcan : MonoBehaviour, IInteractable
 
     }
 
-    public bool PlaceIngredient(FoodData data)
+    public bool PlaceIngredient(ScriptableObject dataRaw)
     {
-        return true; // 어떤 재료든 내려놓기 허용
+        // IIngredientData인지만 검사
+        if (dataRaw is CookingSOGroup.IIngredientData)
+            return true;
 
+        return false;
     }
+
+
 
     public void OnHoverEnter()
     {
