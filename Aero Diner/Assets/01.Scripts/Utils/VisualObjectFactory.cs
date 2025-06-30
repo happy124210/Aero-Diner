@@ -35,7 +35,7 @@ public static class VisualObjectFactory
 
         var collider = obj.AddComponent<CircleCollider2D>();
         collider.isTrigger = true;
-        collider.radius = 0.7f;
+        collider.radius = 0.3f;
 
         var rigidbody = obj.AddComponent<Rigidbody2D>();
         rigidbody.bodyType = RigidbodyType2D.Kinematic;
