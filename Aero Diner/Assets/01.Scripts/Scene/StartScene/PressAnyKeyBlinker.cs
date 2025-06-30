@@ -14,6 +14,18 @@ public class PressAnyKeyBlinker : MonoBehaviour
 
     private void Start()
     {
+        if (pressAnyKeyImage == null)
+        {
+            Debug.LogError("[Blinker] pressAnyKeyImage is null!");
+            return;
+        }
+
+        if (canvasGroup == null)
+        {
+            Debug.LogError("[Blinker] canvasGroup is null!");
+            return;
+        }
+
         StartCoroutine(BlinkImage());
     }
 

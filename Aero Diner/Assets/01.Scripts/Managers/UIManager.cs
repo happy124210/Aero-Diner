@@ -1,32 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class UIManager : Singleton<UIManager>
 {
-    [Header("패널들")]
-    public GameObject pausePanel;
-    public GameObject optionPanel;
-    public GameObject soundPanel;
-    public GameObject videoPanel;
-    public GameObject controlPanel;
-    public GameObject menuPanel3;
-    public GameObject menuPanel4;
-
-    [Header("설정 컴포넌트들")]
-    public VolumeHandler volumeHandler;
-    public VideoSettingPanel videoSettingPanel;
-    public KeyRebindManager keyRebindManager;
-    public UIExitPopup uiExitPopup;
-    public SavePopupFader savePopupFader;
-    public UIInputHandler uiInputHandler;
-    public UITracker uiTracker;
-    public OptionBtn optionBtn;
-
-    [Header("기타 UI")]
-    public GameObject roundTimerPanel;
-
-
-    [SerializeField] private EarningsDisplay earningsDisplay;
+    // 씬별 UI
+    private GameObject currentSceneUI;
 
     private void OnEnable()
     {
@@ -39,99 +19,97 @@ public class UIManager : Singleton<UIManager>
         EventBus.OnUIEvent -= HandleUIEvent;
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
+
+    // 씬 로드 후 UI 자동 로드
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == "LoadingScene")
+        string sceneName = scene.name;
+        LoadSceneUI(sceneName);
+    }
+
+    // Addressable을 통한 씬별 UI 로딩
+    public async void LoadSceneUI(string sceneName)
+    {
+        if (currentSceneUI)
         {
-            DisableAllPanels();
+            Destroy(currentSceneUI);
+            currentSceneUI = null;
+        }
+
+        var handle = Addressables.InstantiateAsync($"UICanvas_{sceneName}", transform);
+
+        await handle.Task;
+
+        if (handle.Status == AsyncOperationStatus.Succeeded)
+        {
+            currentSceneUI = handle.Result;
+        }
+        else
+        {
+            Debug.LogError($"UI Load 실패: {sceneName}, Error: {handle.OperationException?.Message}");
         }
     }
-    private void DisableAllPanels()
-    {
-        pausePanel?.SetActive(false);
-        optionPanel?.SetActive(false);
-        soundPanel?.SetActive(false);
-        videoPanel?.SetActive(false);
-        controlPanel?.SetActive(false);
-        menuPanel3?.SetActive(false);
-        menuPanel4?.SetActive(false);
-        uiExitPopup?.gameObject.SetActive(false);
-        savePopupFader?.gameObject.SetActive(false);
-    }
+
+    // UI 이벤트 처리
     private void HandleUIEvent(UIEventType eventType, object payload)
     {
-        string currentScene = SceneManager.GetActiveScene().name;
-        bool isStartScene = currentScene == "StartScene";
-
         switch (eventType)
         {
+            // Pause 관련
             case UIEventType.OpenPause:
-                if (pausePanel) pausePanel.SetActive(true);
+                UIRoot.Instance.pausePanel?.SetActive(true);
                 break;
             case UIEventType.ClosePause:
-                if (pausePanel) pausePanel.SetActive(false);
+                UIRoot.Instance.pausePanel?.SetActive(false);
                 break;
+
+            // Option 패널 열기/닫기
             case UIEventType.OpenOption:
-                pausePanel?.SetActive(false);
-                optionPanel?.SetActive(true);
-                soundPanel?.SetActive(true);
-                videoPanel?.SetActive(false);
-                controlPanel?.SetActive(false);
+                UIRoot.Instance.pausePanel?.SetActive(false);
+                UIRoot.Instance.optionPanel?.SetActive(true);
                 break;
             case UIEventType.CloseOption:
-                if (!isStartScene) pausePanel?.SetActive(true);
-                optionPanel?.SetActive(false);
-                soundPanel?.SetActive(false);
-                videoPanel?.SetActive(false);
-                controlPanel?.SetActive(false);
+                UIRoot.Instance.optionPanel?.SetActive(false);
+                if (SceneManager.GetActiveScene().name != "StartScene")
+                    UIRoot.Instance.pausePanel?.SetActive(true);
                 break;
+
+            // 하위 탭 패널들 (선택적으로 확장 가능)
             case UIEventType.ShowSoundTab:
-                soundPanel?.SetActive(true);
-                videoPanel?.SetActive(false);
-                controlPanel?.SetActive(false);
+                UIRoot.Instance.volumeHandler?.gameObject.SetActive(true);
+                UIRoot.Instance.videoSettingPanel?.gameObject.SetActive(false);
+                UIRoot.Instance.keyRebindManager?.gameObject.SetActive(false);
                 break;
             case UIEventType.ShowVideoTab:
-                soundPanel?.SetActive(false);
-                videoPanel?.SetActive(true);
-                controlPanel?.SetActive(false);
+                UIRoot.Instance.volumeHandler?.gameObject.SetActive(false);
+                UIRoot.Instance.videoSettingPanel?.gameObject.SetActive(true);
+                UIRoot.Instance.keyRebindManager?.gameObject.SetActive(false);
                 break;
             case UIEventType.ShowControlTab:
-                soundPanel?.SetActive(false);
-                videoPanel?.SetActive(false);
-                controlPanel?.SetActive(true);
-                break;
-            case UIEventType.ShowStartMenuWithSave:
-                menuPanel4.SetActive(true);
+                UIRoot.Instance.volumeHandler?.gameObject.SetActive(false);
+                UIRoot.Instance.videoSettingPanel?.gameObject.SetActive(false);
+                UIRoot.Instance.keyRebindManager?.gameObject.SetActive(true);
                 break;
 
-            case UIEventType.ShowStartMenuNoSave:
-                menuPanel3.SetActive(true);
-                break;
-            // UIManager.cs 내부 HandleUIEvent(UIEventType eventType, object payload)
-            case UIEventType.LoadMainScene:
-                FadeManager.Instance.FadeOutAndLoadSceneWithLoading("MainScene");
-                break;
-
-            case UIEventType.QuitGame:
-                Debug.Log("게임 종료 요청됨");
-                break;
-
-            case UIEventType.ShowRoundTimer:
-                roundTimerPanel?.SetActive(true);
-                break;
-
-            case UIEventType.HideRoundTimer:
-                roundTimerPanel?.SetActive(false);
-                break;
-
+            // 수익 UI 업데이트
             case UIEventType.UpdateEarnings:
-                earningsDisplay?.AnimateEarnings((float)payload);
+                currentSceneUI?.GetComponentInChildren<EarningsDisplay>()?.AnimateEarnings((float)payload);
                 break;
 
+            // 라운드 타이머
+            case UIEventType.ShowRoundTimer:
+            case UIEventType.HideRoundTimer:
+                var timer = currentSceneUI?.GetComponentInChildren<RoundTimerUI>(true)?.gameObject;
+                if (timer != null)
+                    timer.SetActive(eventType == UIEventType.ShowRoundTimer);
+                break;
+
+            // 게임 종료
+            case UIEventType.QuitGame:
 #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
 #else
-    Application.Quit();
+                Application.Quit();
 #endif
                 break;
         }

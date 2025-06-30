@@ -1,0 +1,21 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class UIRoot : Singleton<UIRoot>
+{
+    public KeyRebindManager keyRebindManager;
+    public VolumeHandler volumeHandler;
+    public VideoSettingPanel videoSettingPanel;
+
+    [SerializeField]
+    public GameObject pausePanel;
+    public GameObject optionPanel;
+    public GameObject volumePanel;
+    public GameObject videoPanel;
+    public GameObject keysettingPanel;
+    
+
+    public UITracker uiTracker;
+    public UIExitPopup uiExitPopup;
+}
