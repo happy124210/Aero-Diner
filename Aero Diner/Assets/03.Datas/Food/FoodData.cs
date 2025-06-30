@@ -18,6 +18,8 @@ public class FoodData : ScriptableObject, CookingSOGroup.IIngredientData
 
     public string GetID() => id;
     public string GetDisplayName() => foodName;
+    public Sprite Icon => foodIcon;
+
 
     public override bool Equals(object obj)
     {

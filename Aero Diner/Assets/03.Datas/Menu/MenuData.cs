@@ -19,6 +19,8 @@ public class MenuData : ScriptableObject, CookingSOGroup.IIngredientData
 
     public string GetID() => id;
     public string GetDisplayName() => menuName;
+    public Sprite Icon => menuIcon;
+
 
 
     // 예: 필요하면 런타임에 FoodData로 변환하는 로직

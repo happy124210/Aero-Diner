@@ -10,6 +10,8 @@ public class CookingSOGroup : ScriptableObject
     {
         string GetID(); // 고유 식별자 제공
         string GetDisplayName(); // 이름 (디버그나 UI 출력용)
+        Sprite Icon { get; }
+
     }
 
     [Serializable]
@@ -24,7 +26,7 @@ public class CookingSOGroup : ScriptableObject
     }
 
     [SerializeField]
-    public List<Entry> automaticList = new List<Entry>();
+    public List<Entry> List = new List<Entry>();
 
     // 빠른 조회를 위한 Dictionary
     private Dictionary<string, MenuData> ingredientMap = new();
@@ -36,7 +38,7 @@ public class CookingSOGroup : ScriptableObject
     {
         ingredientMap.Clear();
 
-        foreach (var entry in automaticList)
+        foreach (var entry in List)
         {
             entry.ingredients.Clear();
 
@@ -86,7 +88,7 @@ public class CookingSOGroup : ScriptableObject
             ingredients = new List<IIngredientData>(ingredientList),
             menuData = menuData
         };
-        automaticList.Add(newEntry);
+        List.Add(newEntry);
 
         foreach (var ingredient in ingredientList)
         {

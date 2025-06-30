@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PassiveGroup", menuName = "CookingGame/PassiveGroup")]
@@ -50,5 +51,10 @@ public class PassiveSOGroup : ScriptableObject
         {
             Debug.Log($"Ingredient '{data.foodName}' is already registered in the group.");
         }
+    }
+
+    public bool ContainsID(string id)
+    {
+        return passiveList.Any(e => e.foodData != null && e.foodData.id == id);
     }
 }

@@ -4,20 +4,20 @@ using UnityEngine;
 
 public class FoodDisplay : MonoBehaviour, IInteractable
 {
-    public FoodData foodData;
+    public ScriptableObject rawData;
+    public IngredientStation originIngredient;
     public Shelf originShelf;
     public AutomaticStation originAutomatic;
     public PassiveStation originPassive;
 
     // IIngredientData로 접근할 수 있도록 추가
-    public CookingSOGroup.IIngredientData data => foodData;
+    public CookingSOGroup.IIngredientData data => rawData as CookingSOGroup.IIngredientData;
 
 
     public void Interact(PlayerInventory playerInventory, InteractionType interactionType)
     {
         if (playerInventory == null) return;
 
-        //상호작용 타입을 들기로 고정.
         if (interactionType == InteractionType.Pickup)
         {
             playerInventory.TryPickup(this);

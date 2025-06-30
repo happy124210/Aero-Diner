@@ -35,13 +35,13 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     public List<string> currentIngredients = new();
 
     // 내부 상태
-    private List<IIngredientData> placedIngredientList = new();
-    private List<GameObject> placedIngredients = new();
-    private List<MenuData> availableMatchedRecipes = new();
-    private float currentCookingTime;
-    private MenuData cookedIngredient;
-    private bool isCooking = false;
-    private OutlineShaderController outline;
+    private List<IIngredientData> placedIngredientList = new();      // 실제 등록된 재료의 데이터 목록
+    private List<GameObject> placedIngredients = new();              // 화면에 보여지는 재료 오브젝트들
+    private List<MenuData> availableMatchedRecipes = new();          // 현재 조건에서 가능한 레시피 리스트
+    private float currentCookingTime;                                // 남은 조리 시간
+    private MenuData cookedIngredient;                               // 조리 완료 시 결과가 되는 레시피
+    private bool isCooking = false;                                  // 현재 조리 중인지 여부 플래그
+    private OutlineShaderController outline;                         // 외곽선 효과를 제어하는 컴포넌트
 
     private void Awake()
     {
@@ -82,26 +82,28 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// </summary>
     public void PlaceIngredient(ScriptableObject obj)
     {
+        // 잘못된 데이터거나 등록 불가한 재료일 경우 경고 출력 후 무시
         if (obj is not IIngredientData data || !CanPlaceIngredient(data))
         {
             Debug.LogWarning($"'{obj?.name}'은 등록할 수 없는 재료입니다.");
             return;
         }
 
-        RegisterIngredient(data);
-        UpdateCandidateRecipes();
+        RegisterIngredient(data);     // 재료 등록
+        UpdateCandidateRecipes();     // 현재 재료 기반 가능한 요리 찾기
 
+        // 모든 재료가 준비되었다면 즉시 조리 시작
         if (cookedIngredient != null &&
             cookedIngredient.ingredients.All(id => currentIngredients.Contains(id)))
         {
-            StartCooking();
+            StartCooking(); // 자동 조리 시작
         }
         else
         {
+            // 준비는 되었지만 아직 요리 시작 조건이 안 맞음
             isCooking = false;
-            Debug.Log($"조리 대기 중...");
+            Debug.Log("조리 대기 중...");
         }
-
     }
 
     /// <summary>
@@ -120,7 +122,7 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         //{
         //    // 시각화 오브젝트에 FoodDisplay 연결 및 목록 추가
         //    var display = obj.AddComponent<FoodDisplay>();
-        //    display.foodData = selectedIngredient;
+        //    display.rawData = data as ScriptableObject;
         //    display.originAutomatic = this;
         //    placedIngredients.Add(obj);
         //}
@@ -129,22 +131,30 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// <summary>
     /// 현재 재료 조합에 일치하는 레시피 후보 탐색
     /// </summary>
+    /// <summary>
+    /// 현재 스테이션에 놓인 재료 목록을 기반으로 가능한 레시피 후보를 탐색하고
+    /// 가장 일치하는 요리를 선정함
+    /// </summary>
     private void UpdateCandidateRecipes()
     {
+        // 전체 레시피 중, 현재 등록된 재료 ID 중 하나라도 포함하는 후보 레시피 필터링
         var candidateRecipes = stationData.availableRecipes
             .Where(r => r.ingredients != null && currentIngredients.Any(id => r.ingredients.Contains(id)))
             .ToList();
 
+        // 후보 중에서 현재 재료와 정확히 일치하는 레시피를 RecipeManager를 통해 찾음
         var matches = RecipeManager.Instance.FindMatchingRecipes(candidateRecipes, currentIngredients);
 
+        // 일치하는 레시피가 하나라도 있을 경우
         if (matches != null && matches.Count > 0)
         {
-            cookedIngredient = matches[0].recipe;
-            availableMatchedRecipes = matches.Select(m => m.recipe).ToList();
+            cookedIngredient = matches[0].recipe; // 가장 먼저 일치한 요리 데이터를 선택
+            availableMatchedRecipes = matches.Select(m => m.recipe).ToList(); // 전체 일치 목록 저장
             Debug.Log($"{matches.Count}개 일치 — '{cookedIngredient.menuName}' 선택됨");
         }
         else
         {
+            // 일치하는 레시피가 없으면 초기화
             cookedIngredient = null;
             availableMatchedRecipes.Clear();
             Debug.Log("조건에 맞는 레시피가 없습니다.");
@@ -183,7 +193,7 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         {
             // 결과물에도 FoodDisplay 구성
             var display = result.AddComponent<FoodDisplay>();
-            display.foodData = selectedIngredient;
+            display.rawData = cookedIngredient;
             display.originAutomatic = this;
         }
     }
@@ -206,12 +216,12 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// </summary>
     private void ResetStation()
     {
-        isCooking = false;
-        cookedIngredient = null;
-        ResetCookingTimer();
-        currentIngredients.Clear();
-        placedIngredientList.Clear();
-        ClearPlacedObjects();
+        isCooking = false;              // 조리 상태 해제
+        cookedIngredient = null;        // 조리된 레시피 정보 제거
+        ResetCookingTimer();            // 타이머 초기화
+        currentIngredients.Clear();     // 재료 ID 초기화
+        placedIngredientList.Clear();   // 재료 객체 리스트 초기화
+        ClearPlacedObjects();           // 화면에서 제거
     }
 
     /// <summary>
@@ -266,46 +276,51 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// </summary>
     public void OnPlayerPickup(PlayerInventory playerInventory)
     {
-        // 타이머 및 내부 상태 초기화
+        // 조리 관련 상태 초기화
         ResetCookingTimer();
         ClearPlacedObjects();
         currentIngredients.Clear();
         placedIngredientList.Clear();
 
-        // 조리 결과물 혹은 기본 재료명/아이콘 결정
-        string name = cookedIngredient?.menuName ?? selectedIngredient?.GetDisplayName();
-        Sprite icon = cookedIngredient?.menuIcon ?? selectedIngredient?.foodIcon;
+        // 결과물이 있으면 사용하고, 없으면 마지막 등록 재료 사용
+        ScriptableObject dataRaw = cookedIngredient != null
+            ? (ScriptableObject)cookedIngredient
+            : (ScriptableObject)selectedIngredient;
 
-        if (string.IsNullOrEmpty(name) || icon == null)
-        {
-            Debug.LogWarning("들어올 수 있는 조리 결과물이 없습니다.");
+        // 유효한 데이터인지 검사
+        if (dataRaw is not IIngredientData ingredientData)
             return;
-        }
 
-        // 손에 들릴 오브젝트 생성
-        GameObject pickupObj = VisualObjectFactory.CreateIngredientVisual(transform, name, icon);
-        if (pickupObj != null)
-        {
-            // FoodDisplay 컴포넌트 연결
-            var display = pickupObj.AddComponent<FoodDisplay>();
-            display.foodData = selectedIngredient;
-            display.originAutomatic = this;
+        string name = ingredientData.GetDisplayName();
+        Sprite icon = ingredientData.Icon;
+        if (string.IsNullOrEmpty(name) || icon == null)
+            return;
 
-            // 충돌 처리 제거
-            var col = pickupObj.GetComponent<Collider2D>();
-            if (col != null) col.enabled = false;
+        // 비주얼 오브젝트 생성 및 플레이어 인벤토리에 배치
+        Transform slot = playerInventory.GetItemSlotTransform();
+        GameObject pickupObj = VisualObjectFactory.CreateIngredientVisual(slot, name, icon);
+        if (pickupObj == null)
+            return;
 
-            // 플레이어 손에 위치시키고 등록
-            Transform slot = playerInventory.GetItemSlotTransform();
-            pickupObj.transform.SetParent(slot);
-            pickupObj.transform.localPosition = Vector3.zero;
-            pickupObj.transform.localRotation = Quaternion.identity;
+        var display = pickupObj.AddComponent<FoodDisplay>();
+        display.rawData = dataRaw;
+        display.originAutomatic = this;
 
-            playerInventory.SetHeldItem(display);
+        // 충돌/물리 엔진 비활성화 (UI 용도)
+        Collider2D col = pickupObj.GetComponent<Collider2D>();
+        if (col != null)
+            col.enabled = false;
 
-            Debug.Log($"플레이어가 '{name}' 획득");
-        }
+        Rigidbody2D rb = pickupObj.GetComponent<Rigidbody2D>();
+        if (rb != null)
+            rb.simulated = false;
+
+        // 인벤토리 등록 처리
+        playerInventory.SetHeldItem(display);
+
+        Debug.Log($"플레이어가 '{name}' 획득");
     }
+
     public void OnHoverEnter()
     {
         outline?.EnableOutline();
