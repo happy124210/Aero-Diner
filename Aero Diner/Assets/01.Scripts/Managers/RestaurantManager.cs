@@ -4,10 +4,14 @@ using UnityEngine;
 /// <summary>
 /// 레스토랑 게임 매니저 (임시)
 /// </summary>
-public class RestaurantGameManager : Singleton<RestaurantGameManager>
+public class RestaurantManager : Singleton<RestaurantManager>
 {
     [Header("Managers")]
     [SerializeField] private CustomerSpawner customerSpawner;
+    
+    [Header("Layouts")]
+    [SerializeField] private Transform entrancePoint;
+    [SerializeField] private Transform exitPoint;
     
     [Header("Game State")]
     [SerializeField] private bool gameRunning = true;
@@ -37,7 +41,9 @@ public class RestaurantGameManager : Singleton<RestaurantGameManager>
     public float CurrentGameTime => gameTime;
     public float GameTimeLimit => gameTimeLimit;
     public float TotalEarnings => totalEarnings;
-
+    public Vector3 GetEntrancePoint() => entrancePoint.position;
+    public Vector3 GetExitPoint() => exitPoint.position;
+    
     private void Start()
     {
         StartGame();
@@ -107,12 +113,6 @@ public class RestaurantGameManager : Singleton<RestaurantGameManager>
                 customerSpawner.SpawnSingleCustomer();
         }
         
-        if (GUILayout.Button("Clear All Customers"))
-        {
-            if (customerSpawner)
-                customerSpawner.ClearAllCustomers();
-        }
-        
         if (GUILayout.Button(gameRunning ? "Stop Game" : "Start Game"))
         {
             if (gameRunning)
@@ -164,7 +164,7 @@ public class RestaurantGameManager : Singleton<RestaurantGameManager>
         // 모든 손님 정리
         if (customerSpawner)
         {
-            customerSpawner.ClearAllCustomers();
+            TableManager.Instance.ReleaseAllSeatsAndQueue();
         }
         
         // 게임 재시작

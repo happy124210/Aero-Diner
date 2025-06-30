@@ -198,15 +198,30 @@ public class CustomerController : MonoBehaviour, IPoolable
 #region Customer Actions & State
     
     /// <summary>
-    /// 줄 위치 업데이트 (CustomerSpawner가 호출)
+    /// 줄 위치 업데이트
     /// </summary>
-    public void UpdateQueuePosition(Vector3 newQueuePosition)
+    public void UpdateQueuePosition(Vector3 newPosition)
     {
-        currentQueuePosition = newQueuePosition;
-        isMovingToNewQueuePosition = true;
-        
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 새로운 줄 위치로 이동: {newQueuePosition}");
-        SetDestination(newQueuePosition);
+        SetDestination(newPosition);
+    }
+    
+    /// <summary>
+    /// 줄서기 시작
+    /// </summary>
+    public void StartWaitingInLine(Vector3 queuePosition)
+    {
+        SetDestination(queuePosition);
+        ChangeState(new WaitingInLineState());
+        StartPatienceTimer();
+    }
+
+    /// <summary>
+    /// 할당된 좌석으로 이동
+    /// </summary>
+    public void MoveToAssignedSeat()
+    {
+        StopPatienceTimer();
+        ChangeState(new MovingToSeatState());
     }
     
     /// <summary>
@@ -260,7 +275,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     {
         // TODO: 실제 결제 시스템과 연동
         int payment = Random.Range(100, 500);
-        RestaurantGameManager.Instance.OnCustomerPaid(payment);
+        RestaurantManager.Instance.OnCustomerPaid(payment);
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} {payment} 코인 결제!");
         paymentCompleted = true;
         
@@ -496,17 +511,9 @@ public class CustomerController : MonoBehaviour, IPoolable
             navAgent.isStopped = true;
         }
         
-        // Queue 시스템에서 제거
-        if (CustomerSpawner.Instance != null)
-        {
-            CustomerSpawner.Instance.RemoveCustomerFromQueue(this);
-        }
-        
-        // 할당받은 좌석이 있다면 좌석 해제
-        if (CustomerSpawner.Instance != null)
-        {
-            TableManager.Instance.ReleaseSeat(this);
-        }
+        // 대기/좌석 정리
+        TableManager.Instance.RemoveCustomerFromQueue(this);
+        TableManager.Instance.ReleaseSeat(this);
         
         // 큐 데이터 정리
         currentQueuePosition = Vector3.zero;
