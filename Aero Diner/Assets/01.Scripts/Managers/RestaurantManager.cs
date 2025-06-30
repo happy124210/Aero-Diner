@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// 레스토랑 게임 매니저 (임시)
@@ -19,6 +20,14 @@ public class RestaurantGameManager : Singleton<RestaurantGameManager>
     //시간 UI 관련하여 수정
     [Tooltip("현재까지 경과한 시간")]
     [SerializeField] private float gameTime;
+    
+    [Header("Menu")]
+    [SerializeField] private MenuData[] availableMenus;
+    private Dictionary<string, MenuData> menuDatabase = new Dictionary<string, MenuData>();
+    
+    [Header("Debug")]
+    [SerializeField] private bool showDebugInfo = true;
+    
 
     [Header("라운드 시간 설정")]
     [Tooltip("1라운드(하루)의 제한 시간 (초 단위)")]
@@ -52,6 +61,26 @@ public class RestaurantGameManager : Singleton<RestaurantGameManager>
             }
         }
     }
+    
+    /// <summary>
+    /// 메뉴 데이터 로드
+    /// </summary>
+    private void LoadMenuData()
+    {
+        // 딕셔너리에 메뉴 등록
+        menuDatabase.Clear();
+        
+        foreach (var menu in availableMenus)
+        {
+            if (menu != null && !string.IsNullOrEmpty(menu.id))
+            {
+                menuDatabase[menu.id] = menu;
+            }
+        }
+
+        if (showDebugInfo) Debug.Log($"[RestaurantManager]: {menuDatabase.Count}개 메뉴 로드 완료");
+    }
+    
     
     private void OnGUI()
     {

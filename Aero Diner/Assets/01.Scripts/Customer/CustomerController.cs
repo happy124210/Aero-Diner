@@ -201,7 +201,6 @@ public class CustomerController : MonoBehaviour, IPoolable
     public bool HasAvailableSeat()
     {
         // 임시로 좌석 체크
-        HideAllUI();
         return CustomerSpawner.Instance.AssignSeatToCustomer(this);
     }
     

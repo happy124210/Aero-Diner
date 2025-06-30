@@ -1,13 +1,5 @@
 using UnityEngine;
 
-public abstract class CustomerState
-{
-    public abstract void Enter(CustomerController customer);
-    public abstract CustomerState Update(CustomerController customer);
-    public abstract void Exit(CustomerController customer);
-    public abstract string StateName { get; }
-}
-
 /// <summary>
 /// 입구로 이동
 /// </summary>
@@ -79,6 +71,7 @@ public class WaitingInLineState : CustomerState
     public override void Exit(CustomerController customer)
     {
         CustomerSpawner.Instance.RemoveCustomerFromQueue(customer);
+        customer.StopPatienceTimer();
     }
 }
 
@@ -105,7 +98,6 @@ public class MovingToSeatState : CustomerState
 
     public override void Exit(CustomerController customer)
     {
-        customer.StopPatienceTimer();
     }
 }
 
