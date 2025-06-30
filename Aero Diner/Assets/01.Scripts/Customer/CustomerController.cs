@@ -22,6 +22,9 @@ public class CustomerController : MonoBehaviour, IPoolable
     private float currentPatience;
     private Table assignedTable;
     
+    [Header("Order")]
+    [SerializeField] private MenuData currentOrder;
+    
     [Header("Customer UI")]
     [SerializeField] private Canvas customerUI;
     [SerializeField] private Image orderBubble;
@@ -32,15 +35,11 @@ public class CustomerController : MonoBehaviour, IPoolable
     [SerializeField] private bool showDebugInfo;
     [SerializeField] public string currentNodeName;
     
-    // 큐 관리
-    private Vector3 currentQueuePosition = Vector3.zero;
-    private bool isMovingToNewQueuePosition;
-    
     // 상태 체크용 bool변수들
-    private bool foodServed;
+    private bool isServed;
     private bool isEating;
-    private bool eatingFinished;
-    private bool paymentCompleted;
+    private bool isEatingFinished;
+    private bool isPaymentCompleted;
     private bool hasLeftRestaurant;
 
     // components
@@ -101,7 +100,7 @@ public class CustomerController : MonoBehaviour, IPoolable
             if (eatingTimer >= eatTime)
             {
                 isEating = false;
-                eatingFinished = true;
+                isEatingFinished = true;
                 if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 식사 완료!");
             }
         }
@@ -138,16 +137,12 @@ public class CustomerController : MonoBehaviour, IPoolable
     /// </summary>
     private void ResetCustomerData()
     {
-        foodServed = false;
+        isServed = false;
         isEating = false;
-        eatingFinished = false;
-        paymentCompleted = false;
+        isEatingFinished = false;
+        isPaymentCompleted = false;
         hasLeftRestaurant = false;
         eatingTimer = 0f;
-        
-        // 큐 데이터 초기화
-        currentQueuePosition = Vector3.zero;
-        isMovingToNewQueuePosition = false;
         
         // UI 초기화
         HideAllUI();
@@ -252,24 +247,24 @@ public class CustomerController : MonoBehaviour, IPoolable
     
     private void ServeFood()
     {
-        foodServed = true;
+        isServed = true;
         StopPatienceTimer();
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 음식 서빙됨!");
     }
     
-    public bool IsFoodServed() => foodServed;
+    public bool IsFoodServed() => isServed;
     
     public void StartEating()
     {
         isEating = true;
         eatingTimer = 0f;
-        eatingFinished = false;
+        isEatingFinished = false;
         SetAnimationState(CustomerAnimState.Idle);
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 식사 시작");
     }
     
-    public bool IsEatingFinished() => eatingFinished;
-    public bool IsPaymentCompleted() => paymentCompleted;
+    public bool IsEatingFinished() => isEatingFinished;
+    public bool IsPaymentCompleted() => isPaymentCompleted;
     
     public void ProcessPayment()
     {
@@ -277,7 +272,7 @@ public class CustomerController : MonoBehaviour, IPoolable
         int payment = Random.Range(100, 500);
         RestaurantManager.Instance.OnCustomerPaid(payment);
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} {payment} 코인 결제!");
-        paymentCompleted = true;
+        isPaymentCompleted = true;
         
         // TODO: 결제 이펙트
     }
@@ -322,8 +317,8 @@ public class CustomerController : MonoBehaviour, IPoolable
     /// </summary>
     public bool HasReachedDestination()
     {
-        const float ARRIVAL_THRESHOLD = 0.5f;
-        const float VELOCITY_THRESHOLD = 0.1f;
+        const float arrivalThreshold = 0.5f;
+        const float velocityThreshold = 0.1f;
         
         if (!navAgent || !navAgent.isOnNavMesh) 
         {
@@ -332,8 +327,8 @@ public class CustomerController : MonoBehaviour, IPoolable
         }
         
         bool reached = !navAgent.pathPending && 
-                      navAgent.remainingDistance < ARRIVAL_THRESHOLD && 
-                      navAgent.velocity.sqrMagnitude < VELOCITY_THRESHOLD;
+                      navAgent.remainingDistance < arrivalThreshold && 
+                      navAgent.velocity.sqrMagnitude < velocityThreshold;
         
         if (reached && showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 목적지 도착!");
             
@@ -514,11 +509,7 @@ public class CustomerController : MonoBehaviour, IPoolable
         // 대기/좌석 정리
         TableManager.Instance.RemoveCustomerFromQueue(this);
         TableManager.Instance.ReleaseSeat(this);
-        
-        // 큐 데이터 정리
-        currentQueuePosition = Vector3.zero;
-        isMovingToNewQueuePosition = false;
-        
+
         // Animation 정리
         SetAnimationState(CustomerAnimState.Idle);
         transform.localPosition = Vector3.zero;
