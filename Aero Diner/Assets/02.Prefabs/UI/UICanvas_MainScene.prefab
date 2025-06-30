@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5613295260753683922}
   - component: {fileID: 5823747607339228882}
   - component: {fileID: 1915956251862014842}
-  - component: {fileID: 6042338436621871451}
   m_Layer: 5
   m_Name: UICanvas_MainScene
   m_TagString: Untagged
@@ -49,7 +48,7 @@ Canvas:
   m_GameObject: {fileID: 436117537610307092}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -80,7 +79,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -102,19 +101,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
---- !u!114 &6042338436621871451
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 436117537610307092}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6073105bd1485b46bd6131310cd1cc1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+    m_Bits: 0
 --- !u!1 &761976229355838076
 GameObject:
   m_ObjectHideFlags: 0
@@ -319,6 +306,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4599317137772963162}
+  - component: {fileID: 4716562195499855845}
   m_Layer: 0
   m_Name: MainSceneUI
   m_TagString: Untagged
@@ -342,6 +330,18 @@ Transform:
   - {fileID: 8193421746260783859}
   m_Father: {fileID: 4810083784729990426}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4716562195499855845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1522846569981737563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66cd8db881468df40bb1c35ba1f8b2da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1888713864693901242
 GameObject:
   m_ObjectHideFlags: 0
@@ -1680,9 +1680,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6042338436621871451}
-        m_TargetAssemblyTypeName: UIInputHandler, Assembly-CSharp
-        m_MethodName: HandleEscapeLikeAction
+      - m_Target: {fileID: 4716562195499855845}
+        m_TargetAssemblyTypeName: MainSceneUI, Assembly-CSharp
+        m_MethodName: OnClickPause
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1753,7 +1753,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
