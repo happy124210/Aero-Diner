@@ -151,6 +151,22 @@ public class PlayerInventory : MonoBehaviour
                     break;
 
                 }
+            
+            case Table table:
+                if (table.CanPlaceFood())
+                {
+                    //table.PlaceFood();
+                    Destroy(heldItem.gameObject);
+                    heldItem = null;
+                    Debug.Log("[Inventory] 테이블에 아이템 배치됨");
+                    placed = true;
+                }
+                else
+                {
+                    Debug.Log("[Inventory] 테이블에 재료를 배치할 수 없습니다.");
+                }
+                break;
+            
         }
 
         if (!placed)
