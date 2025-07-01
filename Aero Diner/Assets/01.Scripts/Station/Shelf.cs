@@ -15,7 +15,7 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
     public Transform spawnPoint;
 
     [Header("가공 허용 재료 그룹 (FoodData만 관리)")] // 플레이어가 내려놓은 재료를 기반으로 동적으로 채워짐
-    public ShelfSOGroup NeededIngredients;
+    public ShelfSOGroup neededIngredients;
 
     // 내부 상태
     private GameObject placedIngredientObj;
@@ -50,7 +50,7 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
         }
 
         // FoodData인 경우 그룹 검사
-        if (data is FoodData food && NeededIngredients != null && !NeededIngredients.Contains(food))
+        if (data is FoodData food && neededIngredients != null && !neededIngredients.Contains(food))
         {
             Debug.Log($"'{food.displayName}'는 허용되지 않은 재료입니다.");
             return;
@@ -66,15 +66,15 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
 
         // 만약 FoodData이고, 그룹에 없으면 추가
         if (data is FoodData fd &&
-            NeededIngredients != null &&
-            !NeededIngredients.Contains(fd))
+            neededIngredients != null &&
+            !neededIngredients.Contains(fd))
         {
-            NeededIngredients.AddIngredient(fd);
+            neededIngredients.AddIngredient(fd);
             Debug.Log($"가공 허용 재료 그룹에 '{fd.displayName}' 추가됨.");
         }
     }
 
-    // FoodData 전용 검사 대신 IIngredientData 전반을 검사
+    // IIngredientData 전반을 검사
     public bool CanPlaceIngredient(ScriptableObject dataRaw)
     {
         if (currentData != null)
@@ -85,7 +85,7 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
 
         if (dataRaw is CookingSOGroup.IIngredientData data)
         {
-            if (data is FoodData food && NeededIngredients != null && !NeededIngredients.Contains(food))
+            if (data is FoodData food && neededIngredients != null && !neededIngredients.Contains(food))
             {
                 Debug.Log($"[Shelf] '{food.displayName}'는 허용되지 않은 재료입니다.");
                 return false;

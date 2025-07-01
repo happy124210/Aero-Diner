@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class OptionBtn : MonoBehaviour
 {
-    private bool IsKeyChanged() => UIManager.Instance.keyRebindManager?.HasUnsavedChanges() ?? false;
-    private bool IsVolumeChanged() => UIManager.Instance.volumeHandler?.HasUnsavedChanges() ?? false;
-    private bool IsVideoChanged() => UIManager.Instance.videoSettingPanel?.HasUnsavedChanges() ?? false;
+    private bool IsKeyChanged() => UIRoot.Instance.keyRebindManager?.HasUnsavedChanges() ?? false;
+    private bool IsVolumeChanged() => UIRoot.Instance.volumeHandler?.HasUnsavedChanges() ?? false;
+    private bool IsVideoChanged() => UIRoot.Instance.videoSettingPanel?.HasUnsavedChanges() ?? false;
     [SerializeField] private SavePopupFader popupFader;
     public void OnClickOption()
     {
@@ -17,7 +17,7 @@ public class OptionBtn : MonoBehaviour
     {
         if (IsKeyChanged() || IsVideoChanged())
         {
-            UIManager.Instance.uiExitPopup?.Show(() =>
+               UIRoot.Instance.uiExitPopup?.Show(() =>
             {
                 EventBus.Raise(UIEventType.ShowSoundTab);
             });
@@ -32,7 +32,7 @@ public class OptionBtn : MonoBehaviour
     {
         if (IsKeyChanged() || IsVolumeChanged())
         {
-            UIManager.Instance.uiExitPopup?.Show(() =>
+            UIRoot.Instance.uiExitPopup?.Show(() =>
             {
                 EventBus.Raise(UIEventType.ShowVideoTab);
             });
@@ -47,7 +47,7 @@ public class OptionBtn : MonoBehaviour
     {
         if (IsVolumeChanged() || IsVideoChanged())
         {
-            UIManager.Instance.uiExitPopup?.Show(() =>
+            UIRoot.Instance.uiExitPopup?.Show(() =>
             {
                 EventBus.Raise(UIEventType.ShowControlTab);
             });
@@ -63,6 +63,7 @@ public class OptionBtn : MonoBehaviour
     }
     public void GotoStartScene()
     {
+        EventBus.Raise(UIEventType.ClosePause);
         FadeManager.Instance.FadeOutAndLoadSceneWithLoading("StartScene");
     }
     public void OnClickStartGame()

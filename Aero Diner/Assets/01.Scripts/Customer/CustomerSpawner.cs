@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -111,7 +111,7 @@ public class CustomerSpawner : MonoBehaviour
     {
         if (spawnPoints == null || spawnPoints.Length == 0)
         {
-            Debug.LogError("[CustomerSpawner]: 스폰 지점 설정해주세요 !!!");
+            //Debug.LogError("[CustomerSpawner]: 스폰 지점 설정해주세요 !!!");
             return;
         }
 

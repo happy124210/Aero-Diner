@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d09df1354ed6e32448b2b49289c0a40c, type: 3}
   m_Name: CuttingtomatoData
   m_EditorClassIdentifier: 
-  id: m3
+  id: m2
   menuName: CuttingTomato
+  foodType: 1
   menuIcon: {fileID: 21300000, guid: 5d1ef642f4dbe3749a152f37bf8eaaa1, type: 3}
-  description: "\uC790\uB978 \uD1A0\uB9C8\uD1A0 \uC785\uB2C8\uB2E4"
+  description: "\uC190\uC9C8\uD55C \uD1A0\uB9C8\uD1A0 \uC785\uB2C8\uB2E4"
   ingredients:
   - f3
   cookTime: 5

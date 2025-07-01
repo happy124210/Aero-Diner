@@ -11,7 +11,6 @@ public class PlayerInventory : MonoBehaviour
 
     ///현재 들고 있는 재료
     public FoodDisplay heldItem;
-    private PlayerInventory playerInventory;
 
     public bool IsHoldingItem => heldItem != null;
     public CookingSOGroup.IIngredientData HeldData => heldItem?.data;
@@ -43,9 +42,6 @@ public class PlayerInventory : MonoBehaviour
 
         // 마지막에 스테이션 초기화 호출 (재료 오브젝트 파괴 방지)
         if (food.originPlace != null) { food.originPlace.OnPlayerPickup(); }
-
-        if (food.originPassive) { food.originPassive.OnPlayerPickup(playerInventory); }
-        if (food.originAutomatic) { food.originAutomatic.OnPlayerPickup(playerInventory); }
     }
 
     //아이템을 내려놓기 시도
@@ -116,7 +112,7 @@ public class PlayerInventory : MonoBehaviour
                     if (heldItem.rawData is IIngredientData ingredientData
                         && station.CanPlaceIngredient(ingredientData))
                     {
-                        // ② ScriptableObject 원본(rawData)으로 배치 호출
+                        // ScriptableObject 원본(rawData)으로 배치 호출
                         station.PlaceObject(heldItem.rawData);
 
                         Destroy(heldItem.gameObject);
@@ -136,7 +132,7 @@ public class PlayerInventory : MonoBehaviour
                     if (heldItem.rawData is IIngredientData ingredientData
                         && automatic.CanPlaceIngredient(ingredientData))
                     {
-                        // 실제 배치 호출 (메뉴·재료 모두 처리됨)
+                        // 실제 배치 호출
                         automatic.PlaceObject(heldItem.rawData);
 
                         Destroy(heldItem.gameObject);

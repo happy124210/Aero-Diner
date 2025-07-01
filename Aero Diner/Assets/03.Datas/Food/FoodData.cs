@@ -3,6 +3,15 @@
 /// <summary>
 /// 음식/재료 데이터
 /// </summary>
+public enum FoodType
+{
+    Topping,
+    Sauce,
+    Noodle,
+    Menu,
+    Raw
+}
+
 [CreateAssetMenu(fileName = "New Food Data", menuName = "Game Data/Food Data")]
 public class FoodData : ScriptableObject, CookingSOGroup.IIngredientData
 {
@@ -10,10 +19,10 @@ public class FoodData : ScriptableObject, CookingSOGroup.IIngredientData
     public string id;
     public string foodName;
     public string displayName;
+    public FoodType foodType;
     public Sprite foodIcon;
-    public Sprite processedIcon;
     public string description;
-    public StationType requireStation;
+    public StationType stationType;
     public int foodCost;
 
     public string GetID() => id;
