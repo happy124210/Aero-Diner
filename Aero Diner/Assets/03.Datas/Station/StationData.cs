@@ -10,7 +10,8 @@ public enum StationType
     Grater,
     Grinding,
     Mixing,
-    //Oven,            // 오븐
+    Oven,            // 오븐
+    Kneading,
     //Blender,         // 믹서기
     //MixingBowl,      // 믹싱 볼
 

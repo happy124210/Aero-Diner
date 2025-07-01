@@ -12,6 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 117d233d9fc2bff418b6e4c7d9135079, type: 3}
   m_Name: FryingPan
   m_EditorClassIdentifier: 
+  id: 
+  stationName: 
   stationType: 1
+  workType: 0
+  stationSprite: {fileID: 0}
+  stationIcon: {fileID: 0}
+  description: 
+  stationCost: 0
   availableRecipes:
   - {fileID: 11400000, guid: dade73e4017f0004da99a730ca752dc8, type: 2}
+  - {fileID: 11400000, guid: e1e900252341e484bb09de1fa93d4e8a, type: 2}
+  - {fileID: 11400000, guid: 7089b92753e1ec94aa7f9b86f258292a, type: 2}
+  - {fileID: 11400000, guid: 9f4de5919b300cd43b33546a236913a0, type: 2}
+  - {fileID: 11400000, guid: 263a938b3ed26e248a1ebf994cd31d4f, type: 2}
+  - {fileID: 11400000, guid: 0fb2663b6d54fe64da59cc4e0718c6a5, type: 2}
+  - {fileID: 11400000, guid: 17002cd6687697049aa34653c7516e2b, type: 2}
+  - {fileID: 11400000, guid: 854aba876a3f7a24ea2e74eb03469a14, type: 2}
+  - {fileID: 11400000, guid: be4af856dd497b34d9d0e18a0735f814, type: 2}
+  - {fileID: 11400000, guid: dade73e4017f0004da99a730ca752dc8, type: 2}
+  - {fileID: 11400000, guid: 9e781194469d5cd4bb05865f36d040e8, type: 2}
+  - {fileID: 11400000, guid: 27fd36ac8c91905468d5b8d36853cbd0, type: 2}
