@@ -183,7 +183,9 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
 
     public void OnPlayerPickup()
     {
-        
+        placedMenuObj = null;
+        currentData = null;
+        currentDataRaw = null;
     }
 
     #endregion

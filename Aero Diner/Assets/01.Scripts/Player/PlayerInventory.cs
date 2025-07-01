@@ -11,7 +11,6 @@ public class PlayerInventory : MonoBehaviour
 
     ///현재 들고 있는 재료
     public FoodDisplay heldItem;
-    private PlayerInventory playerInventory;
 
     public bool IsHoldingItem => heldItem != null;
     public CookingSOGroup.IIngredientData HeldData => heldItem?.data;
@@ -43,9 +42,6 @@ public class PlayerInventory : MonoBehaviour
 
         // 마지막에 스테이션 초기화 호출 (재료 오브젝트 파괴 방지)
         if (food.originPlace != null) { food.originPlace.OnPlayerPickup(); }
-
-        if (food.originPassive) { food.originPassive.OnPlayerPickup(playerInventory); }
-        if (food.originAutomatic) { food.originAutomatic.OnPlayerPickup(playerInventory); }
     }
 
     //아이템을 내려놓기 시도

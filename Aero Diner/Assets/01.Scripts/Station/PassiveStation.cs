@@ -81,10 +81,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         }
     }
 
-    public void OnPlayerPickup()
-    {
-    }
-
     private void RegisterIngredient(IIngredientData data)
     {
         // 재료 고유 ID 등록
@@ -248,7 +244,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         {
             var display = result.AddComponent<FoodDisplay>();
             display.rawData = data;
-            display.originPassive = this;
         }
 
         return result;
@@ -276,7 +271,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// <summary>
     /// 플레이어가 재료를 들 때 호출
     /// </summary>
-    public void OnPlayerPickup(PlayerInventory playerInventory)
+    public void OnPlayerPickup()
     {
         // 배치된 재료 시각 오브젝트 모두 제거
         foreach (var obj in placedIngredients)
@@ -304,29 +299,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         Sprite icon = ingredientData.Icon;
         if (string.IsNullOrEmpty(name) || icon == null)
             return;
-
-        // 플레이어 인벤토리 슬롯 위치 가져오기
-        Transform slot = playerInventory.GetItemSlotTransform();
-
-        // 시각 오브젝트 생성
-        GameObject pickupObj = VisualObjectFactory.CreateIngredientVisual(slot, name, icon);
-        if (pickupObj == null)
-            return;
-
-        // FoodDisplay 구성 후 정보 부여
-        var display = pickupObj.AddComponent<FoodDisplay>();
-        display.rawData = dataRaw;
-        display.originPassive = this;
-
-        // 충돌 및 물리 비활성화: 인벤토리에 들려주는 용도이므로
-        Collider2D col = pickupObj.GetComponent<Collider2D>();
-        if (col != null) col.enabled = false;
-
-        Rigidbody2D rb = pickupObj.GetComponent<Rigidbody2D>();
-        if (rb != null) rb.simulated = false;
-
-        // 인벤토리에 장착 처리
-        playerInventory.SetHeldItem(display);
+        
         Debug.Log($"플레이어가 '{name}' 획득");
     }
 
