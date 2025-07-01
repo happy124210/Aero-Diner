@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using UnityEngine;
+using UnityEditor;
 
 public static class Util
 {
@@ -38,3 +39,22 @@ public static class Util
             .Select(word => char.ToUpper(word[0]) + word.Substring(1)));
     }
 }
+
+/// <summary>
+/// ReadOnlyAttribute
+/// </summary>
+public class ReadOnlyAttribute : PropertyAttribute { }
+
+#if UNITY_EDITOR
+
+[CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
+public class ReadOnlyDrawer : PropertyDrawer
+{
+    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+    {
+        GUI.enabled = false;
+        EditorGUI.PropertyField(position, property, label, true);
+        GUI.enabled = true;
+    }
+}
+#endif
