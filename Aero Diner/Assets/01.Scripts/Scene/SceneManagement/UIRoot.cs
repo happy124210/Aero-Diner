@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIRoot : Singleton<UIRoot>
 {
@@ -14,7 +15,7 @@ public class UIRoot : Singleton<UIRoot>
     public GameObject volumePanel;
     public GameObject videoPanel;
     public GameObject keysettingPanel;
-    
+
 
     public UITracker uiTracker;
     public UIExitPopup uiExitPopup;
