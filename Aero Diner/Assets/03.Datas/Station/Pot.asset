@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 117d233d9fc2bff418b6e4c7d9135079, type: 3}
   m_Name: Pot
   m_EditorClassIdentifier: 
-  stationType: 0
+  stationType: 2
   availableRecipes:
   - {fileID: 11400000, guid: f84132e9b5f2b5a43b0491a6c548972d, type: 2}
