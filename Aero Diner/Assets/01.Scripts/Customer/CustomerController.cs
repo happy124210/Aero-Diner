@@ -23,7 +23,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     private Table assignedTable;
     
     [Header("Order")]
-    [SerializeField] private MenuData currentOrder;
+    [SerializeField] private FoodData currentOrder;
     
     [Header("Customer UI")]
     [SerializeField] private Canvas customerUI;
@@ -237,7 +237,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     
     public void PlaceOrder()
     {
-        MenuData[] availableMenus = RestaurantManager.Instance.GetAvailableMenus();
+        FoodData[] availableMenus = RestaurantManager.Instance.GetAvailableMenus();
     
         if (availableMenus != null && availableMenus.Length > 0)
         {
@@ -246,7 +246,7 @@ public class CustomerController : MonoBehaviour, IPoolable
         }
     }
     
-    private void ReceiveFood(MenuData servedMenu)
+    private void ReceiveFood(FoodData servedMenu)
     {
         if (isServed) return;
 
@@ -274,7 +274,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     
     public void ProcessPayment()
     {
-        int payment = Mathf.RoundToInt(currentOrder.menuCost);
+        int payment = Mathf.RoundToInt(currentOrder.foodCost);
         RestaurantManager.Instance.OnCustomerPaid(payment);
         isPaymentCompleted = true;
         
@@ -540,7 +540,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     public CustomerData CurrentData => currentData;
     public bool HasPatience() => currentPatience > 0;
     public Table GetAssignedTable() => assignedTable;
-    public MenuData CurrentOrder => currentOrder;
+    public FoodData CurrentOrder => currentOrder;
     
     #endregion
     

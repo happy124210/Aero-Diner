@@ -65,10 +65,10 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
     
     #region IPlaceableStation
     
-    public void PlaceObject(ScriptableObject dataRaw)
+    public void PlaceObject(FoodData data)
     {
         if (currentFoodObj) return;
-        currentFoodObj = CreateMenuDisplay(dataRaw);
+        currentFoodObj = CreateMenuDisplay(data);
         currentData = currentFoodObj.GetComponent<FoodDisplay>();
         
         CheckOrderMatch();
@@ -81,31 +81,25 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
 
     #endregion
     
-    private GameObject CreateMenuDisplay(ScriptableObject dataRaw)
+    private GameObject CreateMenuDisplay(FoodData data)
     {
-        if (dataRaw == null || menuSpawnPoint == null)
+        if (data == null || menuSpawnPoint == null)
         {
             Debug.LogError("필수 데이터가 누락되었습니다.");
-            return null;
-        }
-
-        if (dataRaw is not CookingSOGroup.IIngredientData ingredientData)
-        {
-            Debug.LogWarning("디스플레이를 생성할 수 없는 데이터입니다.");
             return null;
         }
 
         // VisualObjectFactory 호출
         GameObject obj = VisualObjectFactory.CreateIngredientVisual(
             parent: menuSpawnPoint,
-            name: ingredientData.GetDisplayName(),
-            icon: ingredientData.Icon
+            name: data.foodName,
+            icon: data.foodIcon
         );
         if (obj == null) return null;
 
         // FoodDisplay 세팅 (원본 데이터만 연결)
         var display = obj.AddComponent<FoodDisplay>();
-        display.rawData = dataRaw;
+        display.foodData = data;
         display.originPlace = this;
         return obj;
     }

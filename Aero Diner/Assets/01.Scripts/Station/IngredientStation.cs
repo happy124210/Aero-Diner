@@ -6,9 +6,6 @@ using UnityEngine.UIElements;
 /// </summary>
 public class IngredientStation : MonoBehaviour, IInteractable
 {
-    [Header("재료 데이터 그룹")]
-    public IngredientSOGroup ingredientGroup;
-
     [Header("생성할 재료 SO")]
     public FoodData selectedIngredient;
 
@@ -24,7 +21,7 @@ public class IngredientStation : MonoBehaviour, IInteractable
     /// </summary>
     public void Interact(PlayerInventory playerInventory, InteractionType interactionType)
     {
-        if (ingredientGroup == null || selectedIngredient == null || playerInventory == null)
+        if (!selectedIngredient || !playerInventory)
         {
             Debug.LogError("필수 데이터가 누락되었습니다.");
             return;
@@ -35,11 +32,9 @@ public class IngredientStation : MonoBehaviour, IInteractable
             Debug.Log("플레이어가 이미 아이템을 들고 있음");
             return;
         }
-
-        // IIngredientData로 이름과 아이콘 가져오기
-        var ingredientData = selectedIngredient as CookingSOGroup.IIngredientData;
-        string displayName = ingredientData.GetDisplayName();
-        Sprite displayIcon = ingredientData.Icon;
+        
+        string displayName = selectedIngredient.foodName;
+        Sprite displayIcon = selectedIngredient.foodIcon;
 
         // VisualObjectFactory로 시각 오브젝트 생성 (부모: 플레이어 손 슬롯)
         Transform slot = playerInventory.GetItemSlotTransform();
@@ -48,7 +43,7 @@ public class IngredientStation : MonoBehaviour, IInteractable
             name: displayName,
             icon: displayIcon
         );
-        if (pickupObj == null)
+        if (!pickupObj)
         {
             Debug.LogError("비주얼 오브젝트 생성 실패");
             return;
@@ -56,8 +51,7 @@ public class IngredientStation : MonoBehaviour, IInteractable
 
         // FoodDisplay 세팅
         var display = pickupObj.AddComponent<FoodDisplay>();
-        display.rawData = selectedIngredient;
-        display.originIngredient = this;
+        display.foodData = selectedIngredient;
 
         // Collider / Rigidbody 비활성화
         var col = pickupObj.GetComponent<Collider2D>();

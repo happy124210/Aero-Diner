@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class RecipeManager : Singleton<RecipeManager>
 {
-    public List<RecipeMatchResult> FindMatchingRecipes(List<MenuData> candidateRecipes, List<string> ingredientIds)
+    public List<RecipeMatchResult> FindMatchingRecipes(List<FoodData> candidateRecipes, List<string> ingredientIds)
     {
         if (candidateRecipes == null || ingredientIds == null)
         {
@@ -20,7 +20,7 @@ public class RecipeManager : Singleton<RecipeManager>
             .Select(r => new RecipeMatchResult
             {
                 recipe = r,
-                matchedCount = r.ingredients.Count(id => ingredientIds.Contains(id)),
+                matchedCount = r.ingredients.Count(ingredientIds.Contains),
                 totalRequired = r.ingredients.Length
             })
             .Where(r => r.matchedCount > 0)
@@ -32,7 +32,7 @@ public class RecipeManager : Singleton<RecipeManager>
 
 public class RecipeMatchResult
 {
-    public MenuData recipe;
+    public FoodData recipe;
     public int matchedCount;
     public int totalRequired;
     public float MatchRatio => totalRequired == 0 ? 0f : (float)matchedCount / totalRequired;

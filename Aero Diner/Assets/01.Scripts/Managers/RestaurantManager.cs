@@ -26,8 +26,8 @@ public class RestaurantManager : Singleton<RestaurantManager>
     [SerializeField] private float gameTime;
     
     [Header("Menu")]
-    [SerializeField] private MenuData[] availableMenus;
-    private readonly Dictionary<string, MenuData> menuDatabase = new Dictionary<string, MenuData>();
+    [SerializeField] private FoodData[] availableMenus;
+    private readonly Dictionary<string, FoodData> menuDatabase = new Dictionary<string, FoodData>();
     
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo = true;
@@ -43,7 +43,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
     public float TotalEarnings => totalEarnings;
     public Vector3 GetEntrancePoint() => entrancePoint.position;
     public Vector3 GetExitPoint() => exitPoint.position;
-    public MenuData[] GetAvailableMenus() => availableMenus;
+    public FoodData[] GetAvailableMenus() => availableMenus;
     private void Start()
     {
         StartGame();
@@ -79,7 +79,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
         
         foreach (var menu in availableMenus)
         {
-            if (menu != null && !string.IsNullOrEmpty(menu.id))
+            if (menu != null && !string.IsNullOrEmpty(menu.id) && menu.foodType == FoodType.Menu)
             {
                 menuDatabase[menu.id] = menu;
             }
