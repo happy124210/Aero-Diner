@@ -514,6 +514,10 @@ PrefabInstance:
       propertyPath: ingredientGroup
       value: 
       objectReference: {fileID: 11400000, guid: 54651676d6b0e7a46980bd2eb9451ecd, type: 2}
+    - target: {fileID: 1414166720000491536, guid: 5f0c10aa945407043988e50775e7c222, type: 3}
+      propertyPath: selectedIngredient
+      value: 
+      objectReference: {fileID: 11400000, guid: efb9dca86fe9fa14e880869ef50db4cf, type: 2}
     - target: {fileID: 6795388052790419936, guid: 5f0c10aa945407043988e50775e7c222, type: 3}
       propertyPath: m_Name
       value: I_WaterStationTest
@@ -694,6 +698,10 @@ PrefabInstance:
       propertyPath: ingredientGroup
       value: 
       objectReference: {fileID: 11400000, guid: 54651676d6b0e7a46980bd2eb9451ecd, type: 2}
+    - target: {fileID: 614573308090536744, guid: ec1bb3c87ab45fc45bd365f3ad7a152a, type: 3}
+      propertyPath: selectedIngredient
+      value: 
+      objectReference: {fileID: 11400000, guid: 88a44882a6155d7419c7589471c18497, type: 2}
     - target: {fileID: 7935754670503280462, guid: ec1bb3c87ab45fc45bd365f3ad7a152a, type: 3}
       propertyPath: m_Name
       value: I_NoodleStationTest
