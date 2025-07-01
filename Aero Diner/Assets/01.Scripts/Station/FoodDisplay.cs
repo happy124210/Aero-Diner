@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class FoodDisplay : MonoBehaviour, IInteractable
 {
     public ScriptableObject rawData;
     public IngredientStation originIngredient;
-    public Shelf originShelf;
+    public IPlaceableStation originPlace;
     public AutomaticStation originAutomatic;
     public PassiveStation originPassive;
 
