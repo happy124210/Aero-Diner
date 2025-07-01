@@ -45,5 +45,5 @@ public class StationData : ScriptableObject
     public int stationCost;
 
     // 해당 스테이션에서 지원하는 레시피 목록
-    public List<MenuData> availableRecipes;
+    public List<FoodData> availableRecipes;
 }

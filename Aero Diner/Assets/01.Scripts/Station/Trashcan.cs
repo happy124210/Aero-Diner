@@ -17,17 +17,6 @@ public class Trashcan : MonoBehaviour, IInteractable
 
     }
 
-    public bool PlaceIngredient(ScriptableObject dataRaw)
-    {
-        // IIngredientData인지만 검사
-        if (dataRaw is CookingSOGroup.IIngredientData)
-            return true;
-
-        return false;
-    }
-
-
-
     public void OnHoverEnter()
     {
         outline?.EnableOutline();

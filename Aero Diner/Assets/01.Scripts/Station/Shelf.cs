@@ -9,7 +9,7 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
     public ShelfSOGroup shelfGroup;
 
     [Header("생성할 Food/Menu SO")]
-    public ScriptableObject selectedDataRaw; // 플레이어가 내려놓은 재료 데이터 기반으로 갱신
+    public FoodData currentData; // 선반에 올려진 음식 데이터
 
     [Header("비주얼 오브젝트 생성 위치")]
     public Transform spawnPoint;
@@ -19,8 +19,6 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
 
     // 내부 상태
     private GameObject placedIngredientObj;
-    private CookingSOGroup.IIngredientData currentData;
-    private ScriptableObject currentDataRaw;
 
     private OutlineShaderController outline;
 
@@ -33,14 +31,8 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
     public void Interact(PlayerInventory playerInventory, InteractionType interactionType) { }
 
     // IPlaceableStation 인터페이스 구현
-    public void PlaceObject(ScriptableObject dataRaw)
+    public void PlaceObject(FoodData data)
     {
-        // IIngredientData인지 확인
-        if (dataRaw is not CookingSOGroup.IIngredientData data)
-        {
-            Debug.LogWarning("유효하지 않은 데이터입니다.");
-            return;
-        }
 
         // 이미 올려진 게 있으면 차단
         if (currentData != null)
@@ -58,24 +50,21 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
 
         // 상태 갱신
         currentData = data;
-        currentDataRaw = dataRaw;
-        selectedDataRaw = dataRaw;
 
         // 비주얼 생성
-        placedIngredientObj = CreateIngredientDisplay(dataRaw);
+        placedIngredientObj = CreateIngredientDisplay(data);
 
         // 만약 FoodData이고, 그룹에 없으면 추가
-        if (data is FoodData fd &&
-            neededIngredients != null &&
-            !neededIngredients.Contains(fd))
+        if (neededIngredients != null &&
+            !neededIngredients.Contains(data))
         {
-            neededIngredients.AddIngredient(fd);
-            Debug.Log($"가공 허용 재료 그룹에 '{fd.displayName}' 추가됨.");
+            neededIngredients.AddIngredient(data);
+            Debug.Log($"가공 허용 재료 그룹에 '{data.displayName}' 추가됨.");
         }
     }
 
     // IIngredientData 전반을 검사
-    public bool CanPlaceIngredient(ScriptableObject dataRaw)
+    public bool CanPlaceIngredient(FoodData data)
     {
         if (currentData != null)
         {
@@ -83,50 +72,38 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
             return false;
         }
 
-        if (dataRaw is CookingSOGroup.IIngredientData data)
+        if (neededIngredients != null && !neededIngredients.Contains(data))
         {
-            if (data is FoodData food && neededIngredients != null && !neededIngredients.Contains(food))
-            {
-                Debug.Log($"[Shelf] '{food.displayName}'는 허용되지 않은 재료입니다.");
-                return false;
-            }
-
-            Debug.Log($"[Shelf] '{data.GetDisplayName()}' 배치 가능");
-            return true;
+            Debug.Log($"[Shelf] '{data.displayName}'는 허용되지 않은 재료입니다.");
+            return false;
         }
 
-        Debug.Log("[Shelf] IIngredientData가 아닙니다.");
-        return false;
+        Debug.Log($"[Shelf] '{data.displayName}' 배치 가능");
+        return true;
     }
 
     /// <summary>
     /// rawData(FoodData or MenuData) 기반으로 VisualObjectFactory 사용해 오브젝트 생성
     /// </summary>
-    private GameObject CreateIngredientDisplay(ScriptableObject dataRaw)
+    private GameObject CreateIngredientDisplay(FoodData data)
     {
-        if (dataRaw == null || spawnPoint == null)
+        if (data == null || spawnPoint == null)
         {
             Debug.LogError("필수 데이터가 누락되었습니다.");
-            return null;
-        }
-
-        if (dataRaw is not CookingSOGroup.IIngredientData ingredientData)
-        {
-            Debug.LogWarning("디스플레이를 생성할 수 없는 데이터입니다.");
             return null;
         }
 
         // VisualObjectFactory 호출
         GameObject obj = VisualObjectFactory.CreateIngredientVisual(
             parent: spawnPoint,
-            name: ingredientData.GetDisplayName(),
-            icon: ingredientData.Icon
+            name: data.foodName,
+            icon: data.foodIcon
         );
         if (obj == null) return null;
 
         // FoodDisplay 세팅 (원본 데이터만 연결)
         var display = obj.AddComponent<FoodDisplay>();
-        display.rawData = dataRaw;
+        display.foodData = data;
         display.originPlace = this;
         return obj;
     }
@@ -138,9 +115,7 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
     public void OnPlayerPickup()
     {
         placedIngredientObj = null;
-        selectedDataRaw = null;
         currentData = null;
-        currentDataRaw = null;
         Debug.Log("플레이어가 재료를 들었고, 스테이션이 초기화되었습니다.");
     }
 

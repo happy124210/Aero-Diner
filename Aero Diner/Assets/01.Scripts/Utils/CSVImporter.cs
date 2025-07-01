@@ -35,40 +35,13 @@ public class CSVImporter
     }
     
     #endregion
-    
-    #region MenuData 생성
-    
-    [MenuItem("Tools/Import Game Data/Menu Data")]
-    public static void ImportRecipeData()
-    {
-        ImportData("MenuData", ParseRecipeData, "Menu");
-    }
-    
-    public static MenuData ParseRecipeData(string[] cols)
-    {
-        var data = ScriptableObject.CreateInstance<MenuData>();
-        
-        // 레시피 데이터 파싱
-        data.id = cols[0].Trim();
-        data.menuName = cols[1].Trim();
-        data.foodType = (FoodType)Enum.Parse(typeof(FoodType), cols[2].Trim());
-        data.menuIcon = LoadIcon($"{data.menuName}-icon", "Menu");
-        data.description = cols[3].Trim();
-        data.ingredients = ParseStringArray(cols[4]); // 파이프로 구분된 재료들
-        data.cookTime = float.Parse(cols[5]);
-        data.menuCost = float.Parse(cols[6]);
-        
-        return data;
-    }
-
-    #endregion
 
     #region StationData 생성
 
     [MenuItem("Tools/Import Game Data/Station Data")]
     public static void ImportStationData()
     {
-        ImportData("StationData", ParseRecipeData, "Station");
+        ImportData("StationData", ParseStationData, "Station");
     }
 
     public static StationData ParseStationData(string[] cols)
