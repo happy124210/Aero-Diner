@@ -82,7 +82,9 @@ public class CustomerController : MonoBehaviour, IPoolable
     {
         if (hasLeftRestaurant) return;
         
-        currentPatience -= Time.deltaTime;
+        if (isPatienceDecreasing)
+            currentPatience -= Time.deltaTime;
+        
         UpdateCustomerUI();
         
         if (currentState != null)
@@ -207,7 +209,6 @@ public class CustomerController : MonoBehaviour, IPoolable
     {
         SetDestination(queuePosition);
         ChangeState(new WaitingInLineState());
-        StartPatienceTimer();
     }
 
     /// <summary>
@@ -215,7 +216,6 @@ public class CustomerController : MonoBehaviour, IPoolable
     /// </summary>
     public void MoveToAssignedSeat()
     {
-        StopPatienceTimer();
         ChangeState(new MovingToSeatState());
     }
     
@@ -540,6 +540,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     public CustomerData CurrentData => currentData;
     public bool HasPatience() => currentPatience > 0;
     public Table GetAssignedTable() => assignedTable;
+    public MenuData CurrentOrder => currentOrder;
     
     #endregion
     

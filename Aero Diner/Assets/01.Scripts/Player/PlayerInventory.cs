@@ -149,7 +149,7 @@ public class PlayerInventory : MonoBehaviour
                 }
             
             case Table table:
-                if (table.CanPlaceFood())
+                if (table.CanPlaceFood)
                 {
                     table.PlaceObject(heldItem.rawData);
                     Destroy(heldItem.gameObject);

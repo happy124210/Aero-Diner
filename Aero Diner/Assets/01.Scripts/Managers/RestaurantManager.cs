@@ -27,7 +27,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
     
     [Header("Menu")]
     [SerializeField] private MenuData[] availableMenus;
-    private Dictionary<string, MenuData> menuDatabase = new Dictionary<string, MenuData>();
+    private readonly Dictionary<string, MenuData> menuDatabase = new Dictionary<string, MenuData>();
     
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo = true;
@@ -37,7 +37,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
     [Tooltip("1라운드(하루)의 제한 시간 (초 단위)")]
     [SerializeField] private float gameTimeLimit = 180f;
 
-    //UI에 필요한 getter 추가
+    //UI에 필요한 getter 추가 
     public float CurrentGameTime => gameTime;
     public float GameTimeLimit => gameTimeLimit;
     public float TotalEarnings => totalEarnings;
