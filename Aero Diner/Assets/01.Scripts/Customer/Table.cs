@@ -1,20 +1,23 @@
 using System.Collections;
+using System.ComponentModel;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Table : MonoBehaviour, IInteractable, IPlaceableStation
 {
-    [Header("테이블 설정")] [SerializeField] private Transform seatPosition;
+    [Header("테이블 설정")] 
+    [SerializeField] private Transform seatPosition;
     [SerializeField] private Transform menuSpawnPoint;
-
-    [Header("현재 설정")] [SerializeField] private FoodDisplay currentFood;
-    [SerializeField] private CustomerController assignedCustomer; // 이 테이블에 앉아있는 손님
     [SerializeField] private int seatIndex = -1;
+    
+    [Header("현재 설정 - 확인용")]
+    [SerializeField, ReadOnly] private GameObject currentFoodObj; // 테이블에 놓여있는 음식
+    [SerializeField, ReadOnly] private CustomerController assignedCustomer; // 테이블에 앉아있는 손님
 
-    [Header("Debug")] [SerializeField] private bool showDebugInfo = true;
-
-    private GameObject placedMenuObj;
-    private CookingSOGroup.IIngredientData currentData;
-    private ScriptableObject currentDataRaw;
+    [Header("Debug")]
+    [SerializeField] private bool showDebugInfo = true;
+    
+    private FoodDisplay currentData;
 
     #region UnityEvents
 
@@ -52,42 +55,32 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
 
     #region IInteractable
 
-    public void Interact(PlayerInventory inventory, InteractionType interactionType)
+    public void Interact(PlayerInventory inventory, InteractionType interactionType) { }
+
+    public void OnHoverEnter() { }
+
+    public void OnHoverExit() { }
+
+    #endregion
+    
+    #region IPlaceableStation
+    
+    public void PlaceObject(ScriptableObject dataRaw)
     {
-        switch (interactionType)
-        {
-            case InteractionType.Pickup:
-                if (currentFood != null && !inventory.IsHoldingItem)
-                {
-
-                }
-
-                break;
-
-            case InteractionType.Use:
-                break;
-        }
+        if (currentFoodObj) return;
+        currentFoodObj = CreateMenuDisplay(dataRaw);
+        currentData = currentFoodObj.GetComponent<FoodDisplay>();
+        
+        CheckOrderMatch();
     }
 
-    public void OnHoverEnter()
+    public void OnPlayerPickup()
     {
-    }
-
-    public void OnHoverExit()
-    {
+        currentFoodObj = null;
     }
 
     #endregion
-
-    /// <summary>
-    /// 현재 테이블이 음식 서빙 가능 상태인지
-    /// 손님 존재 여부는 고려하지 않음
-    /// </summary>
-    public bool CanPlaceFood()
-    {
-        return currentFood == null;
-    }
-
+    
     private GameObject CreateMenuDisplay(ScriptableObject dataRaw)
     {
         if (dataRaw == null || menuSpawnPoint == null)
@@ -119,9 +112,7 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
 
     public void CheckOrderMatch()
     {
-        if (assignedCustomer == null || currentFood == null) return;
-
-        // TODO: 주문 시스템 연동
+        if (assignedCustomer == null || !currentFoodObj) return;
     }
 
     public void OnOrderMatch()
@@ -141,56 +132,15 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
         }
 
         // TODO: 임시 Destroy
-        Destroy(currentFood.gameObject);
-        currentFood = null;
+        Destroy(currentFoodObj);
+        currentFoodObj = null;
     }
-
-    /// <summary>
-    /// 테이블에서 음식 가져가기
-    /// </summary>
-    public void PickupFood(PlayerInventory inventory)
-    {
-        if (currentFood == null) return;
-
-        if (assignedCustomer != null && assignedCustomer.IsFoodServed()) return;
-
-        currentFood.transform.SetParent(inventory.GetItemSlotTransform());
-        currentFood.transform.localPosition = Vector3.zero;
-
-        // 물리 효과 정리
-        var rb = currentFood.GetComponent<Rigidbody2D>();
-        if (rb) rb.simulated = false;
-        var col = currentFood.GetComponent<Collider2D>();
-        if (col) col.enabled = false;
-
-        inventory.SetHeldItem(currentFood);
-        currentFood = null;
-    }
-
-    #region IPlaceableStation
-    
-    public void PlaceObject(ScriptableObject dataRaw)
-    {
-        if (!CanPlaceFood())
-        {
-            return;
-        }
-
-        placedMenuObj = CreateMenuDisplay(dataRaw);
-    }
-
-    public void OnPlayerPickup()
-    {
-        
-    }
-
-    #endregion
 
     #region Public getters
 
-    public bool HasFood => currentFood != null;
+    public bool HasFood => currentFoodObj != null;
     public bool HasCustomer => assignedCustomer != null;
-    public FoodDisplay CurrentFood => currentFood;
+    public bool CanPlaceFood => currentFoodObj == null;
     public CustomerController AssignedCustomer => assignedCustomer;
 
     #endregion

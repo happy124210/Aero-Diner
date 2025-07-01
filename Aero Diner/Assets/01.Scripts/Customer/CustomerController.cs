@@ -82,7 +82,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     {
         if (hasLeftRestaurant) return;
         
-        if (isPatienceDecreasing )
+        if (isPatienceDecreasing)
             currentPatience -= Time.deltaTime;
         
         UpdateCustomerUI();
@@ -540,6 +540,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     public CustomerData CurrentData => currentData;
     public bool HasPatience() => currentPatience > 0;
     public Table GetAssignedTable() => assignedTable;
+    public MenuData CurrentOrder => currentOrder;
     
     #endregion
     
