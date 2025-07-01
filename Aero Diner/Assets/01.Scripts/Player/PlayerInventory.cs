@@ -112,7 +112,7 @@ public class PlayerInventory : MonoBehaviour
                     if (heldItem.rawData is IIngredientData ingredientData
                         && station.CanPlaceIngredient(ingredientData))
                     {
-                        // ② ScriptableObject 원본(rawData)으로 배치 호출
+                        // ScriptableObject 원본(rawData)으로 배치 호출
                         station.PlaceObject(heldItem.rawData);
 
                         Destroy(heldItem.gameObject);
@@ -132,7 +132,7 @@ public class PlayerInventory : MonoBehaviour
                     if (heldItem.rawData is IIngredientData ingredientData
                         && automatic.CanPlaceIngredient(ingredientData))
                     {
-                        // 실제 배치 호출 (메뉴·재료 모두 처리됨)
+                        // 실제 배치 호출
                         automatic.PlaceObject(heldItem.rawData);
 
                         Destroy(heldItem.gameObject);

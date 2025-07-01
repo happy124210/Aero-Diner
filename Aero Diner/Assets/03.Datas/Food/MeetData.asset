@@ -15,8 +15,8 @@ MonoBehaviour:
   id: f4
   foodName: Meet
   displayName: "\uACE0\uAE30"
+  foodType: 3
   foodIcon: {fileID: 21300000, guid: 95ce90dbcfafbca49bbfa9de6327dcdd, type: 3}
-  processedIcon: {fileID: 21300000, guid: cf66664f063ad474f885368f0e74b360, type: 3}
   description: "\uACE0\uAE30 \uC785\uB2C8\uB2E4"
-  requireStation: 0
+  stationType: 0
   foodCost: 500
