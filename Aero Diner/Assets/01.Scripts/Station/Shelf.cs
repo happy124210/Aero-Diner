@@ -74,7 +74,7 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
         }
     }
 
-    // FoodData 전용 검사 대신 IIngredientData 전반을 검사
+    // IIngredientData 전반을 검사
     public bool CanPlaceIngredient(ScriptableObject dataRaw)
     {
         if (currentData != null)

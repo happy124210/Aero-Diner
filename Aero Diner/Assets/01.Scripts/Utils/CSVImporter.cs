@@ -51,15 +51,43 @@ public class CSVImporter
         // 레시피 데이터 파싱
         data.id = cols[0].Trim();
         data.menuName = cols[1].Trim();
+        data.foodType = (FoodType)Enum.Parse(typeof(FoodType), cols[2].Trim());
         data.menuIcon = LoadIcon($"{data.menuName}-icon", "Menu");
-        data.description = cols[2].Trim();
-        data.ingredients = ParseStringArray(cols[3]); // 파이프로 구분된 재료들
-        data.cookTime = float.Parse(cols[4]);
-        data.menuCost = float.Parse(cols[5]);
+        data.description = cols[3].Trim();
+        data.ingredients = ParseStringArray(cols[4]); // 파이프로 구분된 재료들
+        data.cookTime = float.Parse(cols[5]);
+        data.menuCost = float.Parse(cols[6]);
         
         return data;
     }
-    
+
+    #endregion
+
+    #region StationData 생성
+
+    [MenuItem("Tools/Import Game Data/Station Data")]
+    public static void ImportStationData()
+    {
+        ImportData("StationData", ParseRecipeData, "Station");
+    }
+
+    public static StationData ParseStationData(string[] cols)
+    {
+        var data = ScriptableObject.CreateInstance<StationData>();
+
+        // 레시피 데이터 파싱
+        data.id = cols[0].Trim();
+        data.stationName = cols[1].Trim();
+        data.stationType = (StationType)Enum.Parse(typeof(StationType), cols[2].Trim());
+        data.workType = (WorkType)Enum.Parse(typeof(WorkType), cols[3].Trim());
+        data.stationSprite = LoadIcon($"{data.stationName}-icon", "Menu");
+        data.stationIcon = LoadIcon($"{data.stationName}-icon", "Menu");
+        data.description = cols[4].Trim();
+        data.stationCost = int.Parse(cols[5]);
+
+        return data;
+    }
+
     #endregion
 
     #region FoodData 생성
@@ -78,11 +106,11 @@ public class CSVImporter
         data.id = cols[0].Trim();
         data.foodName = cols[1].Trim();
         data.displayName = cols[2].Trim();
-        data.description = cols[3].Trim();
+        data.foodType = (FoodType)Enum.Parse(typeof(FoodType), cols[3].Trim());
+        data.description = cols[4].Trim();
         data.foodIcon = LoadIcon($"{data.foodName}-icon", "Food"); // Resources에서 아이콘 로드
-        data.processedIcon = LoadIcon($"{data.foodName}-processed", "Food");
-        data.requireStation = (StationType)Enum.Parse(typeof(StationType), cols[4].Trim()); // StationType enum값 parse
-        data.foodCost = int.Parse(cols[5]);
+        data.stationType = (StationType)Enum.Parse(typeof(StationType), cols[5].Trim()); // StationType enum값 parse
+        data.foodCost = int.Parse(cols[6]);
         
         return data;
     }
@@ -192,7 +220,7 @@ public class CSVImporter
         if (icon == null)
         {
             Debug.LogWarning($"[LoadIcon] Icon 없어요!!!: Resources/{path}");
-            Debug.LogWarning($"Resources/{path}.png 형태 있나 확인해주세요 !!!");
+            //Debug.LogWarning($"Resources/{path}.png 형태 있나 확인해주세요 !!!");
         }
         else
         {

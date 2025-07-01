@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d09df1354ed6e32448b2b49289c0a40c, type: 3}
+  m_Name: SpicyspiceData
+  m_EditorClassIdentifier: 
+  id: m10
+  menuName: SpicySpice
+  foodType: 0
+  menuIcon: {fileID: 21300000, guid: afae42a2d9cb09f48bed8cda45930181, type: 3}
+  description: "\uB9E4\uCF64 \uD5A5\uC2E0\uB8CC \uC785\uB2C8\uB2E4"
+  ingredients:
+  - f11
+  - f12
+  - f14
+  cookTime: 5
+  menuCost: 1000

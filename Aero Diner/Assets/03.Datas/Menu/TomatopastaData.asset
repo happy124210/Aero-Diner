@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d09df1354ed6e32448b2b49289c0a40c, type: 3}
   m_Name: TomatopastaData
   m_EditorClassIdentifier: 
-  id: m2
+  id: m15
   menuName: TomatoPasta
+  foodType: 3
   menuIcon: {fileID: 21300000, guid: 9b1ee1982c55ad74c93d1a70c128f4b0, type: 3}
   description: "\uD1A0\uB9C8\uD1A0 \uD30C\uC2A4\uD0C0 \uC785\uB2C8\uB2E4"
   ingredients:
   - m1
-  - m3
+  - m2
   - m4
   cookTime: 5
-  menuCost: 1500
+  menuCost: 1000

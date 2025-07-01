@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d09df1354ed6e32448b2b49289c0a40c, type: 3}
+  m_Name: MushroompastaData
+  m_EditorClassIdentifier: 
+  id: m16
+  menuName: MushroomPasta
+  foodType: 3
+  menuIcon: {fileID: 21300000, guid: ea963bc06c2b51f408e9fad93c3b9d14, type: 3}
+  description: "\uBC84\uC12F \uD30C\uC2A4\uD0C0 \uC785\uB2C8\uB2E4"
+  ingredients:
+  - m1
+  - m2
+  - m5
+  cookTime: 5
+  menuCost: 1000

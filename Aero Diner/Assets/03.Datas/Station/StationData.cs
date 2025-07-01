@@ -7,6 +7,9 @@ public enum StationType
     CuttingBoard,    // 도마
     FryingPan,       // 프라이팬
     Pot,             // 냄비
+    Grater,
+    Grinding,
+    Mixing,
     //Oven,            // 오븐
     //Blender,         // 믹서기
     //MixingBowl,      // 믹싱 볼
@@ -20,11 +23,25 @@ public enum StationType
     None             // 빈 공간
 }
 
+public enum WorkType
+{
+    None,
+    Automatic,
+    Passive
+}
+
 [CreateAssetMenu(fileName = "StationData", menuName = "CookingGame/StationData")]
 public class StationData : ScriptableObject
 {
-    // 스테이션의 종류
+    [Header("설비 정보")]
+    public string id;
+    public string stationName;
     public StationType stationType;
+    public WorkType workType ;
+    public Sprite stationSprite;
+    public Sprite stationIcon;
+    public string description;
+    public int stationCost;
 
     // 해당 스테이션에서 지원하는 레시피 목록
     public List<MenuData> availableRecipes;
