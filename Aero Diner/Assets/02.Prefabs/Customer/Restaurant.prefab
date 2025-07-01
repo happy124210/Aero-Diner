@@ -410,10 +410,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seatPosition: {fileID: 5651296611060170310}
   menuSpawnPoint: {fileID: 8050371800188029445}
-  currentFood: {fileID: 0}
-  assignedCustomer: {fileID: 0}
   seatIndex: -1
-  showDebugInfo: 1
+  currentFoodData: {fileID: 0}
+  assignedCustomer: {fileID: 0}
+  showDebugInfo: 0
 --- !u!50 &1840769803673616322
 Rigidbody2D:
   serializedVersion: 4
@@ -828,10 +828,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seatPosition: {fileID: 8177375270696540754}
   menuSpawnPoint: {fileID: 8135888080116473352}
-  currentFood: {fileID: 0}
-  assignedCustomer: {fileID: 0}
   seatIndex: -1
-  showDebugInfo: 1
+  currentFoodData: {fileID: 0}
+  assignedCustomer: {fileID: 0}
+  showDebugInfo: 0
 --- !u!50 &684034555856984185
 Rigidbody2D:
   serializedVersion: 4
@@ -1596,10 +1596,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seatPosition: {fileID: 5686542298123345917}
   menuSpawnPoint: {fileID: 6043619221270260509}
-  currentFood: {fileID: 0}
-  assignedCustomer: {fileID: 0}
   seatIndex: -1
-  showDebugInfo: 1
+  currentFoodData: {fileID: 0}
+  assignedCustomer: {fileID: 0}
+  showDebugInfo: 0
 --- !u!50 &3290991972112251684
 Rigidbody2D:
   serializedVersion: 4

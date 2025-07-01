@@ -44,7 +44,6 @@ public class CustomerController : MonoBehaviour, IPoolable
 
     // components
     private NavMeshAgent navAgent;
-    
     private CustomerState currentState;
     private float eatingTimer;
 
@@ -123,7 +122,7 @@ public class CustomerController : MonoBehaviour, IPoolable
             return;
         }
         
-        speed = currentData.speed; 
+        speed = currentData.speed;
         maxPatience = currentData.waitTime;
         eatTime = currentData.eatTime;
         
@@ -246,7 +245,7 @@ public class CustomerController : MonoBehaviour, IPoolable
         }
     }
     
-    private void ReceiveFood(FoodData servedMenu)
+    public void ReceiveFood(FoodData servedMenu)
     {
         if (isServed) return;
 

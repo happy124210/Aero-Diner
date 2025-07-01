@@ -110,9 +110,11 @@ public class OrderingState : CustomerState
             orderPlaced = true;
             customer.StartPatienceTimer();
         }
-        
+
         if (customer.IsFoodServed())
+        {
             return new EatingState();
+        }
             
         return this;
     }
