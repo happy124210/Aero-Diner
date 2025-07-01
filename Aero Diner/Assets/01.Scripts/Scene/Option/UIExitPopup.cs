@@ -30,9 +30,9 @@ public class UIExitPopup : MonoBehaviour
     public void OnClickRevertChanges()
     {
         // 각 시스템에 롤백 요청
-        UIManager.Instance.keyRebindManager?.CancelAll();
-        UIManager.Instance.volumeHandler?.RollbackVolumes();
-        UIManager.Instance.videoSettingPanel?.RollbackPending();
+        UIRoot.Instance.keyRebindManager?.CancelAll();
+        UIRoot.Instance.volumeHandler?.RollbackVolumes();
+        UIRoot.Instance.videoSettingPanel?.RollbackPending();
 
         Hide();
 
