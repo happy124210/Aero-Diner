@@ -3,29 +3,31 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class Table : MonoBehaviour, IInteractable
+public class Table : MonoBehaviour, IInteractable, IPlaceableStation
 {
-    [Header("테이블 설정")]
-    [SerializeField] private Transform seatPosition;
-    
-    [Header("현재 설정")]
-    [SerializeField] private FoodDisplay currentFood;
+    [Header("테이블 설정")] [SerializeField] private Transform seatPosition;
+    [SerializeField] private Transform menuSpawnPoint;
+
+    [Header("현재 설정")] [SerializeField] private FoodDisplay currentFood;
     [SerializeField] private CustomerController assignedCustomer; // 이 테이블에 앉아있는 손님
     [SerializeField] private int seatIndex = -1;
-    
-    [Header("Debug")]
-    [SerializeField] private bool showDebugInfo = true;
 
-#region UnityEvents
+    [Header("Debug")] [SerializeField] private bool showDebugInfo = true;
+
+    private GameObject placedMenuObj;
+    private CookingSOGroup.IIngredientData currentData;
+    private ScriptableObject currentDataRaw;
+
+    #region UnityEvents
 
     private void Reset()
     {
         seatPosition = transform.Find("Seat Position");
     }
 
-#endregion
-    
-#region TableManager 연동
+    #endregion
+
+    #region TableManager 연동
 
     public void SetSeatIndex(int index)
     {
@@ -47,10 +49,10 @@ public class Table : MonoBehaviour, IInteractable
     {
         return seatPosition.position;
     }
-    
+
     #endregion
 
-#region IInteractable
+    #region IInteractable
 
     public void Interact(PlayerInventory inventory, InteractionType interactionType)
     {
@@ -59,10 +61,11 @@ public class Table : MonoBehaviour, IInteractable
             case InteractionType.Pickup:
                 if (currentFood != null && !inventory.IsHoldingItem)
                 {
-                    
+
                 }
+
                 break;
-            
+
             case InteractionType.Use:
                 break;
         }
@@ -87,21 +90,39 @@ public class Table : MonoBehaviour, IInteractable
         return currentFood == null;
     }
 
-    public bool PlaceFood()
+    private GameObject CreateMenuDisplay(ScriptableObject dataRaw)
     {
-        if (!CanPlaceFood())
+        if (dataRaw == null || menuSpawnPoint == null)
         {
-            return false;
+            Debug.LogError("필수 데이터가 누락되었습니다.");
+            return null;
         }
-        
-        // TODO: 배치 로직
-        return true;
+
+        if (dataRaw is not CookingSOGroup.IIngredientData ingredientData)
+        {
+            Debug.LogWarning("디스플레이를 생성할 수 없는 데이터입니다.");
+            return null;
+        }
+
+        // VisualObjectFactory 호출
+        GameObject obj = VisualObjectFactory.CreateIngredientVisual(
+            parent: menuSpawnPoint,
+            name: ingredientData.GetDisplayName(),
+            icon: ingredientData.Icon
+        );
+        if (obj == null) return null;
+
+        // FoodDisplay 세팅 (원본 데이터만 연결)
+        var display = obj.AddComponent<FoodDisplay>();
+        display.rawData = dataRaw;
+        display.originPlace = this;
+        return obj;
     }
 
     public void CheckOrderMatch()
     {
         if (assignedCustomer == null || currentFood == null) return;
-        
+
         // TODO: 주문 시스템 연동
     }
 
@@ -120,7 +141,7 @@ public class Table : MonoBehaviour, IInteractable
             float eatTime = assignedCustomer.CurrentData.eatTime;
             yield return new WaitForSeconds(eatTime);
         }
-        
+
         // TODO: 임시 Destroy
         Destroy(currentFood.gameObject);
         currentFood = null;
@@ -132,12 +153,12 @@ public class Table : MonoBehaviour, IInteractable
     public void PickupFood(PlayerInventory inventory)
     {
         if (currentFood == null) return;
-        
+
         if (assignedCustomer != null && assignedCustomer.IsFoodServed()) return;
-        
+
         currentFood.transform.SetParent(inventory.GetItemSlotTransform());
         currentFood.transform.localPosition = Vector3.zero;
-        
+
         // 물리 효과 정리
         var rb = currentFood.GetComponent<Rigidbody2D>();
         if (rb) rb.simulated = false;
@@ -147,13 +168,35 @@ public class Table : MonoBehaviour, IInteractable
         inventory.SetHeldItem(currentFood);
         currentFood = null;
     }
+
+    #region IPlaceableStation
     
-#region Public getters
-    
+    public void PlaceObject(ScriptableObject dataRaw)
+    {
+        if (!CanPlaceFood())
+        {
+            return;
+        }
+
+        placedMenuObj = CreateMenuDisplay(dataRaw);
+    }
+
+    public void OnPlayerPickup()
+    {
+        placedMenuObj = null;
+        currentData = null;
+        currentDataRaw = null;
+    }
+
+    #endregion
+
+    #region Public getters
+
     public bool HasFood => currentFood != null;
     public bool HasCustomer => assignedCustomer != null;
     public FoodDisplay CurrentFood => currentFood;
     public CustomerController AssignedCustomer => assignedCustomer;
-    
-#endregion
+
+    #endregion
+
 }

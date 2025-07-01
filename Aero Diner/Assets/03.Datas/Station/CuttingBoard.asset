@@ -12,7 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 117d233d9fc2bff418b6e4c7d9135079, type: 3}
   m_Name: CuttingBoard
   m_EditorClassIdentifier: 
+  id: 
+  stationName: 
   stationType: 0
+  workType: 0
+  stationSprite: {fileID: 0}
+  stationIcon: {fileID: 0}
+  description: 
+  stationCost: 0
   availableRecipes:
   - {fileID: 11400000, guid: 4ea4dc71205b4b5478ca1abb145fb913, type: 2}
   - {fileID: 11400000, guid: 034c4487a2513af49b5d1770d4d3ff7f, type: 2}
+  - {fileID: 11400000, guid: 71573f57fcf1d03419fc28d1ccf5707f, type: 2}
+  - {fileID: 11400000, guid: 59b5b00e0cb905f49bbb9f95473315f9, type: 2}
+  - {fileID: 11400000, guid: 38dbf5e79ffb9cc4a8932e61914c9be5, type: 2}
+  - {fileID: 11400000, guid: fad3ac071342ed546b61fd2a81f89a5c, type: 2}

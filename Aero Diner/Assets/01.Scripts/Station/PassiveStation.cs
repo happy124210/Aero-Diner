@@ -45,7 +45,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     private MenuData cookedIngredient;                               // 조리 완료 시 결과가 되는 레시피
     private bool isCooking = false;                                  // 현재 조리 중인지 여부 플래그
     private OutlineShaderController outline;                         // 외곽선 효과를 제어하는 컴포넌트
-
     private void Awake()
     {
         outline = GetComponent<OutlineShaderController>(); // 외곽선 컴포넌트 연결
@@ -57,7 +56,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         UpdateCookingTimeText(); // UI 초기화
     }
 
-    public void PlaceIngredient(ScriptableObject obj)
+    public void PlaceObject(ScriptableObject obj)
     {
         // 유효하지 않은 데이터거나 등록 불가한 재료일 경우 경고 출력 후 무시
         if (obj is not IIngredientData data || !CanPlaceIngredient(data))
@@ -212,16 +211,36 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// </summary>
     public bool CanPlaceIngredient(IIngredientData data)
     {
-        if (currentIngredients.Contains(data.GetID()))
+        if (!(data is FoodData food))
+        {
+            Debug.LogWarning("[Station] 유효하지 않은 데이터 타입입니다.");
             return false;
+        }
 
-        if (neededIngredients == null || neededIngredients.GetCount() == 0)
-            return true;
+        // 첫 번째 재료
+        if (currentIngredients.Count == 0)
+        {
+            bool typeMatch = food.stationType == stationData.stationType;
+            Debug.Log($"[Station] 첫 번째 재료 시도됨: {food.foodName} | 스테이션 타입 일치 여부: {typeMatch}");
+            return typeMatch;
+        }
 
-        if (data is FoodData food && neededIngredients.Contains(food))
-            return true;
+        if (cookedIngredient == null)
+        {
+            Debug.LogWarning("[Station] 현재 설정된 레시피가 없습니다.");
+            return false;
+        }
 
-        return false;
+        if (currentIngredients.Contains(data.GetID()))
+        {
+            Debug.LogWarning($"[Station] 중복 재료: {data.GetID()} 이미 추가됨");
+            return false;
+        }
+
+        bool isInRecipe = cookedIngredient.ingredients.Contains(data.GetID());
+        Debug.Log($"[Station] 레시피 유효성 검사: {data.GetID()} 포함 여부: {isInRecipe}");
+
+        return isInRecipe;
     }
 
     /// <summary>
@@ -245,7 +264,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         {
             var display = result.AddComponent<FoodDisplay>();
             display.rawData = data;
-            display.originPassive = this;
         }
 
         return result;
@@ -273,7 +291,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// <summary>
     /// 플레이어가 재료를 들 때 호출
     /// </summary>
-    public void OnPlayerPickup(PlayerInventory playerInventory)
+    public void OnPlayerPickup()
     {
         // 배치된 재료 시각 오브젝트 모두 제거
         foreach (var obj in placedIngredients)
@@ -301,29 +319,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         Sprite icon = ingredientData.Icon;
         if (string.IsNullOrEmpty(name) || icon == null)
             return;
-
-        // 플레이어 인벤토리 슬롯 위치 가져오기
-        Transform slot = playerInventory.GetItemSlotTransform();
-
-        // 시각 오브젝트 생성
-        GameObject pickupObj = VisualObjectFactory.CreateIngredientVisual(slot, name, icon);
-        if (pickupObj == null)
-            return;
-
-        // FoodDisplay 구성 후 정보 부여
-        var display = pickupObj.AddComponent<FoodDisplay>();
-        display.rawData = dataRaw;
-        display.originPassive = this;
-
-        // 충돌 및 물리 비활성화: 인벤토리에 들려주는 용도이므로
-        Collider2D col = pickupObj.GetComponent<Collider2D>();
-        if (col != null) col.enabled = false;
-
-        Rigidbody2D rb = pickupObj.GetComponent<Rigidbody2D>();
-        if (rb != null) rb.simulated = false;
-
-        // 인벤토리에 장착 처리
-        playerInventory.SetHeldItem(display);
+        
         Debug.Log($"플레이어가 '{name}' 획득");
     }
 

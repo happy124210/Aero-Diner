@@ -11,6 +11,7 @@ public class MenuData : ScriptableObject, CookingSOGroup.IIngredientData
     [Header("메뉴 정보")]
     public string id;
     public string menuName;
+    public FoodType foodType;
     public Sprite menuIcon;
     public string description;
     public string[] ingredients; // 필요한 재료들 id List

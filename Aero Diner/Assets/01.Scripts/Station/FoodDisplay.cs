@@ -1,14 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class FoodDisplay : MonoBehaviour, IInteractable
 {
     public ScriptableObject rawData;
     public IngredientStation originIngredient;
-    public Shelf originShelf;
-    public AutomaticStation originAutomatic;
-    public PassiveStation originPassive;
+    public IPlaceableStation originPlace;
 
     // IIngredientData로 접근할 수 있도록 추가
     public CookingSOGroup.IIngredientData data => rawData as CookingSOGroup.IIngredientData;
