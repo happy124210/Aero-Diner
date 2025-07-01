@@ -776,6 +776,42 @@ PrefabInstance:
       propertyPath: m_Name
       value: UIRoot
       objectReference: {fileID: 0}
+    - target: {fileID: 7415852557579463741, guid: d684d1accbf6def42a8a8e4beff2e4fe, type: 3}
+      propertyPath: sceneUIPrefabs.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7415852557579463741, guid: d684d1accbf6def42a8a8e4beff2e4fe, type: 3}
+      propertyPath: sceneUIPrefabs.Array.data[0].sceneName
+      value: StartScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 7415852557579463741, guid: d684d1accbf6def42a8a8e4beff2e4fe, type: 3}
+      propertyPath: sceneUIPrefabs.Array.data[1].sceneName
+      value: MainScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 7415852557579463741, guid: d684d1accbf6def42a8a8e4beff2e4fe, type: 3}
+      propertyPath: sceneUIPrefabs.Array.data[2].sceneName
+      value: LoadingScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 7415852557579463741, guid: d684d1accbf6def42a8a8e4beff2e4fe, type: 3}
+      propertyPath: sceneUIPrefabs.Array.data[3].sceneName
+      value: LivingScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 7415852557579463741, guid: d684d1accbf6def42a8a8e4beff2e4fe, type: 3}
+      propertyPath: sceneUIPrefabs.Array.data[0].uiPrefab.m_AssetGUID
+      value: 636e500dadca3b84582d21d6a02aa27f
+      objectReference: {fileID: 0}
+    - target: {fileID: 7415852557579463741, guid: d684d1accbf6def42a8a8e4beff2e4fe, type: 3}
+      propertyPath: sceneUIPrefabs.Array.data[1].uiPrefab.m_AssetGUID
+      value: 4f04806a308443a428151319d7678021
+      objectReference: {fileID: 0}
+    - target: {fileID: 7415852557579463741, guid: d684d1accbf6def42a8a8e4beff2e4fe, type: 3}
+      propertyPath: sceneUIPrefabs.Array.data[2].uiPrefab.m_AssetGUID
+      value: 57c7f4e59bd49494a850032ef34ba337
+      objectReference: {fileID: 0}
+    - target: {fileID: 7415852557579463741, guid: d684d1accbf6def42a8a8e4beff2e4fe, type: 3}
+      propertyPath: sceneUIPrefabs.Array.data[3].uiPrefab.m_AssetGUID
+      value: 4f04806a308443a428151319d7678021
+      objectReference: {fileID: 0}
     - target: {fileID: 8051697394139384181, guid: d684d1accbf6def42a8a8e4beff2e4fe, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
