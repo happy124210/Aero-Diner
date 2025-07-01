@@ -9,5 +9,5 @@ public interface IPlaceableStation
     /// </summary>
     /// <param name="data">내려놓는 재료 데이터</param>
     void PlaceObject(ScriptableObject data);
-    void OnPlayerPickup();
+    void OnPlayerPickup(); // 내려놓은 재료 그대로 들기
 }
