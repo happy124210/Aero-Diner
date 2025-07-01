@@ -45,7 +45,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     private MenuData cookedIngredient;                               // 조리 완료 시 결과가 되는 레시피
     private bool isCooking = false;                                  // 현재 조리 중인지 여부 플래그
     private OutlineShaderController outline;                         // 외곽선 효과를 제어하는 컴포넌트
-
     private void Awake()
     {
         outline = GetComponent<OutlineShaderController>(); // 외곽선 컴포넌트 연결

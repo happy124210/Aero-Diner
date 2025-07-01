@@ -63,6 +63,7 @@ public class OptionBtn : MonoBehaviour
     }
     public void GotoStartScene()
     {
+        EventBus.Raise(UIEventType.ClosePause);
         FadeManager.Instance.FadeOutAndLoadSceneWithLoading("StartScene");
     }
     public void OnClickStartGame()
