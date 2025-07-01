@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using DG.Tweening;
-using System.Collections;
 using UnityEngine.UI;
 
 public class PressAnyKeyBlinker : MonoBehaviour
@@ -8,24 +7,20 @@ public class PressAnyKeyBlinker : MonoBehaviour
     [SerializeField] private Image pressAnyKeyImage;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private float blinkInterval = 0.5f;
-    [SerializeField] private float fadeOutDuration = 1f;
+    [SerializeField] private float fastBlinkMultiplier = 0.5f; // 두 배 빠르게
+    [SerializeField] private float fastBlinkDuration = 1f;
 
     private bool inputDetected = false;
+    private Tween blinkTween;
 
     private void Start()
     {
-        if (pressAnyKeyImage == null)
+        if (pressAnyKeyImage == null || canvasGroup == null)
         {
             return;
         }
 
-        if (canvasGroup == null)
-        {
-            Debug.LogError("[Blinker] canvasGroup is null!");
-            return;
-        }
-
-        StartCoroutine(BlinkImage());
+        StartBlink(blinkInterval);
     }
 
     private void Update()
@@ -35,38 +30,45 @@ public class PressAnyKeyBlinker : MonoBehaviour
         if (Input.anyKeyDown)
         {
             inputDetected = true;
-            StopAllCoroutines();
-            FadeOutAndRaiseUIEvent();
+            blinkTween.Kill(); // 기존 깜빡임 중단
+            StartFastBlink();  // 빠른 깜빡임 시작
         }
     }
 
-    private IEnumerator BlinkImage()
+    private void StartBlink(float interval)
     {
-        while (true)
+        // 0 ↔ 1 반복 루프
+        blinkTween = canvasGroup.DOFade(0f, interval)
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetEase(Ease.InOutSine);
+    }
+
+    private void StartFastBlink()
+    {
+        // 빠르게 깜빡임
+        canvasGroup.alpha = 1f;
+
+        blinkTween = canvasGroup.DOFade(0f, blinkInterval * fastBlinkMultiplier)
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetEase(Ease.InOutSine);
+
+        // 1초 후 종료 및 전환
+        DOVirtual.DelayedCall(fastBlinkDuration, () =>
         {
-            pressAnyKeyImage.enabled = !pressAnyKeyImage.enabled;
-            yield return new WaitForSeconds(blinkInterval);
-        }
+            blinkTween.Kill();
+            canvasGroup.alpha = 0f;
+            RaiseStartMenuEvent();
+        });
     }
 
-    private void FadeOutAndRaiseUIEvent()
+    private void RaiseStartMenuEvent()
     {
-        canvasGroup.DOFade(0f, fadeOutDuration)
-            .OnComplete(() =>
-            {
-                Debug.Log("Fade 완료. 이벤트 발생");
+        Debug.Log("DOTween 빠른 깜빡임 후 이벤트 발생");
 
-                if (HasSavedGame())
-                {
-                    EventBus.Raise(UIEventType.ShowStartMenuWithSave);
-                }
-                else
-                {
-                    EventBus.Raise(UIEventType.ShowStartMenuNoSave);
-                }
-
-                pressAnyKeyImage.enabled = false;
-            });
+        if (HasSavedGame())
+            EventBus.Raise(UIEventType.ShowStartMenuWithSave);
+        else
+            EventBus.Raise(UIEventType.ShowStartMenuNoSave);
     }
 
     private bool HasSavedGame()
