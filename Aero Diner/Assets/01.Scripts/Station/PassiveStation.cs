@@ -45,7 +45,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     private MenuData cookedIngredient;                               // 조리 완료 시 결과가 되는 레시피
     private bool isCooking = false;                                  // 현재 조리 중인지 여부 플래그
     private OutlineShaderController outline;                         // 외곽선 효과를 제어하는 컴포넌트
-
     private void Awake()
     {
         outline = GetComponent<OutlineShaderController>(); // 외곽선 컴포넌트 연결
@@ -80,10 +79,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             isCooking = false;
             Debug.Log("조건에 맞는 레시피가 부족하여 대기 중...");
         }
-    }
-
-    public void OnPlayerPickup()
-    {
     }
 
     private void RegisterIngredient(IIngredientData data)
@@ -269,7 +264,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         {
             var display = result.AddComponent<FoodDisplay>();
             display.rawData = data;
-            display.originPassive = this;
         }
 
         return result;
@@ -297,7 +291,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// <summary>
     /// 플레이어가 재료를 들 때 호출
     /// </summary>
-    public void OnPlayerPickup(PlayerInventory playerInventory)
+    public void OnPlayerPickup()
     {
         // 배치된 재료 시각 오브젝트 모두 제거
         foreach (var obj in placedIngredients)
@@ -325,29 +319,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         Sprite icon = ingredientData.Icon;
         if (string.IsNullOrEmpty(name) || icon == null)
             return;
-
-        // 플레이어 인벤토리 슬롯 위치 가져오기
-        Transform slot = playerInventory.GetItemSlotTransform();
-
-        // 시각 오브젝트 생성
-        GameObject pickupObj = VisualObjectFactory.CreateIngredientVisual(slot, name, icon);
-        if (pickupObj == null)
-            return;
-
-        // FoodDisplay 구성 후 정보 부여
-        var display = pickupObj.AddComponent<FoodDisplay>();
-        display.rawData = dataRaw;
-        display.originPassive = this;
-
-        // 충돌 및 물리 비활성화: 인벤토리에 들려주는 용도이므로
-        Collider2D col = pickupObj.GetComponent<Collider2D>();
-        if (col != null) col.enabled = false;
-
-        Rigidbody2D rb = pickupObj.GetComponent<Rigidbody2D>();
-        if (rb != null) rb.simulated = false;
-
-        // 인벤토리에 장착 처리
-        playerInventory.SetHeldItem(display);
+        
         Debug.Log($"플레이어가 '{name}' 획득");
     }
 

@@ -106,10 +106,6 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         }
     }
 
-    public void OnPlayerPickup()
-    {
-    }
-
     /// <summary>
     /// 재료를 등록하고 시각화 오브젝트를 생성
     /// </summary>
@@ -198,7 +194,6 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
             // 결과물에도 FoodDisplay 구성
             var display = result.AddComponent<FoodDisplay>();
             display.rawData = cookedIngredient;
-            display.originAutomatic = this;
         }
     }
 
@@ -298,7 +293,7 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// <summary>
     /// 플레이어가 결과물을 픽업할 때 호출됨
     /// </summary>
-    public void OnPlayerPickup(PlayerInventory playerInventory)
+    public void OnPlayerPickup()
     {
         // 조리 관련 상태 초기화
         ResetCookingTimer();
@@ -319,28 +314,6 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         Sprite icon = ingredientData.Icon;
         if (string.IsNullOrEmpty(name) || icon == null)
             return;
-
-        // 비주얼 오브젝트 생성 및 플레이어 인벤토리에 배치
-        Transform slot = playerInventory.GetItemSlotTransform();
-        GameObject pickupObj = VisualObjectFactory.CreateIngredientVisual(slot, name, icon);
-        if (pickupObj == null)
-            return;
-
-        var display = pickupObj.AddComponent<FoodDisplay>();
-        display.rawData = dataRaw;
-        display.originAutomatic = this;
-
-        // 충돌/물리 엔진 비활성화 (UI 용도)
-        Collider2D col = pickupObj.GetComponent<Collider2D>();
-        if (col != null)
-            col.enabled = false;
-
-        Rigidbody2D rb = pickupObj.GetComponent<Rigidbody2D>();
-        if (rb != null)
-            rb.simulated = false;
-
-        // 인벤토리 등록 처리
-        playerInventory.SetHeldItem(display);
 
         Debug.Log($"플레이어가 '{name}' 획득");
     }
