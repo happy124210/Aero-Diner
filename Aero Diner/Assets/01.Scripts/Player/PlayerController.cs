@@ -24,10 +24,18 @@ public class PlayerController : MonoBehaviour
     private Vector2 moveInput;
     private Vector2 lastMoveDir = Vector2.down;
     private Rigidbody2D rb;
+
+    public PlayerInputActions inputActions;
+    private InputAction interactAction;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         playerInventory = GetComponent<PlayerInventory>();
+
+        inputActions = new PlayerInputActions();
+        inputActions.Enable(); // 중요!
+
+        interactAction = inputActions.Player.Interact;
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -38,9 +46,34 @@ public class PlayerController : MonoBehaviour
     {
         if (moveInput != Vector2.zero)
             lastMoveDir = moveInput;
+
         UpdateItemSlotPosition();
-        RaycastForInteractable(); //매 프레임 상호작용 대상 탐색
+        RaycastForInteractable();
+
+        if (interactAction == null) return;
+
+        bool isHolding = interactAction.IsPressed();
+        bool justPressed = interactAction.WasPressedThisFrame();
+
+        if (currentTarget != null)
+        {
+            if (interactionType == InteractionType.Use)
+            {
+                if (isHolding)
+                {
+                    currentTarget.Interact(playerInventory, interactionType);
+                }
+            }
+            else
+            {
+                if (justPressed)
+                {
+                    currentTarget.Interact(playerInventory, interactionType);
+                }
+            }
+        }
     }
+
     private void FixedUpdate()
     {
         rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
