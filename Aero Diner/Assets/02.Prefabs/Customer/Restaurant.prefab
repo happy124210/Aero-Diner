@@ -1432,7 +1432,7 @@ MonoBehaviour:
   allFoodData: []
   playerMenus: []
   todayMenus: []
-  startMenuId: f1
+  startMenuId: f26
   showDebugInfo: 1
 --- !u!1 &7476354895652351597
 GameObject:

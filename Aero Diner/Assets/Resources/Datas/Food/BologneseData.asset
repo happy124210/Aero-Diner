@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca77332d7f9b4134e9c53ece37a21432, type: 3}
+  m_Name: BologneseData
+  m_EditorClassIdentifier: 
+  id: f29
+  foodName: Bolognese
+  displayName: "\uBCFC\uB85C\uB124\uC81C"
+  foodType: 4
+  foodIcon: {fileID: 21300000, guid: c4259458a5f83094dbea53d1366e5d14, type: 3}
+  description: "\uBCFC\uB85C\uB124\uC81C \uC785\uB2C8\uB2E4"
+  stationType: 06000000
+  ingredients:
+  - f18
+  - f12
+  - f19
+  cookTime: 5
+  foodCost: 500
