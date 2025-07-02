@@ -14,22 +14,21 @@ public class TabButtonController : MonoBehaviour
 
     private void Start()
     {
-        // 처음 시작할 때 첫 번째 탭을 선택 상태로 설정
-        SelectTab(0);
+        RequestSelectTab(0);               // 0번 탭을 예약하고
+        ApplyTabSelectionVisuals();       // 실제로 색상을 반영
     }
 
-    public void SelectTab(int index)
+    public void RequestSelectTab(int index)
     {
-        if (index == currentSelectedIndex) return;
+        currentSelectedIndex = index; // 예약만 해둠
+    }
 
-        currentSelectedIndex = index;
-
+    // 실제 탭이 보여질 때 호출
+    public void ApplyTabSelectionVisuals()
+    {
         for (int i = 0; i < tabImages.Count; i++)
         {
-            tabImages[i].color = (i == index) ? selectedColor : unselectedColor;
+            tabImages[i].color = (i == currentSelectedIndex) ? selectedColor : unselectedColor;
         }
-
-        // 탭에 따라 실제 패널 전환도 여기서 수행할 수 있음
-        // 예: SoundPanel.SetActive(index == 0), VideoPanel.SetActive(index == 1) ...
     }
 }
