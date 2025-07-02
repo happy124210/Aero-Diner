@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -294,13 +294,13 @@ public class CustomerController : MonoBehaviour, IPoolable
     { 
         if (!navAgent)
         {
-            Debug.LogError($"[CustomerController]: {gameObject.name} NavMeshAgent가 null입니다!");
+          //  Debug.LogError($"[CustomerController]: {gameObject.name} NavMeshAgent가 null입니다!");
             return;
         }
         
         if (!navAgent.isOnNavMesh)
         {
-            Debug.LogWarning($"[CustomerController]: {gameObject.name}이 NavMesh 위에 있지 않습니다!");
+          //  Debug.LogWarning($"[CustomerController]: {gameObject.name}이 NavMesh 위에 있지 않습니다!");
             return;
         }
         
@@ -313,7 +313,7 @@ public class CustomerController : MonoBehaviour, IPoolable
         navAgent.SetDestination(destination);
         SetAnimationState(CustomerAnimState.Walking);
         
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 목적지 설정: {destination}");
+        //if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 목적지 설정: {destination}");
     }
     
     /// <summary>
@@ -326,7 +326,7 @@ public class CustomerController : MonoBehaviour, IPoolable
         
         if (!navAgent || !navAgent.isOnNavMesh) 
         {
-            if (showDebugInfo) Debug.LogWarning($"[CustomerController]: {gameObject.name} NavMeshAgent 문제!");
+        //    if (showDebugInfo) Debug.LogWarning($"[CustomerController]: {gameObject.name} NavMeshAgent 문제!");
             return false;
         }
         
@@ -334,7 +334,7 @@ public class CustomerController : MonoBehaviour, IPoolable
                       navAgent.remainingDistance < arrivalThreshold && 
                       navAgent.velocity.sqrMagnitude < velocityThreshold;
         
-        if (reached && showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 목적지 도착!");
+       // if (reached && showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 목적지 도착!");
             
         return reached;
     }
@@ -342,7 +342,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     public void SetAnimationState(CustomerAnimState state) 
     { 
         // TODO: 실제 애니메이터 연동
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 애니메이션 상태: {state}");
+       // if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 애니메이션 상태: {state}");
     }
     
     /// <summary>

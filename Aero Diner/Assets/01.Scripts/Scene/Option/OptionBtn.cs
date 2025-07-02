@@ -15,48 +15,70 @@ public class OptionBtn : MonoBehaviour
 
     public void OnClickSoundTab()
     {
-        if (IsKeyChanged() || IsVideoChanged())
+        if (UIRoot.Instance.volumeHandler.HasUnsavedChanges() ||
+            UIRoot.Instance.videoSettingPanel.HasUnsavedChanges())
         {
-               UIRoot.Instance.uiExitPopup?.Show(() =>
+            UIRoot.Instance.tabButtonController.RequestSelectTab(0);
+
+            UIRoot.Instance.uiExitPopup.Show(() =>
             {
                 EventBus.Raise(UIEventType.ShowSoundTab);
+                UIRoot.Instance.tabButtonController.ApplyTabSelectionVisuals();
             });
         }
         else
         {
+            UIRoot.Instance.tabButtonController.RequestSelectTab(0);
             EventBus.Raise(UIEventType.ShowSoundTab);
+            UIRoot.Instance.tabButtonController.ApplyTabSelectionVisuals();
         }
     }
+
 
     public void OnClickVideoTab()
     {
-        if (IsKeyChanged() || IsVolumeChanged())
+        if (UIRoot.Instance.volumeHandler.HasUnsavedChanges() ||
+            UIRoot.Instance.keyRebindManager.HasUnsavedChanges())
         {
-            UIRoot.Instance.uiExitPopup?.Show(() =>
+            UIRoot.Instance.tabButtonController.RequestSelectTab(1);
+
+            UIRoot.Instance.uiExitPopup.Show(() =>
             {
                 EventBus.Raise(UIEventType.ShowVideoTab);
+                UIRoot.Instance.tabButtonController.ApplyTabSelectionVisuals();
             });
         }
         else
         {
+            UIRoot.Instance.tabButtonController.RequestSelectTab(1);
             EventBus.Raise(UIEventType.ShowVideoTab);
+            UIRoot.Instance.tabButtonController.ApplyTabSelectionVisuals();
         }
     }
 
+
     public void OnClickControlTab()
     {
-        if (IsVolumeChanged() || IsVideoChanged())
+        if (UIRoot.Instance.volumeHandler.HasUnsavedChanges() ||
+            UIRoot.Instance.videoSettingPanel.HasUnsavedChanges())
         {
-            UIRoot.Instance.uiExitPopup?.Show(() =>
+            UIRoot.Instance.tabButtonController.RequestSelectTab(2);
+
+            UIRoot.Instance.uiExitPopup.Show(() =>
             {
                 EventBus.Raise(UIEventType.ShowControlTab);
+                UIRoot.Instance.tabButtonController.ApplyTabSelectionVisuals();
             });
         }
         else
         {
+            UIRoot.Instance.tabButtonController.RequestSelectTab(2);
             EventBus.Raise(UIEventType.ShowControlTab);
+            UIRoot.Instance.tabButtonController.ApplyTabSelectionVisuals();
         }
     }
+
+
     public void OnSaveClick()
     {
         popupFader.ShowPopup("설정이 저장되었습니다!");

@@ -29,7 +29,10 @@ public class KeyRebindButton : MonoBehaviour
     {
         LoadBinding();
     }
-
+    void OnEnable()
+    {
+        UIRoot.Instance.tabButtonController.ApplyTabSelectionVisuals();
+    }
     private void StartRebind()
     {
         if (waitingForKey) return;
