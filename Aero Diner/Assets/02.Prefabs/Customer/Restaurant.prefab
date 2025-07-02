@@ -1370,6 +1370,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2374614055684473981}
   - component: {fileID: 4711894738966735290}
+  - component: {fileID: 5796004451528270688}
   m_Layer: 0
   m_Name: Restaurant
   m_TagString: Untagged
@@ -1414,10 +1415,25 @@ MonoBehaviour:
   customersServed: 0
   totalEarnings: 0
   gameTime: 0
-  availableMenus:
-  - {fileID: 11400000, guid: 607b75f9c84c68a4e9d7f3feecc16aaa, type: 2}
   showDebugInfo: 0
   gameTimeLimit: 300
+--- !u!114 &5796004451528270688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7413637340875454940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14419fe36a1778f40a2dc5a7f2af6854, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allFoodData: []
+  playerMenus: []
+  todayMenus: []
+  startMenuId: f1
+  showDebugInfo: 1
 --- !u!1 &7476354895652351597
 GameObject:
   m_ObjectHideFlags: 0
