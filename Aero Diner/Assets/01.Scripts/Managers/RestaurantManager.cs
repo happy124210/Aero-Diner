@@ -25,10 +25,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
     [Tooltip("현재까지 경과한 시간")]
     [SerializeField] private float gameTime;
     
-    [Header("Menu")]
-    [SerializeField] private FoodData[] availableMenus; // 플레이어가 가지고 있는 모든 메뉴
-    [SerializeField] private FoodData[] selectedMenus; // 영업에 사용할 메뉴
-    
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo;
     
@@ -42,8 +38,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
     public float TotalEarnings => totalEarnings;
     public Vector3 GetEntrancePoint() => entrancePoint.position;
     public Vector3 GetExitPoint() => exitPoint.position;
-    public FoodData[] GetAvailableMenus() => availableMenus;
-    
 
     private void Update()
     {
@@ -64,15 +58,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
             }
         }
     }
-    
-    /// <summary>
-    /// 메뉴 데이터 로드
-    /// </summary>
-    private void LoadMenuData()
-    {
-        // Resources 폴더에서 해금된 메뉴 불러오기
-    }
-    
     
     private void OnGUI()
     {

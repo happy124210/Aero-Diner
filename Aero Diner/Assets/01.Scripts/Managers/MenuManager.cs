@@ -30,7 +30,7 @@ public class MenuManager : Singleton<MenuManager>
     /// </summary>
     private void LoadAllFoodData()
     {
-        allFoodData = Resources.LoadAll<FoodData>("Data/Food");
+        allFoodData = Resources.LoadAll<FoodData>("Datas/Food");
 
         if (showDebugInfo) Debug.Log($"[MenuManager]: {allFoodData.Length}개 데이터 로드 완료");
     }
@@ -81,8 +81,7 @@ public class MenuManager : Singleton<MenuManager>
         return false;
     }
 
-
-    public void ToddleMenuSelection(string foodId)
+    public void ToggleMenuSelection(string foodId)
     {
         Menu menu = playerMenus.FirstOrDefault(m => m.foodData.id == foodId);
         if (menu?.isUnlocked == true)
@@ -95,8 +94,9 @@ public class MenuManager : Singleton<MenuManager>
     #endregion
     
     #region public getters
-    
-    public FoodData[] GetTodayMenuData() => todayMenus.Select(m => m.foodData).ToArray();
+
+    public List<Menu> GetTodayMenus() => todayMenus; // Menu 리스트 (해금, 선택정보 포함)
+    public FoodData[] GetTodayMenuData() => todayMenus.Select(m => m.foodData).ToArray(); // FoodData만
     public List<Menu> GetUnlockedMenus() => playerMenus.Where(menu => menu.isUnlocked).ToList();
     public List<Menu> GetAllMenus() => new List<Menu>(playerMenus);
     

@@ -39,14 +39,6 @@ public class CustomerSpawner : MonoBehaviour
             customerDataIds.Add(customerData.id);
         }
     }
-
-    private void Start()
-    {
-        if (autoSpawn)
-        {
-            StartSpawning();
-        }
-    }
     
     private void OnDestroy()
     {
