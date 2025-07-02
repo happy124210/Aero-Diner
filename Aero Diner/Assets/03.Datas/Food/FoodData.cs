@@ -22,8 +22,8 @@ public class FoodData : ScriptableObject
     public FoodType foodType; // Raw, Sauce, Topping, Menu 
     public Sprite foodIcon;
     public string description;
-    public StationType stationType; // 가공될 설비
+    public StationType[] stationType; // 가공될 설비 (여러 개 가능)
     public string[] ingredients; // 레시피. 원재료라면 null
-    public int cookTime;
+    public float cookTime;
     public int foodCost;
 }

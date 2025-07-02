@@ -11,14 +11,14 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
     [SerializeField] private int seatIndex = -1;
     
     [Header("현재 설정 - 확인용")]
-    [SerializeField, ReadOnly] private GameObject currentFoodObj; // 테이블에 놓여있는 음식
+    [SerializeField, ReadOnly] private FoodData currentFoodData; // 테이블에 놓여있는 음식 정보
     [SerializeField, ReadOnly] private CustomerController assignedCustomer; // 테이블에 앉아있는 손님
 
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo = true;
     
-    private FoodDisplay currentData;
-
+    private GameObject currentFoodObj;
+    
     #region UnityEvents
 
     private void Reset()
@@ -37,12 +37,13 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
 
     public void AssignCustomer(CustomerController customer)
     {
-        this.assignedCustomer = customer;
+        assignedCustomer = customer;
         if (showDebugInfo) Debug.Log("[Table]: 손님 할당");
     }
 
     public void ReleaseCustomer()
     {
+        ClearFood();
         assignedCustomer = null;
     }
 
@@ -69,9 +70,10 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
     {
         if (currentFoodObj) return;
         currentFoodObj = CreateMenuDisplay(data);
-        currentData = currentFoodObj.GetComponent<FoodDisplay>();
+        currentFoodData = currentFoodObj.GetComponent<FoodDisplay>().foodData;
         
-        CheckOrderMatch();
+        // 앉아있는 고객에게 메뉴 전달
+        assignedCustomer.ReceiveFood(data);
     }
 
     public void OnPlayerPickup()
@@ -104,11 +106,6 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
         return obj;
     }
 
-    public void CheckOrderMatch()
-    {
-        if (assignedCustomer == null || !currentFoodObj) return;
-    }
-
     public void OnOrderMatch()
     {
         // TODO: 주문 일치 시 식사 시작
@@ -117,15 +114,8 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
     /// <summary>
     /// 식사 대기 후 음식 제거
     /// </summary>
-    public IEnumerator ClearFood()
+    public void ClearFood()
     {
-        while (assignedCustomer != null)
-        {
-            float eatTime = assignedCustomer.CurrentData.eatTime;
-            yield return new WaitForSeconds(eatTime);
-        }
-
-        // TODO: 임시 Destroy
         Destroy(currentFoodObj);
         currentFoodObj = null;
     }
