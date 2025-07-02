@@ -116,7 +116,7 @@ GameObject:
   - component: {fileID: 2944876725851306697}
   - component: {fileID: 6342791297210915905}
   - component: {fileID: 1213949508448831621}
-  - component: {fileID: 6017995620600695251}
+  - component: {fileID: 4164869093904009518}
   m_Layer: 6
   m_Name: A_PotTest
   m_TagString: Untagged
@@ -132,7 +132,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5752060857114101056}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.38, y: -4.33, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -204,12 +204,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 890181c7806db64468c64ee802927450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  passiveGroup: {fileID: 11400000, guid: 8550c91e57ac0324ab88624bdcef9a5d, type: 2}
+  passiveGroup: {fileID: 11400000, guid: 289b9a71e29e1034ea6a62b94f62c65c, type: 2}
   selectedIngredient: {fileID: 0}
   spawnPoint: {fileID: 2231297551284836002}
   cookingTime: 5
   cookingTimeText: {fileID: 5736905581696427561}
-  stationData: {fileID: 11400000, guid: 510f50279063a1846bfed3e14972ddc8, type: 2}
+  stationData: {fileID: 11400000, guid: 272a983b5a938804db36dcf429586c2a, type: 2}
   currentIngredients: []
   slotsDisplay: {fileID: 0}
 --- !u!50 &2944876725851306697
@@ -296,7 +296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd01cdc2607e29c4182ce745cd92390b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6017995620600695251
+--- !u!114 &4164869093904009518
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -305,11 +305,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5752060857114101056}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74ad3199940570f44846669998326eda, type: 3}
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  iconPrefab: {fileID: 6099388104275518232, guid: dccf66cf9cefbe54c8128dc7c7e551f7, type: 3}
-  spacing: 0.5
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &6901747118855865534
 GameObject:
   m_ObjectHideFlags: 0

@@ -20,6 +20,11 @@ MonoBehaviour:
   stationIcon: {fileID: 21300000, guid: 5d4803d598c9e61459425cac6b152f70, type: 3}
   description: "\uC804\uB3D9 \uCC44\uCE7C \uC785\uB2C8\uB2E4"
   stationCost: 100
-  availableRecipes: []
+  availableRecipes:
+  - {fileID: 11400000, guid: ff5d9b526cfdc9d4ea5d00308db03749, type: 2}
+  - {fileID: 11400000, guid: f02da3cce38effa4c95245798ef86752, type: 2}
+  - {fileID: 11400000, guid: 6f74b333018cbf540950f52f148c2281, type: 2}
+  - {fileID: 11400000, guid: 11fc209d50dd7f84c819d65cee7c2cf4, type: 2}
+  - {fileID: 11400000, guid: 1ad4f7bbe831eeb4aad0d2fe6c2202d9, type: 2}
   ingredientSlots: 3
   slotPlaceholderIcon: {fileID: 0}

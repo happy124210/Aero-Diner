@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5730471318557948500}
   - component: {fileID: 6099388104275518232}
+  - component: {fileID: -8807396433779527027}
   m_Layer: 0
   m_Name: IngredientSlotIcon
   m_TagString: Untagged
@@ -84,3 +85,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-8807396433779527027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3741827721312152300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74ad3199940570f44846669998326eda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  iconPrefab: {fileID: 6099388104275518232}
+  spacing: 0.5

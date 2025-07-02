@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4392329725694600481}
   - component: {fileID: 1215068463477411717}
   - component: {fileID: -9037808772910123558}
+  - component: {fileID: 6135554117017021008}
   m_Layer: 6
   m_Name: Shelf
   m_TagString: Untagged
@@ -117,7 +118,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -172,10 +173,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bf2624f2ef12c842b402b9a99e9028b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shelfGroup: {fileID: 11400000, guid: e0a0da7df12471040aa1de20be99d08f, type: 2}
-  selectedIngredient: {fileID: 0}
+  currentData: {fileID: 0}
   spawnPoint: {fileID: 1153726550070249425}
-  NeededIngredients: {fileID: 0}
+  neededIngredients: {fileID: 0}
 --- !u!114 &-9037808772910123558
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -188,3 +188,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd01cdc2607e29c4182ce745cd92390b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6135554117017021008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9105805640978016393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff

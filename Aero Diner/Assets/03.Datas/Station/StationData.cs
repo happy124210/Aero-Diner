@@ -47,6 +47,6 @@ public class StationData : ScriptableObject
     public List<FoodData> availableRecipes;
 
     [Header("Ingredient Slot Settings")]
-    public int ingredientSlots = 3;          // 슬롯 개수
-    public Sprite slotPlaceholderIcon;       // 각 슬롯에 사용할 플레이스홀더 스프라이트
+    public int ingredientSlots = 3;                 // 슬롯 개수
+    public List<Sprite> slotPlaceholderIcons;       // 각 슬롯에 사용할 플레이스홀더 스프라이트
 }

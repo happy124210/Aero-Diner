@@ -5,9 +5,6 @@
 /// </summary>
 public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
 {
-    [Header("재료 데이터 그룹 (FoodData만 관리)")]
-    public ShelfSOGroup shelfGroup;
-
     [Header("생성할 Food/Menu SO")]
     public FoodData currentData; // 선반에 올려진 음식 데이터
 
@@ -15,7 +12,7 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
     public Transform spawnPoint;
 
     [Header("가공 허용 재료 그룹 (FoodData만 관리)")] // 플레이어가 내려놓은 재료를 기반으로 동적으로 채워짐
-    public ShelfSOGroup neededIngredients;
+    public FoodSOGroup neededIngredients;
 
     // 내부 상태
     private GameObject placedIngredientObj;
