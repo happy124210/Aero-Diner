@@ -4,7 +4,7 @@ using System.IO;
 
 public class FoodSOGroupPopulator
 {
-    [MenuItem("Tools/Populate FoodSOGroup")]
+    [MenuItem("Tools/Editor/Populate FoodSOGroup")]
     public static void PopulateGroup()
     {
         // FoodSOGroup 에셋 불러오기
