@@ -212,7 +212,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         // 첫 번째 재료
         if (currentIngredients.Count == 0)
         {
-            bool typeMatch = data.stationType == stationData.stationType;
+            bool typeMatch = data.stationType.Contains(stationData.stationType);
             Debug.Log($"[Station] 첫 번째 재료 시도됨: {data.foodName} | 스테이션 타입 일치 여부: {typeMatch}");
             return typeMatch;
         }
