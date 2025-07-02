@@ -116,6 +116,7 @@ GameObject:
   - component: {fileID: 7782568563348176842}
   - component: {fileID: 3888013740838835383}
   - component: {fileID: 3858298165295957993}
+  - component: {fileID: 9205120929400621500}
   m_Layer: 6
   m_Name: A_FryingPanTest
   m_TagString: Untagged
@@ -131,7 +132,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6573594668745997083}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.38, y: -1.11, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -181,7 +182,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 50
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.3301887, g: 0.042052336, b: 0.3136926, a: 1}
+  m_Color: {r: 0.7924528, g: 0.28034887, b: 0.50165015, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -203,14 +204,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 890181c7806db64468c64ee802927450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  passiveGroup: {fileID: 11400000, guid: 8550c91e57ac0324ab88624bdcef9a5d, type: 2}
+  passiveGroup: {fileID: 11400000, guid: 289b9a71e29e1034ea6a62b94f62c65c, type: 2}
   selectedIngredient: {fileID: 0}
   spawnPoint: {fileID: 3585195938276608026}
-  neededIngredients: {fileID: 11400000, guid: 8aca67cf6037bb948aef6cc1f50c76a1, type: 2}
   cookingTime: 5
   cookingTimeText: {fileID: 7018230484246268172}
-  stationData: {fileID: 11400000, guid: d0cfd544b707b4749a079638ce41a558, type: 2}
+  stationData: {fileID: 11400000, guid: cae44f9c00942634c9c87c8b038577b6, type: 2}
   currentIngredients: []
+  slotsDisplay: {fileID: 0}
 --- !u!50 &7782568563348176842
 Rigidbody2D:
   serializedVersion: 4
@@ -295,6 +296,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd01cdc2607e29c4182ce745cd92390b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &9205120929400621500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6573594668745997083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &6875246090366265209
 GameObject:
   m_ObjectHideFlags: 0

@@ -51,12 +51,12 @@ public class CSVImporter
         // 레시피 데이터 파싱
         data.id = cols[0].Trim();
         data.stationName = cols[1].Trim();
-        data.stationType = (StationType)Enum.Parse(typeof(StationType), cols[2].Trim());
-        data.workType = (WorkType)Enum.Parse(typeof(WorkType), cols[3].Trim());
-        data.stationSprite = LoadIcon($"{data.stationName}-icon", "Menu");
-        data.stationIcon = LoadIcon($"{data.stationName}-icon", "Menu");
-        data.description = cols[4].Trim();
-        data.stationCost = int.Parse(cols[5]);
+        data.displayName = cols[2].Trim();
+        data.stationType = (StationType)Enum.Parse(typeof(StationType), cols[3].Trim());
+        data.workType = (WorkType)Enum.Parse(typeof(WorkType), cols[4].Trim());
+        data.stationIcon = LoadIcon($"{data.stationName}-icon", "Station");
+        data.description = cols[5].Trim();
+        data.stationCost = int.Parse(cols[6]);
 
         return data;
     }

@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 117d233d9fc2bff418b6e4c7d9135079, type: 3}
+  m_Name: FryingpanData
+  m_EditorClassIdentifier: 
+  id: s8
+  stationName: FryingPan
+  displayName: "\uD504\uB77C\uC774\uD32C"
+  stationType: 1
+  workType: 2
+  stationIcon: {fileID: 21300000, guid: 70d09754f99f53943a6edc76e24d2920, type: 3}
+  description: "\uD504\uB77C\uC774\uD32C \uC785\uB2C8\uB2E4"
+  stationCost: 100
+  availableRecipes:
+  - {fileID: 11400000, guid: b0dd8c4087595ef448023fc38062377e, type: 2}
+  - {fileID: 11400000, guid: 98f0e40cf6800e54a807774e0137e3ba, type: 2}
+  - {fileID: 11400000, guid: 9cc2e1b8abab949478b254ce603a0fde, type: 2}
+  - {fileID: 11400000, guid: 01a26afbc788c8a45a17280417a7eb9f, type: 2}
+  - {fileID: 11400000, guid: 9a0ed7fd8ea6b4e45ba56587546cae8a, type: 2}
+  - {fileID: 11400000, guid: 167f20b2e9914a840b29c3a43b08a957, type: 2}
+  - {fileID: 11400000, guid: aeac6e2a980c5db4f9554530098c7b1d, type: 2}
+  - {fileID: 11400000, guid: 751086e2dafafb94080110c1346453e1, type: 2}
+  - {fileID: 11400000, guid: 8892d509911c1184bbd8bd2120d1e3f8, type: 2}
+  - {fileID: 11400000, guid: cea4ac0e999051546ad78ffe2201e5a3, type: 2}
+  - {fileID: 11400000, guid: 8d08fe2aedf48774f9796b0b22d980b4, type: 2}
+  - {fileID: 11400000, guid: fb715715dd6057a47955e293b07103f8, type: 2}
+  - {fileID: 11400000, guid: 8a82aaffbce19a94a93d2735f338d2e3, type: 2}
+  ingredientSlots: 3
+  slotPlaceholderIcon: {fileID: 0}

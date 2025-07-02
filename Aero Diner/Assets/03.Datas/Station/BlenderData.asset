@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 117d233d9fc2bff418b6e4c7d9135079, type: 3}
+  m_Name: BlenderData
+  m_EditorClassIdentifier: 
+  id: s12
+  stationName: Blender
+  displayName: "\uBBF9\uC11C\uAE30"
+  stationType: 4
+  workType: 1
+  stationIcon: {fileID: 21300000, guid: 9c8e0453a7a534b4d9ebca078851383f, type: 3}
+  description: "\uBBF9\uC11C\uAE30 \uC785\uB2C8\uB2E4"
+  stationCost: 100
+  availableRecipes:
+  - {fileID: 11400000, guid: aae9a85be31d0c240ba479fda8f0a43f, type: 2}
+  - {fileID: 11400000, guid: e71f89a2de2d4ea4dbed63fe30c48463, type: 2}
+  - {fileID: 11400000, guid: 63001436fe09b304d82f0a93ef9c428d, type: 2}
+  ingredientSlots: 3
+  slotPlaceholderIcon: {fileID: 0}
