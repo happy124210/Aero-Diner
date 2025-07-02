@@ -13,8 +13,6 @@ public class CustomerSpawner : MonoBehaviour
     [SerializeField] private Transform[] spawnPoints;
     
     // 줄서기 큐 (앞에서부터 순서대로)
-    private Queue<CustomerController> waitingQueue = new Queue<CustomerController>();
-    private readonly Dictionary<CustomerController, Vector3> customerQueuePositions = new Dictionary<CustomerController, Vector3>();
     private bool isAssigningSeat;
     
     [Header("손님 타입 리스트 (자동 로드됨)")]
@@ -40,8 +38,6 @@ public class CustomerSpawner : MonoBehaviour
         {
             customerDataIds.Add(customerData.id);
         }
-        
-        InitializeArrays();
     }
 
     private void Start()
@@ -55,19 +51,6 @@ public class CustomerSpawner : MonoBehaviour
     private void OnDestroy()
     {
         StopSpawning();
-    }
-    
-    #endregion
-
-    #region 초기화
-    
-    /// <summary>
-    /// 배열들 초기화
-    /// </summary>
-    private void InitializeArrays()
-    {
-        waitingQueue.Clear();
-        customerQueuePositions.Clear();
     }
     
     #endregion
