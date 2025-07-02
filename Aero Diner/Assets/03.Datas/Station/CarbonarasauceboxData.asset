@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 117d233d9fc2bff418b6e4c7d9135079, type: 3}
+  m_Name: CarbonarasauceboxData
+  m_EditorClassIdentifier: 
+  id: s21
+  stationName: CarbonaraSauceBox
+  displayName: "\uAE4C\uB974\uBCF4\uB098\uB77C \uC18C\uC2A4"
+  stationType: 8
+  workType: 0
+  stationIcon: {fileID: 21300000, guid: c2b3638f0aa7eaf48bfaf3c97deb98ae, type: 3}
+  description: "\uAE4C\uB974\uBCF4\uB098\uB77C \uC18C\uC2A4 \uBCD1 \uC785\uB2C8\uB2E4"
+  stationCost: 100
+  availableRecipes: []
+  ingredientSlots: 3
+  slotPlaceholderIcon: {fileID: 0}

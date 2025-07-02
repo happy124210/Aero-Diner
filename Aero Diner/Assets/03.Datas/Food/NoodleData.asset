@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca77332d7f9b4134e9c53ece37a21432, type: 3}
   m_Name: NoodleData
   m_EditorClassIdentifier: 
-  id: 
-  foodName: 
-  displayName: 
-  foodType: 0
-  foodIcon: {fileID: 0}
-  description: 
-  stationType: 0
+  id: f2
+  foodName: Noodle
+  displayName: "\uAC74\uC870\uB41C \uBA74"
+  foodType: 10
+  foodIcon: {fileID: 21300000, guid: 9e5555104f5f2e043ac79c077b886e7c, type: 3}
+  description: "\uAC74\uC870\uB41C \uBA74 \uC785\uB2C8\uB2E4"
+  stationType: 02000000
   ingredients: []
-  cookTime: 0
-  foodCost: 0
+  cookTime: 5
+  foodCost: 500

@@ -5,11 +5,18 @@
 /// </summary>
 public enum FoodType
 {
+    Water,
     Topping,
     Sauce,
     Noodle,
     Menu,
-    Raw
+    Raw,
+    Cheese,
+    Chili,
+    Capsicum,
+    Pepper,
+    DryNoodle,
+    GratedCheese
 }
 
 [CreateAssetMenu(fileName = "New Food Data", menuName = "Game Data/Food Data")]

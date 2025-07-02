@@ -116,6 +116,7 @@ GameObject:
   - component: {fileID: 3351457593935497327}
   - component: {fileID: 2977976777810006853}
   - component: {fileID: 5667583159350442385}
+  - component: {fileID: -6602161311492694314}
   m_Layer: 6
   m_Name: A_CuttingBoardTest
   m_TagString: Untagged
@@ -206,11 +207,11 @@ MonoBehaviour:
   passiveGroup: {fileID: 11400000, guid: 8550c91e57ac0324ab88624bdcef9a5d, type: 2}
   selectedIngredient: {fileID: 0}
   spawnPoint: {fileID: 8543442232447714564}
-  neededIngredients: {fileID: 11400000, guid: 8aca67cf6037bb948aef6cc1f50c76a1, type: 2}
   cookingTime: 5
   cookingTimeText: {fileID: 7242697039802216529}
   stationData: {fileID: 11400000, guid: 8a9bb9db9ee36e24b9789a8bb97960dd, type: 2}
   currentIngredients: []
+  slotsDisplay: {fileID: 0}
 --- !u!50 &3351457593935497327
 Rigidbody2D:
   serializedVersion: 4
@@ -295,6 +296,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd01cdc2607e29c4182ce745cd92390b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-6602161311492694314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7128799760504958799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74ad3199940570f44846669998326eda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  iconPrefab: {fileID: 6099388104275518232, guid: dccf66cf9cefbe54c8128dc7c7e551f7, type: 3}
+  spacing: 0.5
 --- !u!1 &8913938796140914761
 GameObject:
   m_ObjectHideFlags: 0
