@@ -26,16 +26,15 @@ public class RestaurantManager : Singleton<RestaurantManager>
     [SerializeField] private float gameTime;
     
     [Header("Menu")]
-    [SerializeField] private FoodData[] availableMenus;
-    private readonly Dictionary<string, FoodData> menuDatabase = new Dictionary<string, FoodData>();
+    [SerializeField] private FoodData[] availableMenus; // 플레이어가 가지고 있는 모든 메뉴
+    [SerializeField] private FoodData[] selectedMenus; // 영업에 사용할 메뉴
     
     [Header("Debug")]
-    [SerializeField] private bool showDebugInfo = true;
+    [SerializeField] private bool showDebugInfo;
     
-
     [Header("라운드 시간 설정")]
-    [Tooltip("1라운드(하루)의 제한 시간 (초 단위)")]
-    [SerializeField] private float gameTimeLimit = 180f;
+    [Tooltip("하루 제한 시간 (초 단위)")]
+    [SerializeField] private float gameTimeLimit;
 
     //UI에 필요한 getter 추가 
     public float CurrentGameTime => gameTime;
@@ -44,11 +43,8 @@ public class RestaurantManager : Singleton<RestaurantManager>
     public Vector3 GetEntrancePoint() => entrancePoint.position;
     public Vector3 GetExitPoint() => exitPoint.position;
     public FoodData[] GetAvailableMenus() => availableMenus;
-    private void Start()
-    {
-        StartGame();
-    }
     
+
     private void Update()
     {
         if (gameRunning)
@@ -74,18 +70,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
     /// </summary>
     private void LoadMenuData()
     {
-        // 딕셔너리에 메뉴 등록
-        menuDatabase.Clear();
-        
-        foreach (var menu in availableMenus)
-        {
-            if (menu != null && !string.IsNullOrEmpty(menu.id) && menu.foodType == FoodType.Menu)
-            {
-                menuDatabase[menu.id] = menu;
-            }
-        }
-
-        if (showDebugInfo) Debug.Log($"[RestaurantManager]: {menuDatabase.Count}개 메뉴 로드 완료");
+        // Resources 폴더에서 해금된 메뉴 불러오기
     }
     
     
