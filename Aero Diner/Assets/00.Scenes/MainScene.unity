@@ -398,6 +398,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5808419587469950342, guid: 95f1c94ddbcf5404691a4d504b3a43e2, type: 3}
+      propertyPath: m_NavMeshData
+      value: 
+      objectReference: {fileID: 23800000, guid: 20781cdfb79ee204c88b73e94d4d273c, type: 2}
     - target: {fileID: 7183592348503508313, guid: 95f1c94ddbcf5404691a4d504b3a43e2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -549,14 +553,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2597507615415898592, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
-      propertyPath: ingredientGroup
-      value: 
-      objectReference: {fileID: 11400000, guid: 54651676d6b0e7a46980bd2eb9451ecd, type: 2}
-    - target: {fileID: 3532026373071327852, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
-      propertyPath: ingredientGroup
-      value: 
-      objectReference: {fileID: 11400000, guid: 54651676d6b0e7a46980bd2eb9451ecd, type: 2}
     - target: {fileID: 3752047619878666795, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
       propertyPath: m_Name
       value: StationSet
@@ -601,14 +597,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4446575015386252329, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
-      propertyPath: ingredientGroup
-      value: 
-      objectReference: {fileID: 11400000, guid: 54651676d6b0e7a46980bd2eb9451ecd, type: 2}
-    - target: {fileID: 5554594299861167691, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
-      propertyPath: ingredientGroup
-      value: 
-      objectReference: {fileID: 11400000, guid: 54651676d6b0e7a46980bd2eb9451ecd, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

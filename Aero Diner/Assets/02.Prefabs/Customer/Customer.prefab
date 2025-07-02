@@ -378,10 +378,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentData: {fileID: 0}
+  currentOrder: {fileID: 0}
   customerUI: {fileID: 5070177583603407402}
   orderBubble: {fileID: 3525487760294110372}
   patienceTimer: {fileID: 3569666337585117268}
-  showDebugInfo: 0
+  showDebugInfo: 1
   currentNodeName: 
 --- !u!195 &7523355939073356595
 NavMeshAgent:

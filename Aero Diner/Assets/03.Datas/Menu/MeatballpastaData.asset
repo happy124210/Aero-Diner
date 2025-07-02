@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d09df1354ed6e32448b2b49289c0a40c, type: 3}
+  m_Name: MeatballpastaData
+  m_EditorClassIdentifier: 
+  id: m19
+  menuName: MeatballPasta
+  foodType: 3
+  menuIcon: {fileID: 21300000, guid: ea2f7ff9aad7c4a45adc16f9a475f5b1, type: 3}
+  description: "\uBBF8\uD2B8\uBCFC \uD30C\uC2A4\uD0C0 \uC785\uB2C8\uB2E4"
+  ingredients:
+  - m1
+  - m2
+  - m8
+  cookTime: 5
+  menuCost: 1000
