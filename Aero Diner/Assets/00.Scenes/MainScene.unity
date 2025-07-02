@@ -418,10 +418,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5808419587469950342, guid: 95f1c94ddbcf5404691a4d504b3a43e2, type: 3}
-      propertyPath: m_NavMeshData
-      value: 
-      objectReference: {fileID: 23800000, guid: 20781cdfb79ee204c88b73e94d4d273c, type: 2}
     - target: {fileID: 7183592348503508313, guid: 95f1c94ddbcf5404691a4d504b3a43e2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -625,11 +621,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2017407775838589653, guid: 04b5dcc961d8b4f4eadb0dbfdea2a8d2, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000009536743
+      value: 0.0000009536743
       objectReference: {fileID: 0}
     - target: {fileID: 2017407775838589653, guid: 04b5dcc961d8b4f4eadb0dbfdea2a8d2, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000030517578
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2542533018838599681, guid: 04b5dcc961d8b4f4eadb0dbfdea2a8d2, type: 3}
       propertyPath: m_AnchorMax.x
@@ -646,10 +642,6 @@ PrefabInstance:
     - target: {fileID: 4463306478129098026, guid: 04b5dcc961d8b4f4eadb0dbfdea2a8d2, type: 3}
       propertyPath: m_Value
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6392137069715490736, guid: 04b5dcc961d8b4f4eadb0dbfdea2a8d2, type: 3}
-      propertyPath: m_SortingOrder
-      value: 150
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

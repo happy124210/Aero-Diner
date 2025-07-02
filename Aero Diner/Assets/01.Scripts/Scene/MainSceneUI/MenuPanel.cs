@@ -21,28 +21,27 @@ public class MenuPanel : MonoBehaviour
         }
 
         // 메뉴 가져오기
-        var foodList = RestaurantManager.Instance.GetAvailableMenus();
+        var menuList = MenuManager.Instance.GetUnlockedMenus();
 
-        if (foodList == null)
+        if (menuList == null)
         {
-            Debug.LogWarning(" availableMenus 가 null입니다!");
+            Debug.LogWarning("TodayMenus 가 null입니다!");
             return;
         }
 
-        Debug.Log($" 메뉴 수: {foodList.Length}");
+        Debug.Log($" 메뉴 수: {menuList.Count}");
 
-        foreach (var food in foodList)
+        foreach (var menu in menuList)
         {
-            if (food == null)
+            if (menu == null)
             {
-                Debug.LogWarning(" null인 FoodData 발견");
+                Debug.LogWarning("null인 Menu 발견");
                 continue;
             }
-
-
+            
             var go = Instantiate(foodItemPrefab, contentTransform);
             var foodUI = go.GetComponent<MenuPanelContent>();
-            foodUI.SetData(food);
+            foodUI.SetData(menu);
         }
     }
     public void OnClickDayStartBtn()
@@ -55,5 +54,7 @@ public class MenuPanel : MonoBehaviour
                 gameObject.SetActive(false); // 비활성화
                 EventBus.Raise(UIEventType.HideMenuPanel);
             });
+        
+        RestaurantManager.Instance.StartGame();
     }
 }
