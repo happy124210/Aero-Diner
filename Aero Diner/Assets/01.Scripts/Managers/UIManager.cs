@@ -111,6 +111,12 @@ public class UIManager : Singleton<UIManager>
             case UIEventType.ShowStartMenuNoSave:
                 currentSceneUI?.GetComponentInChildren<MenuPanel3>(true)?.gameObject.SetActive(true);
                 break;
+            case UIEventType.ShowMenuPanel:
+                currentSceneUI?.GetComponentInChildren<MenuPanel>(true)?.gameObject.SetActive(true);
+                break;
+            case UIEventType.HideMenuPanel:
+                currentSceneUI?.GetComponentInChildren<MenuPanel>(true)?.gameObject.SetActive(false);
+                break;
             case UIEventType.ShowRoundTimer:
             case UIEventType.HideRoundTimer:
                 var timer = currentSceneUI?.GetComponentInChildren<RoundTimerUI>(true)?.gameObject;

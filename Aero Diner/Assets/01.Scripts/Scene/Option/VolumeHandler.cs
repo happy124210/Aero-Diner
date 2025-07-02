@@ -48,7 +48,10 @@ public class VolumeHandler : MonoBehaviour
             UpdateSFXVolumeUI(v);
         });
     }
-
+    private void OnEnable()
+    {
+        UIRoot.Instance.tabButtonController.ApplyTabSelectionVisuals();
+    }
     private void UpdateBGMVolumeUI(float value)
     {
         bgmPercentageText.text = $"{Mathf.RoundToInt(value * 100)}%";

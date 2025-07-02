@@ -22,7 +22,8 @@ public enum UIEventType
     QuitGame,
     //MainSceneUI
     ShowRoundTimer, HideRoundTimer,
-    UpdateEarnings
+    UpdateEarnings, ShowMenuPanel,
+    HideMenuPanel
 }
 
 public static class EventBus

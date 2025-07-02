@@ -258,6 +258,7 @@ MonoBehaviour:
   keyRebindManager: {fileID: 309382665607120160}
   volumeHandler: {fileID: 6250927537225144785}
   videoSettingPanel: {fileID: 4910507528603062709}
+  tabButtonController: {fileID: 6379105854829957512}
   pausePanel: {fileID: 2994172926831345143}
   optionPanel: {fileID: 1219793329137901483}
   volumePanel: {fileID: 9119959161602546009}
@@ -353,6 +354,18 @@ MonoBehaviour:
   - sceneName: LivingScene
     uiPrefab:
       m_AssetGUID: 4f04806a308443a428151319d7678021
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+  - sceneName: MainScene
+    uiPrefab:
+      m_AssetGUID: 21f3a84c692d9c74da9051ff22b60a35
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+  - sceneName: MainScene
+    uiPrefab:
+      m_AssetGUID: 04b5dcc961d8b4f4eadb0dbfdea2a8d2
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
@@ -659,6 +672,10 @@ PrefabInstance:
     - target: {fileID: 3265053936465237713, guid: de4b79dad97e20d4b8d9b457cc95146e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: QuitGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 3997616582652732691, guid: de4b79dad97e20d4b8d9b457cc95146e, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6494534100550455516, guid: de4b79dad97e20d4b8d9b457cc95146e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target

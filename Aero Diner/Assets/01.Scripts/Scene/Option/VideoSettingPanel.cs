@@ -53,7 +53,10 @@ public class VideoSettingPanel : MonoBehaviour
 
         UpdateUI();
     }
-    
+    void OnEnable()
+    {
+        UIRoot.Instance.tabButtonController.ApplyTabSelectionVisuals();
+    }
     private int GetCurrentScreenModeIndex()
     {
         for (int i = 0; i < fullScreenModes.Length; i++)
