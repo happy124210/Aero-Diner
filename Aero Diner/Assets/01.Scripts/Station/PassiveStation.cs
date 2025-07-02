@@ -14,7 +14,7 @@ using TMPro;
 public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
 {
     [Header("재료 데이터 그룹")]
-    public PassiveSOGroup passiveGroup;
+    public FoodSOGroup passiveGroup;
 
     [Header("생성할 재료 SO")]
     public FoodData selectedIngredient;

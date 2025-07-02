@@ -21,14 +21,13 @@ public class MenuManager : Singleton<MenuManager>
     protected override void Awake()
     {
         base.Awake();
-        LoadAllFoodData();
         InitializePlayerMenus();
     }
 
     /// <summary>
     /// 존재하는 모든 음식 데이터 로드
     /// </summary>
-    private void LoadAllFoodData()
+    public void LoadAllFoodData()
     {
         allFoodData = Resources.LoadAll<FoodData>("Datas/Food");
 
