@@ -13,8 +13,6 @@ public enum StationType
     Oven,            // 오븐
     Kneading,
 
-
-
     // 기타 스테이션
     IngredientBox,   // 재료 박스
     Fridge,          // 냉장고 (재료)
@@ -48,5 +46,12 @@ public class StationData : ScriptableObject
 
     [Header("Ingredient Slot Settings")]
     public int ingredientSlots = 3;                 // 슬롯 개수
-    public List<Sprite> slotPlaceholderIcons;       // 각 슬롯에 사용할 플레이스홀더 스프라이트
+    public List<SlotDisplayData> slotDisplays; // 슬롯별 타입과 아이콘 설정
+}
+
+[System.Serializable]
+public class SlotDisplayData
+{
+    public FoodType foodType;             // 슬롯이 담당하는 재료 타입
+    public Sprite placeholderIcon;        // 슬롯에 표시할 아이콘
 }
