@@ -357,6 +357,12 @@ MonoBehaviour:
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
+  - sceneName: MainScene
+    uiPrefab:
+      m_AssetGUID: 21f3a84c692d9c74da9051ff22b60a35
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
 --- !u!1 &6784009097632759853
 GameObject:
   m_ObjectHideFlags: 0
