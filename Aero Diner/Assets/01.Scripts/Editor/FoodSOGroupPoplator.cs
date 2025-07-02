@@ -11,7 +11,7 @@ public class FoodSOGroupPopulator
         var group = AssetDatabase.LoadAssetAtPath<FoodSOGroup>("Assets/03.Datas/SOGroup/FoodGroup.asset");
         if (group == null)
         {
-            Debug.LogError("FoodGroup.asset not found!");
+            Debug.LogError("FoodGroup.asset 파일을 찾을 수 없습니다!");
             return;
         }
 
@@ -29,6 +29,6 @@ public class FoodSOGroupPopulator
 
         EditorUtility.SetDirty(group);
         AssetDatabase.SaveAssets();
-        Debug.Log("FoodSOGroup population completed.");
+        Debug.Log($"FoodSOGroup에 푸드 데이터를 추가했습니다.");
     }
 }
