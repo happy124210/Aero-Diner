@@ -244,7 +244,7 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         // 첫 번째 재료
         if (currentIngredients.Count == 0)
         {
-            bool typeMatch = food.stationType == stationData.stationType;
+            bool typeMatch = food.stationType.Contains(stationData.stationType);
             Debug.Log($"[Station] 첫 번째 재료 시도됨: {food.foodName} | 스테이션 타입 일치 여부: {typeMatch}");
             return typeMatch;
         }
