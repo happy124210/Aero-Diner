@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -236,11 +237,12 @@ public class CustomerController : MonoBehaviour, IPoolable
     
     public void PlaceOrder()
     {
-        FoodData[] availableMenus = RestaurantManager.Instance.GetAvailableMenus();
+        FoodData[] availableMenus = MenuManager.Instance.GetTodayMenuData();
     
         if (availableMenus != null && availableMenus.Length > 0)
         {
             currentOrder = availableMenus[Random.Range(0, availableMenus.Length)];
+            orderBubble.sprite = currentOrder.foodIcon;
             ShowOrderBubble();
         }
     }

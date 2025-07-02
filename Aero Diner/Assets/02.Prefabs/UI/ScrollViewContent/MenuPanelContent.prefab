@@ -234,7 +234,19 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5791137649495482260}
+        m_TargetAssemblyTypeName: MenuPanelContent, Assembly-CSharp
+        m_MethodName: OnToggle
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 1
 --- !u!1 &3415938795095629806
 GameObject:
@@ -331,6 +343,7 @@ MonoBehaviour:
   iconImage: {fileID: 9112661578369700165}
   nameText: {fileID: 5508937744248133320}
   priceText: {fileID: 3456780245376107212}
+  toggle: {fileID: 572905180499668985}
 --- !u!1 &3442158601304387917
 GameObject:
   m_ObjectHideFlags: 0
