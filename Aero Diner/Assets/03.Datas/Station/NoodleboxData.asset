@@ -21,5 +21,5 @@ MonoBehaviour:
   description: "\uAC74\uC870\uBA74 \uBCF4\uAD00\uD568 \uC785\uB2C8\uB2E4"
   stationCost: 100
   availableRecipes: []
-  ingredientSlots: 3
+  ingredientSlots: 0
   slotPlaceholderIcon: {fileID: 0}

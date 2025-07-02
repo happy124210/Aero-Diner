@@ -1,0 +1,34 @@
+﻿using UnityEditor;
+using UnityEngine;
+using System.IO;
+
+public class FoodSOGroupPopulator
+{
+    [MenuItem("Tools/Populate FoodSOGroup")]
+    public static void PopulateGroup()
+    {
+        // FoodSOGroup 에셋 불러오기
+        var group = AssetDatabase.LoadAssetAtPath<FoodSOGroup>("Assets/03.Datas/SOGroup/FoodGroup.asset");
+        if (group == null)
+        {
+            Debug.LogError("FoodGroup.asset not found!");
+            return;
+        }
+
+        // FoodData 에셋들 불러오기
+        string[] guids = AssetDatabase.FindAssets("t:FoodData", new[] { "Assets/03.Datas/Food" });
+        foreach (string guid in guids)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            FoodData foodData = AssetDatabase.LoadAssetAtPath<FoodData>(path);
+            if (foodData != null)
+            {
+                group.AddIngredient(foodData);
+            }
+        }
+
+        EditorUtility.SetDirty(group);
+        AssetDatabase.SaveAssets();
+        Debug.Log("FoodSOGroup population completed.");
+    }
+}

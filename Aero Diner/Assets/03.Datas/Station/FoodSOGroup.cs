@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "PassiveGroup", menuName = "CookingGame/PassiveGroup")]
-public class PassiveSOGroup : ScriptableObject
+[CreateAssetMenu(fileName = "FoodGroup", menuName = "CookingGame/FoodGroup")]
+public class FoodSOGroup : ScriptableObject
 {
     [Serializable]
     public class Entry
