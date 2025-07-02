@@ -21,7 +21,6 @@ public class MenuPanel : MonoBehaviour
         }
 
         // 메뉴 가져오기
-        MenuManager.Instance.LoadAllFoodData();
         var menuList = MenuManager.Instance.GetUnlockedMenus();
 
         if (menuList == null)

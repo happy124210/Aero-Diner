@@ -1433,7 +1433,7 @@ MonoBehaviour:
   playerMenus: []
   todayMenus: []
   startMenuId: f26
-  showDebugInfo: 0
+  showDebugInfo: 1
 --- !u!1 &7476354895652351597
 GameObject:
   m_ObjectHideFlags: 0
