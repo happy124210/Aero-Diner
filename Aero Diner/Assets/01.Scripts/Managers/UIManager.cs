@@ -6,19 +6,28 @@ using System.Collections.Generic;
 
 public class UIManager : Singleton<UIManager>
 {
+    [System.Serializable]
+    public class SceneUIEntry
+    {
+        public string sceneName;
+        public List<AssetReferenceGameObject> uiPrefabs;
+    }
+
     [Header("씬별 UI 매핑")]
     [SerializeField] private List<SceneUIEntry> sceneUIPrefabs;
 
-    private Dictionary<string, AssetReference> uiMap;
-    private GameObject currentSceneUI;
+    private Dictionary<string, List<AssetReferenceGameObject>> uiMap;
+    private List<GameObject> currentSceneUIs = new();
+    public List<GameObject> CurrentSceneUIs => currentSceneUIs;
 
     private void Awake()
     {
-        uiMap = new Dictionary<string, AssetReference>();
+        uiMap = new();
         foreach (var entry in sceneUIPrefabs)
         {
             if (!uiMap.ContainsKey(entry.sceneName))
-                uiMap.Add(entry.sceneName, entry.uiPrefab);
+                uiMap[entry.sceneName] = new();
+            uiMap[entry.sceneName].AddRange(entry.uiPrefabs);
         }
     }
 
@@ -36,33 +45,38 @@ public class UIManager : Singleton<UIManager>
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // 항상 모든 UI를 비활성화 상태로 생성만 하고, 이후 EventBus로 활성화 제어
         LoadSceneUI(scene.name);
     }
 
     public async void LoadSceneUI(string sceneName)
     {
-        if (currentSceneUI != null)
+        foreach (var ui in currentSceneUIs)
         {
-            Destroy(currentSceneUI);
-            currentSceneUI = null;
+            if (ui != null)
+                Destroy(ui);
         }
+        currentSceneUIs.Clear();
 
-        if (!uiMap.TryGetValue(sceneName, out var assetRef))
+        if (!uiMap.TryGetValue(sceneName, out var assetRefs))
         {
             Debug.LogWarning($"[UIManager] UI 프리팹을 찾을 수 없음: {sceneName}");
             return;
         }
 
-        var handle = assetRef.InstantiateAsync(transform);
-        await handle.Task;
+        foreach (var assetRef in assetRefs)
+        {
+            var handle = assetRef.InstantiateAsync(transform); // SetActive 상태 유지
+            await handle.Task;
 
-        if (handle.Status == AsyncOperationStatus.Succeeded)
-        {
-            currentSceneUI = handle.Result;
-        }
-        else
-        {
-            Debug.LogError($"[UIManager] UI 로드 실패: {sceneName}, Error: {handle.OperationException?.Message}");
+            if (handle.Status == AsyncOperationStatus.Succeeded)
+            {
+                currentSceneUIs.Add(handle.Result); // 프리팹에서 지정한 활성화 상태 그대로 들어옴
+            }
+            else
+            {
+                Debug.LogError($"[UIManager] UI 로드 실패: {sceneName}, Error: {handle.OperationException?.Message}");
+            }
         }
     }
 
@@ -103,25 +117,49 @@ public class UIManager : Singleton<UIManager>
                 UIRoot.Instance.keysettingPanel.gameObject.SetActive(true);
                 break;
             case UIEventType.UpdateEarnings:
-                currentSceneUI?.GetComponentInChildren<EarningsDisplay>()?.AnimateEarnings((float)payload);
+                foreach (var ui in currentSceneUIs)
+                    ui?.GetComponentInChildren<EarningsDisplay>()?.AnimateEarnings((float)payload);
                 break;
             case UIEventType.ShowStartMenuWithSave:
-                currentSceneUI?.GetComponentInChildren<MenuPanel4>(true)?.gameObject.SetActive(true);
+                foreach (var ui in currentSceneUIs)
+                    ui?.GetComponentInChildren<MenuPanel4>(true)?.gameObject.SetActive(true);
                 break;
             case UIEventType.ShowStartMenuNoSave:
-                currentSceneUI?.GetComponentInChildren<MenuPanel3>(true)?.gameObject.SetActive(true);
+                foreach (var ui in currentSceneUIs)
+                    ui?.GetComponentInChildren<MenuPanel3>(true)?.gameObject.SetActive(true);
                 break;
             case UIEventType.ShowMenuPanel:
-                currentSceneUI?.GetComponentInChildren<MenuPanel>(true)?.gameObject.SetActive(true);
+                foreach (var ui in currentSceneUIs)
+                    ui?.GetComponentInChildren<MenuPanel>(true)?.gameObject.SetActive(true);
                 break;
             case UIEventType.HideMenuPanel:
-                currentSceneUI?.GetComponentInChildren<MenuPanel>(true)?.gameObject.SetActive(false);
+                foreach (var ui in currentSceneUIs)
+                    ui?.GetComponentInChildren<MenuPanel>(true)?.gameObject.SetActive(false);
+                break;
+            case UIEventType.ShowResultPanel:
+                foreach (var ui in currentSceneUIs)
+                    ui?.GetComponentInChildren<ResultPanel>(true)?.gameObject.SetActive(true);
+                break;
+            case UIEventType.HideResultPanel:
+                foreach (var ui in currentSceneUIs)
+                    ui?.GetComponentInChildren<ResultPanel>(true)?.gameObject.SetActive(false);
+                break;
+            case UIEventType.ShowInventory:
+                foreach (var ui in currentSceneUIs)
+                    ui?.GetComponentInChildren<Inventory>(true)?.gameObject.SetActive(true);
+                break;
+            case UIEventType.HideInventory:
+                foreach (var ui in currentSceneUIs)
+                    ui?.GetComponentInChildren<Inventory>(true)?.gameObject.SetActive(false);
                 break;
             case UIEventType.ShowRoundTimer:
             case UIEventType.HideRoundTimer:
-                var timer = currentSceneUI?.GetComponentInChildren<RoundTimerUI>(true)?.gameObject;
-                if (timer != null)
-                    timer.SetActive(eventType == UIEventType.ShowRoundTimer);
+                foreach (var ui in currentSceneUIs)
+                {
+                    var timer = ui?.GetComponentInChildren<RoundTimerUI>(true)?.gameObject;
+                    if (timer != null)
+                        timer.SetActive(eventType == UIEventType.ShowRoundTimer);
+                }
                 break;
             case UIEventType.LoadMainScene:
                 FadeManager.Instance.FadeOutAndLoadSceneWithLoading("MainScene");
