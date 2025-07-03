@@ -6182,13 +6182,13 @@ TextureImporter:
       name: Modern_UI_Style_1_48x48_289
       rect:
         serializedVersion: 2
-        x: 192
-        y: 1728
-        width: 48
-        height: 48
+        x: 186
+        y: 1740
+        width: 60
+        height: 15
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 3, y: 6, z: 3, w: 6}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -7064,8 +7064,8 @@ TextureImporter:
       name: Modern_UI_Style_1_48x48_331
       rect:
         serializedVersion: 2
-        x: 480
-        y: 1680
+        x: 510
+        y: 1707
         width: 48
         height: 48
       alignment: 0
@@ -11454,7 +11454,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 384
-        y: 1440
+        y: 1464
         width: 48
         height: 48
       alignment: 0
@@ -11475,7 +11475,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 480
-        y: 1440
+        y: 1462
         width: 48
         height: 48
       alignment: 0
@@ -11894,13 +11894,13 @@ TextureImporter:
       name: Modern_UI_Style_1_48x48_561
       rect:
         serializedVersion: 2
-        x: 48
-        y: 1392
-        width: 48
-        height: 48
+        x: 3
+        y: 1383
+        width: 135
+        height: 54
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 24, y: 9, z: 21, w: 21}
       outline: []
       physicsShape: []
       tessellationDetail: 0
