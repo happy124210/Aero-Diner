@@ -18,8 +18,8 @@ public class CSVImporter
     {
         ImportData("CustomerData", ParseCustomerData, "Customer");
     }
-    
-    public static CustomerData ParseCustomerData(string[] cols)
+
+    private static CustomerData ParseCustomerData(string[] cols)
     {
         var data = ScriptableObject.CreateInstance<CustomerData>();
         
@@ -35,55 +35,28 @@ public class CSVImporter
     }
     
     #endregion
-    
-    #region MenuData 생성
-    
-    [MenuItem("Tools/Import Game Data/Menu Data")]
-    public static void ImportRecipeData()
-    {
-        ImportData("MenuData", ParseRecipeData, "Menu");
-    }
-    
-    public static MenuData ParseRecipeData(string[] cols)
-    {
-        var data = ScriptableObject.CreateInstance<MenuData>();
-        
-        // 레시피 데이터 파싱
-        data.id = cols[0].Trim();
-        data.menuName = cols[1].Trim();
-        data.foodType = (FoodType)Enum.Parse(typeof(FoodType), cols[2].Trim());
-        data.menuIcon = LoadIcon($"{data.menuName}-icon", "Menu");
-        data.description = cols[3].Trim();
-        data.ingredients = ParseStringArray(cols[4]); // 파이프로 구분된 재료들
-        data.cookTime = float.Parse(cols[5]);
-        data.menuCost = float.Parse(cols[6]);
-        
-        return data;
-    }
-
-    #endregion
 
     #region StationData 생성
 
     [MenuItem("Tools/Import Game Data/Station Data")]
     public static void ImportStationData()
     {
-        ImportData("StationData", ParseRecipeData, "Station");
+        ImportData("StationData", ParseStationData, "Station");
     }
 
-    public static StationData ParseStationData(string[] cols)
+    private static StationData ParseStationData(string[] cols)
     {
         var data = ScriptableObject.CreateInstance<StationData>();
 
         // 레시피 데이터 파싱
         data.id = cols[0].Trim();
         data.stationName = cols[1].Trim();
-        data.stationType = (StationType)Enum.Parse(typeof(StationType), cols[2].Trim());
-        data.workType = (WorkType)Enum.Parse(typeof(WorkType), cols[3].Trim());
-        data.stationSprite = LoadIcon($"{data.stationName}-icon", "Menu");
-        data.stationIcon = LoadIcon($"{data.stationName}-icon", "Menu");
-        data.description = cols[4].Trim();
-        data.stationCost = int.Parse(cols[5]);
+        data.displayName = cols[2].Trim();
+        data.stationType = (StationType)Enum.Parse(typeof(StationType), cols[3].Trim());
+        data.workType = (WorkType)Enum.Parse(typeof(WorkType), cols[4].Trim());
+        data.stationIcon = LoadIcon($"{data.stationName}-icon", "Station");
+        data.description = cols[5].Trim();
+        data.stationCost = int.Parse(cols[6]);
 
         return data;
     }
@@ -95,10 +68,10 @@ public class CSVImporter
     [MenuItem("Tools/Import Game Data/Food Data")]
     public static void ImportFoodData()
     {
-        ImportData<FoodData>("FoodData", ParseFoodData, "Food");
+        ImportData("FoodData", ParseFoodData, "Food");
     }
-    
-    public static FoodData ParseFoodData(string[] cols)
+
+    private static FoodData ParseFoodData(string[] cols)
     {
         var data = ScriptableObject.CreateInstance<FoodData>();
         
@@ -107,10 +80,12 @@ public class CSVImporter
         data.foodName = cols[1].Trim();
         data.displayName = cols[2].Trim();
         data.foodType = (FoodType)Enum.Parse(typeof(FoodType), cols[3].Trim());
-        data.description = cols[4].Trim();
         data.foodIcon = LoadIcon($"{data.foodName}-icon", "Food"); // Resources에서 아이콘 로드
-        data.stationType = (StationType)Enum.Parse(typeof(StationType), cols[5].Trim()); // StationType enum값 parse
-        data.foodCost = int.Parse(cols[6]);
+        data.description = cols[4].Trim();
+        data.stationType = ParseEnumArray<StationType>(cols[5]); // StationType enum값 parse
+        data.ingredients = ParseStringArray(cols[6]);
+        data.cookTime = float.Parse(cols[7]);
+        data.foodCost = int.Parse(cols[8]);
         
         return data;
     }
@@ -122,7 +97,7 @@ public class CSVImporter
     /// <summary>
     /// 제네릭 데이터 임포트 메서드
     /// </summary>
-    public static void ImportData<T>(string csvName, Func<string[], T> parseFunc, string folderName) where T : ScriptableObject
+    private static void ImportData<T>(string csvName, Func<string[], T> parseFunc, string folderName) where T : ScriptableObject
     {
         string path = EditorUtility.OpenFilePanel($"Select {csvName} CSV", "", "csv");
         if (string.IsNullOrEmpty(path)) return;
@@ -188,12 +163,12 @@ public class CSVImporter
     /// ID를 PascalCase + "Data" 형태의 파일명으로 변환
     /// ex: "customer-001" -> "Customer001Data"
     /// </summary>
-    public static string ToPascalDataName(string id)
+    private static string ToPascalDataName(string id)
     {
         if (string.IsNullOrEmpty(id)) return "UnknownData";
         
         // 하이픈이나 언더스코어로 분리
-        string[] parts = id.Split(new char[] { '-', '_' }, StringSplitOptions.RemoveEmptyEntries);
+        string[] parts = id.Split(new [] { '-', '_' }, StringSplitOptions.RemoveEmptyEntries);
         
         // 각 단어의 첫 글자를 대문자로 만들고 이어붙임
         string pascal = string.Concat(parts.Select(part =>
@@ -208,7 +183,7 @@ public class CSVImporter
     /// <summary>
     /// Resources 폴더에서 아이콘 로드
     /// </summary>
-    public static Sprite LoadIcon(string iconName, string category = "")
+    private static Sprite LoadIcon(string iconName, string category = "")
     {
         if (string.IsNullOrEmpty(iconName)) return null;
         
@@ -233,7 +208,7 @@ public class CSVImporter
     /// 문자열 배열 파싱 (파이프 구분자 사용)
     /// ex: "carrot|potato|onion" -> ["carrot", "potato", "onion"]
     /// </summary>
-    public static string[] ParseStringArray(string value)
+    private static string[] ParseStringArray(string value)
     {
         if (string.IsNullOrEmpty(value)) return Array.Empty<string>();
         return value.Split('|').Select(s => s.Trim()).Where(s => !string.IsNullOrEmpty(s)).ToArray();
@@ -246,6 +221,15 @@ public class CSVImporter
     {
         if (string.IsNullOrEmpty(value)) return Array.Empty<float>();
         return value.Split('|').Select(s => float.Parse(s.Trim())).ToArray();
+    }
+
+    private static TEnum[] ParseEnumArray<TEnum>(string value) where TEnum : struct
+    {
+        string[] tokens = value.Split('|');
+        return tokens.Select(t => t.Trim())
+            .Where(t=> Enum.TryParse<TEnum>(t, out _))
+            .Select(t => Enum.Parse<TEnum>(t))
+            .ToArray();
     }
     
     #endregion

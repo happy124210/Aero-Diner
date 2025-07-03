@@ -1,8 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 레스토랑 게임 매니저 (임시)
+/// 레스토랑 게임 매니저
 /// </summary>
 public class RestaurantManager : Singleton<RestaurantManager>
 {
@@ -25,30 +26,20 @@ public class RestaurantManager : Singleton<RestaurantManager>
     [Tooltip("현재까지 경과한 시간")]
     [SerializeField] private float gameTime;
     
-    [Header("Menu")]
-    [SerializeField] private MenuData[] availableMenus;
-    private Dictionary<string, MenuData> menuDatabase = new Dictionary<string, MenuData>();
-    
     [Header("Debug")]
-    [SerializeField] private bool showDebugInfo = true;
+    [SerializeField] private bool showDebugInfo;
     
-
     [Header("라운드 시간 설정")]
-    [Tooltip("1라운드(하루)의 제한 시간 (초 단위)")]
-    [SerializeField] private float gameTimeLimit = 180f;
+    [Tooltip("하루 제한 시간 (초 단위)")]
+    [SerializeField] private float gameTimeLimit;
 
-    //UI에 필요한 getter 추가
+    //UI에 필요한 getter 추가 
     public float CurrentGameTime => gameTime;
     public float GameTimeLimit => gameTimeLimit;
     public float TotalEarnings => totalEarnings;
     public Vector3 GetEntrancePoint() => entrancePoint.position;
     public Vector3 GetExitPoint() => exitPoint.position;
-    public MenuData[] GetAvailableMenus() => availableMenus;
-    private void Start()
-    {
-        StartGame();
-    }
-    
+
     private void Update()
     {
         if (gameRunning)
@@ -68,26 +59,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
             }
         }
     }
-    
-    /// <summary>
-    /// 메뉴 데이터 로드
-    /// </summary>
-    private void LoadMenuData()
-    {
-        // 딕셔너리에 메뉴 등록
-        menuDatabase.Clear();
-        
-        foreach (var menu in availableMenus)
-        {
-            if (menu != null && !string.IsNullOrEmpty(menu.id))
-            {
-                menuDatabase[menu.id] = menu;
-            }
-        }
-
-        if (showDebugInfo) Debug.Log($"[RestaurantManager]: {menuDatabase.Count}개 메뉴 로드 완료");
-    }
-    
     
     private void OnGUI()
     {
@@ -121,6 +92,17 @@ public class RestaurantManager : Singleton<RestaurantManager>
                 StartGame();
         }
         
+        if (GUILayout.Button("Restart Game"))
+        {
+            RestartGame();
+        }
+        
+        if (GUILayout.Button("Unlock All Menus"))
+        {
+            MenuManager.Instance.UnlockAllMenus();
+            EventBus.Raise(UIEventType.UpdateMenuPanel);
+        }
+        
         GUILayout.EndArea();
     }
     
@@ -138,7 +120,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
         //라운드 타이머 UI 표시 요청
         EventBus.Raise(UIEventType.ShowRoundTimer);
-
         Debug.Log("Restaurant game started!");
     }
     
@@ -151,12 +132,22 @@ public class RestaurantManager : Singleton<RestaurantManager>
             customerSpawner.StopSpawning();
         }
 
-        //라운드 타이머 UI 숨기기
-        EventBus.Raise(UIEventType.HideRoundTimer);
+        StartCoroutine(WaitAndCleanup(reason));
+        EventBus.Raise(UIEventType.ShowResultPanel);
+    }
 
-
+    private IEnumerator WaitAndCleanup(string reason)
+    {
+        Debug.Log("영업 종료 - 손님들이 떠나기를 기다리는 중...");
+    
+        // 모든 손님이 떠날 때까지 대기
+        yield return new WaitUntil(() => PoolManager.Instance.ActiveCustomerCount == 0);
+        
         Debug.Log($"Game ended: {reason}");
-        Debug.Log($"Final Stats - Served: {customersServed}, Earnings: {totalEarnings}, Time: {gameTime:F1}s");
+        Debug.Log($"Final Stats - Served: {customersServed}, Earnings: {totalEarnings}");
+
+        EventBus.Raise(UIEventType.HideRoundTimer);
+        // TODO: 게임 종료 UI 띄우기
     }
     
     public void RestartGame()
@@ -196,12 +187,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
     {
         customersServed += 10;
         Debug.Log($"Added 10 customers served. Total: {customersServed}");
-    }
-    
-    [ContextMenu("Restart Game")]
-    public void RestartGameCommand()
-    {
-        RestartGame();
     }
     
     #endregion

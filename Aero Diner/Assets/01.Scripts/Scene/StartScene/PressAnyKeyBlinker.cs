@@ -46,7 +46,7 @@ public class PressAnyKeyBlinker : MonoBehaviour
     private void StartFastBlink()
     {
         // 빠르게 깜빡임
-        canvasGroup.alpha = 1f;
+        canvasGroup.alpha = 2f;
 
         blinkTween = canvasGroup.DOFade(0f, blinkInterval * fastBlinkMultiplier)
             .SetLoops(-1, LoopType.Yoyo)

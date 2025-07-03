@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 117d233d9fc2bff418b6e4c7d9135079, type: 3}
+  m_Name: ChiliboxData
+  m_EditorClassIdentifier: 
+  id: s29
+  stationName: ChiliBox
+  displayName: "\uACE0\uCD94 \uC0C1\uC790"
+  stationType: 8
+  workType: 0
+  stationIcon: {fileID: 21300000, guid: 3868c3bc459b30147a6f0974bca959a5, type: 3}
+  description: "\uACE0\uCD94 \uC0C1\uC790 \uC785\uB2C8\uB2E4"
+  stationCost: 100
+  availableRecipes: []
+  ingredientSlots: 0
+  slotDisplays: []

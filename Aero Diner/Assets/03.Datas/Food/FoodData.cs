@@ -5,40 +5,32 @@
 /// </summary>
 public enum FoodType
 {
+    Water,
     Topping,
     Sauce,
     Noodle,
     Menu,
-    Raw
+    Raw,
+    Cheese,
+    Chili,
+    Capsicum,
+    Pepper,
+    DryNoodle,
+    GratedCheese
 }
 
 [CreateAssetMenu(fileName = "New Food Data", menuName = "Game Data/Food Data")]
-public class FoodData : ScriptableObject, CookingSOGroup.IIngredientData
+public class FoodData : ScriptableObject
 {
     [Header("음식 정보")]
-    public string id;
+    public string id; // 고유 아이디, 레시피(ingredients)에 사용 (ex. f1)
     public string foodName;
-    public string displayName;
-    public FoodType foodType;
+    public string displayName; // UI용 한글 이름
+    public FoodType foodType; // Raw, Sauce, Topping, Menu 
     public Sprite foodIcon;
     public string description;
-    public StationType stationType;
+    public StationType[] stationType; // 가공될 설비 (여러 개 가능)
+    public string[] ingredients; // 레시피. 원재료라면 null
+    public float cookTime;
     public int foodCost;
-
-    public string GetID() => id;
-    public string GetDisplayName() => foodName;
-    public Sprite Icon => foodIcon;
-
-
-    public override bool Equals(object obj)
-    {
-        if (obj is FoodData other)
-            return this.foodName == other.foodName; // 필요 시 더 많은 필드 비교
-        return false;
-    }
-
-    public override int GetHashCode()
-    {
-        return foodName.GetHashCode();
-    }
 }

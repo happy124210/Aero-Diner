@@ -40,19 +40,24 @@ public class MovingToEntranceState : CustomerState
 public class WaitingInLineState : CustomerState
 {
     public override string StateName => "WaitingInLine";
-    
+
     public override void Enter(CustomerController customer) { }
     
     public override CustomerState Update(CustomerController customer)
     {
-        // 인내심 소진 체크
+        if (customer.HasReachedDestination())
+            customer.StartPatienceTimer();
+        
         if (!customer.HasPatience())
             return new LeavingState();
         
         return this;
     }
-    
-    public override void Exit(CustomerController customer) { }
+
+    public override void Exit(CustomerController customer)
+    {
+        customer.StopPatienceTimer();
+    }
 }
 
 /// <summary>
@@ -77,7 +82,7 @@ public class MovingToSeatState : CustomerState
     }
 
     public override void Exit(CustomerController customer)
-    {
+    { 
     }
 }
 
@@ -105,9 +110,11 @@ public class OrderingState : CustomerState
             orderPlaced = true;
             customer.StartPatienceTimer();
         }
-        
+
         if (customer.IsFoodServed())
+        {
             return new EatingState();
+        }
             
         return this;
     }

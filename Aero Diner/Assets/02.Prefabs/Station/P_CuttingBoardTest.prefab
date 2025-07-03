@@ -116,6 +116,7 @@ GameObject:
   - component: {fileID: 92543333806365024}
   - component: {fileID: 6978538903994312873}
   - component: {fileID: 27543209317372882}
+  - component: {fileID: 5808774607223665762}
   m_Layer: 6
   m_Name: P_CuttingBoardTest
   m_TagString: Untagged
@@ -131,7 +132,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7871481608949728927}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.19, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -180,7 +181,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 50
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: aebd8417eba3046408d45b49ad0615fa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -203,14 +204,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48ed6e64159907f4ca003162431cd853, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  passiveGroup: {fileID: 11400000, guid: 8550c91e57ac0324ab88624bdcef9a5d, type: 2}
+  passiveGroup: {fileID: 11400000, guid: 289b9a71e29e1034ea6a62b94f62c65c, type: 2}
   selectedIngredient: {fileID: 0}
   spawnPoint: {fileID: 626848843258143368}
-  neededIngredients: {fileID: 11400000, guid: 8aca67cf6037bb948aef6cc1f50c76a1, type: 2}
+  neededIngredients:
+  - {fileID: 11400000, guid: f02da3cce38effa4c95245798ef86752, type: 2}
+  - {fileID: 11400000, guid: 1ad4f7bbe831eeb4aad0d2fe6c2202d9, type: 2}
+  - {fileID: 11400000, guid: 6f74b333018cbf540950f52f148c2281, type: 2}
+  - {fileID: 11400000, guid: 11fc209d50dd7f84c819d65cee7c2cf4, type: 2}
+  - {fileID: 11400000, guid: ff5d9b526cfdc9d4ea5d00308db03749, type: 2}
   cookingTime: 5
   cookingTimeText: {fileID: 4618803278412993000}
-  stationData: {fileID: 11400000, guid: 8a9bb9db9ee36e24b9789a8bb97960dd, type: 2}
+  stationData: {fileID: 11400000, guid: 2dedc6e41e9e947489aea699aa5585e5, type: 2}
   currentIngredients: []
+  slotsDisplay: {fileID: -8807396433779527027, guid: dccf66cf9cefbe54c8128dc7c7e551f7, type: 3}
 --- !u!50 &92543333806365024
 Rigidbody2D:
   serializedVersion: 4
@@ -267,14 +274,14 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 1.024, y: 1.024}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -295,6 +302,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd01cdc2607e29c4182ce745cd92390b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5808774607223665762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7871481608949728927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &8942518138765536278
 GameObject:
   m_ObjectHideFlags: 0

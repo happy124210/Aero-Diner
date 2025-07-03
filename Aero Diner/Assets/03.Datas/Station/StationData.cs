@@ -12,15 +12,12 @@ public enum StationType
     Mixing,
     Oven,            // 오븐
     Kneading,
-    //Blender,         // 믹서기
-    //MixingBowl,      // 믹싱 볼
-
 
     // 기타 스테이션
     IngredientBox,   // 재료 박스
     Fridge,          // 냉장고 (재료)
     Shelf,           // 선반
-    Trashcan,        // 쓰레기통
+    TrashCan,        // 쓰레기통
     None             // 빈 공간
 }
 
@@ -37,13 +34,24 @@ public class StationData : ScriptableObject
     [Header("설비 정보")]
     public string id;
     public string stationName;
+    public string displayName; 
     public StationType stationType;
     public WorkType workType ;
-    public Sprite stationSprite;
     public Sprite stationIcon;
     public string description;
     public int stationCost;
 
     // 해당 스테이션에서 지원하는 레시피 목록
-    public List<MenuData> availableRecipes;
+    public List<FoodData> availableRecipes;
+
+    [Header("Ingredient Slot Settings")]
+    public int ingredientSlots = 3;                 // 슬롯 개수
+    public List<SlotDisplayData> slotDisplays; // 슬롯별 타입과 아이콘 설정
+}
+
+[System.Serializable]
+public class SlotDisplayData
+{
+    public FoodType foodType;             // 슬롯이 담당하는 재료 타입
+    public Sprite placeholderIcon;        // 슬롯에 표시할 아이콘
 }

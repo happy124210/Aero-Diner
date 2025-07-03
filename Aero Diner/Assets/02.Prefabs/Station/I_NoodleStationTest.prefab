@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1904031083098201944}
   - component: {fileID: 4111471023095139839}
   - component: {fileID: -5948128680050238989}
+  - component: {fileID: 6127737479242440217}
   m_Layer: 6
   m_Name: I_NoodleStationTest
   m_TagString: Untagged
@@ -78,8 +79,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 50
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 0.9196672, b: 0.5518868, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 3a1fd24b6929d5241a302f6d0fb43719, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -101,8 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d8299292fe84d49aa45b529417f69c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ingredientGroup: {fileID: 11400000, guid: 5f7e84b54ed034643b4536bf49b41243, type: 2}
-  selectedIngredient: {fileID: 11400000, guid: aa9b9bcc7cf708f43bffa37d9515f3df, type: 2}
+  selectedIngredient: {fileID: 11400000, guid: 88a44882a6155d7419c7589471c18497, type: 2}
 --- !u!61 &9100735225014646287
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -132,14 +132,14 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 1.024, y: 1.024}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -199,3 +199,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd01cdc2607e29c4182ce745cd92390b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6127737479242440217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7935754670503280462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff

@@ -1,3 +1,4 @@
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -23,7 +24,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     private Table assignedTable;
     
     [Header("Order")]
-    [SerializeField] private MenuData currentOrder;
+    [SerializeField] private FoodData currentOrder;
     
     [Header("Customer UI")]
     [SerializeField] private Canvas customerUI;
@@ -44,7 +45,6 @@ public class CustomerController : MonoBehaviour, IPoolable
 
     // components
     private NavMeshAgent navAgent;
-    
     private CustomerState currentState;
     private float eatingTimer;
 
@@ -82,7 +82,9 @@ public class CustomerController : MonoBehaviour, IPoolable
     {
         if (hasLeftRestaurant) return;
         
-        currentPatience -= Time.deltaTime;
+        if (isPatienceDecreasing)
+            currentPatience -= Time.deltaTime;
+        
         UpdateCustomerUI();
         
         if (currentState != null)
@@ -121,7 +123,7 @@ public class CustomerController : MonoBehaviour, IPoolable
             return;
         }
         
-        speed = currentData.speed; 
+        speed = currentData.speed;
         maxPatience = currentData.waitTime;
         eatTime = currentData.eatTime;
         
@@ -207,7 +209,6 @@ public class CustomerController : MonoBehaviour, IPoolable
     {
         SetDestination(queuePosition);
         ChangeState(new WaitingInLineState());
-        StartPatienceTimer();
     }
 
     /// <summary>
@@ -215,7 +216,6 @@ public class CustomerController : MonoBehaviour, IPoolable
     /// </summary>
     public void MoveToAssignedSeat()
     {
-        StopPatienceTimer();
         ChangeState(new MovingToSeatState());
     }
     
@@ -237,16 +237,12 @@ public class CustomerController : MonoBehaviour, IPoolable
     
     public void PlaceOrder()
     {
-        MenuData[] availableMenus = RestaurantManager.Instance.GetAvailableMenus();
-    
-        if (availableMenus != null && availableMenus.Length > 0)
-        {
-            currentOrder = availableMenus[Random.Range(0, availableMenus.Length)];
-            ShowOrderBubble();
-        }
+        currentOrder = MenuManager.Instance.GetRandomMenu();
+        orderBubble.sprite = currentOrder.foodIcon;
+        ShowOrderBubble();
     }
     
-    private void ReceiveFood(MenuData servedMenu)
+    public void ReceiveFood(FoodData servedMenu)
     {
         if (isServed) return;
 
@@ -274,7 +270,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     
     public void ProcessPayment()
     {
-        int payment = Mathf.RoundToInt(currentOrder.menuCost);
+        int payment = Mathf.RoundToInt(currentOrder.foodCost);
         RestaurantManager.Instance.OnCustomerPaid(payment);
         isPaymentCompleted = true;
         
@@ -295,13 +291,13 @@ public class CustomerController : MonoBehaviour, IPoolable
     { 
         if (!navAgent)
         {
-            Debug.LogError($"[CustomerController]: {gameObject.name} NavMeshAgent가 null입니다!");
+          //  Debug.LogError($"[CustomerController]: {gameObject.name} NavMeshAgent가 null입니다!");
             return;
         }
         
         if (!navAgent.isOnNavMesh)
         {
-            Debug.LogWarning($"[CustomerController]: {gameObject.name}이 NavMesh 위에 있지 않습니다!");
+          //  Debug.LogWarning($"[CustomerController]: {gameObject.name}이 NavMesh 위에 있지 않습니다!");
             return;
         }
         
@@ -314,7 +310,7 @@ public class CustomerController : MonoBehaviour, IPoolable
         navAgent.SetDestination(destination);
         SetAnimationState(CustomerAnimState.Walking);
         
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 목적지 설정: {destination}");
+        //if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 목적지 설정: {destination}");
     }
     
     /// <summary>
@@ -327,7 +323,7 @@ public class CustomerController : MonoBehaviour, IPoolable
         
         if (!navAgent || !navAgent.isOnNavMesh) 
         {
-            if (showDebugInfo) Debug.LogWarning($"[CustomerController]: {gameObject.name} NavMeshAgent 문제!");
+        //    if (showDebugInfo) Debug.LogWarning($"[CustomerController]: {gameObject.name} NavMeshAgent 문제!");
             return false;
         }
         
@@ -335,7 +331,7 @@ public class CustomerController : MonoBehaviour, IPoolable
                       navAgent.remainingDistance < arrivalThreshold && 
                       navAgent.velocity.sqrMagnitude < velocityThreshold;
         
-        if (reached && showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 목적지 도착!");
+       // if (reached && showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 목적지 도착!");
             
         return reached;
     }
@@ -343,7 +339,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     public void SetAnimationState(CustomerAnimState state) 
     { 
         // TODO: 실제 애니메이터 연동
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 애니메이션 상태: {state}");
+       // if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 애니메이션 상태: {state}");
     }
     
     /// <summary>
@@ -540,6 +536,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     public CustomerData CurrentData => currentData;
     public bool HasPatience() => currentPatience > 0;
     public Table GetAssignedTable() => assignedTable;
+    public FoodData CurrentOrder => currentOrder;
     
     #endregion
     

@@ -19,10 +19,13 @@ public enum UIEventType
     //StartScene
     ShowStartWarningPanel, ShowStartMenuWithSave,
     ShowStartMenuNoSave, LoadMainScene,
-    QuitGame,
+    QuitGame, ShowPressAnyKey,
     //MainSceneUI
     ShowRoundTimer, HideRoundTimer,
-    UpdateEarnings
+    UpdateEarnings, ShowMenuPanel, UpdateMenuPanel,
+    HideMenuPanel, ShowResultPanel,
+    HideResultPanel, ShowInventory,
+    HideInventory
 }
 
 public static class EventBus

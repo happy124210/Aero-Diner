@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7588260556198660444}
   - component: {fileID: 3629489433293501823}
   - component: {fileID: 6556212873242834424}
+  - component: {fileID: 7046290255751161144}
   m_Layer: 0
   m_Name: AutomaticStationTest
   m_TagString: Untagged
@@ -102,13 +103,11 @@ MonoBehaviour:
   passiveGroup: {fileID: 11400000, guid: 8550c91e57ac0324ab88624bdcef9a5d, type: 2}
   selectedIngredient: {fileID: 0}
   spawnPoint: {fileID: 226943276944319367}
-  neededIngredients: {fileID: 0}
   cookingTime: 5
   cookingTimeText: {fileID: 2888241244538322905}
   stationData: {fileID: 11400000, guid: d0cfd544b707b4749a079638ce41a558, type: 2}
   currentIngredients: []
-  availableMatchedRecipes: []
-  cookedIngredient: {fileID: 0}
+  slotsDisplay: {fileID: 0}
 --- !u!114 &6556212873242834424
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -121,6 +120,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd01cdc2607e29c4182ce745cd92390b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7046290255751161144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7883360337137974910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74ad3199940570f44846669998326eda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  iconPrefab: {fileID: 6099388104275518232, guid: dccf66cf9cefbe54c8128dc7c7e551f7, type: 3}
+  spacing: 0.5
 --- !u!1 &8208793610894426951
 GameObject:
   m_ObjectHideFlags: 0

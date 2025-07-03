@@ -1,21 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Serialization;
+﻿using UnityEngine;
 
 public class FoodDisplay : MonoBehaviour, IInteractable
 {
-    public ScriptableObject rawData;
-    public IngredientStation originIngredient;
+    public FoodData foodData;
     public IPlaceableStation originPlace;
-
-    // IIngredientData로 접근할 수 있도록 추가
-    public CookingSOGroup.IIngredientData data => rawData as CookingSOGroup.IIngredientData;
 
 
     public void Interact(PlayerInventory playerInventory, InteractionType interactionType)
     {
-        if (playerInventory == null) return;
+        if (!playerInventory) return;
 
         if (interactionType == InteractionType.Pickup)
         {
