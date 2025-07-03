@@ -181,7 +181,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 50
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: aebd8417eba3046408d45b49ad0615fa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -208,14 +208,16 @@ MonoBehaviour:
   selectedIngredient: {fileID: 0}
   spawnPoint: {fileID: 626848843258143368}
   neededIngredients:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: f02da3cce38effa4c95245798ef86752, type: 2}
+  - {fileID: 11400000, guid: 1ad4f7bbe831eeb4aad0d2fe6c2202d9, type: 2}
+  - {fileID: 11400000, guid: 6f74b333018cbf540950f52f148c2281, type: 2}
+  - {fileID: 11400000, guid: 11fc209d50dd7f84c819d65cee7c2cf4, type: 2}
+  - {fileID: 11400000, guid: ff5d9b526cfdc9d4ea5d00308db03749, type: 2}
   cookingTime: 5
   cookingTimeText: {fileID: 4618803278412993000}
   stationData: {fileID: 11400000, guid: 2dedc6e41e9e947489aea699aa5585e5, type: 2}
   currentIngredients: []
-  slotsDisplay: {fileID: 0}
+  slotsDisplay: {fileID: -8807396433779527027, guid: dccf66cf9cefbe54c8128dc7c7e551f7, type: 3}
 --- !u!50 &92543333806365024
 Rigidbody2D:
   serializedVersion: 4
@@ -279,7 +281,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 1.024, y: 1.024}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

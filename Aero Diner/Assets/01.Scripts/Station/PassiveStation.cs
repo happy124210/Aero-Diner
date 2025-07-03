@@ -15,7 +15,7 @@ using System.Linq;
 public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
 {
     [Header("재료 데이터 그룹")]
-    public FoodSOGroup passiveGroup;
+    public FoodSOGroup foodGroup;
 
     [Header("생성할 재료 SO")]
     public FoodData selectedIngredient;
@@ -38,9 +38,8 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     [Header("현재 등록된 재료 ID 목록")]
     public List<string> currentIngredients = new();
 
-    [Header("슬롯 UI 디스플레이")]
-    [SerializeField] private IngredientSlotsDisplay slotsDisplay;
-
+    [Header("아이콘 디스플레이")]
+    [SerializeField] private FoodSlotIconDisplay iconDisplay;
 
     private List<FoodData> placedIngredientList = new();      // 실제 등록된 재료의 데이터 목록
     private List<GameObject> placedIngredients = new();              // 화면에 보여지는 재료 오브젝트들
@@ -49,6 +48,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     private FoodData cookedIngredient;                               // 조리 완료 시 결과가 되는 레시피
     private bool isCooking = false;                                  // 현재 조리 중인지 여부 플래그
     private OutlineShaderController outline;                         // 외곽선 효과를 제어하는 컴포넌트
+   
     private void Awake()
     {
         outline = GetComponent<OutlineShaderController>(); // 외곽선 컴포넌트 연결
@@ -57,10 +57,20 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     private void Start()
     {
         currentCookingTime = cookingTime;
-        UpdateCookingTimeText(); // UI 초기화
+        UpdateCookingTimeText();
 
-        // StationData에서 SlotDisplayData 리스트를 전달
-        slotsDisplay.Initialize(stationData.slotDisplays);
+        if (stationData != null && stationData.slotDisplays != null)
+        {
+            iconDisplay.Initialize(stationData.slotDisplays);
+            iconDisplay.ResetAll();
+        }
+        else
+        {
+            Debug.LogWarning("stationData 또는 slotDisplays가 null입니다.");
+        }
+
+        currentCookingTime = cookingTime;
+        UpdateCookingTimeText(); // UI 초기화
     }
 
     public void PlaceObject(FoodData data)
@@ -72,8 +82,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             return;
         }
 
-        // 슬롯 하나 소비
-        slotsDisplay.ConsumeSlot(data.foodType);
+        iconDisplay.UseSlot(data.foodType); // 아이콘 끄기
 
         RegisterIngredient(data);     // 재료 등록 및 선택 처리
         UpdateCandidateRecipes();     // 현재 재료 조합으로 가능한 레시피 탐색
@@ -256,7 +265,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     private GameObject CreateProcessedIngredientDisplay(FoodData data)
     {
         // 필수 데이터가 누락되었는지 확인
-        if (!passiveGroup || !data || !spawnPoint)
+        if (!foodGroup || !data || !spawnPoint)
         {
             Debug.LogError("필수 데이터가 누락되었습니다.");
             return null;
@@ -305,14 +314,14 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         {
             if (obj) Destroy(obj);
         }
-        // 슬롯 UI 재초기화
-        slotsDisplay.Initialize(stationData.slotDisplays);
 
         // 관련 리스트와 변수 초기화
         placedIngredients.Clear();          // 시각 오브젝트 리스트 초기화
         currentIngredients.Clear();         // 현재 재료 목록 초기화
         currentCookingTime = cookingTime;   // 타이머 초기화
         UpdateCookingTimeText();            // UI 갱신
+
+        iconDisplay?.ResetAll(); // 아이콘 리셋
 
         // 조리 완료된 데이터가 존재하면 그걸 사용, 없으면 마지막 선택된 재료 사용
         FoodData data = cookedIngredient

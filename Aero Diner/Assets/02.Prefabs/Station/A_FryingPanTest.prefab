@@ -181,8 +181,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 50
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.7924528, g: 0.28034887, b: 0.50165015, a: 1}
+  m_Sprite: {fileID: 21300000, guid: a124331eaa81af240ad9090168615065, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -209,9 +209,10 @@ MonoBehaviour:
   spawnPoint: {fileID: 3585195938276608026}
   cookingTime: 5
   cookingTimeText: {fileID: 7018230484246268172}
-  stationData: {fileID: 11400000, guid: cae44f9c00942634c9c87c8b038577b6, type: 2}
+  stationData: {fileID: 11400000, guid: d160a9cc1e04c634f99a2a43df2cd532, type: 2}
   currentIngredients: []
-  slotsDisplay: {fileID: 0}
+  slotsDisplay: {fileID: -8807396433779527027, guid: dccf66cf9cefbe54c8128dc7c7e551f7, type: 3}
+  expectedIngredients: []
 --- !u!50 &7782568563348176842
 Rigidbody2D:
   serializedVersion: 4
@@ -275,7 +276,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 1.024, y: 1.024}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
