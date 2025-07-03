@@ -15,15 +15,40 @@ public class RecipeManager : Singleton<RecipeManager>
             return new List<RecipeMatchResult>();
         }
 
-        return candidateRecipes
+        var matches = candidateRecipes
             .Where(r => r.ingredients != null)
-            .Select(r => new RecipeMatchResult
+            .Select(r =>
             {
-                recipe = r,
-                matchedCount = r.ingredients.Count(ingredientIds.Contains),
-                totalRequired = r.ingredients.Length
+                var matchedCount = r.ingredients.Count(ingredientIds.Contains);
+                var result = new RecipeMatchResult
+                {
+                    recipe = r,
+                    matchedCount = matchedCount,
+                    totalRequired = r.ingredients.Length
+                };
+
+                Debug.Log($"[RecipeManager] Checking recipe: {r.foodName}");
+                Debug.Log($" - Required: {string.Join(", ", r.ingredients)}");
+                Debug.Log($" - Given:   {string.Join(", ", ingredientIds)}");
+                Debug.Log($" - Match: {matchedCount}/{r.ingredients.Length} | MatchRatio: {result.MatchRatio:F2}");
+
+                return result;
             })
             .Where(r => r.matchedCount > 0)
+            .ToList();
+
+        var fullMatches = matches
+            .Where(r => r.matchedCount == r.totalRequired && ingredientIds.Count == r.totalRequired)
+            .ToList();
+
+        if (fullMatches.Count > 0)
+        {
+            Debug.Log($"[RecipeManager] 정확 일치 레시피 {fullMatches.Count}개");
+            return fullMatches;
+        }
+
+        Debug.Log("[RecipeManager] 정확 일치 없음 — 유사도 기반 결과 반환");
+        return matches
             .OrderByDescending(r => r.MatchRatio)
             .ThenByDescending(r => r.matchedCount)
             .ToList();
