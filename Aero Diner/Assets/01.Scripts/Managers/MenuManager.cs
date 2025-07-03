@@ -92,6 +92,11 @@ public class MenuManager : Singleton<MenuManager>
         }
     }
 
+    public FoodData GetRandomMenu()
+    {
+        return todayMenus[Random.Range(0, todayMenus.Count)].foodData;
+    }
+
     #endregion
     
     #region public getters
