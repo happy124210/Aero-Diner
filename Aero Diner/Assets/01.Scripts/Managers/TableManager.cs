@@ -263,8 +263,6 @@ public class TableManager : Singleton<TableManager>
     #endregion
 
     #region 상태 체크
-
-    public bool HasAvailableSeat() => GetAvailableSeatCount() > 0;
     
     public bool CanAcceptNewCustomer() 
     {
@@ -328,7 +326,9 @@ public class TableManager : Singleton<TableManager>
     public int TotalSeatCount => tables?.Length ?? 0;
     public int CurrentQueueLength => waitingQueue.Count;
     public int MaxQueueLength => maxQueueLength;
+
     public bool IsQueueFull => waitingQueue.Count >= maxQueueLength;
+	public bool HasAvailableSeat() => GetAvailableSeatCount() > 0;
 
     #endregion
     

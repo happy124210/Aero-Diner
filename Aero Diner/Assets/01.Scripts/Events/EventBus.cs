@@ -22,7 +22,7 @@ public enum UIEventType
     QuitGame, ShowPressAnyKey,
     //MainSceneUI
     ShowRoundTimer, HideRoundTimer,
-    UpdateEarnings, ShowMenuPanel,
+    UpdateEarnings, ShowMenuPanel, UpdateMenuPanel,
     HideMenuPanel, ShowResultPanel,
     HideResultPanel, ShowInventory,
     HideInventory
