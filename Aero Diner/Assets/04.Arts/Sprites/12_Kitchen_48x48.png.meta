@@ -10951,27 +10951,6 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 12_Kitchen_48x48_516
-      rect:
-        serializedVersion: 2
-        x: 528
-        y: 768
-        width: 48
-        height: 48
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 7bc2b508685faf04cb7c86949ee1a139
-      internalID: 1385649848
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: 12_Kitchen_48x48_517
       rect:
         serializedVersion: 2
@@ -11287,13 +11266,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 12_Kitchen_48x48_532
+      name: ingredientBox
       rect:
         serializedVersion: 2
         x: 528
         y: 720
         width: 48
-        height: 48
+        height: 96
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -11959,7 +11938,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 12_Kitchen_48x48_564
+      name: cutting_board
       rect:
         serializedVersion: 2
         x: 528
@@ -12164,27 +12143,6 @@ TextureImporter:
       bones: []
       spriteID: 9a3877f9a5b42ab4d9d82af74951201f
       internalID: -1090479598
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 12_Kitchen_48x48_574
-      rect:
-        serializedVersion: 2
-        x: 240
-        y: 576
-        width: 48
-        height: 48
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6d981c7867590ea4482024d30e18443f
-      internalID: 687733884
       vertices: []
       indices: 
       edges: []
@@ -12484,13 +12442,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 12_Kitchen_48x48_589
+      name: roller_pan
       rect:
         serializedVersion: 2
         x: 240
         y: 528
         width: 48
-        height: 48
+        height: 96
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -16545,7 +16503,6 @@ TextureImporter:
       12_Kitchen_48x48_53: -1371031879
       12_Kitchen_48x48_530: -628883546
       12_Kitchen_48x48_531: 648011349
-      12_Kitchen_48x48_532: 45388868
       12_Kitchen_48x48_533: -489717597
       12_Kitchen_48x48_534: -286661570
       12_Kitchen_48x48_535: 2005938636
@@ -16580,7 +16537,6 @@ TextureImporter:
       12_Kitchen_48x48_561: 1939514566
       12_Kitchen_48x48_562: 1134915855
       12_Kitchen_48x48_563: -780044150
-      12_Kitchen_48x48_564: -426563415
       12_Kitchen_48x48_565: -887623932
       12_Kitchen_48x48_566: 142184728
       12_Kitchen_48x48_567: -2106316446
@@ -16607,7 +16563,6 @@ TextureImporter:
       12_Kitchen_48x48_586: -1520155926
       12_Kitchen_48x48_587: 2082120383
       12_Kitchen_48x48_588: -1192537675
-      12_Kitchen_48x48_589: -1999474605
       12_Kitchen_48x48_59: -1411525981
       12_Kitchen_48x48_590: 1095583715
       12_Kitchen_48x48_591: 1096383272
@@ -16824,6 +16779,9 @@ TextureImporter:
       12_Kitchen_48x48_98: 1667168148
       12_Kitchen_48x48_99: -69320890
       chair: -1070650715
+      cutting_board: -426563415
+      ingredientBox: 45388868
+      roller_pan: -1999474605
       table: -2020423566
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
