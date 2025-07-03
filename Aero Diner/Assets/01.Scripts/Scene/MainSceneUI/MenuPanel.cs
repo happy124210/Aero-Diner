@@ -7,6 +7,10 @@ public class MenuPanel : MonoBehaviour
     [SerializeField] private Transform contentTransform;      // ScrollView의 Content
     [SerializeField] private CanvasGroup canvasGroup;
 
+    [SerializeField] private GameObject warningPopup; // 팝업 루트
+    [SerializeField] private CanvasGroup warningPopupCanvas; // 팝업의 CanvasGroup
+    [SerializeField] private float popupFadeDuration = 0.5f;
+    [SerializeField] private float popupVisibleTime = 2f;
     private void OnEnable()
     {
         GenerateFoodList();
@@ -47,6 +51,26 @@ public class MenuPanel : MonoBehaviour
     }
     public void OnClickDayStartBtn()
     {
+        // 체크된 토글이 하나라도 있는지 확인
+        bool anyToggled = false;
+
+        foreach (Transform child in contentTransform)
+        {
+            var content = child.GetComponent<MenuPanelContent>();
+            if (content != null && content.toggle.isOn)
+            {
+                anyToggled = true;
+                break;
+            }
+        }
+
+        if (!anyToggled)
+        {
+            // 아무것도 선택되지 않았을 경우 → 경고 팝업 출력
+            Debug.LogWarning("[MenuPanel] 선택된 메뉴가 없습니다!");
+            ShowNoMenuSelectedPopup(); // 팝업 메서드 추가 필요
+            return;
+        }
         // 두트윈으로 페이드 아웃 → 종료 후 비활성화
         canvasGroup.DOFade(0f, 0.5f)
             .SetEase(Ease.InQuad)
@@ -57,5 +81,24 @@ public class MenuPanel : MonoBehaviour
             });
         
         RestaurantManager.Instance.StartGame();
+    }
+
+    private void ShowNoMenuSelectedPopup()
+    {
+        if (warningPopup == null || warningPopupCanvas == null) return;
+
+        warningPopup.SetActive(true);
+        warningPopupCanvas.alpha = 0f;
+        warningPopupCanvas.DOFade(1f, popupFadeDuration)
+            .SetEase(Ease.OutQuad)
+            .OnComplete(() =>
+            {
+                DOVirtual.DelayedCall(popupVisibleTime, () =>
+                {
+                    warningPopupCanvas.DOFade(0f, popupFadeDuration)
+                        .SetEase(Ease.InQuad)
+                        .OnComplete(() => warningPopup.SetActive(false));
+                });
+            });
     }
 }
