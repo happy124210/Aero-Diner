@@ -30,14 +30,18 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     [Header("현재 등록된 재료 ID 목록")]
     public List<string> currentIngredients = new();
 
+    [Header("슬롯 UI 디스플레이")]
+    [SerializeField] private IngredientSlotsDisplay slotsDisplay;
+
     // 내부 상태
-    private List<FoodData> placedIngredientList = new();      // 실제 등록된 재료의 데이터 목록
+    private List<FoodData> placedIngredientList = new();             // 실제 등록된 재료의 데이터 목록
     private List<GameObject> placedIngredients = new();              // 화면에 보여지는 재료 오브젝트들
     private List<FoodData> availableMatchedRecipes = new();          // 현재 조건에서 가능한 레시피 리스트
     private float currentCookingTime;                                // 남은 조리 시간
     private FoodData cookedIngredient;                               // 조리 완료 시 결과가 되는 레시피
     private bool isCooking = false;                                  // 현재 조리 중인지 여부 플래그
     private OutlineShaderController outline;                         // 외곽선 효과를 제어하는 컴포넌트
+    public List<FoodData> expectedIngredients;
 
     private void Awake()
     {
@@ -46,6 +50,9 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
 
     private void Start()
     {
+        // StationData에서 SlotDisplayData 리스트를 전달
+        slotsDisplay.Initialize(stationData.slotDisplays);
+
         ResetCookingTimer();
     }
 
@@ -85,6 +92,9 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
             return;
         }
 
+        // 슬롯 하나 소비
+        slotsDisplay.ConsumeSlot(data.foodType);
+
         RegisterIngredient(data);     // 재료 등록
         UpdateCandidateRecipes();     // 현재 재료 기반 가능한 요리 찾기
 
@@ -111,17 +121,6 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         string id = data.id;
         currentIngredients.Add(id);
         placedIngredientList.Add(data);
-
-        //// 아이콘 가져와 시각화 오브젝트 생성
-        //GameObject obj = VisualObjectFactory.CreateIngredientVisual(transform, data.GetDisplayName(), GetIconFromData(data));
-        //if (obj != null)
-        //{
-        //    // 시각화 오브젝트에 FoodDisplay 연결 및 목록 추가
-        //    var display = obj.AddComponent<FoodDisplay>();
-        //    display.rawData = data as ScriptableObject;
-        //    display.originAutomatic = this;
-        //    placedIngredients.Add(obj);
-        //}
     }
 
     /// <summary>
@@ -272,21 +271,30 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// </summary>
     public void OnPlayerPickup()
     {
-        // 조리 관련 상태 초기화
-        ResetCookingTimer();
-        ClearPlacedObjects();
-        currentIngredients.Clear();
-        placedIngredientList.Clear();
+        // 배치된 재료 시각 오브젝트 모두 제거
+        foreach (var obj in placedIngredients)
+        {
+            if (obj) Destroy(obj);
+        }
 
-        // 결과물이 있으면 사용하고, 없으면 마지막 등록 재료 사용
-        ScriptableObject dataRaw = cookedIngredient ? cookedIngredient : selectedIngredient;
+        // 슬롯 UI 재초기화
+        slotsDisplay.Initialize(stationData.slotDisplays);
 
-        // 유효한 데이터인지 검사
-        if (dataRaw is not FoodData ingredientData)
-            return;
 
-        string name = ingredientData.displayName;
-        Sprite icon = ingredientData.foodIcon;
+        // 관련 리스트와 변수 초기화
+        placedIngredients.Clear();          // 시각 오브젝트 리스트 초기화
+        currentIngredients.Clear();         // 현재 재료 목록 초기화
+        currentCookingTime = cookingTime;   // 타이머 초기화
+        UpdateCookingTimeText();            // UI 갱신
+
+        // 조리 완료된 데이터가 존재하면 그걸 사용, 없으면 마지막 선택된 재료 사용
+        FoodData data = cookedIngredient
+            ? cookedIngredient
+            : selectedIngredient;
+
+        // 이름이나 아이콘이 비어있으면 중단
+        string name = data.displayName;
+        Sprite icon = data.foodIcon;
         if (string.IsNullOrEmpty(name) || !icon)
             return;
 

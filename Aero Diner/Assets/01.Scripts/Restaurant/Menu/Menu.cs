@@ -24,5 +24,4 @@ public class Menu
     public string MenuName => foodData?.displayName ?? "Unknown";
     public int Price => foodData?.foodCost ?? 0;
     public bool CanServeToday => isUnlocked && isSelected;
-
 }

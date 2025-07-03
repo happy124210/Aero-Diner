@@ -23,5 +23,9 @@ MonoBehaviour:
   availableRecipes:
   - {fileID: 11400000, guid: 88a44882a6155d7419c7589471c18497, type: 2}
   - {fileID: 11400000, guid: efb9dca86fe9fa14e880869ef50db4cf, type: 2}
-  ingredientSlots: 3
-  slotPlaceholderIcon: {fileID: 0}
+  ingredientSlots: 2
+  slotDisplays:
+  - foodType: 9
+    placeholderIcon: {fileID: 21300000, guid: 7c2cd1fa6019ba24bb782dad539387a1, type: 3}
+  - foodType: 0
+    placeholderIcon: {fileID: 21300000, guid: 1dae0837832d27a4db4b44ac3022738f, type: 3}

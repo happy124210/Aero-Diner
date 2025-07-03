@@ -2,6 +2,7 @@
 using System.Linq;
 using UnityEngine;
 using TMPro;
+using System.Linq;
 
 /// <summary>
 /// 플레이어가 상호작용하면 재료를 가공하여 가공된 재료를 생성하는 스테이션
@@ -37,6 +38,10 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     [Header("현재 등록된 재료 ID 목록")]
     public List<string> currentIngredients = new();
 
+    [Header("슬롯 UI 디스플레이")]
+    [SerializeField] private IngredientSlotsDisplay slotsDisplay;
+
+
     private List<FoodData> placedIngredientList = new();      // 실제 등록된 재료의 데이터 목록
     private List<GameObject> placedIngredients = new();              // 화면에 보여지는 재료 오브젝트들
     private List<FoodData> availableMatchedRecipes = new();          // 현재 조건에서 가능한 레시피 리스트
@@ -53,6 +58,9 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     {
         currentCookingTime = cookingTime;
         UpdateCookingTimeText(); // UI 초기화
+
+        // StationData에서 SlotDisplayData 리스트를 전달
+        slotsDisplay.Initialize(stationData.slotDisplays);
     }
 
     public void PlaceObject(FoodData data)
@@ -63,6 +71,9 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             Debug.LogWarning($"'{data.foodName}'은 등록할 수 없는 재료입니다.");
             return;
         }
+
+        // 슬롯 하나 소비
+        slotsDisplay.ConsumeSlot(data.foodType);
 
         RegisterIngredient(data);     // 재료 등록 및 선택 처리
         UpdateCandidateRecipes();     // 현재 재료 조합으로 가능한 레시피 탐색
@@ -212,23 +223,27 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         // 첫 번째 재료
         if (currentIngredients.Count == 0)
         {
+            // StationData.stationType이 FoodData.stationType 배열에 들어 있는지 검사
             bool typeMatch = data.stationType.Contains(stationData.stationType);
-            Debug.Log($"[Station] 첫 번째 재료 시도됨: {data.foodName} | 스테이션 타입 일치 여부: {typeMatch}");
+            Debug.Log($"[Station] 첫 번째 재료 시도: {data.foodName} | 타입 일치: {typeMatch}");
             return typeMatch;
         }
 
+        // 레시피가 아직 정해지지 않았을 때
         if (cookedIngredient == null)
         {
             Debug.LogWarning("[Station] 현재 설정된 레시피가 없습니다.");
             return false;
         }
 
+        // 중복 검사
         if (currentIngredients.Contains(data.id))
         {
             Debug.LogWarning($"[Station] 중복 재료: {data.id} 이미 추가됨");
             return false;
         }
 
+        // 이미 결정된 레시피에 이 재료가 포함되는지 검사
         bool isInRecipe = cookedIngredient.ingredients.Contains(data.id);
         Debug.Log($"[Station] 레시피 유효성 검사: {data.id} 포함 여부: {isInRecipe}");
 
@@ -290,6 +305,8 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         {
             if (obj) Destroy(obj);
         }
+        // 슬롯 UI 재초기화
+        slotsDisplay.Initialize(stationData.slotDisplays);
 
         // 관련 리스트와 변수 초기화
         placedIngredients.Clear();          // 시각 오브젝트 리스트 초기화

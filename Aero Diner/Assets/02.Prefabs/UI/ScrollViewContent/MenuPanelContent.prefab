@@ -238,7 +238,7 @@ MonoBehaviour:
       - m_Target: {fileID: 5791137649495482260}
         m_TargetAssemblyTypeName: MenuPanelContent, Assembly-CSharp
         m_MethodName: OnToggle
-        m_Mode: 6
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

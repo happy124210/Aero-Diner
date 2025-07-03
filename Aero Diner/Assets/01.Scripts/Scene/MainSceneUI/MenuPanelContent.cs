@@ -29,6 +29,6 @@ public class MenuPanelContent : MonoBehaviour
     
     public void OnToggle(bool isOn)
     {
-        MenuManager.Instance.ToggleMenuSelection(currentMenu.foodData.id);
+        MenuManager.Instance.SetMenuSelection(currentMenu.foodData.id, isOn);
     }
 }

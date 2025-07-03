@@ -21,6 +21,7 @@ public class MenuManager : Singleton<MenuManager>
     protected override void Awake()
     {
         base.Awake();
+        LoadAllFoodData();
         InitializePlayerMenus();
     }
 
@@ -60,6 +61,7 @@ public class MenuManager : Singleton<MenuManager>
     public void UpdateTodayMenus()
     {
         todayMenus = playerMenus.Where(menu => menu.CanServeToday).ToList();
+
         if (showDebugInfo)  Debug.Log($"[MenuManager]: 오늘 메뉴 - {todayMenus.Count}개");
     }
 
@@ -80,14 +82,19 @@ public class MenuManager : Singleton<MenuManager>
         return false;
     }
 
-    public void ToggleMenuSelection(string foodId)
+    public void SetMenuSelection(string foodId, bool selection)
     {
         Menu menu = playerMenus.FirstOrDefault(m => m.foodData.id == foodId);
         if (menu?.isUnlocked == true)
         {
-            menu.isSelected = !menu.isSelected;
+            menu.isSelected = selection;
             UpdateTodayMenus();
         }
+    }
+
+    public FoodData GetRandomMenu()
+    {
+        return todayMenus[Random.Range(0, todayMenus.Count)].foodData;
     }
 
     #endregion
@@ -96,7 +103,7 @@ public class MenuManager : Singleton<MenuManager>
 
     public List<Menu> GetTodayMenus() => todayMenus; // Menu 리스트 (해금, 선택정보 포함)
     public FoodData[] GetTodayMenuData() => todayMenus.Select(m => m.foodData).ToArray(); // FoodData만
-    public List<Menu> GetUnlockedMenus() => playerMenus.Where(menu => menu.isUnlocked).ToList();
+    public List<Menu> GetUnlockedMenus() => playerMenus.Where(menu => menu.isUnlocked).ToList(); // 플레이어가 해금한 레시피 전부
     public List<Menu> GetAllMenus() => new List<Menu>(playerMenus);
     
     #endregion
