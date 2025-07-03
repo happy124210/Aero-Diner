@@ -16,7 +16,7 @@ public class MenuPanel : MonoBehaviour
         GenerateFoodList();
     }
 
-    private void GenerateFoodList()
+    public void GenerateFoodList()
     {
         // 기존 아이템 제거
         foreach (Transform child in contentTransform)
@@ -25,7 +25,7 @@ public class MenuPanel : MonoBehaviour
         }
 
         // 메뉴 가져오기
-        var menuList = MenuManager.Instance.GetUnlockedMenus();
+        var menuList = MenuManager.Instance.PlayerMenus;
 
         if (menuList == null)
         {

@@ -132,6 +132,10 @@ public class UIManager : Singleton<UIManager>
                 foreach (var ui in currentSceneUIs)
                     ui?.GetComponentInChildren<MenuPanel>(true)?.gameObject.SetActive(true);
                 break;
+            case UIEventType.UpdateMenuPanel:
+                foreach (var ui in currentSceneUIs)
+                    ui?.GetComponentInChildren<MenuPanel>(true)?.GenerateFoodList();
+                break;
             case UIEventType.HideMenuPanel:
                 foreach (var ui in currentSceneUIs)
                     ui?.GetComponentInChildren<MenuPanel>(true)?.gameObject.SetActive(false);

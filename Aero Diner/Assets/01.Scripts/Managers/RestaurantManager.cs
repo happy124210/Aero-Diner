@@ -1,8 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 레스토랑 게임 매니저 (임시)
+/// 레스토랑 게임 매니저
 /// </summary>
 public class RestaurantManager : Singleton<RestaurantManager>
 {
@@ -91,6 +92,17 @@ public class RestaurantManager : Singleton<RestaurantManager>
                 StartGame();
         }
         
+        if (GUILayout.Button("Restart Game"))
+        {
+            RestartGame();
+        }
+        
+        if (GUILayout.Button("Unlock All Menus"))
+        {
+            MenuManager.Instance.UnlockAllMenus();
+            EventBus.Raise(UIEventType.UpdateMenuPanel);
+        }
+        
         GUILayout.EndArea();
     }
     
@@ -108,7 +120,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
         //라운드 타이머 UI 표시 요청
         EventBus.Raise(UIEventType.ShowRoundTimer);
-
         Debug.Log("Restaurant game started!");
     }
     
@@ -121,12 +132,22 @@ public class RestaurantManager : Singleton<RestaurantManager>
             customerSpawner.StopSpawning();
         }
 
-        //라운드 타이머 UI 숨기기
-        EventBus.Raise(UIEventType.HideRoundTimer);
+        StartCoroutine(WaitAndCleanup(reason));
+        EventBus.Raise(UIEventType.ShowResultPanel);
+    }
 
-
+    private IEnumerator WaitAndCleanup(string reason)
+    {
+        Debug.Log("영업 종료 - 손님들이 떠나기를 기다리는 중...");
+    
+        // 모든 손님이 떠날 때까지 대기
+        yield return new WaitUntil(() => PoolManager.Instance.ActiveCustomerCount == 0);
+        
         Debug.Log($"Game ended: {reason}");
-        Debug.Log($"Final Stats - Served: {customersServed}, Earnings: {totalEarnings}, Time: {gameTime:F1}s");
+        Debug.Log($"Final Stats - Served: {customersServed}, Earnings: {totalEarnings}");
+
+        EventBus.Raise(UIEventType.HideRoundTimer);
+        // TODO: 게임 종료 UI 띄우기
     }
     
     public void RestartGame()
@@ -166,12 +187,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
     {
         customersServed += 10;
         Debug.Log($"Added 10 customers served. Total: {customersServed}");
-    }
-    
-    [ContextMenu("Restart Game")]
-    public void RestartGameCommand()
-    {
-        RestartGame();
     }
     
     #endregion
