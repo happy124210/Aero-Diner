@@ -237,14 +237,9 @@ public class CustomerController : MonoBehaviour, IPoolable
     
     public void PlaceOrder()
     {
-        FoodData[] availableMenus = MenuManager.Instance.GetTodayMenuData();
-    
-        if (availableMenus != null && availableMenus.Length > 0)
-        {
-            currentOrder = availableMenus[Random.Range(0, availableMenus.Length)];
-            orderBubble.sprite = currentOrder.foodIcon;
-            ShowOrderBubble();
-        }
+        currentOrder = MenuManager.Instance.GetRandomMenu();
+        orderBubble.sprite = currentOrder.foodIcon;
+        ShowOrderBubble();
     }
     
     public void ReceiveFood(FoodData servedMenu)
