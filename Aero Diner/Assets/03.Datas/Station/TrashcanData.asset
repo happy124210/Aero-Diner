@@ -22,4 +22,4 @@ MonoBehaviour:
   stationCost: 100
   availableRecipes: []
   ingredientSlots: 0
-  slotPlaceholderIcons: []
+  slotDisplays: []

@@ -21,7 +21,7 @@ MonoBehaviour:
   description: "\uAC15\uD310 \uC785\uB2C8\uB2E4"
   stationCost: 100
   availableRecipes:
-  - {fileID: 11400000, guid: c387cad776abb584b83df8bf77c8eda3, type: 2}
+  - {fileID: 11400000, guid: a4209fe6c6535514a8b8bfe786a089a4, type: 2}
   ingredientSlots: 1
   slotDisplays:
   - foodType: 6
