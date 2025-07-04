@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31dc2934ff3253e49b9a8b945c1ddfa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minSpawnInterval: 3
-  maxSpawnInterval: 5
+  minSpawnInterval: 20
+  maxSpawnInterval: 30
   maxCustomers: 10
   spawnPoints:
   - {fileID: 1699959310969922015}
@@ -333,6 +333,7 @@ MonoBehaviour:
   gameRunning: 0
   targetCustomersServed: 50
   customersServed: 0
+  customersVisited: 0
   totalEarnings: 0
   gameTime: 0
   showDebugInfo: 0

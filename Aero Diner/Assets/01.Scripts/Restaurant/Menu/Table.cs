@@ -6,8 +6,8 @@ using UnityEngine.Serialization;
 public class Table : MonoBehaviour, IInteractable, IPlaceableStation
 {
     [Header("테이블 설정")] 
-    [SerializeField] private Transform seatPosition;
-    [SerializeField] private Transform menuSpawnPoint;
+    [SerializeField] private Transform seatPosition; // 손님이 앉는 위치
+    [SerializeField] private Transform menuSpawnPosition; // 메뉴가 생성되는 위치
     [SerializeField] private int seatIndex = -1;
     
     [Header("현재 설정 - 확인용")]
@@ -15,7 +15,7 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
     [SerializeField, ReadOnly] private CustomerController assignedCustomer; // 테이블에 앉아있는 손님
 
     [Header("Debug")]
-    [SerializeField] private bool showDebugInfo = true;
+    [SerializeField] private bool showDebugInfo;
     
     private GameObject currentFoodObj;
     
@@ -24,6 +24,7 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
     private void Reset()
     {
         seatPosition = transform.Find("Seat Position");
+        menuSpawnPosition = transform.Find("Menu Spawn Position");
     }
 
     #endregion
@@ -85,7 +86,7 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
     
     private GameObject CreateMenuDisplay(FoodData data)
     {
-        if (data == null || menuSpawnPoint == null)
+        if (data == null || menuSpawnPosition == null)
         {
             Debug.LogError("필수 데이터가 누락되었습니다.");
             return null;
@@ -93,7 +94,7 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
 
         // VisualObjectFactory 호출
         GameObject obj = VisualObjectFactory.CreateIngredientVisual(
-            parent: menuSpawnPoint,
+            parent: menuSpawnPosition,
             name: data.foodName,
             icon: data.foodIcon
         );
