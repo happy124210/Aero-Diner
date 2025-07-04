@@ -29,7 +29,6 @@ public class FadeManager : Singleton<FadeManager>
         //최초 진입일 경우 페이드 인
         if (SceneManager.GetActiveScene().name == "StartScene" || SceneManager.GetActiveScene().buildIndex == 0)
         {
-            Debug.Log("[FadeManager] 첫 씬에서 강제 페이드 인");
             FadeTo(0f, defaultFadeTime);
         }
     }
@@ -45,16 +44,11 @@ public class FadeManager : Singleton<FadeManager>
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log($"[FadeManager] 씬 로드됨: {scene.name}");
         if (isFadePlanned && fadeImage != null)
         {
-            Debug.Log("[FadeManager] 페이드 인 실행");
             FadeTo(0f, defaultFadeTime);
         }
-        else
-        {
-            Debug.Log("[FadeManager] 일반 로드 → 페이드 인 생략");
-        }
+
 
         //무조건 false로 리셋
         isFadePlanned = false;

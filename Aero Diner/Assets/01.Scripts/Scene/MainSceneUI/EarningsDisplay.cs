@@ -8,7 +8,7 @@ public class EarningsDisplay : MonoBehaviour
     [SerializeField] private float animateDuration = 0.5f;
     [SerializeField] private Color flashColor = Color.yellow;
 
-    private float currentDisplayAmount = 0f;
+    private int currentDisplayAmount = 0;
     private Color originalColor;
 
     private void Awake()
@@ -19,7 +19,7 @@ public class EarningsDisplay : MonoBehaviour
         originalColor = Txt_Earning.color;
     }
 
-    public void AnimateEarnings(float newAmount)
+    public void AnimateEarnings(int newAmount)
     {
         DOTween.Kill(Txt_Earning); // 기존 애니메이션 정리
 
@@ -27,7 +27,7 @@ public class EarningsDisplay : MonoBehaviour
         DOTween.To(() => currentDisplayAmount, x =>
         {
             currentDisplayAmount = x;
-            Txt_Earning.text = $"₩ {Mathf.RoundToInt(x):N0}";
+            Txt_Earning.text = $"{Mathf.RoundToInt(x):N0} G";
         },
         newAmount, animateDuration)
         .SetEase(Ease.OutCubic);

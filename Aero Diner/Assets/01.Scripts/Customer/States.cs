@@ -69,21 +69,22 @@ public class MovingToSeatState : CustomerState
     
     public override void Enter(CustomerController customer)
     {
-        Vector3 seatPos = customer.GetAssignedSeatPosition();
+        Vector3 seatPos = customer.GetAssignedStopPosition();
         customer.SetDestination(seatPos);
     }
     
     public override CustomerState Update(CustomerController customer)
     {
         if (customer.HasReachedDestination())
+        {
+            customer.AdjustSeatPosition();
             return new OrderingState();
-            
+        }
+        
         return this;
     }
 
-    public override void Exit(CustomerController customer)
-    { 
-    }
+    public override void Exit(CustomerController customer) { }
 }
 
 /// <summary>
@@ -94,8 +95,9 @@ public class OrderingState : CustomerState
     public override string StateName => "Ordering";
     private bool orderPlaced;
     
-    public override void Enter(CustomerController customer)
+    public override void Enter(CustomerController customer) 
     {
+        customer.StopMovement();
     }
     
     public override CustomerState Update(CustomerController customer)
@@ -173,9 +175,7 @@ public class PayingState : CustomerState
         return this;
     }
 
-    public override void Exit(CustomerController customer)
-    {
-    }
+    public override void Exit(CustomerController customer) { }
 }
 
 /// <summary>

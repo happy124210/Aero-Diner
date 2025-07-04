@@ -8,12 +8,6 @@ using TMPro;
 /// </summary>
 public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
 {
-    [Header("재료 데이터 그룹")]
-    public FoodSOGroup foodGroup;
-
-    [Header("생성할 재료 SO")]
-    public FoodData selectedIngredient;
-
     [Header("재료 생성 위치")]
     public Transform spawnPoint;
 
@@ -29,10 +23,18 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     [Header("현재 등록된 재료 ID 목록")]
     public List<string> currentIngredients = new();
 
+    [Header("레시피 매칭 결과 (읽기 전용)")]
+    [SerializeField] private string bestMatchedRecipe;
+
+    [Header("모든 매칭 레시피 목록 (읽기 전용)")]
+    [SerializeField] private List<string> matchedRecipeNames = new();
+
     [Header("아이콘 디스플레이")] // 추가됨
     [SerializeField] private FoodSlotIconDisplay iconDisplay;
-
     [SerializeField] private float slotSpacing = 0.5f;
+
+    [Header("Debug")]
+    [SerializeField] private bool showDebugInfo;
 
     private List<FoodData> placedIngredientList = new();             // 실제 등록된 재료의 데이터 목록
     private List<GameObject> placedIngredients = new();              // 화면에 보여지는 재료 오브젝트들
@@ -41,8 +43,8 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     private FoodData cookedIngredient;                               // 조리 완료 시 결과가 되는 레시피
     private bool isCooking = false;                                  // 현재 조리 중인지 여부 플래그
     private OutlineShaderController outline;                         // 외곽선 효과를 제어하는 컴포넌트
-
     private bool hasInitialized = false;                             // 아이콘 초기화 플래그
+    private FoodData selectedIngredient;
 
     private void Awake()
     {
@@ -60,7 +62,7 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         }
         else
         {
-            Debug.LogWarning("stationData 또는 slotDisplays가 할당되지 않았습니다.");
+           if (showDebugInfo) Debug.LogWarning("stationData 또는 slotDisplays가 할당되지 않았습니다.");
         }
 
         ResetCookingTimer();
@@ -97,7 +99,7 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     {
         if (!CanPlaceIngredient(data))
         {
-            Debug.LogWarning($"[PlaceObject] '{data.foodName}' 등록 실패");
+            if (showDebugInfo) Debug.LogWarning($"[PlaceObject] '{data.foodName}' 등록 실패");
             return;
         }
 
@@ -123,11 +125,11 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     {
         if (data == null)
         {
-            Debug.LogError("[RegisterIngredient] 등록 시도된 데이터가 null입니다!");
+            if (showDebugInfo) Debug.LogError("[RegisterIngredient] 등록 시도된 데이터가 null입니다!");
             return;
         }
 
-        Debug.Log($"[RegisterIngredient] ID: {data.id}, Name: {data.foodName}");
+        if (showDebugInfo) Debug.Log($"[RegisterIngredient] ID: {data.id}, Name: {data.foodName}");
         currentIngredients.Add(data.id);
         placedIngredientList.Add(data);
     }
@@ -138,17 +140,17 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// </summary>
     private void UpdateCandidateRecipes()
     {
-        Debug.Log($"[UpdateCandidateRecipes] 현재 재료 목록: {string.Join(", ", currentIngredients)}");
+        if (showDebugInfo) Debug.Log($"[UpdateCandidateRecipes] 현재 재료 목록: {string.Join(", ", currentIngredients)}");
 
         var candidateRecipes = stationData.availableRecipes
             .Where(r => r.ingredients != null && currentIngredients.Any(id => r.ingredients.Contains(id)))
             .ToList();
 
-        Debug.Log($"[UpdateCandidateRecipes] 후보 레시피 수: {candidateRecipes.Count}");
+        if (showDebugInfo) Debug.Log($"[UpdateCandidateRecipes] 후보 레시피 수: {candidateRecipes.Count}");
 
         foreach (var r in candidateRecipes)
         {
-            Debug.Log($" - 후보 레시피: {r.foodName} | 필요 재료: {string.Join(", ", r.ingredients)}");
+            if (showDebugInfo) Debug.Log($" - 후보 레시피: {r.foodName} | 필요 재료: {string.Join(", ", r.ingredients)}");
         }
 
         var matches = RecipeManager.Instance.FindMatchingRecipes(candidateRecipes, currentIngredients);
@@ -157,13 +159,58 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         {
             cookedIngredient = matches[0].recipe;
             availableMatchedRecipes = matches.Select(m => m.recipe).ToList();
-            Debug.Log($"{matches.Count}개 일치 — '{cookedIngredient.foodName}' 선택됨");
+            if (showDebugInfo) Debug.Log($"{matches.Count}개 일치 — '{cookedIngredient.foodName}' 선택됨");
         }
         else
         {
             cookedIngredient = null;
             availableMatchedRecipes.Clear();
-            Debug.LogWarning("조건에 맞는 레시피가 없습니다.");
+            if (showDebugInfo) Debug.LogWarning("조건에 맞는 레시피가 없습니다.");
+        }
+    }
+
+    /// <summary>
+    /// 현재 재료를 기반으로 가장 적합한 레시피를 찾아서 저장
+    /// </summary>
+    public void UpdateRecipePreview()
+    {
+        if (RecipeManager.Instance == null)
+        {
+            if (showDebugInfo) Debug.LogWarning("[PassiveStation] RecipeManager 인스턴스가 없음");
+            return;
+        }
+
+        var recipes = stationData?.availableRecipes ?? new List<FoodData>();
+
+        var matches = RecipeManager.Instance.FindMatchingRecipes(recipes, currentIngredients);
+
+        // 매칭 목록 초기화
+        matchedRecipeNames.Clear();
+
+        if (matches.Count > 0)
+        {
+            // 가장 일치하는 레시피 저장
+            var best = matches[0];
+            bestMatchedRecipe = $"{best.recipe.displayName} ({best.matchedCount}/{best.totalRequired})";
+
+            // 전체 매칭 리스트 업데이트
+            foreach (var m in matches)
+            {
+                matchedRecipeNames.Add($"{m.recipe.displayName} ({m.matchedCount}/{m.totalRequired})");
+            }
+
+            if (showDebugInfo)
+            {
+                var previewList = string.Join("\n", matchedRecipeNames.Select(r => "- " + r));
+                Debug.Log("[레시피 미리보기]\n" + previewList);
+            }
+        }
+        else
+        {
+            bestMatchedRecipe = "매칭되는 레시피 없음";
+            matchedRecipeNames.Add("없음");
+
+            if (showDebugInfo) Debug.Log("[PassiveStation] 일치하는 레시피 없음");
         }
     }
 
@@ -186,11 +233,11 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
 
         if (!cookedIngredient)
         {
-            Debug.LogWarning("조리 결과 레시피가 없습니다.");
+            if (showDebugInfo) Debug.LogWarning("조리 결과 레시피가 없습니다.");
             return;
         }
 
-        Debug.Log($"조리 완료: '{cookedIngredient.foodName}' 생성");
+        if (showDebugInfo) Debug.Log($"조리 완료: '{cookedIngredient.foodName}' 생성");
         GameObject result = VisualObjectFactory.CreateIngredientVisual(transform, cookedIngredient.foodName, cookedIngredient.foodIcon);
         if (result)
         {
@@ -249,25 +296,25 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         if (currentIngredients.Count == 0)
         {
             bool typeMatch = food.stationType.Any(type => type == stationData.stationType);
-            Debug.Log($"[Debug] Food station types: {string.Join(",", food.stationType)}");
-            Debug.Log($"[Debug] Station type: {stationData.stationType}");
+            if (showDebugInfo) Debug.Log($"[Debug] Food station types: {string.Join(",", food.stationType)}");
+            if (showDebugInfo) Debug.Log($"[Debug] Station type: {stationData.stationType}");
             return typeMatch;
         }
 
         if (cookedIngredient == null)
         {
-            Debug.LogWarning("[Station] 현재 설정된 레시피가 없습니다.");
+            if (showDebugInfo) Debug.LogWarning("[Station] 현재 설정된 레시피가 없습니다.");
             return false;
         }
 
         if (currentIngredients.Contains(food.id))
         {
-            Debug.LogWarning($"[Station] 중복 재료: {food.id} 이미 추가됨");
+            if (showDebugInfo) Debug.LogWarning($"[Station] 중복 재료: {food.id} 이미 추가됨");
             return false;
         }
 
         bool isInRecipe = cookedIngredient.ingredients.Contains(food.id);
-        Debug.Log($"[Station] 레시피 유효성 검사: {food.id} 포함 여부: {isInRecipe}");
+        if (showDebugInfo) Debug.Log($"[Station] 레시피 유효성 검사: {food.id} 포함 여부: {isInRecipe}");
 
         return isInRecipe;
     }
@@ -299,7 +346,7 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         if (string.IsNullOrEmpty(name) || !icon)
             return;
 
-        Debug.Log($"플레이어가 '{name}' 획득");
+        if (showDebugInfo) Debug.Log($"플레이어가 '{name}' 획득");
     }
 
 

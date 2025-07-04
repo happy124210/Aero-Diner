@@ -20,8 +20,9 @@ public class UIManager : Singleton<UIManager>
     private List<GameObject> currentSceneUIs = new();
     public List<GameObject> CurrentSceneUIs => currentSceneUIs;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         uiMap = new();
         foreach (var entry in sceneUIPrefabs)
         {
@@ -117,8 +118,20 @@ public class UIManager : Singleton<UIManager>
                 UIRoot.Instance.keysettingPanel.gameObject.SetActive(true);
                 break;
             case UIEventType.UpdateEarnings:
+                Debug.Log($"[UIManager] UpdateEarnings 이벤트 발생: {payload}");
                 foreach (var ui in currentSceneUIs)
-                    ui?.GetComponentInChildren<EarningsDisplay>()?.AnimateEarnings((float)payload);
+                {
+                    var ed = ui?.GetComponentInChildren<EarningsDisplay>(true);
+                    if (ed != null)
+                    {
+                        Debug.Log($"[UIManager] EarningsDisplay 찾음: {ed.name}");
+                        ed.AnimateEarnings((int)payload);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("[UIManager] EarningsDisplay 없음");
+                    }
+                }
                 break;
             case UIEventType.ShowStartMenuWithSave:
                 foreach (var ui in currentSceneUIs)

@@ -106,6 +106,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -5448,9 +5461,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 912
-        y: 1776
+        y: 1773
         width: 48
-        height: 48
+        height: 54
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -6371,13 +6384,13 @@ TextureImporter:
       name: Modern_UI_Style_1_48x48_298
       rect:
         serializedVersion: 2
-        x: 816
+        x: 813
         y: 1728
-        width: 48
+        width: 54
         height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 3, y: 21, z: 3, w: 18}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -7064,10 +7077,10 @@ TextureImporter:
       name: Modern_UI_Style_1_48x48_331
       rect:
         serializedVersion: 2
-        x: 510
-        y: 1707
-        width: 48
-        height: 48
+        x: 507
+        y: 1704
+        width: 54
+        height: 54
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -11453,10 +11466,10 @@ TextureImporter:
       name: Modern_UI_Style_1_48x48_540
       rect:
         serializedVersion: 2
-        x: 384
-        y: 1464
-        width: 48
-        height: 48
+        x: 381
+        y: 1461
+        width: 54
+        height: 54
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -14814,11 +14827,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 36
-        y: 1237
+        y: 1239
         width: 72
         height: 75
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5343481, y: 0.5}
       border: {x: 9, y: 9, z: 9, w: 12}
       outline: []
       physicsShape: []
