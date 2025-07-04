@@ -250,6 +250,7 @@ public class CustomerController : MonoBehaviour, IPoolable
         if (currentOrder.id == servedMenu.id)
         {
             isServed = true;
+            MenuManager.Instance.OnMenuServed(servedMenu.id);
         }
         
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 음식 서빙됨!");

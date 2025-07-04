@@ -28,7 +28,6 @@ public class MenuManager : Singleton<MenuManager>
         LoadAllFoodData();
         LoadAllMenu();
 
-        InitializeTodayStats();
         InitializePlayerMenus();
     }
 
@@ -92,6 +91,26 @@ public class MenuManager : Singleton<MenuManager>
         todayMenuSales[menuId]++;
     }
     
+    /// <summary>
+    /// 모든 메뉴의 판매 데이터 반환
+    /// </summary>
+    public List<MenuSalesData> GetAllMenuSalesData()
+    {
+        List<MenuSalesData> salesData = new();
+        
+        foreach (var menu in todayMenus)
+        {
+            salesData.Add(new MenuSalesData
+            {
+                MenuName = menu.MenuName,
+                SoldCount = GetTodayMenuSales(menu.foodData.id),
+                TotalRevenue = GetTodayMenuSales(menu.foodData.id) * menu.Price,
+            });
+        }
+        
+        return salesData;
+    }
+    
     #endregion
     
     #region 외부 사용 함수
@@ -102,7 +121,8 @@ public class MenuManager : Singleton<MenuManager>
     public void UpdateTodayMenus()
     {
         todayMenus = playerMenus.Where(menu => menu.CanServeToday).ToList();
-
+        InitializeTodayStats();
+        
         if (showDebugInfo)  Debug.Log($"[MenuManager]: 오늘 메뉴 - {todayMenus.Count}개");
     }
 
@@ -173,10 +193,32 @@ public class MenuManager : Singleton<MenuManager>
     public List<Menu> GetTodayMenus() => todayMenus; // Menu 리스트 (해금, 선택정보 포함)
     public List<Menu> PlayerMenus => playerMenus; // 플레이어가 해금한 레시피 전부
     
-    // 판매량 조회
+    // 전체 판매량 조회
     public int GetTotalSalesToday() => todayMenus.Sum(menu => GetTodayMenuSales(menu.foodData.id));
+    public int GetTotalRevenueToday() => todayMenus.Sum(menu => GetTodayMenuRevenue(menu.foodData.id));
+    
+    // 메뉴별 판매량 조회 (id로 조회함)
     public int GetTodayMenuSales(string menuId) => todayMenuSales.GetValueOrDefault(menuId, 0);
     
+    public int GetTodayMenuRevenue(string menuId)
+    {
+        int soldCount = GetTodayMenuSales(menuId);
+        int price = GetMenuPrice(menuId);
+        return soldCount * price;
+    }
+    
+    private int GetMenuPrice(string menuId) => todayMenus.Find(m => m.foodData.id == menuId).Price;
     #endregion
 
+}
+
+/// <summary>
+/// 통계용 클래스
+/// </summary>
+[System.Serializable]
+public class MenuSalesData
+{
+    public string MenuName;
+    public int SoldCount;
+    public int TotalRevenue;
 }

@@ -8,8 +8,6 @@ public class ResultPanelContent : MonoBehaviour
     [SerializeField] private TextMeshProUGUI soldCount;
     [SerializeField] private TextMeshProUGUI menuRevenue;
 
-    private Menu currentMenu;
-
     private void Reset()
     {
         menuName = transform.FindChild<TextMeshProUGUI>("Tmp_MenuName");
@@ -20,13 +18,10 @@ public class ResultPanelContent : MonoBehaviour
     /// <summary>
     /// Menu 데이터로 UI 설정
     /// </summary>
-    public void SetData(Menu menu)
+    public void SetData(MenuSalesData menu)
     {
-        currentMenu = menu;
-        int sold = MenuManager.Instance.GetTodayMenuSales(menu.foodData.id);
-        
-        menuName.text = menu.foodData.displayName;
-        soldCount.text = sold.ToString();
-        menuRevenue.text = (sold * menu.Price).ToString();
+        menuName.text = menu.MenuName;
+        soldCount.text = menu.SoldCount.ToString();
+        menuRevenue.text = menu.TotalRevenue.ToString();
     }
 }

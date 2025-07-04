@@ -659,7 +659,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2608745741943835709}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999285
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -676,7 +676,7 @@ GameObject:
   - component: {fileID: 4843597294912806412}
   - component: {fileID: 6407891403413796240}
   m_Layer: 5
-  m_Name: Tmp_SalesIncome
+  m_Name: Tmp_TotalRevenue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1086,7 +1086,7 @@ RectTransform:
   m_Father: {fileID: 4109110240430014772}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 0.99999267}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1276,7 +1276,7 @@ GameObject:
   - component: {fileID: 2510656647938558324}
   - component: {fileID: 424371286221869058}
   m_Layer: 5
-  m_Name: Tmp_SalesVolume
+  m_Name: Tmp_TotalSalesVolume
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1443,8 +1443,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7314f76543196443a0de1f9df68913c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  salesVolume: {fileID: 424371286221869058}
-  salesIncome: {fileID: 6407891403413796240}
+  contentPrefab: {fileID: 1813385923714132484, guid: 73b8eb6b58b901b4cb88d3a2f26d62b1, type: 3}
+  contentTransform: {fileID: 2486628239974748720}
+  totalSalesVolume: {fileID: 424371286221869058}
+  totalRevenue: {fileID: 6407891403413796240}
   allCustomer: {fileID: 6256309504616682377}
   servedCustomer: {fileID: 4466113173932737552}
   goneCustomer: {fileID: 3982012680669466103}
@@ -2072,6 +2074,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2486628239974748720}
+  - component: {fileID: 2975553978287912556}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -2095,9 +2098,35 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0}
+  m_AnchoredPosition: {x: 0, y: 0.00010894474}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
+--- !u!114 &2975553978287912556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8236712178499607580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &8487414462766158910
 GameObject:
   m_ObjectHideFlags: 0
@@ -2346,7 +2375,6 @@ GameObject:
   - component: {fileID: 4530070144475531718}
   - component: {fileID: 6074367318028377019}
   - component: {fileID: 4365130879216545285}
-  - component: {fileID: 744956532390433782}
   m_Layer: 5
   m_Name: Viewport
   m_TagString: Untagged
@@ -2425,32 +2453,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 0
---- !u!114 &744956532390433782
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8705046673347918906}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
 --- !u!1 &8870367862758142148
 GameObject:
   m_ObjectHideFlags: 0
