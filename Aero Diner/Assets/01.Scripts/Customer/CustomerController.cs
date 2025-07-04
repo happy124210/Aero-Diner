@@ -279,6 +279,15 @@ public class CustomerController : MonoBehaviour, IPoolable
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} {payment} 코인 결제!");
         // TODO: 결제 이펙트
     }
+
+    /// <summary>
+    /// 강제로 떠나게 하기
+    /// </summary>
+    public void ForceLeave()
+    {
+        StopPatienceTimer();
+        ChangeState(new LeavingState());
+    }
     
 #endregion
 
