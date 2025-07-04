@@ -45,6 +45,7 @@ public class PressAnyKeyBlinker : MonoBehaviour
 
     private void StartFastBlink()
     {
+        EventBus.PlaySFX(SFXType.PressAnyKey);
         // 빠르게 깜빡임
         canvasGroup.alpha = 2f;
 
