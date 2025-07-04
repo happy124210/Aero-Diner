@@ -15,7 +15,7 @@ public class MenuManager : Singleton<MenuManager>
     [Header("오늘 영업 메뉴")] 
     [SerializeField] private List<Menu> todayMenus = new(); // 오늘 영업할 메뉴
 
-    [Header("디버깅")] 
+    [Header("디버깅")]
     [SerializeField] private string startMenuId;
     [SerializeField] private bool showDebugInfo;
 
