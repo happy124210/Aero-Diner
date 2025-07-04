@@ -14,7 +14,6 @@ public class UIClickEffectManager : MonoBehaviour
         {
             if (!IsPointerOverUI())
             {
-                Debug.Log("UI가 아닌 클릭 감지됨 → 이펙트 발생");
                 CreateEffect(Input.mousePosition);
             }
             else
