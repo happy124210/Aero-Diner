@@ -160,6 +160,46 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sfxList:
   - type: 0
+    clip: {fileID: 8300000, guid: 756d23b4e9932cd46b99738b548a1ffa, type: 3}
+  - type: 1
+    clip: {fileID: 8300000, guid: cd9c578f1d9d12647920d41c1f71fa67, type: 3}
+  - type: 2
+    clip: {fileID: 8300000, guid: 98fb10d0afdae524db58eeb0e101ab0c, type: 3}
+  - type: 4
+    clip: {fileID: 8300000, guid: 8034013cf3ee7d845b15cf8c2401bf54, type: 3}
+  - type: 5
+    clip: {fileID: 8300000, guid: db59654bcb828114d910950fd0b87f7f, type: 3}
+  - type: 7
+    clip: {fileID: 8300000, guid: d4718ca2879055842b87b386910bf7b0, type: 3}
+  - type: 8
+    clip: {fileID: 8300000, guid: 23890398c04781f4bbe6ed30416102f0, type: 3}
+  - type: 9
+    clip: {fileID: 8300000, guid: 430c0c8b65fad5f4499f1f7b28f71d11, type: 3}
+  - type: 11
+    clip: {fileID: 8300000, guid: 39a8d77219d10b04d9ff6dadc9532375, type: 3}
+  - type: 12
+    clip: {fileID: 8300000, guid: 551883e9cb9b75a4ea625402969ca54e, type: 3}
+  - type: 13
+    clip: {fileID: 8300000, guid: a89d1e498566b7e498e52e89b0c74f99, type: 3}
+  - type: 14
+    clip: {fileID: 8300000, guid: 09f10cadc8ae0cb4383cd040b9235608, type: 3}
+  - type: 15
+    clip: {fileID: 8300000, guid: a95af8333121d224882f48baf1449943, type: 3}
+  - type: 16
+    clip: {fileID: 8300000, guid: 9dfbe766aea8e934385de0c40ad6782b, type: 3}
+  - type: 17
+    clip: {fileID: 8300000, guid: ade5233d5ce254b4ea652cf2e04256fc, type: 3}
+  - type: 18
+    clip: {fileID: 8300000, guid: d465363e0a3dff245a3e43c9bb8c789e, type: 3}
+  - type: 19
+    clip: {fileID: 8300000, guid: c6a1e4c7332dfb54596bc90667a84a5d, type: 3}
+  - type: 20
+    clip: {fileID: 8300000, guid: 659937111aa92494986e3177c92b43ff, type: 3}
+  - type: 21
+    clip: {fileID: 8300000, guid: 3a36b39d6ffb3e34aa10992bf81bb79e, type: 3}
+  - type: 22
+    clip: {fileID: 8300000, guid: d465363e0a3dff245a3e43c9bb8c789e, type: 3}
+  - type: 0
     clip: {fileID: 0}
 --- !u!82 &5778095875073599622
 AudioSource:

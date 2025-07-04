@@ -20,8 +20,9 @@ public class UIManager : Singleton<UIManager>
     private List<GameObject> currentSceneUIs = new();
     public List<GameObject> CurrentSceneUIs => currentSceneUIs;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         uiMap = new();
         foreach (var entry in sceneUIPrefabs)
         {
