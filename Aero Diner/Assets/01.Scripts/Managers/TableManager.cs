@@ -33,14 +33,16 @@ public class TableManager : Singleton<TableManager>
 
     private void InitializeTables()
     {
+        // 테이블 초기화
+        tables = GetComponentsInChildren<Table>();
         if (tables == null || tables.Length == 0)
         {
             Debug.LogError("[TableManager] Table 배열 설정 안 됨 !!!");
             return;
         }
 
+        // 좌석 초기화
         seatOccupied = new bool[tables.Length];
-        
         for (int i = 0; i < tables.Length; i++)
         {
             seatOccupied[i] = false;
@@ -55,8 +57,7 @@ public class TableManager : Singleton<TableManager>
         waitingQueue.Clear();
         customerQueuePositions.Clear();
         
-        if (showDebugInfo)
-            Debug.Log($"[TableManager]: 테이블 초기화 완료 - 총 {tables.Length}개");
+        if (showDebugInfo) Debug.Log($"[TableManager]: 테이블 초기화 완료 - 총 {tables.Length}개");
     }
 
     #endregion
