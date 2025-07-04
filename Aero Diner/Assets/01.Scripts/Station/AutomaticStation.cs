@@ -8,9 +8,6 @@ using TMPro;
 /// </summary>
 public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
 {
-    [Header("재료 데이터 그룹")]
-    public FoodSOGroup foodGroup;
-
     [Header("생성할 재료 SO")]
     public FoodData selectedIngredient;
 

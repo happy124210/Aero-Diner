@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// 서빙되는 Menu, 즉 FoodType == Menu인 FoodData만 관리
+/// FoodData 관리
 /// </summary>
 public class MenuManager : Singleton<MenuManager>
 {
@@ -70,56 +70,9 @@ public class MenuManager : Singleton<MenuManager>
 
     #region 레시피 검색
 
-    public List<RecipeMatchResult> FindMatchingRecipes(List<FoodData> candidateRecipes, List<string> ingredientIds)
-    {
-        if (candidateRecipes == null || ingredientIds == null)
-        {
-            Debug.LogWarning("[RecipeManager] 입력값이 null입니다.");
-            return new List<RecipeMatchResult>();
-        }
-
-        var matches = candidateRecipes
-            .Where(r => r.ingredients != null)
-            .Select(r =>
-            {
-                var matchedCount = r.ingredients.Count(ingredientIds.Contains);
-                var result = new RecipeMatchResult
-                {
-                    recipe = r,
-                    matchedCount = matchedCount,
-                    totalRequired = r.ingredients.Length
-                };
-
-                Debug.Log($"[RecipeManager] Checking recipe: {r.foodName}");
-                Debug.Log($" - Required: {string.Join(", ", r.ingredients)}");
-                Debug.Log($" - Given:   {string.Join(", ", ingredientIds)}");
-                Debug.Log($" - Match: {matchedCount}/{r.ingredients.Length} | MatchRatio: {result.MatchRatio:F2}");
-
-                return result;
-            })
-            .Where(r => r.matchedCount > 0)
-            .ToList();
-
-        var fullMatches = matches
-            .Where(r => r.matchedCount == r.totalRequired && ingredientIds.Count == r.totalRequired)
-            .ToList();
-
-        if (fullMatches.Count > 0)
-        {
-            Debug.Log($"[RecipeManager] 정확 일치 레시피 {fullMatches.Count}개");
-            return fullMatches;
-        }
-
-        Debug.Log("[RecipeManager] 정확 일치 없음 — 유사도 기반 결과 반환");
-        return matches
-            .OrderByDescending(r => r.MatchRatio)
-            .ThenByDescending(r => r.matchedCount)
-            .ToList();
-    }
+    
     
     #endregion
-    
-    
     
     #region 외부 사용 함수
     
@@ -195,15 +148,8 @@ public class MenuManager : Singleton<MenuManager>
     public FoodData[] GetTodayMenuData() => todayMenus.Select(m => m.foodData).ToArray(); // FoodData만
     public List<Menu> PlayerMenus => playerMenus; // 플레이어가 해금한 레시피 전부
     public List<Menu> GetAllMenus() => new List<Menu>(playerMenus);
-    
-    #endregion
-    
-}
+    public FoodData[] AllFoodData => allFoodData;
 
-public class RecipeMatchResult
-{
-    public FoodData recipe;
-    public int matchedCount;
-    public int totalRequired;
-    public float MatchRatio => totalRequired == 0 ? 0f : (float)matchedCount / totalRequired;
+    #endregion
+
 }
