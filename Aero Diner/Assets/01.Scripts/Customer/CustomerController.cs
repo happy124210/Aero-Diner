@@ -237,6 +237,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     
     public void PlaceOrder()
     {
+        RestaurantManager.Instance.OnCustomerEntered();
         currentOrder = MenuManager.Instance.GetRandomMenu();
         orderBubble.sprite = currentOrder.foodIcon;
         ShowOrderBubble();

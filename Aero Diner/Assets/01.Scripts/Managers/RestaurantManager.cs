@@ -20,9 +20,9 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
     [Header("Statistics")]
     [SerializeField] private int customersServed;
+    [SerializeField] private int customersVisited;
     [SerializeField] private int totalEarnings;
 
-    //시간 UI 관련하여 수정
     [Tooltip("현재까지 경과한 시간")]
     [SerializeField] private float gameTime;
     
@@ -32,13 +32,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
     [Header("라운드 시간 설정")]
     [Tooltip("하루 제한 시간 (초 단위)")]
     [SerializeField] private float gameTimeLimit;
-
-    //UI에 필요한 getter 추가 
-    public float CurrentGameTime => gameTime;
-    public float GameTimeLimit => gameTimeLimit;
-    public float TotalEarnings => totalEarnings;
-    public Vector3 GetEntrancePoint() => entrancePoint.position;
-    public Vector3 GetExitPoint() => exitPoint.position;
 
     private void Update()
     {
@@ -118,11 +111,11 @@ public class RestaurantManager : Singleton<RestaurantManager>
             customerSpawner.StartSpawning();
         }
 
-        //라운드 타이머 UI 표시 요청
+        // UI 이벤트
         EventBus.Raise(UIEventType.ShowRoundTimer);
-        //돈 초기화
         EventBus.Raise(UIEventType.UpdateEarnings, (float)totalEarnings);
-        Debug.Log("Restaurant game started!");
+        
+        if (showDebugInfo) Debug.Log("Restaurant game started!");
     }
     
     public void EndGame(string reason)
@@ -145,8 +138,8 @@ public class RestaurantManager : Singleton<RestaurantManager>
         // 모든 손님이 떠날 때까지 대기
         yield return new WaitUntil(() => PoolManager.Instance.ActiveCustomerCount == 0);
         
-        Debug.Log($"Game ended: {reason}");
-        Debug.Log($"Final Stats - Served: {customersServed}, Earnings: {totalEarnings}");
+        if (showDebugInfo) Debug.Log($"Game ended: {reason}");
+        if (showDebugInfo) Debug.Log($"Final Stats - Served: {customersServed}, Earnings: {totalEarnings}");
 
         EventBus.Raise(UIEventType.HideRoundTimer);
         // TODO: 게임 종료 UI 띄우기
@@ -163,7 +156,12 @@ public class RestaurantManager : Singleton<RestaurantManager>
         // 게임 재시작
         StartGame();
         
-        Debug.Log("Restaurant game restarted!");
+        if (showDebugInfo) Debug.Log("Restaurant game restarted!");
+    }
+
+    public void OnCustomerEntered()
+    {
+        customersVisited++;
     }
     
     // 손님이 결제했을 때 호출되는 메서드
@@ -171,10 +169,31 @@ public class RestaurantManager : Singleton<RestaurantManager>
     {
         customersServed++;
         totalEarnings += amount;
-        //이벤트 호출
+        
+        // UI 이벤트
         EventBus.Raise(UIEventType.UpdateEarnings, (float)totalEarnings);
-        Debug.Log($"Customer paid {amount}! Total served: {customersServed}, Total earnings: {totalEarnings}");
+        
+        if (showDebugInfo) Debug.Log($"Customer paid {amount}! Total served: {customersServed}, Total earnings: {totalEarnings}");
     }
+
+    #region public getters
+
+    // 레스토랑 레이아웃
+    public Vector3 GetEntrancePoint() => entrancePoint.position;
+    public Vector3 GetExitPoint() => exitPoint.position;
+    
+    // 시간
+    public float GameTimeLimit => gameTimeLimit;
+    public float CurrentGameTime => gameTime;
+    
+    // 손님
+    public int CustomersServed => customersServed;
+    public int CustomersVisited => customersVisited;
+    
+    // 돈
+    public int TotalEarnings => totalEarnings;
+
+    #endregion
     
     #region Debug Commands
     

@@ -18,18 +18,22 @@ public class ResultPanel : MonoBehaviour
 
     private void Reset()
     {
-        salesVolume = transform.FindChild<TextMeshProUGUI>("Tmp_SaleVolume");
-        salesIncome = transform.FindChild<TextMeshProUGUI>("Tmp_SaleIncome");
+        salesVolume = transform.FindChild<TextMeshProUGUI>("Tmp_SalesVolume");
+        salesIncome = transform.FindChild<TextMeshProUGUI>("Tmp_SalesIncome");
         
         allCustomer = transform.FindChild<TextMeshProUGUI>("Tmp_AllCustomer");
         servedCustomer = transform.FindChild<TextMeshProUGUI>("Tmp_ServedCustomer");
         goneCustomer = transform.FindChild<TextMeshProUGUI>("Tmp_GoneCustomer");
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        allCustomer.text = 
-        servedCustomer.text = RestaurantManager.Instance.CustomersServed.ToString();
+        int all = RestaurantManager.Instance.CustomersVisited;
+        int served = RestaurantManager.Instance.CustomersServed;
+        int gone = all - served;
         
+        allCustomer.text = all.ToString();
+        servedCustomer.text = served.ToString();
+        goneCustomer.text = gone.ToString();
     }
 }
