@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31dc2934ff3253e49b9a8b945c1ddfa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minSpawnInterval: 3
-  maxSpawnInterval: 5
+  minSpawnInterval: 20
+  maxSpawnInterval: 30
   maxCustomers: 10
   spawnPoints:
   - {fileID: 1699959310969922015}
@@ -64,6 +64,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9063775954684593966}
+  - component: {fileID: 4768223824206957903}
   m_Layer: 0
   m_Name: Seats
   m_TagString: Untagged
@@ -89,6 +90,24 @@ Transform:
   - {fileID: 1090910537750047226}
   m_Father: {fileID: 5170058059054205272}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4768223824206957903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 321241236627500330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d1cc1bdf54a24440a4936c27f9801b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tables: []
+  seatOccupied: 
+  queueStartPosition: {fileID: 0}
+  queueSpacing: 1
+  maxQueueLength: 6
+  showDebugInfo: 1
 --- !u!1 &1233175867066911897
 GameObject:
   m_ObjectHideFlags: 0
@@ -333,6 +352,7 @@ MonoBehaviour:
   gameRunning: 0
   targetCustomersServed: 50
   customersServed: 0
+  customersVisited: 0
   totalEarnings: 0
   gameTime: 0
   showDebugInfo: 0
