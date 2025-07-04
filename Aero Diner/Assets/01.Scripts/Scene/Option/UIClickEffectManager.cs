@@ -63,10 +63,6 @@ public class UIClickEffectManager : MonoBehaviour
         effect.localScale = Vector3.one * 0.3f;
         group.alpha = 1f;
         Image img = effect.GetComponent<Image>();
-        if (img != null)
-        {
-            img.color = new Color(0.6f, 0.4f, 0.2f); // 나무색상
-        }
         seq.Append(effect.DOScale(1.2f, 0.15f).SetEase(Ease.OutBack))
            .Join(group.DOFade(0f, 0.15f))
            .OnComplete(() => Destroy(effect.gameObject));
