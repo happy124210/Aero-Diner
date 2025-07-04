@@ -124,7 +124,7 @@ public class UIManager : Singleton<UIManager>
                     if (ed != null)
                     {
                         Debug.Log($"[UIManager] EarningsDisplay 찾음: {ed.name}");
-                        ed.AnimateEarnings((float)payload);
+                        ed.AnimateEarnings((int)payload);
                     }
                     else
                     {
