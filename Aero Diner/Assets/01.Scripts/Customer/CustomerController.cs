@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 /// <summary>
 /// 손님 애니메이션 상태
@@ -227,12 +225,20 @@ public class CustomerController : MonoBehaviour, IPoolable
         assignedTable = table;
     }
 
+    public void AdjustSeatPosition()
+    {
+        if (!assignedTable) return;
+
+        transform.position = assignedTable.SeatPoint.position;
+        SetAnimationState(CustomerAnimState.Idle);
+    }
+
     /// <summary>
     /// 할당된 좌석 위치 반환
     /// </summary>
-    public Vector3 GetAssignedSeatPosition()
+    public Vector3 GetAssignedStopPosition()
     {
-        return assignedTable ? assignedTable.GetSeatPosition() : Vector3.zero;
+        return assignedTable.GetStopPosition() ;
     }
     
     public void PlaceOrder()
@@ -288,6 +294,8 @@ public class CustomerController : MonoBehaviour, IPoolable
         StopPatienceTimer();
         ChangeState(new LeavingState());
     }
+
+    
     
 #endregion
 
@@ -302,16 +310,17 @@ public class CustomerController : MonoBehaviour, IPoolable
     { 
         if (!navAgent)
         {
-          //  Debug.LogError($"[CustomerController]: {gameObject.name} NavMeshAgent가 null입니다!");
+            if (showDebugInfo) Debug.LogError($"[CustomerController]: {gameObject.name} NavMeshAgent가 null입니다!");
             return;
         }
         
         if (!navAgent.isOnNavMesh)
         {
-          //  Debug.LogWarning($"[CustomerController]: {gameObject.name}이 NavMesh 위에 있지 않습니다!");
+            if (showDebugInfo) Debug.LogWarning($"[CustomerController]: {gameObject.name}이 NavMesh 위에 있지 않습니다!");
             return;
         }
         
+        navAgent.isStopped = false;
         // NavMeshPlus Y축 버그 방지용
         if (Mathf.Abs(transform.position.x - destination.x) < AGENT_DRIFT)
         {
@@ -321,7 +330,16 @@ public class CustomerController : MonoBehaviour, IPoolable
         navAgent.SetDestination(destination);
         SetAnimationState(CustomerAnimState.Walking);
         
-        //if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 목적지 설정: {destination}");
+        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 목적지 설정: {destination}");
+    }
+    
+    public void StopMovement()
+    {
+        if (!navAgent) return;
+        
+        navAgent.isStopped = true;
+        navAgent.ResetPath();
+        navAgent.velocity = Vector3.zero;
     }
     
     /// <summary>
