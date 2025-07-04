@@ -120,6 +120,8 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
         //라운드 타이머 UI 표시 요청
         EventBus.Raise(UIEventType.ShowRoundTimer);
+        //돈 초기화
+        EventBus.Raise(UIEventType.UpdateEarnings, (float)totalEarnings);
         Debug.Log("Restaurant game started!");
     }
     

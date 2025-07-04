@@ -27,7 +27,7 @@ public class EarningsDisplay : MonoBehaviour
         DOTween.To(() => currentDisplayAmount, x =>
         {
             currentDisplayAmount = x;
-            Txt_Earning.text = $"₩ {Mathf.RoundToInt(x):N0}";
+            Txt_Earning.text = $"{Mathf.RoundToInt(x):N0} G";
         },
         newAmount, animateDuration)
         .SetEase(Ease.OutCubic);

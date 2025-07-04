@@ -8,4 +8,8 @@ public class MainSceneUI : MonoBehaviour
     {
         EventBus.Raise(UIEventType.OpenPause);
     }
+    public void OnClickInventory()
+    {
+        EventBus.Raise(UIEventType.ShowInventory);
+    }
 }
