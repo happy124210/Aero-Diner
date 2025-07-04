@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.ComponentModel;
 using UnityEngine;
@@ -6,7 +7,8 @@ using UnityEngine.Serialization;
 public class Table : MonoBehaviour, IInteractable, IPlaceableStation
 {
     [Header("테이블 설정")] 
-    [SerializeField] private Transform seatPosition; // 손님이 앉는 위치
+    [SerializeField] private Transform stopPoint; // 손님이 멈추는 위치
+    [SerializeField] private Transform seatPoint; // 손님이 앉는 위치
     [SerializeField] private Transform menuSpawnPosition; // 메뉴가 생성되는 위치
     [SerializeField] private int seatIndex = -1;
     
@@ -23,7 +25,15 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
 
     private void Reset()
     {
-        seatPosition = transform.Find("Seat Position");
+        stopPoint = transform.Find("Stop Position");
+        seatPoint = transform.Find("Seat Position");
+        menuSpawnPosition = transform.Find("Menu Spawn Position");
+    }
+
+    private void Awake()
+    {
+        stopPoint = transform.Find("Stop Position");
+        seatPoint = transform.Find("Seat Position");
         menuSpawnPosition = transform.Find("Menu Spawn Position");
     }
 
@@ -48,9 +58,9 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
         assignedCustomer = null;
     }
 
-    public Vector3 GetSeatPosition()
+    public Vector3 GetStopPosition()
     {
-        return seatPosition.position;
+        return stopPoint.position;
     }
 
     #endregion
@@ -123,6 +133,7 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
 
     #region Public getters
 
+    public Transform SeatPoint => seatPoint;
     public bool HasFood => currentFoodObj != null;
     public bool HasCustomer => assignedCustomer != null;
     public bool CanPlaceFood => currentFoodObj == null;
