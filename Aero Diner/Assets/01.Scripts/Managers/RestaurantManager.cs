@@ -128,7 +128,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
         }
 
         StartCoroutine(WaitAndCleanup(reason));
-        EventBus.Raise(UIEventType.ShowResultPanel);
     }
 
     private IEnumerator WaitAndCleanup(string reason)
@@ -142,7 +141,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
         if (showDebugInfo) Debug.Log($"Final Stats - Served: {customersServed}, Earnings: {totalEarnings}");
 
         EventBus.Raise(UIEventType.HideRoundTimer);
-        // TODO: 게임 종료 UI 띄우기
+        EventBus.Raise(UIEventType.ShowResultPanel);
     }
     
     public void RestartGame()
