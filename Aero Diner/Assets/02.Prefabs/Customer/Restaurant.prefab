@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 37938363331745866}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.24, y: -11.13, z: 0}
+  m_LocalPosition: {x: 4.94, y: -12.62, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -104,7 +104,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tables: []
   seatOccupied: 
-  queueStartPosition: {fileID: 0}
+  queueStartPosition: {fileID: 99934688092184859}
   queueSpacing: 1
   maxQueueLength: 6
   showDebugInfo: 1
@@ -133,7 +133,7 @@ Transform:
   m_GameObject: {fileID: 1233175867066911897}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 15.89, y: -7.13, z: 0}
+  m_LocalPosition: {x: 5.07, y: -12.77, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -200,7 +200,7 @@ Transform:
   m_GameObject: {fileID: 3980758558681744523}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: -7, z: 0}
+  m_LocalPosition: {x: 3, y: -6.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

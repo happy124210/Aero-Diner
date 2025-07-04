@@ -85,11 +85,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
                 StartGame();
         }
         
-        if (GUILayout.Button("Restart Game"))
-        {
-            RestartGame();
-        }
-        
         if (GUILayout.Button("Unlock All Menus"))
         {
             MenuManager.Instance.UnlockAllMenus();
@@ -113,7 +108,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
         // UI 이벤트
         EventBus.Raise(UIEventType.ShowRoundTimer);
-        EventBus.Raise(UIEventType.UpdateEarnings, (float)totalEarnings);
+        EventBus.Raise(UIEventType.UpdateEarnings, totalEarnings);
         
         if (showDebugInfo) Debug.Log("Restaurant game started!");
     }
@@ -132,30 +127,17 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
     private IEnumerator WaitAndCleanup(string reason)
     {
-        Debug.Log("영업 종료 - 손님들이 떠나기를 기다리는 중...");
-    
+        if (showDebugInfo) Debug.Log("영업 종료 - 손님들이 떠나기를 기다리는 중...");
+        
+        TableManager.Instance.ReleaseAllQueues();
         // 모든 손님이 떠날 때까지 대기
         yield return new WaitUntil(() => PoolManager.Instance.ActiveCustomerCount == 0);
         
         if (showDebugInfo) Debug.Log($"Game ended: {reason}");
         if (showDebugInfo) Debug.Log($"Final Stats - Served: {customersServed}, Earnings: {totalEarnings}");
-
+        
         EventBus.Raise(UIEventType.HideRoundTimer);
         EventBus.Raise(UIEventType.ShowResultPanel);
-    }
-    
-    public void RestartGame()
-    {
-        // 모든 손님 정리
-        if (customerSpawner)
-        {
-            TableManager.Instance.ReleaseAllSeatsAndQueue();
-        }
-        
-        // 게임 재시작
-        StartGame();
-        
-        if (showDebugInfo) Debug.Log("Restaurant game restarted!");
     }
 
     public void OnCustomerEntered()
@@ -170,7 +152,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
         totalEarnings += amount;
         
         // UI 이벤트
-        EventBus.Raise(UIEventType.UpdateEarnings, (float)totalEarnings);
+        EventBus.Raise(UIEventType.UpdateEarnings, totalEarnings);
         
         if (showDebugInfo) Debug.Log($"Customer paid {amount}! Total served: {customersServed}, Total earnings: {totalEarnings}");
     }
