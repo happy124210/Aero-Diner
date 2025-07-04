@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -120,6 +120,8 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
         //라운드 타이머 UI 표시 요청
         EventBus.Raise(UIEventType.ShowRoundTimer);
+        //돈 초기화
+        EventBus.Raise(UIEventType.UpdateEarnings, (float)totalEarnings);
         Debug.Log("Restaurant game started!");
     }
     
@@ -170,7 +172,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
         customersServed++;
         totalEarnings += amount;
         //이벤트 호출
-        EventBus.Raise(UIEventType.UpdateEarnings, totalEarnings);
+        EventBus.Raise(UIEventType.UpdateEarnings, (float)totalEarnings);
         Debug.Log($"Customer paid {amount}! Total served: {customersServed}, Total earnings: {totalEarnings}");
     }
     
