@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// 서빙되는 Menu, 즉 FoodType == Menu인 FoodData만 관리
+/// FoodData 관리
 /// </summary>
 public class MenuManager : Singleton<MenuManager>
 {
@@ -68,6 +68,12 @@ public class MenuManager : Singleton<MenuManager>
         UpdateTodayMenus();
     }
 
+    #region 레시피 검색
+
+    
+    
+    #endregion
+    
     #region 외부 사용 함수
     
     /// <summary>
@@ -122,7 +128,6 @@ public class MenuManager : Singleton<MenuManager>
 
     #endregion
     
-    
     #region cheater
 
     public void UnlockAllMenus()
@@ -137,14 +142,14 @@ public class MenuManager : Singleton<MenuManager>
     
     #endregion
     
-    
     #region public getters
 
     public List<Menu> GetTodayMenus() => todayMenus; // Menu 리스트 (해금, 선택정보 포함)
     public FoodData[] GetTodayMenuData() => todayMenus.Select(m => m.foodData).ToArray(); // FoodData만
     public List<Menu> PlayerMenus => playerMenus; // 플레이어가 해금한 레시피 전부
     public List<Menu> GetAllMenus() => new List<Menu>(playerMenus);
-    
+    public FoodData[] AllFoodData => allFoodData;
+
     #endregion
-    
+
 }

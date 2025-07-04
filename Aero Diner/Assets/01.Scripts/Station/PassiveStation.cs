@@ -14,9 +14,6 @@ using System.Linq;
 /// </summary>
 public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
 {
-    [Header("재료 데이터 그룹")]
-    public FoodSOGroup foodGroup;
-
     [Header("생성할 재료 SO")]
     public FoodData selectedIngredient;
 
@@ -265,7 +262,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     private GameObject CreateProcessedIngredientDisplay(FoodData data)
     {
         // 필수 데이터가 누락되었는지 확인
-        if (!foodGroup || !data || !spawnPoint)
+        if (!data || !spawnPoint)
         {
             Debug.LogError("필수 데이터가 누락되었습니다.");
             return null;

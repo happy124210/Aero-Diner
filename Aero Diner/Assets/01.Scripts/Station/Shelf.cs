@@ -11,9 +11,6 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
     [Header("비주얼 오브젝트 생성 위치")]
     public Transform spawnPoint;
 
-    [Header("가공 허용 재료 그룹 (FoodData만 관리)")] // 플레이어가 내려놓은 재료를 기반으로 동적으로 채워짐
-    public FoodSOGroup neededIngredients;
-
     // 내부 상태
     private GameObject placedIngredientObj;
 
@@ -38,26 +35,11 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
             return;
         }
 
-        // FoodData인 경우 그룹 검사
-        if (data is FoodData food && neededIngredients != null && !neededIngredients.Contains(food))
-        {
-            Debug.Log($"'{food.displayName}'는 허용되지 않은 재료입니다.");
-            return;
-        }
-
         // 상태 갱신
         currentData = data;
 
         // 비주얼 생성
         placedIngredientObj = CreateIngredientDisplay(data);
-
-        // 만약 FoodData이고, 그룹에 없으면 추가
-        if (neededIngredients != null &&
-            !neededIngredients.Contains(data))
-        {
-            neededIngredients.AddIngredient(data);
-            Debug.Log($"가공 허용 재료 그룹에 '{data.displayName}' 추가됨.");
-        }
     }
 
     // IIngredientData 전반을 검사
@@ -66,12 +48,6 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
         if (currentData != null)
         {
             Debug.Log("[Shelf] 이미 항목이 배치되어 있습니다.");
-            return false;
-        }
-
-        if (neededIngredients != null && !neededIngredients.Contains(data))
-        {
-            Debug.Log($"[Shelf] '{data.displayName}'는 허용되지 않은 재료입니다.");
             return false;
         }
 
