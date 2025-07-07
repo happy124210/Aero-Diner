@@ -270,6 +270,7 @@ public class CustomerController : MonoBehaviour, IPoolable
         eatingTimer = 0f;
         isEatingFinished = false;
         SetAnimationState(CustomerAnimState.Idle);
+        
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 식사 시작");
     }
     
@@ -352,7 +353,7 @@ public class CustomerController : MonoBehaviour, IPoolable
         
         if (!navAgent || !navAgent.isOnNavMesh) 
         {
-        //    if (showDebugInfo) Debug.LogWarning($"[CustomerController]: {gameObject.name} NavMeshAgent 문제!");
+            if (showDebugInfo) Debug.LogWarning($"[CustomerController]: {gameObject.name} NavMeshAgent 문제!");
             return false;
         }
         
@@ -360,7 +361,7 @@ public class CustomerController : MonoBehaviour, IPoolable
                       navAgent.remainingDistance < arrivalThreshold && 
                       navAgent.velocity.sqrMagnitude < velocityThreshold;
         
-       // if (reached && showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 목적지 도착!");
+       if (reached && showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 목적지 도착!");
             
         return reached;
     }
@@ -368,7 +369,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     public void SetAnimationState(CustomerAnimState state) 
     { 
         // TODO: 실제 애니메이터 연동
-       // if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 애니메이션 상태: {state}");
+        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 애니메이션 상태: {state}");
     }
     
     /// <summary>

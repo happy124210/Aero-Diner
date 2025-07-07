@@ -137,6 +137,9 @@ public class EatingState : CustomerState
     public override void Enter(CustomerController customer)
     {
         customer.StartEating();
+
+        Table table = customer.GetAssignedTable();
+        table.GetCurrentFood().isPickupable = false;
     }
     
     public override CustomerState Update(CustomerController customer)
