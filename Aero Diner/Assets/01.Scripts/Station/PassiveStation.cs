@@ -120,29 +120,45 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         if (showDebugInfo) Debug.Log($"'{cookedIngredient.foodName}' 조리 시작!");
     }
 
+    /// <summary>
+    /// 현재 스테이션에 놓인 재료 목록을 기반으로 가능한 레시피 후보를 탐색하고
+    /// 가장 일치하는 요리를 선정함
+    /// </summary>
     private void UpdateCandidateRecipes()
     {
-        // 전체 레시피 중, 현재 등록된 재료 ID 중 하나라도 포함하는 후보 레시피 필터링
+        // 현재까지 넣은 재료 중 하나 이상 포함한 후보 레시피 추출
         var candidateRecipes = stationData.availableRecipes
             .Where(r => r.ingredients != null && currentIngredients.Any(id => r.ingredients.Contains(id)))
             .ToList();
 
-        // 후보 중에서 현재 재료와 정확히 일치하는 레시피를 RecipeManager를 통해 찾음
+        // 현재 재료 기반으로 가장 많이 일치하는 레시피들 검색
         var matches = RecipeManager.Instance.FindMatchingRecipes(candidateRecipes, currentIngredients);
 
-        // 일치하는 레시피가 하나라도 있을 경우
         if (matches != null && matches.Count > 0)
         {
-            cookedIngredient = matches[0].recipe; // 가장 먼저 일치한 요리 데이터를 선택
-            availableMatchedRecipes = matches.Select(m => m.recipe).ToList(); // 전체 일치 목록 저장
-            if (showDebugInfo) Debug.Log($"{matches.Count}개 일치 — '{cookedIngredient.foodName}' 선택됨");
+            // 전체 매칭된 레시피 저장
+            availableMatchedRecipes = matches.Select(m => m.recipe).ToList();
+
+            // matchedRecipeNames: 모든 매칭된 레시피에서 등장하는 모든 재료 ID 집합
+            matchedRecipeNames = availableMatchedRecipes
+                .SelectMany(r => r.ingredients)
+                .Distinct()
+                .ToList();
+
+            // bestMatchedRecipe는 현재까지의 재료와 가장 잘 맞는 첫 번째 레시피로 설정
+            cookedIngredient = matches[0].recipe;
+
+            if (showDebugInfo)
+                Debug.Log($"{matches.Count}개 일치 — '{cookedIngredient.foodName}' 선택됨");
         }
         else
         {
-            // 일치하는 레시피가 없으면 초기화
             cookedIngredient = null;
             availableMatchedRecipes.Clear();
-            if (showDebugInfo) Debug.Log("조건에 맞는 레시피가 없습니다.");
+            matchedRecipeNames.Clear();
+
+            if (showDebugInfo)
+                Debug.Log("조건에 맞는 레시피가 없습니다.");
         }
     }
 
@@ -231,36 +247,36 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// <summary>
     /// 현재 재료를 추가할 수 있는지 검사
     /// </summary>
-    public bool CanPlaceIngredient(FoodData data)
+    public bool CanPlaceIngredient(FoodData food)
     {
-        // 첫 번째 재료
+        // 첫 번째 재료일 경우: 해당 스테이션 타입이 맞는지 검사
         if (currentIngredients.Count == 0)
         {
-            // StationData.stationType이 FoodData.stationType 배열에 들어 있는지 검사
-            bool typeMatch = data.stationType.Contains(stationData.stationType);
-            if (showDebugInfo) Debug.Log($"[Station] 첫 번째 재료 시도: {data.foodName} | 타입 일치: {typeMatch}");
+            bool typeMatch = food.stationType.Any(type => type == stationData.stationType);
+            if (showDebugInfo) Debug.Log($"[Debug] Food station types: {string.Join(",", food.stationType)}");
+            if (showDebugInfo) Debug.Log($"[Debug] Station type: {stationData.stationType}");
             return typeMatch;
         }
 
-        // 레시피가 아직 정해지지 않았을 때
-        if (cookedIngredient == null)
+        // 중복 재료 확인
+        if (currentIngredients.Contains(food.id))
         {
-            if (showDebugInfo) Debug.LogWarning("[Station] 현재 설정된 레시피가 없습니다.");
+            if (showDebugInfo) Debug.LogWarning($"[Station] 중복 재료: {food.id} 이미 추가됨");
             return false;
         }
 
-        // 중복 검사
-        if (currentIngredients.Contains(data.id))
+        // 아직 레시피가 없을 경우
+        if (matchedRecipeNames == null || matchedRecipeNames.Count == 0)
         {
-            if (showDebugInfo) Debug.LogWarning($"[Station] 중복 재료: {data.id} 이미 추가됨");
+            if (showDebugInfo) Debug.LogWarning("[Station] 현재 설정된 유효 재료 목록이 없습니다.");
             return false;
         }
 
-        // 이미 결정된 레시피에 이 재료가 포함되는지 검사
-        bool isInRecipe = cookedIngredient.ingredients.Contains(data.id);
-        if (showDebugInfo) Debug.Log($"[Station] 레시피 유효성 검사: {data.id} 포함 여부: {isInRecipe}");
+        // 모든 매칭된 레시피들 기준으로 재료 포함 여부 검사
+        bool isValidIngredient = matchedRecipeNames.Contains(food.id);
+        if (showDebugInfo) Debug.Log($"[Station] 유효 재료 검사: {food.id} 포함 여부: {isValidIngredient}");
 
-        return isInRecipe;
+        return isValidIngredient;
     }
 
     /// <summary>

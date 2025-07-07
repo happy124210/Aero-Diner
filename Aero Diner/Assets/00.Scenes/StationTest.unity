@@ -618,57 +618,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 318667501463138349, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
-      propertyPath: showDebugInfo
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1138494965499237432, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
-      propertyPath: showDebugInfo
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1659056206388299309, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
-      propertyPath: showDebugInfo
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2729015404389323652, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
-      propertyPath: showDebugInfo
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3335638495110225549, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
-      propertyPath: showDebugInfo
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3351993008619990083, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
       propertyPath: m_Name
       value: StationSet
-      objectReference: {fileID: 0}
-    - target: {fileID: 3598361370390108060, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
-      propertyPath: showDebugInfo
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4495244567201018075, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
-      propertyPath: showDebugInfo
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4836923829774462328, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
-      propertyPath: showDebugInfo
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5028400580700607635, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
-      propertyPath: showDebugInfo
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264481420151361753, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
-      propertyPath: showDebugInfo
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5525937452514760459, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
-      propertyPath: showDebugInfo
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6312278304415660272, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
-      propertyPath: showDebugInfo
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7003341941849820173, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
       propertyPath: m_LocalPosition.x
@@ -708,26 +660,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7003341941849820173, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7313426215202378307, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
-      propertyPath: showDebugInfo
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8094705140645477764, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
-      propertyPath: showDebugInfo
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8263379577967895604, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
-      propertyPath: showDebugInfo
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8396788528023704498, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
-      propertyPath: showDebugInfo
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9214280323105216041, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
-      propertyPath: showDebugInfo
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

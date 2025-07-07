@@ -18,7 +18,7 @@ MonoBehaviour:
   foodType: 4
   foodIcon: {fileID: 21300000, guid: 5f68f6a3362278945893209ae9c5ce86, type: 3}
   description: "\uB85C\uC81C \uD30C\uC2A4\uD0C0 \uC785\uB2C8\uB2E4"
-  stationType: 0c000000
+  stationType: 01000000
   ingredients:
   - f18
   - f15
