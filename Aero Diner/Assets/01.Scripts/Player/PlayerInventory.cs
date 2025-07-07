@@ -21,7 +21,7 @@ public class PlayerInventory : MonoBehaviour
 
         // 재료만 집을 수 있음
         FoodDisplay food = target as FoodDisplay;
-        if (!food) return;
+        if (!food || !food.CanPickup()) return;
 
         holdingItem = food;
 
