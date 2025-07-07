@@ -56,6 +56,7 @@ public class UIManager : Singleton<UIManager>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         LoadSceneUI(scene.name);
+        
     }
 
     public async void LoadSceneUI(string sceneName)
@@ -81,12 +82,13 @@ public class UIManager : Singleton<UIManager>
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
                 var instance = handle.Result;
-                instance.SetActive(true); 
+                instance.SetActive(true);
                 currentSceneUIs.Add(instance);
+                Debug.Log($"[UIManager] 로드된 UI: {instance.name}");
             }
             else
             {
-                Debug.LogError($"[UIManager] UI 로드 실패: {sceneName}, Error: {handle.OperationException?.Message}");
+                Debug.LogError($"[UIManager] UI 로딩 실패: {assetRef.RuntimeKey}");
             }
         }
         foreach (var ui in currentSceneUIs)
@@ -98,6 +100,18 @@ public class UIManager : Singleton<UIManager>
                 {
                     target.gameObject.SetActive(false);
                     Debug.Log($"[UIManager] {type.Name} 초기 비활성화");
+                }
+            }
+        }
+        if (sceneName == "StartScene")
+        {
+            foreach (var ui in currentSceneUIs)
+            {
+                var blinker = ui.GetComponentInChildren<PressAnyKeyBlinker>(true);
+                if (blinker != null && !blinker.gameObject.activeSelf)
+                {
+                    blinker.gameObject.SetActive(true);
+                    Debug.Log("[UIManager] PressAnyKeyBlinker 강제 활성화");
                 }
             }
         }

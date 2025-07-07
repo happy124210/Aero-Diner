@@ -18,7 +18,7 @@ public class UIClickEffectManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("UI 위 클릭 → 무시");
+               // Debug.Log("UI 위 클릭 → 무시");
             }
         }
     }

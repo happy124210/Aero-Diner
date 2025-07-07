@@ -15,13 +15,11 @@ public class PressAnyKeyBlinker : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("[PressAnyKeyBlinker] Start 진입");
-
-        inputDetected = false;
+        Debug.Log("[PressAnyKeyBlinker] Start 실행됨");
 
         if (pressAnyKeyImage == null || canvasGroup == null)
         {
-            Debug.LogWarning("[PressAnyKeyBlinker] 이미지나 캔버스 그룹이 null입니다");
+            Debug.LogWarning("[PressAnyKeyBlinker] 필수 컴포넌트 누락");
             return;
         }
 
