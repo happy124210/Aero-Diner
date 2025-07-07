@@ -73,4 +73,9 @@ public class ResultPanel : MonoBehaviour
         servedCustomer.text = served.ToString();
         goneCustomer.text = gone.ToString();
     }
+    
+    public void OnNextButtonClick()
+    {
+        FadeManager.Instance.FadeOutAndLoadSceneWithLoading("DayScene");
+    }
 }
