@@ -270,6 +270,7 @@ public class CustomerController : MonoBehaviour, IPoolable
         eatingTimer = 0f;
         isEatingFinished = false;
         SetAnimationState(CustomerAnimState.Idle);
+        
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 식사 시작");
     }
     

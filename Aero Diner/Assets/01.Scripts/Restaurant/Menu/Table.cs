@@ -138,7 +138,11 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
     public bool HasCustomer => assignedCustomer != null;
     public bool CanPlaceFood => currentFoodObj == null;
     public CustomerController AssignedCustomer => assignedCustomer;
+    
+    public FoodDisplay GetCurrentFood() => currentFoodObj?.GetComponent<FoodDisplay>();
 
     #endregion
 
+    
+    
 }
