@@ -228,7 +228,6 @@ public class PlayerController : MonoBehaviour
         animator.SetFloat("MoveX", moveInput.x);
         animator.SetFloat("MoveY", moveInput.y);
         animator.SetBool("IsMoving", moveInput != Vector2.zero);
-        animator.SetBool("IsHolding", playerInventory.IsHoldingItem);
 
         // Optional: idle 방향 유지
         if (moveInput == Vector2.zero)
