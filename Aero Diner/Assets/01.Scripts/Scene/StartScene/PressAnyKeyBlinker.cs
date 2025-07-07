@@ -15,13 +15,16 @@ public class PressAnyKeyBlinker : MonoBehaviour
 
     private void Start()
     {
+
         if (pressAnyKeyImage == null || canvasGroup == null)
         {
             return;
         }
 
+        canvasGroup.alpha = 1f;
         StartBlink(blinkInterval);
     }
+
 
     private void Update()
     {
@@ -64,7 +67,6 @@ public class PressAnyKeyBlinker : MonoBehaviour
 
     private void RaiseStartMenuEvent()
     {
-        Debug.Log("DOTween 빠른 깜빡임 후 이벤트 발생");
 
         if (HasSavedGame())
             EventBus.Raise(UIEventType.ShowStartMenuWithSave);

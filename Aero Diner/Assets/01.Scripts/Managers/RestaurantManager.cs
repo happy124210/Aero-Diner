@@ -33,6 +33,9 @@ public class RestaurantManager : Singleton<RestaurantManager>
     [Tooltip("하루 제한 시간 (초 단위)")]
     [SerializeField] private float gameTimeLimit;
 
+    //PlayerPref 저장용 변수
+    private const string EarningsKey = "TotalEarnings";
+
     private void Update()
     {
         if (gameRunning)
@@ -100,7 +103,9 @@ public class RestaurantManager : Singleton<RestaurantManager>
         gameTime = 0f;
         customersServed = 0;
         totalEarnings = 0;
-        
+        //돈 불러오기
+        LoadEarnings();
+
         if (customerSpawner)
         {
             customerSpawner.StartSpawning();
@@ -150,13 +155,24 @@ public class RestaurantManager : Singleton<RestaurantManager>
     {
         customersServed++;
         totalEarnings += amount;
-        
+
+        //돈 저장
+        SaveEarnings();
+
         // UI 이벤트
         EventBus.Raise(UIEventType.UpdateEarnings, totalEarnings);
         
         if (showDebugInfo) Debug.Log($"Customer paid {amount}! Total served: {customersServed}, Total earnings: {totalEarnings}");
     }
-
+    private void SaveEarnings()
+    {
+        PlayerPrefs.SetInt(EarningsKey, totalEarnings);
+        PlayerPrefs.Save();
+    }
+    private void LoadEarnings()
+    {
+        totalEarnings = PlayerPrefs.GetInt(EarningsKey, 0); // 없으면 0으로 초기화
+    }
     #region public getters
 
     // 레스토랑 레이아웃

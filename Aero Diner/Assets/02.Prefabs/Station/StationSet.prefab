@@ -957,8 +957,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d8299292fe84d49aa45b529417f69c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIngredient: {fileID: 11400000, guid: 88a44882a6155d7419c7589471c18497, type: 2}
-  showDebugInfo: 1
+  selectedIngredient: {fileID: 11400000, guid: e71f89a2de2d4ea4dbed63fe30c48463, type: 2}
+  showDebugInfo: 0
 --- !u!61 &5115089467776690988
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1221,14 +1221,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 890181c7806db64468c64ee802927450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIngredient: {fileID: 0}
   spawnPoint: {fileID: 5415545099906950688}
   cookingTime: 5
   cookingTimeText: {fileID: 8651958716713798403}
   stationData: {fileID: 11400000, guid: d160a9cc1e04c634f99a2a43df2cd532, type: 2}
   currentIngredients: []
+  bestMatchedRecipe: 
+  matchedRecipeNames: []
   iconDisplay: {fileID: 518600258065958192}
   slotSpacing: 0.5
+  showDebugInfo: 0
 --- !u!50 &4238375708139498439
 Rigidbody2D:
   serializedVersion: 4
@@ -1534,8 +1536,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d8299292fe84d49aa45b529417f69c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIngredient: {fileID: 11400000, guid: f2a747a0419c2754487274d8de0d22c6, type: 2}
-  showDebugInfo: 1
+  selectedIngredient: {fileID: 11400000, guid: 8a82aaffbce19a94a93d2735f338d2e3, type: 2}
+  showDebugInfo: 0
 --- !u!61 &4002604260626274759
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1762,10 +1764,10 @@ MonoBehaviour:
   cookingTimeText: {fileID: 4152430063229628274}
   stationData: {fileID: 11400000, guid: ac62d39755eda7744acf7b77c351a37f, type: 2}
   currentIngredients: []
-  allRecipes: []
-  currentIngredientIds: []
   bestMatchedRecipe: "\uB9E4\uCE6D\uB418\uB294 \uB808\uC2DC\uD53C \uC5C6\uC74C"
+  matchedRecipeNames: []
   iconDisplay: {fileID: 8797346020837964626}
+  slotSpacing: 0.5
   showDebugInfo: 0
 --- !u!50 &8053021395616812788
 Rigidbody2D:
@@ -2016,7 +2018,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedIngredient: {fileID: 11400000, guid: ff5d9b526cfdc9d4ea5d00308db03749, type: 2}
-  showDebugInfo: 1
+  showDebugInfo: 0
 --- !u!61 &9157579946274543143
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2400,8 +2402,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d8299292fe84d49aa45b529417f69c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIngredient: {fileID: 11400000, guid: 88a44882a6155d7419c7589471c18497, type: 2}
-  showDebugInfo: 1
+  selectedIngredient: {fileID: 11400000, guid: 98f0e40cf6800e54a807774e0137e3ba, type: 2}
+  showDebugInfo: 0
 --- !u!61 &498524597504862613
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2616,8 +2618,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d8299292fe84d49aa45b529417f69c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIngredient: {fileID: 11400000, guid: 88a44882a6155d7419c7589471c18497, type: 2}
-  showDebugInfo: 1
+  selectedIngredient: {fileID: 11400000, guid: c387cad776abb584b83df8bf77c8eda3, type: 2}
+  showDebugInfo: 0
 --- !u!61 &6382308378736137661
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2833,14 +2835,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 890181c7806db64468c64ee802927450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIngredient: {fileID: 0}
   spawnPoint: {fileID: 2186915114526774667}
   cookingTime: 5
   cookingTimeText: {fileID: 8930139064622750354}
   stationData: {fileID: 11400000, guid: a79c8c43a68771f49ae47eed78b341ef, type: 2}
   currentIngredients: []
+  bestMatchedRecipe: 
+  matchedRecipeNames: []
   iconDisplay: {fileID: 8841047111053585131}
   slotSpacing: 0.5
+  showDebugInfo: 0
 --- !u!50 &971601178443578792
 Rigidbody2D:
   serializedVersion: 4
@@ -3079,8 +3083,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d8299292fe84d49aa45b529417f69c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIngredient: {fileID: 11400000, guid: 88a44882a6155d7419c7589471c18497, type: 2}
-  showDebugInfo: 1
+  selectedIngredient: {fileID: 11400000, guid: 63001436fe09b304d82f0a93ef9c428d, type: 2}
+  showDebugInfo: 0
 --- !u!61 &1650554524145893588
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3429,8 +3433,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d8299292fe84d49aa45b529417f69c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIngredient: {fileID: 11400000, guid: 88a44882a6155d7419c7589471c18497, type: 2}
-  showDebugInfo: 1
+  selectedIngredient: {fileID: 11400000, guid: 9cc2e1b8abab949478b254ce603a0fde, type: 2}
+  showDebugInfo: 0
 --- !u!61 &194229535266291571
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3645,8 +3649,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d8299292fe84d49aa45b529417f69c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIngredient: {fileID: 11400000, guid: 88a44882a6155d7419c7589471c18497, type: 2}
-  showDebugInfo: 1
+  selectedIngredient: {fileID: 11400000, guid: aae9a85be31d0c240ba479fda8f0a43f, type: 2}
+  showDebugInfo: 0
 --- !u!61 &5371989589069161313
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4144,8 +4148,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d8299292fe84d49aa45b529417f69c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIngredient: {fileID: 11400000, guid: 88a44882a6155d7419c7589471c18497, type: 2}
-  showDebugInfo: 1
+  selectedIngredient: {fileID: 11400000, guid: cea4ac0e999051546ad78ffe2201e5a3, type: 2}
+  showDebugInfo: 0
 --- !u!61 &9142014390581192054
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4360,8 +4364,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d8299292fe84d49aa45b529417f69c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIngredient: {fileID: 11400000, guid: 88a44882a6155d7419c7589471c18497, type: 2}
-  showDebugInfo: 1
+  selectedIngredient: {fileID: 11400000, guid: 11fc209d50dd7f84c819d65cee7c2cf4, type: 2}
+  showDebugInfo: 0
 --- !u!61 &1459811142257238636
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5222,14 +5226,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 890181c7806db64468c64ee802927450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIngredient: {fileID: 0}
   spawnPoint: {fileID: 1401825894292575542}
   cookingTime: 5
   cookingTimeText: {fileID: 9033213995031714908}
   stationData: {fileID: 11400000, guid: f8a9f81cc2cbccf4b8219a540e54b46e, type: 2}
   currentIngredients: []
+  bestMatchedRecipe: 
+  matchedRecipeNames: []
   iconDisplay: {fileID: 8038720050282133297}
   slotSpacing: 0.5
+  showDebugInfo: 0
 --- !u!50 &3772415074696767218
 Rigidbody2D:
   serializedVersion: 4
@@ -5433,14 +5439,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 890181c7806db64468c64ee802927450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIngredient: {fileID: 0}
   spawnPoint: {fileID: 2151378581868345341}
   cookingTime: 5
   cookingTimeText: {fileID: 2010870093075166575}
   stationData: {fileID: 11400000, guid: 068a8e1282c0fd745a0ea1a0604bbf55, type: 2}
   currentIngredients: []
+  bestMatchedRecipe: 
+  matchedRecipeNames: []
   iconDisplay: {fileID: 7857475033717353370}
   slotSpacing: 0.5
+  showDebugInfo: 0
 --- !u!50 &4537783116809232242
 Rigidbody2D:
   serializedVersion: 4
@@ -5691,7 +5699,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedIngredient: {fileID: 11400000, guid: f02da3cce38effa4c95245798ef86752, type: 2}
-  showDebugInfo: 1
+  showDebugInfo: 0
 --- !u!61 &2656600154356815262
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5895,7 +5903,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedIngredient: {fileID: 11400000, guid: efb9dca86fe9fa14e880869ef50db4cf, type: 2}
-  showDebugInfo: 1
+  showDebugInfo: 0
 --- !u!61 &6296219711734367611
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6110,10 +6118,10 @@ MonoBehaviour:
   cookingTimeText: {fileID: 1751235236130474317}
   stationData: {fileID: 11400000, guid: 2dedc6e41e9e947489aea699aa5585e5, type: 2}
   currentIngredients: []
-  allRecipes: []
-  currentIngredientIds: []
   bestMatchedRecipe: "\uB9E4\uCE6D\uB418\uB294 \uB808\uC2DC\uD53C \uC5C6\uC74C"
+  matchedRecipeNames: []
   iconDisplay: {fileID: 2368891911857988211}
+  slotSpacing: 0.5
   showDebugInfo: 0
 --- !u!50 &2515193293862300635
 Rigidbody2D:
@@ -6419,8 +6427,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d8299292fe84d49aa45b529417f69c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIngredient: {fileID: 11400000, guid: 88a44882a6155d7419c7589471c18497, type: 2}
-  showDebugInfo: 1
+  selectedIngredient: {fileID: 11400000, guid: 8892d509911c1184bbd8bd2120d1e3f8, type: 2}
+  showDebugInfo: 0
 --- !u!61 &8624967540253601905
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6731,10 +6739,10 @@ MonoBehaviour:
   cookingTimeText: {fileID: 3081537824687129485}
   stationData: {fileID: 11400000, guid: c9863b7b9d7b37a4da3bcbc3c9aeb91d, type: 2}
   currentIngredients: []
-  allRecipes: []
-  currentIngredientIds: []
   bestMatchedRecipe: "\uB9E4\uCE6D\uB418\uB294 \uB808\uC2DC\uD53C \uC5C6\uC74C"
+  matchedRecipeNames: []
   iconDisplay: {fileID: 4415209505255441822}
+  slotSpacing: 0.5
   showDebugInfo: 0
 --- !u!50 &4877016985972356948
 Rigidbody2D:
@@ -6939,14 +6947,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 890181c7806db64468c64ee802927450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIngredient: {fileID: 0}
   spawnPoint: {fileID: 4443007952934525341}
   cookingTime: 5
   cookingTimeText: {fileID: 6855483082567862704}
   stationData: {fileID: 11400000, guid: cae44f9c00942634c9c87c8b038577b6, type: 2}
   currentIngredients: []
+  bestMatchedRecipe: 
+  matchedRecipeNames: []
   iconDisplay: {fileID: 4666510379072612039}
   slotSpacing: 0.5
+  showDebugInfo: 0
 --- !u!50 &4775125544918320079
 Rigidbody2D:
   serializedVersion: 4
@@ -7639,10 +7649,10 @@ MonoBehaviour:
   cookingTimeText: {fileID: 478580834314468897}
   stationData: {fileID: 11400000, guid: 84aaeba3bd8007a458ba48a734520623, type: 2}
   currentIngredients: []
-  allRecipes: []
-  currentIngredientIds: []
   bestMatchedRecipe: "\uB9E4\uCE6D\uB418\uB294 \uB808\uC2DC\uD53C \uC5C6\uC74C"
+  matchedRecipeNames: []
   iconDisplay: {fileID: 5888116414515942548}
+  slotSpacing: 0.5
   showDebugInfo: 0
 --- !u!50 &642921725403637055
 Rigidbody2D:
@@ -8346,14 +8356,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 890181c7806db64468c64ee802927450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIngredient: {fileID: 0}
   spawnPoint: {fileID: 6719169846448364786}
   cookingTime: 5
   cookingTimeText: {fileID: 3785592986133202004}
   stationData: {fileID: 11400000, guid: 272a983b5a938804db36dcf429586c2a, type: 2}
   currentIngredients: []
+  bestMatchedRecipe: 
+  matchedRecipeNames: []
   iconDisplay: {fileID: 3437475423995128164}
   slotSpacing: 0.5
+  showDebugInfo: 0
 --- !u!50 &2650720676867945480
 Rigidbody2D:
   serializedVersion: 4
@@ -9007,8 +9019,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d8299292fe84d49aa45b529417f69c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIngredient: {fileID: 11400000, guid: 88a44882a6155d7419c7589471c18497, type: 2}
-  showDebugInfo: 1
+  selectedIngredient: {fileID: 11400000, guid: 8d08fe2aedf48774f9796b0b22d980b4, type: 2}
+  showDebugInfo: 0
 --- !u!61 &7349927286704606844
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -9492,14 +9504,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 890181c7806db64468c64ee802927450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIngredient: {fileID: 0}
   spawnPoint: {fileID: 8549338608371954225}
   cookingTime: 5
   cookingTimeText: {fileID: 5169568638100587014}
   stationData: {fileID: 11400000, guid: 09edbc6e8bb2a3c4e89406a23ef6df9d, type: 2}
   currentIngredients: []
+  bestMatchedRecipe: 
+  matchedRecipeNames: []
   iconDisplay: {fileID: 3073248164261241817}
   slotSpacing: 0.5
+  showDebugInfo: 0
 --- !u!50 &396226562802920935
 Rigidbody2D:
   serializedVersion: 4
@@ -9737,8 +9751,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d8299292fe84d49aa45b529417f69c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIngredient: {fileID: 11400000, guid: 88a44882a6155d7419c7589471c18497, type: 2}
-  showDebugInfo: 1
+  selectedIngredient: {fileID: 11400000, guid: 1ad4f7bbe831eeb4aad0d2fe6c2202d9, type: 2}
+  showDebugInfo: 0
 --- !u!61 &7874682892149946275
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -9955,7 +9969,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedIngredient: {fileID: 11400000, guid: 88a44882a6155d7419c7589471c18497, type: 2}
-  showDebugInfo: 1
+  showDebugInfo: 0
 --- !u!61 &7309670337120507288
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10171,14 +10185,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 890181c7806db64468c64ee802927450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIngredient: {fileID: 0}
   spawnPoint: {fileID: 915025595844906954}
   cookingTime: 5
   cookingTimeText: {fileID: 4115837931476437157}
   stationData: {fileID: 11400000, guid: d74dc1c0cafcd314387afaac004d0f7c, type: 2}
   currentIngredients: []
+  bestMatchedRecipe: 
+  matchedRecipeNames: []
   iconDisplay: {fileID: 8581770355257148601}
   slotSpacing: 0.5
+  showDebugInfo: 0
 --- !u!50 &3987061272319247326
 Rigidbody2D:
   serializedVersion: 4
@@ -10381,8 +10397,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d8299292fe84d49aa45b529417f69c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedIngredient: {fileID: 11400000, guid: 88a44882a6155d7419c7589471c18497, type: 2}
-  showDebugInfo: 1
+  selectedIngredient: {fileID: 11400000, guid: 6f74b333018cbf540950f52f148c2281, type: 2}
+  showDebugInfo: 0
 --- !u!61 &8021333643324912457
 BoxCollider2D:
   m_ObjectHideFlags: 0
