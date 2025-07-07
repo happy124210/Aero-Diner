@@ -15,10 +15,15 @@ public class PressAnyKeyBlinker : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log("[PressAnyKeyBlinker] Start 진입");
+
         inputDetected = false;
 
         if (pressAnyKeyImage == null || canvasGroup == null)
+        {
+            Debug.LogWarning("[PressAnyKeyBlinker] 이미지나 캔버스 그룹이 null입니다");
             return;
+        }
 
         canvasGroup.alpha = 1f;
         StartBlink(blinkInterval);

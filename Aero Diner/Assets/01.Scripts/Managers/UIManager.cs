@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 public class UIManager : Singleton<UIManager>
 {
+    //이 리스트에 있는 UI는 모두 비활성화 상태로 시작.
     private readonly System.Type[] initiallyDisabledTypes = new System.Type[]
 {
     typeof(ResultPanel),
@@ -54,7 +55,6 @@ public class UIManager : Singleton<UIManager>
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // 항상 모든 UI를 비활성화 상태로 생성만 하고, 이후 EventBus로 활성화 제어
         LoadSceneUI(scene.name);
     }
 
@@ -81,7 +81,7 @@ public class UIManager : Singleton<UIManager>
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
                 var instance = handle.Result;
-                instance.SetActive(true); // 프리팹 활성화 상태와 상관없이 강제로 비활성화
+                instance.SetActive(true); 
                 currentSceneUIs.Add(instance);
             }
             else
