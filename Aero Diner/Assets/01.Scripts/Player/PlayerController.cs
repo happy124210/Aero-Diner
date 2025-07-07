@@ -54,13 +54,15 @@ public class PlayerController : MonoBehaviour
         UpdateItemSlotPosition();
         RaycastForInteractable();
 
-        UpdateItemSlotPosition();
-        RaycastForInteractable();
         animator.SetBool("IsCarrying", playerInventory.IsHoldingItem);
+
         if (interactAction == null) return;
 
         bool isHolding = interactAction.IsPressed();
         bool justPressed = interactAction.WasPressedThisFrame();
+
+        bool isInteracting = currentTarget != null && interactionType == InteractionType.Use && isHolding;
+        animator.SetBool("IsInteract", isInteracting);
 
         if (currentTarget != null)
         {
@@ -79,8 +81,6 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-
-
     }
 
     private void FixedUpdate()
