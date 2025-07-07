@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
@@ -9,10 +8,10 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         get
         {
-            if (instance == null)
+            if (!instance)
             {
                 instance = FindAnyObjectByType<T>();
-                if (instance == null)
+                if (!instance)
                 {
                     GameObject singletonObject = new GameObject(typeof(T).Name);
                     instance = singletonObject.AddComponent<T>();
@@ -32,7 +31,6 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         else
         {
             instance = this as T;
-            DontDestroyOnLoad(gameObject);
         }
     }
 }

@@ -18,6 +18,8 @@ public class SFXManager : Singleton<SFXManager>
     protected override void Awake()
     {
         base.Awake();
+        DontDestroyOnLoad(gameObject);
+        
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
 
