@@ -9,6 +9,9 @@ public class IngredientStation : MonoBehaviour, IInteractable
     [Header("생성할 재료 SO")]
     public FoodData selectedIngredient;
 
+    [Header("Debug")]
+    [SerializeField] private bool showDebugInfo;
+
     private OutlineShaderController outline;
 
     private void Awake()
@@ -23,13 +26,13 @@ public class IngredientStation : MonoBehaviour, IInteractable
     {
         if (!selectedIngredient || !playerInventory)
         {
-            Debug.LogError("필수 데이터가 누락되었습니다.");
+            if (showDebugInfo) Debug.LogError("필수 데이터가 누락되었습니다.");
             return;
         }
 
         if (playerInventory.IsHoldingItem)
         {
-            Debug.Log("플레이어가 이미 아이템을 들고 있음");
+            if (showDebugInfo) Debug.Log("플레이어가 이미 아이템을 들고 있음");
             return;
         }
         
@@ -45,7 +48,7 @@ public class IngredientStation : MonoBehaviour, IInteractable
         );
         if (!pickupObj)
         {
-            Debug.LogError("비주얼 오브젝트 생성 실패");
+            if (showDebugInfo) Debug.LogError("비주얼 오브젝트 생성 실패");
             return;
         }
 
@@ -62,25 +65,25 @@ public class IngredientStation : MonoBehaviour, IInteractable
         // 인벤토리에 등록
         playerInventory.SetHeldItem(display);
 
-        Debug.Log($"[{name}] {displayName} 생성 → 즉시 플레이어 손으로 이동");
+        if (showDebugInfo) Debug.Log($"[{name}] {displayName} 생성 → 즉시 플레이어 손으로 이동");
     }
 
     public bool PlaceIngredient(FoodData data)
     {
         if (data == null || selectedIngredient == null)
         {
-            Debug.Log("유효하지 않은 재료입니다.");
+            if (showDebugInfo) Debug.Log("유효하지 않은 재료입니다.");
             return false;
         }
 
         if (data.id == selectedIngredient.id)
         {
-            Debug.Log("재료 일치: 내려놓기 허용");
+            if (showDebugInfo) Debug.Log("재료 일치: 내려놓기 허용");
             return true;
         }
         else
         {
-            Debug.Log("재료 불일치: 내려놓기 차단");
+            if (showDebugInfo) Debug.Log("재료 불일치: 내려놓기 차단");
             return false;
         }
     }
