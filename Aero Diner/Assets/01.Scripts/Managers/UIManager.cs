@@ -84,7 +84,6 @@ public class UIManager : Singleton<UIManager>
                 var instance = handle.Result;
                 instance.SetActive(true);
                 currentSceneUIs.Add(instance);
-                Debug.Log($"[UIManager] 로드된 UI: {instance.name}");
             }
             else
             {
@@ -99,7 +98,6 @@ public class UIManager : Singleton<UIManager>
                 if (target != null)
                 {
                     target.gameObject.SetActive(false);
-                    Debug.Log($"[UIManager] {type.Name} 초기 비활성화");
                 }
             }
         }

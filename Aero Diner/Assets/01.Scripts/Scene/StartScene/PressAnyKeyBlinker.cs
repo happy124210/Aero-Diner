@@ -15,11 +15,9 @@ public class PressAnyKeyBlinker : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("[PressAnyKeyBlinker] Start 실행됨");
 
         if (pressAnyKeyImage == null || canvasGroup == null)
         {
-            Debug.LogWarning("[PressAnyKeyBlinker] 필수 컴포넌트 누락");
             return;
         }
 
@@ -69,7 +67,6 @@ public class PressAnyKeyBlinker : MonoBehaviour
 
     private void RaiseStartMenuEvent()
     {
-        Debug.Log("DOTween 빠른 깜빡임 후 이벤트 발생");
 
         if (HasSavedGame())
             EventBus.Raise(UIEventType.ShowStartMenuWithSave);
