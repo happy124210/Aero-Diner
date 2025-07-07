@@ -5,6 +5,12 @@ using UnityEngine.UI;
 
 public class UIRoot : Singleton<UIRoot>
 {
+    protected override void Awake()
+    {
+        base.Awake();
+        DontDestroyOnLoad(gameObject);
+    }
+
     public KeyRebindManager keyRebindManager;
     public VolumeHandler volumeHandler;
     public VideoSettingPanel videoSettingPanel;

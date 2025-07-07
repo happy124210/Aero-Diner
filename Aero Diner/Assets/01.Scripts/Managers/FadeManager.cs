@@ -14,6 +14,7 @@ public class FadeManager : Singleton<FadeManager>
     protected override void Awake()
     {
         base.Awake();
+        DontDestroyOnLoad(gameObject);
         if (fadeImage == null)
         {
             Debug.LogError("FadeImage가 연결되지 않았습니다.");
