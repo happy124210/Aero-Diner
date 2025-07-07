@@ -15,13 +15,15 @@ public class PressAnyKeyBlinker : MonoBehaviour
 
     private void Start()
     {
-        if (pressAnyKeyImage == null || canvasGroup == null)
-        {
-            return;
-        }
+        inputDetected = false;
 
+        if (pressAnyKeyImage == null || canvasGroup == null)
+            return;
+
+        canvasGroup.alpha = 1f;
         StartBlink(blinkInterval);
     }
+
 
     private void Update()
     {

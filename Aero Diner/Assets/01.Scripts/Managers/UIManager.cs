@@ -6,6 +6,14 @@ using System.Collections.Generic;
 
 public class UIManager : Singleton<UIManager>
 {
+    private readonly System.Type[] initiallyDisabledTypes = new System.Type[]
+{
+    typeof(ResultPanel),
+    typeof(MenuPanel3),
+    typeof(MenuPanel4),
+    typeof(Inventory),
+    // 필요한 타입 추가 가능
+};
     [System.Serializable]
     public class SceneUIEntry
     {
@@ -67,16 +75,30 @@ public class UIManager : Singleton<UIManager>
 
         foreach (var assetRef in assetRefs)
         {
-            var handle = assetRef.InstantiateAsync(transform); // SetActive 상태 유지
+            var handle = assetRef.InstantiateAsync(transform);
             await handle.Task;
 
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
-                currentSceneUIs.Add(handle.Result); // 프리팹에서 지정한 활성화 상태 그대로 들어옴
+                var instance = handle.Result;
+                instance.SetActive(true); // 프리팹 활성화 상태와 상관없이 강제로 비활성화
+                currentSceneUIs.Add(instance);
             }
             else
             {
                 Debug.LogError($"[UIManager] UI 로드 실패: {sceneName}, Error: {handle.OperationException?.Message}");
+            }
+        }
+        foreach (var ui in currentSceneUIs)
+        {
+            foreach (var type in initiallyDisabledTypes)
+            {
+                var target = ui.GetComponentInChildren(type, true) as MonoBehaviour;
+                if (target != null)
+                {
+                    target.gameObject.SetActive(false);
+                    Debug.Log($"[UIManager] {type.Name} 초기 비활성화");
+                }
             }
         }
     }
@@ -155,7 +177,14 @@ public class UIManager : Singleton<UIManager>
                 break;
             case UIEventType.ShowResultPanel:
                 foreach (var ui in currentSceneUIs)
-                    ui?.GetComponentInChildren<ResultPanel>(true)?.gameObject.SetActive(true);
+                {
+                    var resultPanel = ui?.GetComponentInChildren<ResultPanel>(true);
+                    if (resultPanel != null)
+                    {
+                        resultPanel.gameObject.SetActive(false);
+                        resultPanel.Init(); // 초기화 명시적 호출
+                    }
+                }
                 break;
             case UIEventType.HideResultPanel:
                 foreach (var ui in currentSceneUIs)
