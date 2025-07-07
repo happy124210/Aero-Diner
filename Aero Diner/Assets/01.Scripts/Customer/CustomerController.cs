@@ -385,7 +385,9 @@ public class CustomerController : MonoBehaviour, IPoolable
         if (hasLeftRestaurant) return;
         
         hasLeftRestaurant = true;
-        
+
+        CustomerOrderPanel.Instance?.UnregisterCustomer(this);
+
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 떠남");
         
         // 예약된 Invoke 취소

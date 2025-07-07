@@ -13,8 +13,19 @@ public class CustomerOrderEntryUI : MonoBehaviour
 
     public void UpdatePatience(float current, float max)
     {
-        patienceSlider.value = Mathf.Clamp01(current / max);
-        // 색상 변경도 원하면 여기서 처리 가능
+        float ratio = Mathf.Clamp01(current / max);
+        patienceSlider.value = ratio;
+
+        // 색상 조건 변경
+        Color fillColor = ratio switch
+        {
+            > 0.7f => Color.green,
+            > 0.3f => Color.yellow,
+            _ => Color.red
+        };
+
+        // Fill 이미지 색상 변경
+        patienceSlider.fillRect.GetComponent<Image>().color = fillColor;
     }
 }
 
