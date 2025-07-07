@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -29,11 +29,15 @@ public class ResultPanel : MonoBehaviour
         servedCustomer = transform.FindChild<TextMeshProUGUI>("Tmp_ServedCustomer");
         goneCustomer = transform.FindChild<TextMeshProUGUI>("Tmp_GoneCustomer");
     }
-
-    private void OnEnable()
+    public void Init()
     {
         SetSalesResult();
         SetCustomerResult();
+    }
+
+    private void OnEnable()
+    {
+        Init();
     }
 
     private void SetSalesResult()
