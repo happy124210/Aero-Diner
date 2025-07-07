@@ -161,10 +161,7 @@ public class UIManager : Singleton<UIManager>
                         Debug.Log($"[UIManager] EarningsDisplay 찾음: {ed.name}");
                         ed.AnimateEarnings((int)payload);
                     }
-                    else
-                    {
-                        Debug.LogWarning("[UIManager] EarningsDisplay 없음");
-                    }
+
                 }
                 break;
             case UIEventType.ShowStartMenuWithSave:
@@ -193,7 +190,7 @@ public class UIManager : Singleton<UIManager>
                     var resultPanel = ui?.GetComponentInChildren<ResultPanel>(true);
                     if (resultPanel != null)
                     {
-                        resultPanel.gameObject.SetActive(false);
+                        resultPanel.gameObject.SetActive(true);
                         resultPanel.Init(); // 초기화 명시적 호출
                     }
                 }
