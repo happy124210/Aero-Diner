@@ -16,9 +16,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
 {
     [Header("재료 생성 위치")]
     public Transform spawnPoint;
-    
-    [Header("가공 허용 재료 그룹")]
-    public FoodData[] neededIngredients;
 
     [Header("요리 시간 (초)")]
     public float cookingTime = 5f;
@@ -78,38 +75,42 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         UpdateCookingTimeText(); // UI 초기화
     }
 
+    /// <summary>
+    /// 플레이어가 재료를 놓았을 때 호출됨
+    /// </summary>
     public void PlaceObject(FoodData data)
     {
-        // 유효하지 않은 데이터거나 등록 불가한 재료일 경우 경고 출력 후 무시
         if (!CanPlaceIngredient(data))
         {
-            if (showDebugInfo) Debug.LogWarning($"'{data.foodName}'은 등록할 수 없는 재료입니다.");
+            if (showDebugInfo) Debug.LogWarning($"[PlaceObject] '{data.foodName}' 등록 실패");
             return;
         }
 
-        iconDisplay.UseSlot(data.foodType); // 아이콘 끄기
+        iconDisplay.UseSlot(data.foodType); // 오직 아이콘 사용만 처리
 
-        RegisterIngredient(data);     // 재료 등록 및 선택 처리
-        UpdateCandidateRecipes();     // 현재 재료 조합으로 가능한 레시피 탐색
+        RegisterIngredient(data);
+        UpdateCandidateRecipes();
 
-        // 모든 필요한 재료가 충족되었는지 확인 후 조리 시작
-        if (cookedIngredient != null &&
-            cookedIngredient.ingredients.All(id => currentIngredients.Contains(id)))
+        if (cookedIngredient != null && cookedIngredient.ingredients.All(id => currentIngredients.Contains(id)))
         {
-            StartCooking(); // 타이머 초기화
+            StartCooking();
         }
         else
         {
             isCooking = false;
-            if (showDebugInfo) Debug.Log("조건에 맞는 레시피가 부족하여 대기 중...");
         }
     }
 
     private void RegisterIngredient(FoodData data)
     {
-        // 재료 고유 ID 등록
-        string id = data.id;
-        currentIngredients.Add(id);
+        if (data == null)
+        {
+            if (showDebugInfo) Debug.LogError("[RegisterIngredient] 등록 시도된 데이터가 null입니다!");
+            return;
+        }
+
+        if (showDebugInfo) Debug.Log($"[RegisterIngredient] ID: {data.id}, Name: {data.foodName}");
+        currentIngredients.Add(data.id);
         placedIngredientList.Add(data);
     }
 
@@ -126,9 +127,12 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// </summary>
     private void UpdateCandidateRecipes()
     {
-        // 현재까지 넣은 재료 중 하나 이상 포함한 후보 레시피 추출
+        availableMatchedRecipes.Clear();
+        matchedRecipeNames.Clear();
+
+        // 모든 재료를 포함한 레시피만 후보로 선정
         var candidateRecipes = stationData.availableRecipes
-            .Where(r => r.ingredients != null && currentIngredients.Any(id => r.ingredients.Contains(id)))
+            .Where(r => r.ingredients != null && currentIngredients.All(id => r.ingredients.Contains(id)))
             .ToList();
 
         // 현재 재료 기반으로 가장 많이 일치하는 레시피들 검색
@@ -138,18 +142,21 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         {
             // 전체 매칭된 레시피 저장
             availableMatchedRecipes = matches.Select(m => m.recipe).ToList();
-
-            // matchedRecipeNames: 모든 매칭된 레시피에서 등장하는 모든 재료 ID 집합
-            matchedRecipeNames = availableMatchedRecipes
-                .SelectMany(r => r.ingredients)
-                .Distinct()
-                .ToList();
-
-            // bestMatchedRecipe는 현재까지의 재료와 가장 잘 맞는 첫 번째 레시피로 설정
             cookedIngredient = matches[0].recipe;
 
-            if (showDebugInfo)
-                Debug.Log($"{matches.Count}개 일치 — '{cookedIngredient.foodName}' 선택됨");
+            // bestMatchedRecipe도 갱신!
+            var best = matches[0];
+            bestMatchedRecipe = $"{best.recipe.id} ({best.matchedCount}/{best.totalRequired})";
+
+            foreach (var recipe in availableMatchedRecipes)
+            {
+                foreach (var ingredientId in recipe.ingredients)
+                {
+                    matchedRecipeNames.Add(ingredientId);
+                }
+            }
+
+            if (showDebugInfo) Debug.Log($"{matches.Count}개 일치 — '{cookedIngredient.foodName}' 선택됨");
         }
         else
         {
@@ -157,8 +164,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             availableMatchedRecipes.Clear();
             matchedRecipeNames.Clear();
 
-            if (showDebugInfo)
-                Debug.Log("조건에 맞는 레시피가 없습니다.");
+            if (showDebugInfo) Debug.Log("조건에 맞는 레시피가 없습니다.");
         }
     }
 
@@ -167,7 +173,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// </summary>
     public void Interact(PlayerInventory playerInventory, InteractionType interactionType)
     {
-        // 재료가 없는 경우 조리 타이머 초기화 후 종료
         if (currentIngredients.Count == 0)
         {
             currentCookingTime = cookingTime;
@@ -176,21 +181,23 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             return;
         }
 
-        // 필요한 재료 그룹이 지정되어 있다면 유효성 검사
-        if (neededIngredients.Any())
+        if (currentIngredients.Any())
         {
             bool hasInvalid = currentIngredients.Any(id => !IsIngredientIDAllowed(id));
 
             if (hasInvalid)
             {
-                if (showDebugInfo) Debug.Log("요구된 재료가 아닌 항목이 포함되어 있어 타이머가 리셋됨.");
+                var invalids = currentIngredients
+                    .Where(id => !IsIngredientIDAllowed(id))
+                    .ToList();
+
+                if (showDebugInfo) Debug.Log($"요구되지 않은 재료 포함됨: {string.Join(", ", invalids)} → 타이머 리셋");
                 currentCookingTime = cookingTime;
                 UpdateCookingTimeText();
                 return;
             }
         }
 
-        // 실제 상호작용이 'Use'일 때만 처리
         if (interactionType == InteractionType.Use)
         {
             currentCookingTime -= Time.deltaTime;
@@ -209,12 +216,10 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         }
     }
 
+    // 요리 유효성 검사
     private bool IsIngredientIDAllowed(string id)
     {
-        if (neededIngredients == null || !neededIngredients.Any())
-            return true;
-
-        return neededIngredients.Any(entry => entry.id == id);
+        return currentIngredients.Contains(id);
     }
 
     /// <summary>
@@ -253,8 +258,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         if (currentIngredients.Count == 0)
         {
             bool typeMatch = food.stationType.Any(type => type == stationData.stationType);
-            if (showDebugInfo) Debug.Log($"[Debug] Food station types: {string.Join(",", food.stationType)}");
-            if (showDebugInfo) Debug.Log($"[Debug] Station type: {stationData.stationType}");
+            if (showDebugInfo) Debug.Log($"[Debug] 첫 재료: 스테이션 타입 확인 — 재료: {string.Join(",", food.stationType)} / 스테이션: {stationData.stationType}");
             return typeMatch;
         }
 
@@ -265,16 +269,16 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             return false;
         }
 
-        // 아직 레시피가 없을 경우
+        // 유효 재료 ID 목록이 없는 경우
         if (matchedRecipeNames == null || matchedRecipeNames.Count == 0)
         {
-            if (showDebugInfo) Debug.LogWarning("[Station] 현재 설정된 유효 재료 목록이 없습니다.");
+            if (showDebugInfo) Debug.LogWarning("[Station] 현재 설정된 유효 재료 ID가 없습니다.");
             return false;
         }
 
-        // 모든 매칭된 레시피들 기준으로 재료 포함 여부 검사
+        // 유효 재료 ID에 포함되는지 검사
         bool isValidIngredient = matchedRecipeNames.Contains(food.id);
-        if (showDebugInfo) Debug.Log($"[Station] 유효 재료 검사: {food.id} 포함 여부: {isValidIngredient}");
+        if (showDebugInfo) Debug.Log($"[Station] 재료 유효성 검사: {food.id} → {isValidIngredient}");
 
         return isValidIngredient;
     }
