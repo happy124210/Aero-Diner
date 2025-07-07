@@ -32,6 +32,8 @@ public class UIManager : Singleton<UIManager>
     protected override void Awake()
     {
         base.Awake();
+        DontDestroyOnLoad(gameObject);
+        
         uiMap = new();
         foreach (var entry in sceneUIPrefabs)
         {
