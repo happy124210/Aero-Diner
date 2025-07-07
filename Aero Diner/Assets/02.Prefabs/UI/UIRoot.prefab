@@ -357,6 +357,10 @@ MonoBehaviour:
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
+    - m_AssetGUID: f2428c66a4b41cf409d3ff99e6dc533e
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
   - sceneName: LoadingScene
     uiPrefabs:
     - m_AssetGUID: 57c7f4e59bd49494a850032ef34ba337

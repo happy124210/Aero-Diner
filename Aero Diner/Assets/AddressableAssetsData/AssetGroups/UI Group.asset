@@ -47,6 +47,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f2428c66a4b41cf409d3ff99e6dc533e
+    m_Address: Assets/02.Prefabs/UI/UICanvas_CostomerOrderPanel .prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 0453cdc04330a03449ad1a1148e5f26b, type: 2}
   m_SchemaSet:

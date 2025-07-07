@@ -47,7 +47,9 @@ public class CustomerController : MonoBehaviour, IPoolable
     private float eatingTimer;
 
 
-#region Unity Events
+
+
+    #region Unity Events
 
     private void Reset()
     {
@@ -74,6 +76,7 @@ public class CustomerController : MonoBehaviour, IPoolable
         SetupNavMeshAgent();
         SetupCustomerData();
         ChangeState(new MovingToEntranceState());
+
     }
 
     private void Update()
@@ -247,6 +250,8 @@ public class CustomerController : MonoBehaviour, IPoolable
         currentOrder = MenuManager.Instance.GetRandomMenu();
         orderBubble.sprite = currentOrder.foodIcon;
         ShowOrderBubble();
+
+        CustomerOrderPanel.Instance?.RegisterCustomer(this);
     }
     
     public void ReceiveFood(FoodData servedMenu)
@@ -567,7 +572,10 @@ public class CustomerController : MonoBehaviour, IPoolable
     public bool HasPatience() => currentPatience > 0;
     public Table GetAssignedTable() => assignedTable;
     public FoodData CurrentOrder => currentOrder;
-    
+    //CostomerOrderPanelUI용 Getter
+    public float GetCurrentPatience() => currentPatience;
+    public float GetMaxPatience() => maxPatience;
+
     #endregion
-    
+
 }
