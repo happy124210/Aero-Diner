@@ -80,11 +80,14 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
     public void PlaceObject(FoodData data)
     {
         if (currentFoodObj) return;
+        
+        // 비주얼 생성
         currentFoodObj = CreateMenuDisplay(data);
         currentFoodData = currentFoodObj.GetComponent<FoodDisplay>().foodData;
         
-        // 앉아있는 고객에게 메뉴 전달
-        assignedCustomer.ReceiveFood(data);
+        // 앉아있는 고객 있다면 메뉴 전달
+        if (assignedCustomer)
+            assignedCustomer.ReceiveFood(data);
     }
 
     public void OnPlayerPickup()
@@ -116,12 +119,7 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
         display.originPlace = this;
         return obj;
     }
-
-    public void OnOrderMatch()
-    {
-        // TODO: 주문 일치 시 식사 시작
-    }
-
+    
     /// <summary>
     /// 식사 대기 후 음식 제거
     /// </summary>
