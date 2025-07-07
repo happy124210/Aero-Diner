@@ -84,7 +84,8 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
         currentFoodData = currentFoodObj.GetComponent<FoodDisplay>().foodData;
         
         // 앉아있는 고객에게 메뉴 전달
-        assignedCustomer.ReceiveFood(data);
+        if (assignedCustomer)
+            assignedCustomer.ReceiveFood(data);
     }
 
     public void OnPlayerPickup()
