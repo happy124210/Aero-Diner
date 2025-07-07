@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 public enum SFXType
 {
-    BlankClick,
-    ButtonClick,
-    ItemPickup,
-    Itemlaydown,
-    Cutting
+    PressAnyKey, ButtonClick,BlankClick, PlayerMove,
+    ItemPickup,Itemlaydown,
+    Costomerleave, CostomerOrder, CostomerGetMeal,CostomerPayed,
+    NPCscript, BuyinShop,
+    DoneCooking, ThrowAway,
+    PotSFX, OvenSFX,
+    CuttingBoardSFX, MortalSFX,
+    GrinderSFX, PanSFX,
+    ChopKnifeSFX, BlenderSFX,
+    AutoGrinderSFX, RollPanSFX
+
 }
 public enum UIEventType
 {

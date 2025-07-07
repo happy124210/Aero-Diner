@@ -33,14 +33,16 @@ public class TableManager : Singleton<TableManager>
 
     private void InitializeTables()
     {
+        // 테이블 초기화
+        tables = GetComponentsInChildren<Table>();
         if (tables == null || tables.Length == 0)
         {
             Debug.LogError("[TableManager] Table 배열 설정 안 됨 !!!");
             return;
         }
 
+        // 좌석 초기화
         seatOccupied = new bool[tables.Length];
-        
         for (int i = 0; i < tables.Length; i++)
         {
             seatOccupied[i] = false;
@@ -55,8 +57,7 @@ public class TableManager : Singleton<TableManager>
         waitingQueue.Clear();
         customerQueuePositions.Clear();
         
-        if (showDebugInfo)
-            Debug.Log($"[TableManager]: 테이블 초기화 완료 - 총 {tables.Length}개");
+        if (showDebugInfo) Debug.Log($"[TableManager]: 테이블 초기화 완료 - 총 {tables.Length}개");
     }
 
     #endregion
@@ -287,9 +288,9 @@ public class TableManager : Singleton<TableManager>
     #region 정리
 
     /// <summary>
-    /// 모든 좌석과 줄 해제
+    /// 모든 좌석 해제
     /// </summary>
-    public void ReleaseAllSeatsAndQueue()
+    public void ReleaseAllSeats()
     {
         // 좌석 해제
         if (seatOccupied != null)
@@ -304,19 +305,32 @@ public class TableManager : Singleton<TableManager>
         {
             foreach (var table in tables)
             {
-                if (table != null)
+                if (table)
                 {
                     table.ReleaseCustomer();
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// 모든 줄 해제
+    /// </summary>
+    public void ReleaseAllQueues()
+    {
+        var queuedCustomers = waitingQueue.ToArray();
+        foreach (var customer in queuedCustomers)
+        {
+            if (customer)
+            {
+                customer.ForceLeave();
+            }
+        }
         
-        // 줄 정리
         waitingQueue.Clear();
         customerQueuePositions.Clear();
         
-        if (showDebugInfo)
-            Debug.Log("[TableManager]: 모든 좌석과 줄 해제됨");
+        if (showDebugInfo) Debug.Log("[TableManager]: 모든 좌석과 줄 해제됨");
     }
 
     #endregion

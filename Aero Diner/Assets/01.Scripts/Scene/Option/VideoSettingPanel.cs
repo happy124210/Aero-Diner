@@ -41,15 +41,27 @@ public class VideoSettingPanel : MonoBehaviour
         new Vector2Int(1680, 1050),
         new Vector2Int(1920, 1080)
     };
-    
+
     private void Start()
     {
-        // 현재 설정값을 기준으로 original 저장
         originalScreenModeIndex = GetCurrentScreenModeIndex();
         originalResolutionIndex = GetCurrentResolutionIndex();
 
         screenModeIndex = originalScreenModeIndex;
         resolutionIndex = originalResolutionIndex;
+
+        if (resolutionIndex < 0)
+        {
+            var fallbackRes = new Vector2Int(Screen.width, Screen.height);
+
+            // 동일한 해상도가 중복되지 않도록 확인
+            if (!resolutions.Exists(r => r.x == fallbackRes.x && r.y == fallbackRes.y))
+            {
+                resolutions.Insert(0, fallbackRes);
+            }
+
+            resolutionIndex = 0;
+        }
 
         UpdateUI();
     }

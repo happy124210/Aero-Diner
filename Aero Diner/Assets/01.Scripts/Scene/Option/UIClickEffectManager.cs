@@ -14,12 +14,11 @@ public class UIClickEffectManager : MonoBehaviour
         {
             if (!IsPointerOverUI())
             {
-                Debug.Log("UI가 아닌 클릭 감지됨 → 이펙트 발생");
                 CreateEffect(Input.mousePosition);
             }
             else
             {
-                Debug.Log("UI 위 클릭 → 무시");
+               // Debug.Log("UI 위 클릭 → 무시");
             }
         }
     }
@@ -63,10 +62,6 @@ public class UIClickEffectManager : MonoBehaviour
         effect.localScale = Vector3.one * 0.3f;
         group.alpha = 1f;
         Image img = effect.GetComponent<Image>();
-        if (img != null)
-        {
-            img.color = new Color(0.6f, 0.4f, 0.2f); // 나무색상
-        }
         seq.Append(effect.DOScale(1.2f, 0.15f).SetEase(Ease.OutBack))
            .Join(group.DOFade(0f, 0.15f))
            .OnComplete(() => Destroy(effect.gameObject));

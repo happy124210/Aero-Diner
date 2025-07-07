@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4959197549157748456}
   - component: {fileID: 8209295688780088539}
-  - component: {fileID: 4420809329719931962}
   m_Layer: 0
   m_Name: PoolManager
   m_TagString: Untagged
@@ -50,24 +49,3 @@ MonoBehaviour:
   customerTypes:
   - {fileID: 11400000, guid: 6955cce2271d88e4995d0a3e3c849cf4, type: 2}
   - {fileID: 11400000, guid: f3cbc09da97c96a48840ef0f7eacbab4, type: 2}
---- !u!114 &4420809329719931962
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6176838241506532226}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d1cc1bdf54a24440a4936c27f9801b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tables:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  seatOccupied: 000000
-  queueStartPosition: {fileID: 0}
-  queueSpacing: 1
-  maxQueueLength: 6
-  showDebugInfo: 0

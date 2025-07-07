@@ -86,7 +86,7 @@ public class CustomerSpawner : MonoBehaviour
     {
         if (spawnPoints == null || spawnPoints.Length == 0)
         {
-            //Debug.LogError("[CustomerSpawner]: 스폰 지점 설정해주세요 !!!");
+            if (showDebugInfo) Debug.LogError("[CustomerSpawner]: 스폰 지점 설정해주세요 !!!");
             return;
         }
 

@@ -4,6 +4,7 @@ public class FoodDisplay : MonoBehaviour, IInteractable
 {
     public FoodData foodData;
     public IPlaceableStation originPlace;
+    public bool isPickupable = true;
 
 
     public void Interact(PlayerInventory playerInventory, InteractionType interactionType)
@@ -29,4 +30,11 @@ public class FoodDisplay : MonoBehaviour, IInteractable
     {
 
     }
+
+    #region public getter
+
+    public bool CanPickup() => isPickupable;
+
+    #endregion
+    
 }
