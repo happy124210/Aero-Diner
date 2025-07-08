@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -31,7 +31,7 @@ public class MenuManager : Singleton<MenuManager>
     public List<Menu> GetAllMenus() => new List<Menu>(playerMenus);
     public List<Menu> GetTodayMenus() => todayMenus; // Menu 리스트 (해금, 선택정보 포함)
     public List<Menu> PlayerMenus => playerMenus; // 플레이어가 해금한 레시피 전부
-    
+    public string[] GetPlayerMenuIds() => playerMenus.Select(m => m.foodData.id).ToArray();
     // 전체 판매량 조회
     public int GetTotalSalesToday() => todayMenus.Sum(menu => GetTodayMenuSales(menu.foodData.id));
     public int GetTotalRevenueToday() => todayMenus.Sum(menu => GetTodayMenuRevenue(menu.foodData.id));
@@ -55,7 +55,6 @@ public class MenuManager : Singleton<MenuManager>
 
         LoadAllMenu();
         InitializePlayerMenus();
-        InitializeTodayStats();
     }
 
     private void InitializeTodayStats()
@@ -95,7 +94,8 @@ public class MenuManager : Singleton<MenuManager>
     private void InitializePlayerMenus()
     {
         playerMenus.Clear();
-        
+        //세이브 파일 로드
+        MenuSaveHandler.LoadUnlockedMenus();
         // 시작 메뉴 자동 해금
         if (!string.IsNullOrEmpty(startMenuId))
         {
@@ -145,6 +145,8 @@ public class MenuManager : Singleton<MenuManager>
     {
         todayMenus = playerMenus.Where(menu => menu.CanServeToday).ToList();
         todayRecipes = RecipeManager.Instance.GetAllRecipe(todayMenus);
+        
+        InitializeTodayStats();
         
         if (showDebugInfo)  Debug.Log($"[MenuManager]: 오늘 메뉴 - {todayMenus.Count}개");
     }

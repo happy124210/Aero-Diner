@@ -169,7 +169,15 @@ public class PlayerController : MonoBehaviour
                 animator.SetTrigger("PickUp");
 
                 // 실제 줍기 처리
-                playerInventory.TryPickup(pickupTarget);
+                if (pickupTarget is IngredientStation)
+                {
+                    // Interact를 직접 호출해서 재료 생성
+                    pickupTarget.Interact(playerInventory, InteractionType.Pickup);
+                }
+                else
+                {
+                    playerInventory.TryPickup(pickupTarget);
+                }
             }
             else
             {
@@ -202,7 +210,7 @@ public class PlayerController : MonoBehaviour
                     break;
 
                 case InteractionType.Pickup:
-                    if (interactable is FoodDisplay)
+                    if (interactable is FoodDisplay || interactable is IngredientStation)
                         return interactable;
                     break;
             }
