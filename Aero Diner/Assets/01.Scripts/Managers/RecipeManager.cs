@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static System.Collections.Specialized.BitVector32;
 
 /// <summary>
 /// 모든 FoodData와 레시피를 관리.
@@ -115,8 +117,14 @@ public class RecipeManager : Singleton<RecipeManager>
     }
 
     #endregion
-    
+
     #region 레시피 관리
+
+    // 항상 레시피로 포함될 예외 재료 ID 리스트
+    private static readonly HashSet<string> AlwaysIncludedRecipeIds = new HashSet<string>
+    {
+        "f18", "f19", "f20", "f21", "f22", "f23", "f24", "f25"
+    };
 
     /// <summary>
     /// 유저가 선택한 재료 ID 리스트를 기반으로, 후보 레시피 중 일치하는 레시피를 찾아 반환
@@ -124,15 +132,56 @@ public class RecipeManager : Singleton<RecipeManager>
     /// <param name="candidateRecipes">레시피 후보 리스트</param>
     /// <param name="ingredientIds">유저가 선택한 재료 ID 리스트</param>
     /// <returns>일치율 순으로 정렬된 레시피 결과 리스트</returns>
+    public List<RecipeMatchResult> FindMatchingTodayRecipes(List<string> ingredientIds)
+    {
+        var menuManager = MenuManager.Instance;
+
+        // MenuManager 또는 읽기 전용 todayMenus 속성이 없을 경우 안전하게 빈 결과 반환
+        var todayMenuList = menuManager?.TodayMenus;
+
+        if (todayMenuList == null || todayMenuList.Count == 0)
+        {
+            Debug.LogWarning("[RecipeManager] MenuManager 또는 TodayMenus가 존재하지 않음");
+            return new List<RecipeMatchResult>();
+        }
+
+        // 오늘 메뉴에 포함된 유효한 FoodData만 추출
+        var todayRecipes = todayMenuList
+            .Select(menu => menu.foodData)
+            .Where(food => food != null && food.ingredients != null && food.ingredients.Length > 0)
+            .ToList();
+
+        // 예외 재료 레시피도 포함시키기
+        var exceptionRecipes = FoodDatabase.Values
+            .Where(food => AlwaysIncludedRecipeIds.Contains(food.id))
+            .Where(food => food.ingredients != null && food.ingredients.Length > 0)
+            .ToList();
+
+        // 최종 레시피 후보 결합
+        var finalCandidates = todayRecipes
+            .Concat(exceptionRecipes)
+            .Distinct()
+            .ToList();
+
+        // 기존의 매칭 함수 호출 — 유저 재료 ID와 오늘 메뉴 레시피 간 매칭
+        return FindMatchingRecipes(finalCandidates, ingredientIds);
+    }
+
+    /// <summary>
+    /// 주어진 레시피 후보들 중에서 사용자가 선택한 재료와 얼마나 일치하는지를 판단하여 결과를 반환함
+    /// </summary>
+    /// <param name="candidateRecipes">검사할 레시피 후보 목록</param>
+    /// <param name="ingredientIds">플레이어가 넣은 재료 ID 리스트</param>
+    /// <returns>매칭 결과 객체 리스트 (일치율 기준 정렬)</returns>
     public List<RecipeMatchResult> FindMatchingRecipes(List<FoodData> candidateRecipes, List<string> ingredientIds)
     {
         var matches = candidateRecipes
-            // 재료가 null이 아니고 최소 1개 이상일 때만 필터링
+            // 재료가 null이 아니고 최소 1개 이상일 경우에만 처리
             .Where(r => r.ingredients != null && r.ingredients.Length > 0)
-            // 각 레시피에 대해 유저 재료와 몇 개나 일치하는지 계산
+            // 각 레시피별로 사용자의 재료와 얼마나 일치하는지 계산
             .Select(r =>
             {
-                int matchedCount = r.ingredients.Count(ingredientIds.Contains); // 재료 일치 개수 계산
+                int matchedCount = r.ingredients.Count(ingredientIds.Contains); // 일치한 개수 계산
                 return new RecipeMatchResult
                 {
                     recipe = r,
@@ -140,11 +189,21 @@ public class RecipeManager : Singleton<RecipeManager>
                     totalRequired = r.ingredients.Length
                 };
             })
-            // 일치하는 재료가 하나라도 있으면 필터링
-            .Where(r => r.matchedCount > 0)
+            // 재료 수에 따라 OR / AND 조건 분기
+            .Where(r =>
+            {
+                if (ingredientIds.Count <= 1)
+                {
+                    return r.matchedCount > 0; // OR 조건
+                }
+                else
+                {
+                    return ingredientIds.All(id => r.recipe.ingredients.Contains(id)); // AND 조건
+                }
+            })
             .ToList();
 
-        // 일치율이 높은 순, 그 다음 일치 개수가 많은 순으로 정렬하여 반환
+        // 일치 개수 많은 순으로 정렬하여 반환
         return matches
             .OrderByDescending(r => r.MatchRatio)
             .ThenByDescending(r => r.matchedCount)
