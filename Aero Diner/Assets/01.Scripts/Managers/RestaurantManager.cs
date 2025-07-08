@@ -162,6 +162,9 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
         IncrementDay();
 
+        SaveData data = CreateSaveData();
+        SaveLoadManager.SaveGame(data);
+
         EventBus.Raise(UIEventType.HideRoundTimer);
         EventBus.Raise(UIEventType.ShowResultPanel);
         
