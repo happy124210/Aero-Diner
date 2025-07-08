@@ -22,6 +22,7 @@ public enum UIEventType
     CloseSound, CloseVideo,
     CloseControl, ShowSoundTab,
     ShowVideoTab, ShowControlTab,
+    OnClickNewGame,
     
     //StartScene
     ShowStartWarningPanel, ShowStartMenuWithSave,

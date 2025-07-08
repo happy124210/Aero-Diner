@@ -181,7 +181,12 @@ public class UIManager : Singleton<UIManager>
                 foreach (var ui in currentSceneUIs)
                     ui?.GetComponentInChildren<MenuPanel3>(true)?.gameObject.SetActive(true);
                 break;
-            
+            case UIEventType.OnClickNewGame:
+                SaveLoadManager.DeleteSave(); // 모든 저장 삭제
+
+                // 씬 전환
+                FadeManager.Instance.FadeOutAndLoadSceneWithLoading("MainScene");
+                break;
             case UIEventType.LoadMainScene:
                 FadeManager.Instance.FadeOutAndLoadSceneWithLoading("MainScene");
                 break;

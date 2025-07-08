@@ -39,6 +39,11 @@ public class RecipeManager : Singleton<RecipeManager>
         if (showDebugInfo) Debug.Log($"[MenuManager] {FoodDatabase.Count}개 음식 데이터 로드 완료");
     }
 
+    public FoodData FindFoodDataById(string id)
+    {
+        return FoodDatabase.GetValueOrDefault(id);
+    }
+
     #region 레시피 원재료 찾기
 
     /// <summary>
