@@ -68,18 +68,21 @@ public class KeyRebindButton : MonoBehaviour
     public void SaveBinding()
     {
         var path = actionRef.action.bindings[bindingIndex].effectivePath;
-        PlayerPrefs.SetString(BindingSaveKey, path);
+        var data = SaveLoadManager.LoadGame() ?? new SaveData();
+        data.keyBindings[BindingSaveKey] = path;
+        SaveLoadManager.SaveGame(data);
     }
 
     public void LoadBinding()
     {
-        if (PlayerPrefs.HasKey(BindingSaveKey))
+        var data = SaveLoadManager.LoadGame();
+        if (data != null && data.keyBindings.TryGetValue(BindingSaveKey, out string savedPath))
         {
-            string savedPath = PlayerPrefs.GetString(BindingSaveKey);
             actionRef.action.ApplyBindingOverride(bindingIndex, savedPath);
         }
         UpdateKeyText();
     }
+
 
     public void RevertToOriginal()
     {
@@ -94,16 +97,29 @@ public class KeyRebindButton : MonoBehaviour
     public void ResetToDefault()
     {
         actionRef.action.RemoveBindingOverride(bindingIndex);
-        PlayerPrefs.DeleteKey(BindingSaveKey);
+
+        var data = SaveLoadManager.LoadGame() ?? new SaveData();
+        if (data.keyBindings.ContainsKey(BindingSaveKey))
+        {
+            data.keyBindings.Remove(BindingSaveKey);
+            SaveLoadManager.SaveGame(data);
+        }
+
         UpdateKeyText();
     }
 
-    private void UpdateKeyText()
+    public void UpdateKeyText()
     {
         string displayName = InputControlPath.ToHumanReadableString(
             actionRef.action.bindings[bindingIndex].effectivePath,
             InputControlPath.HumanReadableStringOptions.OmitDevice
         );
         keyText.text = displayName;
+    }
+    public string actionName => actionRef.action.name;
+
+    public string GetCurrentBinding()
+    {
+        return actionRef.action.bindings[bindingIndex].effectivePath;
     }
 }

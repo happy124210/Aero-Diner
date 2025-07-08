@@ -42,54 +42,51 @@ public class VideoSettingPanel : MonoBehaviour
         new Vector2Int(1920, 1080)
     };
 
-    private void Start()
+
+    private void OnEnable()
     {
-        originalScreenModeIndex = GetCurrentScreenModeIndex();
-        originalResolutionIndex = GetCurrentResolutionIndex();
+        var data = SaveLoadManager.LoadGame() ?? new SaveData();
+
+        originalScreenModeIndex = data.screenModeIndex;
+        originalResolutionIndex = data.resolutionIndex;
 
         screenModeIndex = originalScreenModeIndex;
         resolutionIndex = originalResolutionIndex;
 
-        if (resolutionIndex < 0)
+        if (resolutionIndex < 0 || resolutionIndex >= resolutions.Count)
         {
             var fallbackRes = new Vector2Int(Screen.width, Screen.height);
-
-            // 동일한 해상도가 중복되지 않도록 확인
             if (!resolutions.Exists(r => r.x == fallbackRes.x && r.y == fallbackRes.y))
-            {
                 resolutions.Insert(0, fallbackRes);
-            }
 
             resolutionIndex = 0;
         }
 
         UpdateUI();
-    }
-    void OnEnable()
-    {
+
         UIRoot.Instance.tabButtonController.ApplyTabSelectionVisuals();
     }
-    private int GetCurrentScreenModeIndex()
-    {
-        for (int i = 0; i < fullScreenModes.Length; i++)
-        {
-            if (Screen.fullScreenMode == fullScreenModes[i])
-                return i;
-        }
-        return 0;
-    }
+    //private int GetCurrentScreenModeIndex()
+    //{
+    //    for (int i = 0; i < fullScreenModes.Length; i++)
+    //    {
+    //        if (Screen.fullScreenMode == fullScreenModes[i])
+    //            return i;
+    //    }
+    //    return 0;
+    //}
 
-    private int GetCurrentResolutionIndex()
-    {
-        for (int i = 0; i < resolutions.Count; i++)
-        {
-            if (Screen.currentResolution.width == resolutions[i].x &&
-                Screen.currentResolution.height == resolutions[i].y)
-                return i;
-        }
+    //private int GetCurrentResolutionIndex()
+    //{
+    //    for (int i = 0; i < resolutions.Count; i++)
+    //    {
+    //        if (Screen.currentResolution.width == resolutions[i].x &&
+    //            Screen.currentResolution.height == resolutions[i].y)
+    //            return i;
+    //    }
 
-        return resolutions.FindIndex(r => r.x == Screen.width && r.y == Screen.height);
-    }
+    //    return resolutions.FindIndex(r => r.x == Screen.width && r.y == Screen.height);
+    //}
 
     public void OnClickLeft_ScreenMode()
     {
@@ -119,9 +116,13 @@ public class VideoSettingPanel : MonoBehaviour
     {
         ApplyPending();
 
-        // Save current as original
         originalScreenModeIndex = screenModeIndex;
         originalResolutionIndex = resolutionIndex;
+
+        var data = SaveLoadManager.LoadGame() ?? new SaveData();
+        data.screenModeIndex = screenModeIndex;
+        data.resolutionIndex = resolutionIndex;
+        SaveLoadManager.SaveGame(data);
 
         Debug.Log("[VideoSettingPanel] 해상도 및 모드 저장 완료");
     }

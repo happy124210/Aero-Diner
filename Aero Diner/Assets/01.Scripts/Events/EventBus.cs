@@ -25,7 +25,7 @@ public enum UIEventType
     //StartScene
     ShowStartWarningPanel, ShowStartMenuWithSave,
     ShowStartMenuNoSave, LoadMainScene,
-    QuitGame, ShowPressAnyKey,
+    QuitGame, ShowPressAnyKey,OnClickNewGame,
     //MainSceneUI
     ShowRoundTimer, HideRoundTimer,
     UpdateEarnings, ShowMenuPanel, UpdateMenuPanel,

@@ -145,7 +145,16 @@ public class RestaurantManager : Singleton<RestaurantManager>
         if (showDebugInfo) Debug.Log($"Final Stats - Served: {customersServed}, Earnings: {totalEarnings}");
         if (showDebugInfo) Debug.Log($"[RestaurantManager] Incrementing day from {currentDay} → {currentDay + 1}");
 
-        IncrementDay();
+        //  하루 증가
+        currentDay++;
+
+        //  하루 종료 시점에 저장
+        var data = SaveLoadManager.LoadGame() ?? new SaveData();
+        data.totalEarnings = totalEarnings;
+        data.currentDay = currentDay;
+        SaveLoadManager.SaveGame(data);
+
+        if (showDebugInfo) Debug.Log("[RestaurantManager] 저장 완료");
 
         EventBus.Raise(UIEventType.HideRoundTimer);
         EventBus.Raise(UIEventType.ShowResultPanel);
@@ -162,38 +171,26 @@ public class RestaurantManager : Singleton<RestaurantManager>
         customersServed++;
         totalEarnings += amount;
 
-        //돈 저장
-        SaveEarnings();
-
         // UI 이벤트
         EventBus.Raise(UIEventType.UpdateEarnings, totalEarnings);
         
         if (showDebugInfo) Debug.Log($"Customer paid {amount}! Total served: {customersServed}, Total earnings: {totalEarnings}");
     }
-    
-    private void SaveEarnings()
-    {
-        PlayerPrefs.SetInt(EARNINGS_KEY, totalEarnings);
-        PlayerPrefs.Save();
-    }
-    
+
+
+
     private void LoadEarnings()
     {
-        totalEarnings = PlayerPrefs.GetInt(EARNINGS_KEY, 0); // 없으면 0으로 초기화
+        var data = SaveLoadManager.LoadGame();
+        totalEarnings = data?.totalEarnings ?? 0;
     }
 
-    private void IncrementDay()
-    {
-        currentDay++;
-        if (showDebugInfo) Debug.Log($"[RestaurantManager] Day incremented to {currentDay}");
 
-        PlayerPrefs.SetInt("CurrentDay", currentDay);
-        PlayerPrefs.Save();
-    }
 
     private void LoadDay()
     {
-        currentDay = Mathf.Max(1, PlayerPrefs.GetInt("CurrentDay", 1));
+        var data = SaveLoadManager.LoadGame();
+        currentDay = Mathf.Max(1, data?.currentDay ?? 1);
     }
 
     public void GetCurrentDate(out int month, out int day)
