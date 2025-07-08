@@ -115,7 +115,7 @@ public class RecipeManager : Singleton<RecipeManager>
     }
 
     #endregion
-    
+
     #region 레시피 관리
 
     /// <summary>
@@ -124,31 +124,50 @@ public class RecipeManager : Singleton<RecipeManager>
     /// <param name="candidateRecipes">레시피 후보 리스트</param>
     /// <param name="ingredientIds">유저가 선택한 재료 ID 리스트</param>
     /// <returns>일치율 순으로 정렬된 레시피 결과 리스트</returns>
+    public List<RecipeMatchResult> FindMatchingTodayRecipes(List<string> ingredientIds)
+    {
+        var todayRecipes = MenuManager.Instance?.GetTodayRecipes(); // ✅ GetTodayRecipes()를 활용
+
+        if (todayRecipes == null || todayRecipes.Count == 0)
+        {
+            Debug.LogWarning("[RecipeManager] 오늘 사용할 레시피가 없음");
+            return new List<RecipeMatchResult>();
+        }
+
+        var validRecipes = todayRecipes
+            .Where(food => food.ingredients != null && food.ingredients.Length > 0)
+            .ToList();
+
+        return FindMatchingRecipes(validRecipes, ingredientIds);
+    }
+
+    /// <summary>
+    /// 유저가 선택한 재료 ID 리스트를 기반으로,
+    /// 후보 레시피 중 재료 일치율이 높은 순으로 정렬된 결과를 반환
+    /// </summary>
+    /// <param name="candidateRecipes">검사할 FoodData 레시피 리스트</param>
+    /// <param name="ingredientIds">유저가 선택한 재료 ID 리스트</param>
+    /// <returns>RecipeMatchResult 리스트 (일치율 순으로 정렬)</returns>
     public List<RecipeMatchResult> FindMatchingRecipes(List<FoodData> candidateRecipes, List<string> ingredientIds)
     {
         var matches = candidateRecipes
-            // 재료가 null이 아니고 최소 1개 이상일 때만 필터링
-            .Where(r => r.ingredients != null && r.ingredients.Length > 0)
-            // 각 레시피에 대해 유저 재료와 몇 개나 일치하는지 계산
-            .Select(r =>
+            .Where(recipe => recipe.ingredients != null && recipe.ingredients.Length > 0)
+            .Select(recipe =>
             {
-                int matchedCount = r.ingredients.Count(ingredientIds.Contains); // 재료 일치 개수 계산
+                int matchedCount = recipe.ingredients.Count(ingredientIds.Contains);
                 return new RecipeMatchResult
                 {
-                    recipe = r,
+                    recipe = recipe,
                     matchedCount = matchedCount,
-                    totalRequired = r.ingredients.Length
+                    totalRequired = recipe.ingredients.Length
                 };
             })
-            // 일치하는 재료가 하나라도 있으면 필터링
-            .Where(r => r.matchedCount > 0)
+            .Where(result => result.matchedCount > 0)
+            .OrderByDescending(result => result.MatchRatio)       // 재료 비율 우선
+            .ThenByDescending(result => result.matchedCount)      // 그 다음 일치 개수
             .ToList();
 
-        // 일치율이 높은 순, 그 다음 일치 개수가 많은 순으로 정렬하여 반환
-        return matches
-            .OrderByDescending(r => r.MatchRatio)
-            .ThenByDescending(r => r.matchedCount)
-            .ToList();
+        return matches;
     }
 
     /// <summary>

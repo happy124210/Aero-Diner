@@ -1754,12 +1754,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 8150871292611599561}
-  neededIngredients:
-  - {fileID: 11400000, guid: f02da3cce38effa4c95245798ef86752, type: 2}
-  - {fileID: 11400000, guid: 1ad4f7bbe831eeb4aad0d2fe6c2202d9, type: 2}
-  - {fileID: 11400000, guid: 6f74b333018cbf540950f52f148c2281, type: 2}
-  - {fileID: 11400000, guid: 11fc209d50dd7f84c819d65cee7c2cf4, type: 2}
-  - {fileID: 11400000, guid: ff5d9b526cfdc9d4ea5d00308db03749, type: 2}
   cookingTime: 5
   cookingTimeText: {fileID: 4152430063229628274}
   stationData: {fileID: 11400000, guid: ac62d39755eda7744acf7b77c351a37f, type: 2}
@@ -1947,7 +1941,7 @@ Transform:
   m_GameObject: {fileID: 2571085538750048723}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 11.11, y: 3.43, z: 0.049384885}
+  m_LocalPosition: {x: 11.5, y: 4.16, z: 0.049384885}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6108,12 +6102,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 3486134707807749421}
-  neededIngredients:
-  - {fileID: 11400000, guid: f02da3cce38effa4c95245798ef86752, type: 2}
-  - {fileID: 11400000, guid: 1ad4f7bbe831eeb4aad0d2fe6c2202d9, type: 2}
-  - {fileID: 11400000, guid: 6f74b333018cbf540950f52f148c2281, type: 2}
-  - {fileID: 11400000, guid: 11fc209d50dd7f84c819d65cee7c2cf4, type: 2}
-  - {fileID: 11400000, guid: ff5d9b526cfdc9d4ea5d00308db03749, type: 2}
   cookingTime: 5
   cookingTimeText: {fileID: 1751235236130474317}
   stationData: {fileID: 11400000, guid: 2dedc6e41e9e947489aea699aa5585e5, type: 2}
@@ -6729,12 +6717,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 133127399808337944}
-  neededIngredients:
-  - {fileID: 11400000, guid: f02da3cce38effa4c95245798ef86752, type: 2}
-  - {fileID: 11400000, guid: 1ad4f7bbe831eeb4aad0d2fe6c2202d9, type: 2}
-  - {fileID: 11400000, guid: 6f74b333018cbf540950f52f148c2281, type: 2}
-  - {fileID: 11400000, guid: 11fc209d50dd7f84c819d65cee7c2cf4, type: 2}
-  - {fileID: 11400000, guid: ff5d9b526cfdc9d4ea5d00308db03749, type: 2}
   cookingTime: 5
   cookingTimeText: {fileID: 3081537824687129485}
   stationData: {fileID: 11400000, guid: c9863b7b9d7b37a4da3bcbc3c9aeb91d, type: 2}
@@ -6743,7 +6725,7 @@ MonoBehaviour:
   matchedRecipeNames: []
   iconDisplay: {fileID: 4415209505255441822}
   slotSpacing: 0.5
-  showDebugInfo: 0
+  showDebugInfo: 1
 --- !u!50 &4877016985972356948
 Rigidbody2D:
   serializedVersion: 4
@@ -7639,12 +7621,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 7420223699146943749}
-  neededIngredients:
-  - {fileID: 11400000, guid: f02da3cce38effa4c95245798ef86752, type: 2}
-  - {fileID: 11400000, guid: 1ad4f7bbe831eeb4aad0d2fe6c2202d9, type: 2}
-  - {fileID: 11400000, guid: 6f74b333018cbf540950f52f148c2281, type: 2}
-  - {fileID: 11400000, guid: 11fc209d50dd7f84c819d65cee7c2cf4, type: 2}
-  - {fileID: 11400000, guid: ff5d9b526cfdc9d4ea5d00308db03749, type: 2}
   cookingTime: 5
   cookingTimeText: {fileID: 478580834314468897}
   stationData: {fileID: 11400000, guid: 84aaeba3bd8007a458ba48a734520623, type: 2}
