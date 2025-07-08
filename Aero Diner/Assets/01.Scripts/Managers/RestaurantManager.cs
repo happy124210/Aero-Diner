@@ -159,8 +159,10 @@ public class RestaurantManager : Singleton<RestaurantManager>
         if (showDebugInfo) Debug.Log($"Final Stats - Served: {customersServed}, Earnings: {totalEarnings}");
 
         Debug.Log($"[RestaurantManager] Incrementing day from {currentDay} → {currentDay + 1}");
-
+        //날짜증가
         IncrementDay();
+        //자동저장
+        AutoSave();
 
         SaveData data = CreateSaveData();
         SaveLoadManager.SaveGame(data);
@@ -194,10 +196,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
         PlayerPrefs.SetInt(EarningsKey, totalEarnings);
         PlayerPrefs.Save();
     }
-    private void LoadEarnings()
-    {
-        totalEarnings = PlayerPrefs.GetInt(EarningsKey, 0); // 없으면 0으로 초기화
-    }
+
 
     public void IncrementDay()
     {
@@ -233,6 +232,42 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
         day = totalDays;
     }
+    private SaveData CreateSaveData()
+    {
+        var saveData = new SaveData
+        {
+            currentDay = currentDay,
+            totalEarnings = totalEarnings,
+
+            // 🔹 협업 제한으로 string[] 사용
+            //unlockedMenuIds = MenuManager.Instance?.GetPlayerMenuIds() ?? new string[0],
+
+            // 🔹 설정
+            bgmVolume = BGMManager.Instance?.GetVolume() ?? 1f,
+            sfxVolume = SFXManager.Instance?.GetVolume() ?? 1f,
+
+            // 🔹 키 바인딩
+            keyBindings = UIRoot.Instance?.keyRebindManager?.GetCurrentKeyBindings()
+                            ?? new Dictionary<string, string>(),
+        };
+
+        return saveData;
+    }
+    private void AutoSave()
+    {
+        var saveData = CreateSaveData();
+        SaveLoadManager.SaveGame(saveData);
+        Debug.Log("[RestaurantManager] 하루 종료 후 자동 저장 완료");
+    }
+    public void ApplySaveData(SaveData data)
+    {
+        currentDay = data.currentDay;
+        totalEarnings = data.totalEarnings;
+       // MenuManager.Instance.SetUnlockedFoodIDs(data.unlockedMenuIds); // 필요한 경우
+
+        // 필요 시 기타 로직들 예: UI 초기화, 상태 반영 등
+    }
+
     #region public getters
 
     // 레스토랑 레이아웃

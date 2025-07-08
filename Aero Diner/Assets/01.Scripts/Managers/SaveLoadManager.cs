@@ -2,9 +2,16 @@
 using UnityEngine;
 using Newtonsoft.Json;
 
-public static class SaveLoadManager
+public class SaveLoadManager : Singleton<SaveLoadManager>
 {
 
+    protected override void Awake()
+    {
+        base.Awake();
+        DontDestroyOnLoad(this);
+
+
+    }
     private static string savePath => Path.Combine(Application.persistentDataPath, "save.json");
 
     // 🔹 저장

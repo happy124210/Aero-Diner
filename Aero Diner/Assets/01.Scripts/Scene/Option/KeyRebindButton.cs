@@ -18,6 +18,8 @@ public class KeyRebindButton : MonoBehaviour
     private string originalOverridePath;
     public string BindingSaveKey => $"{actionRef.action.name}_binding_{bindingIndex}";
     public string GetCurrentPath() => actionRef.action.bindings[bindingIndex].effectivePath;
+
+
     private void Awake()
     {
         button = GetComponent<Button>();
@@ -98,12 +100,18 @@ public class KeyRebindButton : MonoBehaviour
         UpdateKeyText();
     }
 
-    private void UpdateKeyText()
+    public void UpdateKeyText()
     {
         string displayName = InputControlPath.ToHumanReadableString(
             actionRef.action.bindings[bindingIndex].effectivePath,
             InputControlPath.HumanReadableStringOptions.OmitDevice
         );
         keyText.text = displayName;
+    }
+    public string actionName => actionRef.action.name;
+
+    public string GetCurrentBinding()
+    {
+        return actionRef.action.bindings[bindingIndex].effectivePath;
     }
 }
