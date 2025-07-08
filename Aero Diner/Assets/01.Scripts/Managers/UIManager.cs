@@ -124,9 +124,9 @@ public class UIManager : Singleton<UIManager>
 
     private void HandleUIEvent(UIEventType eventType, object payload)
     {
-        // 기존 코드 그대로 유지
         switch (eventType)
         {
+            // === Start Scene ===
             case UIEventType.OpenPause:
                 UIRoot.Instance.pausePanel?.SetActive(true);
                 break;
@@ -181,6 +181,19 @@ public class UIManager : Singleton<UIManager>
                 foreach (var ui in currentSceneUIs)
                     ui?.GetComponentInChildren<MenuPanel3>(true)?.gameObject.SetActive(true);
                 break;
+            
+            case UIEventType.LoadMainScene:
+                FadeManager.Instance.FadeOutAndLoadSceneWithLoading("MainScene");
+                break;
+            case UIEventType.QuitGame:
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#else
+                Application.Quit();
+#endif
+                break;
+            
+            // === Main Scene ===
             case UIEventType.ShowMenuPanel:
                 foreach (var ui in currentSceneUIs)
                     ui?.GetComponentInChildren<MenuPanel>(true)?.gameObject.SetActive(true);
@@ -225,15 +238,11 @@ public class UIManager : Singleton<UIManager>
                         timer.SetActive(eventType == UIEventType.ShowRoundTimer);
                 }
                 break;
-            case UIEventType.LoadMainScene:
-                FadeManager.Instance.FadeOutAndLoadSceneWithLoading("MainScene");
+
+            case UIEventType.ShowOrderPanel:
                 break;
-            case UIEventType.QuitGame:
-#if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-#else
-                Application.Quit();
-#endif
+                
+            case UIEventType.HideOrderPanel:
                 break;
         }
     }
