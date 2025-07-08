@@ -47,8 +47,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-        if (moveInput != Vector2.zero)
-            lastMoveDir = moveInput;
+     
 
         Animate();
         UpdateItemSlotPosition();
@@ -232,7 +231,10 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("IsMoving", true);
 
             // 마지막 방향 기억
-            lastMoveDir = moveInput;
+            if (moveInput.sqrMagnitude > 0.01f)
+            {
+                lastMoveDir = moveInput.normalized;
+            }
         }
         else
         {
@@ -244,6 +246,9 @@ public class PlayerController : MonoBehaviour
     }
     private void SetDirectionParams()
     {
+        if (lastMoveDir == Vector2.zero)
+            lastMoveDir = Vector2.down;
+
         animator.SetFloat("LastMoveX", lastMoveDir.x);
         animator.SetFloat("LastMoveY", lastMoveDir.y);
     }
