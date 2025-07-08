@@ -1754,6 +1754,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 8150871292611599561}
+  neededIngredients: []
   cookingTime: 5
   cookingTimeText: {fileID: 4152430063229628274}
   stationData: {fileID: 11400000, guid: ac62d39755eda7744acf7b77c351a37f, type: 2}
@@ -6102,6 +6103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 3486134707807749421}
+  neededIngredients: []
   cookingTime: 5
   cookingTimeText: {fileID: 1751235236130474317}
   stationData: {fileID: 11400000, guid: 2dedc6e41e9e947489aea699aa5585e5, type: 2}
@@ -6717,6 +6719,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 133127399808337944}
+  neededIngredients: []
   cookingTime: 5
   cookingTimeText: {fileID: 3081537824687129485}
   stationData: {fileID: 11400000, guid: c9863b7b9d7b37a4da3bcbc3c9aeb91d, type: 2}
@@ -7096,7 +7099,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7ef81b702dce0a44eb708e18f06e5579, type: 2}
+  - {fileID: 2100000, guid: ab3eff0c3915dda4eae306eb0f11b8a9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7621,6 +7624,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 7420223699146943749}
+  neededIngredients: []
   cookingTime: 5
   cookingTimeText: {fileID: 478580834314468897}
   stationData: {fileID: 11400000, guid: 84aaeba3bd8007a458ba48a734520623, type: 2}
@@ -7889,7 +7893,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7ef81b702dce0a44eb708e18f06e5579, type: 2}
+  - {fileID: 2100000, guid: ab3eff0c3915dda4eae306eb0f11b8a9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7910,7 +7914,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 50
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b96dc43e33e6c4949bbb87012b9ce39d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
@@ -7957,7 +7961,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 0.48, y: 0.77}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

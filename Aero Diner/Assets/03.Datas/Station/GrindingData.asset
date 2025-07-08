@@ -25,8 +25,8 @@ MonoBehaviour:
   ingredientSlots: 3
   slotDisplays:
   - foodType: 7
-    placeholderIcon: {fileID: 21300000, guid: d22c0c5e592ce3341a724742cd2bb28d, type: 3}
+    placeholderIcon: {fileID: 21300000, guid: 88a2d74e1addd554ca82d2577170ef1b, type: 3}
   - foodType: 8
-    placeholderIcon: {fileID: 21300000, guid: 766745165951a604eb8a67afbbcef8a1, type: 3}
+    placeholderIcon: {fileID: 21300000, guid: dae3c4b4dc3ad45489758d7bd706fca5, type: 3}
   - foodType: 9
-    placeholderIcon: {fileID: 21300000, guid: 8dc478f6a410e8b47a4d458e7c093ded, type: 3}
+    placeholderIcon: {fileID: 21300000, guid: ee81d7f5af8c6a44aa59992c79e9116a, type: 3}
