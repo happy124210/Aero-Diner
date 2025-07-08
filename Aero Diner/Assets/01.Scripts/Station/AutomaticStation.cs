@@ -331,8 +331,10 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         if (currentIngredients.Count == 0)
         {
             bool typeMatch = data.stationType.Any(type => type == stationData.stationType);
+            
             if (showDebugInfo) Debug.Log($"[Debug] Food station types: {string.Join(",", data.stationType)}");
             if (showDebugInfo) Debug.Log($"[Debug] Station type: {stationData.stationType}");
+            
             return typeMatch;
         }
 
