@@ -10,7 +10,7 @@ public class MainSceneUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI monthText;
     [SerializeField] private TextMeshProUGUI dayText;
 
-    private void Start()
+    private void Update()
     {
         UpdateDate();
     }

@@ -21,21 +21,20 @@ public class VolumeHandler : MonoBehaviour
 
     private void Start()
     {
-        // PlayerPrefs에서 로드
-        originalBGMVolume = PlayerPrefs.GetFloat("BGMVolume", 0.5f);
-        originalSFXVolume = PlayerPrefs.GetFloat("SFXVolume", 0.5f);
+        // SaveData에서 로드
+        var data = SaveLoadManager.LoadGame() ?? new SaveData();
+        originalBGMVolume = data.bgmVolume == 0 ? 0.5f : data.bgmVolume;
+        originalSFXVolume = data.sfxVolume == 0 ? 0.5f : data.sfxVolume;
 
         pendingBGMVolume = originalBGMVolume;
         pendingSFXVolume = originalSFXVolume;
 
-        // 슬라이더 초기화
         bgmSlider.SetValueWithoutNotify(originalBGMVolume);
         sfxSlider.SetValueWithoutNotify(originalSFXVolume);
 
         UpdateBGMVolumeUI(originalBGMVolume);
         UpdateSFXVolumeUI(originalSFXVolume);
 
-        // 변경 감지
         bgmSlider.onValueChanged.AddListener((v) =>
         {
             pendingBGMVolume = v;
@@ -74,9 +73,10 @@ public class VolumeHandler : MonoBehaviour
         originalBGMVolume = pendingBGMVolume;
         originalSFXVolume = pendingSFXVolume;
 
-        PlayerPrefs.SetFloat("BGMVolume", originalBGMVolume);
-        PlayerPrefs.SetFloat("SFXVolume", originalSFXVolume);
-        PlayerPrefs.Save();
+        var data = SaveLoadManager.LoadGame() ?? new SaveData();
+        data.bgmVolume = originalBGMVolume;
+        data.sfxVolume = originalSFXVolume;
+        SaveLoadManager.SaveGame(data);
 
         Debug.Log($"[VolumeHandler] 볼륨 저장됨: BGM {originalBGMVolume}, SFX {originalSFXVolume}");
     }
