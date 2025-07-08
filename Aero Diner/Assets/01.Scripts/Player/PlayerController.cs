@@ -47,8 +47,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-        if (moveInput != Vector2.zero)
-            lastMoveDir = moveInput;
+     
 
         Animate();
         UpdateItemSlotPosition();
@@ -225,19 +224,26 @@ public class PlayerController : MonoBehaviour
     }
     private void Animate()
     {
-        animator.SetFloat("MoveX", moveInput.x);
-        animator.SetFloat("MoveY", moveInput.y);
-        animator.SetBool("IsMoving", moveInput != Vector2.zero);
-
-        // Optional: idle 방향 유지
-        if (moveInput == Vector2.zero)
+        if (moveInput.sqrMagnitude > 0.01f)
         {
+            animator.SetFloat("MoveX", moveInput.x);
+            animator.SetFloat("MoveY", moveInput.y);
+            animator.SetBool("IsMoving", true);
+
+            lastMoveDir = moveInput.normalized;
             animator.SetFloat("LastMoveX", lastMoveDir.x);
             animator.SetFloat("LastMoveY", lastMoveDir.y);
+        }
+        else
+        {
+            animator.SetBool("IsMoving", false);
         }
     }
     private void SetDirectionParams()
     {
+        if (lastMoveDir == Vector2.zero)
+            lastMoveDir = Vector2.down;
+
         animator.SetFloat("LastMoveX", lastMoveDir.x);
         animator.SetFloat("LastMoveY", lastMoveDir.y);
     }

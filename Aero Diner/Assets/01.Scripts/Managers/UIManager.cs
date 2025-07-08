@@ -21,6 +21,8 @@ public class UIManager : Singleton<UIManager>
         public string sceneName;
         public List<AssetReferenceGameObject> uiPrefabs;
     }
+    [Header("Debug")]
+    [SerializeField] private bool showDebugInfo;
 
     [Header("씬별 UI 매핑")]
     [SerializeField] private List<SceneUIEntry> sceneUIPrefabs;
@@ -72,7 +74,8 @@ public class UIManager : Singleton<UIManager>
 
         if (!uiMap.TryGetValue(sceneName, out var assetRefs))
         {
-            Debug.LogWarning($"[UIManager] UI 프리팹을 찾을 수 없음: {sceneName}");
+            if (showDebugInfo)
+                Debug.LogWarning($"[UIManager] UI 프리팹을 찾을 수 없음: {sceneName}");
             return;
         }
 
@@ -89,7 +92,8 @@ public class UIManager : Singleton<UIManager>
             }
             else
             {
-                Debug.LogError($"[UIManager] UI 로딩 실패: {assetRef.RuntimeKey}");
+                if (showDebugInfo)
+                    Debug.LogError($"[UIManager] UI 로딩 실패: {assetRef.RuntimeKey}");
             }
         }
         foreach (var ui in currentSceneUIs)
@@ -111,7 +115,8 @@ public class UIManager : Singleton<UIManager>
                 if (blinker != null && !blinker.gameObject.activeSelf)
                 {
                     blinker.gameObject.SetActive(true);
-                    Debug.Log("[UIManager] PressAnyKeyBlinker 강제 활성화");
+                    if (showDebugInfo)
+                        Debug.Log("[UIManager] PressAnyKeyBlinker 강제 활성화");
                 }
             }
         }
@@ -154,13 +159,15 @@ public class UIManager : Singleton<UIManager>
                 UIRoot.Instance.keysettingPanel.gameObject.SetActive(true);
                 break;
             case UIEventType.UpdateEarnings:
-                Debug.Log($"[UIManager] UpdateEarnings 이벤트 발생: {payload}");
+                if (showDebugInfo)
+                    Debug.Log($"[UIManager] UpdateEarnings 이벤트 발생: {payload}");
                 foreach (var ui in currentSceneUIs)
                 {
                     var ed = ui?.GetComponentInChildren<EarningsDisplay>(true);
                     if (ed != null)
                     {
-                        Debug.Log($"[UIManager] EarningsDisplay 찾음: {ed.name}");
+                        if (showDebugInfo)
+                            Debug.Log($"[UIManager] EarningsDisplay 찾음: {ed.name}");
                         ed.AnimateEarnings((int)payload);
                     }
 
