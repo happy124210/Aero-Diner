@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -25,7 +24,8 @@ public class CustomerView : MonoBehaviour
 
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo;
-
+    
+    
     // NavMesh 관련 상수
     private const float AGENT_DRIFT = 0.0001f;
     private const float ARRIVAL_THRESHOLD = 0.5f;
@@ -36,6 +36,7 @@ public class CustomerView : MonoBehaviour
     {
         SetupComponents();
         SetupNavMeshAgent(speed);
+        HidePatienceTimer();
     }
 
     private void SetupComponents()
@@ -51,8 +52,6 @@ public class CustomerView : MonoBehaviour
         {
             Debug.LogError($"[CustomerView]: {gameObject.name} NavMeshAgent 없음!");
         }
-        
-        HideAllUI();
     }
 
     private void SetupNavMeshAgent(float speed)
@@ -127,7 +126,7 @@ public class CustomerView : MonoBehaviour
     }
     #endregion
 
-    #region UI Updates (Controller로부터 호출)
+    #region UI Updates (Controller로부터 호출됨)
     public void UpdatePatienceUI(float patienceRatio)
     {
         if (!patienceTimer) return;
@@ -149,12 +148,12 @@ public class CustomerView : MonoBehaviour
 
     public void ShowOrderBubble(FoodData order)
     {
-        if (!orderBubble || order == null) return;
+        if (!orderBubble || !order) return;
 
         customerUI.gameObject.SetActive(true);
         orderBubble.gameObject.SetActive(true);
         orderBubble.sprite = order.foodIcon;
-    }
+    } 
 
     private void ShowPatienceTimer()
     {
@@ -166,38 +165,18 @@ public class CustomerView : MonoBehaviour
 
     private void HidePatienceTimer()
     {
-        if (!patienceTimer) return;
-        
-        patienceTimer.gameObject.SetActive(false);
-    }
-
-    private void HideOrderBubble()
-    {
-        if (!orderBubble) return;
-        
-        orderBubble.gameObject.SetActive(false);
-    }
-
-    public void HideAllUI()
-    {
-        if (!customerUI) return;
+        if (!customerUI || !patienceTimer) return;
         
         customerUI.gameObject.SetActive(false);
+        orderBubble.gameObject.SetActive(false);
+        patienceTimer.gameObject.SetActive(false);
     }
+    
     public void OnServedStateChanged(bool isServed)
     {
         if (isServed)
         {
-            HideOrderBubble();
-        }
-    }
-
-    public void OnEatingStateChanged(bool isEating)
-    {
-        // 식사 시작 시 UI 정리
-        if (isEating)
-        {
-            HideOrderBubble();
+            HidePatienceTimer();
         }
     }
 
@@ -214,7 +193,7 @@ public class CustomerView : MonoBehaviour
     #region Cleanup
     public void Cleanup()
     {
-        HideAllUI();
+        HidePatienceTimer();
         
         if (navAgent && navAgent.isOnNavMesh)
         {

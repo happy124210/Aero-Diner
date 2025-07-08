@@ -7,15 +7,13 @@ using UnityEngine;
 /// </summary>
 public class Customer
 {
-    // 이벤트 정의
+    // Events
     public event Action<float> OnPatienceChanged; // 인내심 줄어들고 있음
     public event Action<bool> OnPatienceStateChanged; // 인내심 줄어들어야 하는지 아닌지
     public event Action<FoodData> OnOrderPlaced; // 주문함
     public event Action<bool> OnServedStateChanged; // 서빙됨
     public event Action<bool> OnEatingStateChanged; // 다 먹음
     public event Action<bool> OnPaymentStateChanged; // 결제 끝남
-    
-    public event Action<CustomerAnimState> OnAnimationStateChanged;
     
     // 고객 기본 데이터
     private CustomerData customerData;
@@ -39,6 +37,7 @@ public class Customer
     private float eatingTimer;
 
     #region Properties
+    
     public CustomerData CustomerData => customerData;
     public float Speed => speed;
     public float MaxPatience => maxPatience;
@@ -53,6 +52,7 @@ public class Customer
     public bool HasLeftRestaurant => hasLeftRestaurant;
     public bool HasPatience => currentPatience > 0;
     public float EatingTimer => eatingTimer;
+    
     #endregion
 
     #region Initialization
@@ -121,7 +121,6 @@ public class Customer
         isPatienceDecreasing = false;
         currentPatience = maxPatience;
         OnPatienceStateChanged?.Invoke(isPatienceDecreasing);
-        OnPatienceChanged?.Invoke(currentPatience);
     }
 
     public void SetAssignedTable(Table table)

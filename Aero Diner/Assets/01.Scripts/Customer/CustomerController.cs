@@ -89,7 +89,6 @@ public class CustomerController : MonoBehaviour, IPoolable
         model.OnServedStateChanged += HandleServedStateChanged;
         model.OnEatingStateChanged += HandleEatingStateChanged;
         model.OnPaymentStateChanged += HandlePaymentStateChanged;
-        model.OnAnimationStateChanged += HandleAnimationStateChanged;
     }
 
     private void UnsubscribeFromModelEvents()
@@ -100,7 +99,6 @@ public class CustomerController : MonoBehaviour, IPoolable
         model.OnServedStateChanged -= HandleServedStateChanged;
         model.OnEatingStateChanged -= HandleEatingStateChanged;
         model.OnPaymentStateChanged -= HandlePaymentStateChanged;
-        model.OnAnimationStateChanged -= HandleAnimationStateChanged;
     }
     #endregion
     
@@ -137,7 +135,7 @@ public class CustomerController : MonoBehaviour, IPoolable
 
     private void HandleEatingStateChanged(bool isEating)
     {
-        view.OnEatingStateChanged(isEating);
+        // Timer 시작 알림?
     }
 
     private void HandlePaymentStateChanged(bool isCompleted)
