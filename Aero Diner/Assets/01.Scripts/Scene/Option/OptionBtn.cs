@@ -8,6 +8,7 @@ public class OptionBtn : MonoBehaviour
     private bool IsVolumeChanged() => UIRoot.Instance.volumeHandler?.HasUnsavedChanges() ?? false;
     private bool IsVideoChanged() => UIRoot.Instance.videoSettingPanel?.HasUnsavedChanges() ?? false;
     [SerializeField] private SavePopupFader popupFader;
+    public GameObject saveWarningPanel;
     public void OnClickOption()
     {
         EventBus.Raise(UIEventType.OpenOption);
@@ -96,5 +97,17 @@ public class OptionBtn : MonoBehaviour
     public void QuitGame()
     {
         EventBus.Raise(UIEventType.QuitGame);
+    }
+    public void OnClickNewGame()
+    {
+        saveWarningPanel.SetActive(true);
+    }
+    public void OnClickCancel()
+    {
+        saveWarningPanel.SetActive(false);
+    }
+    public void NewGameNoSave()
+    {
+        EventBus.Raise(UIEventType.OnClickNewGame);
     }
 }

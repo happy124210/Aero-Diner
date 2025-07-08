@@ -14,7 +14,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
     }
     private static string savePath => Path.Combine(Application.persistentDataPath, "save.json");
 
-    // 🔹 저장
+    // 저장
     public static void SaveGame(SaveData data)
     {
         try
@@ -29,7 +29,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         }
     }
 
-    // 🔹 불러오기
+    //  불러오기
     public static SaveData LoadGame()
     {
         if (!File.Exists(savePath))
@@ -52,13 +52,13 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         }
     }
 
-    // 🔹 저장 파일 존재 여부
+    //  저장 파일 존재 여부
     public static bool HasSaveData()
     {
         return File.Exists(savePath);
     }
 
-    // 🔹 저장 파일 삭제 (New Game 시)
+    //  저장 파일 삭제 (New Game 시)
     public static void DeleteSave()
     {
         if (File.Exists(savePath))

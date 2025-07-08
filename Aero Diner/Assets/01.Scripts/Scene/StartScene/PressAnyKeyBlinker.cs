@@ -76,7 +76,7 @@ public class PressAnyKeyBlinker : MonoBehaviour
 
     private bool HasSavedGame()
     {
-        string path = System.IO.Path.Combine(Application.persistentDataPath, "userdata.json");
-        return System.IO.File.Exists(path);
+        var data = SaveLoadManager.LoadGame();
+        return data != null && data.currentDay > 1;
     }
 }

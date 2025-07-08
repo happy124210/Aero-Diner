@@ -228,6 +228,12 @@ public class UIManager : Singleton<UIManager>
             case UIEventType.LoadMainScene:
                 FadeManager.Instance.FadeOutAndLoadSceneWithLoading("MainScene");
                 break;
+            case UIEventType.OnClickNewGame:
+                SaveLoadManager.DeleteSave(); // 모든 저장 삭제
+
+                // 씬 전환
+                FadeManager.Instance.FadeOutAndLoadSceneWithLoading("MainScene");
+                break;
             case UIEventType.QuitGame:
 #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;

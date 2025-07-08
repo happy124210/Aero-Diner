@@ -12,25 +12,31 @@ public class KeyRebindManager : MonoBehaviour
 
     public bool HasUnsavedChanges()
     {
+        var data = SaveLoadManager.LoadGame();
+        if (data == null) return true;
+
         foreach (var btn in rebindButtons)
         {
             var path = btn.GetCurrentPath();
-            var saved = PlayerPrefs.GetString(btn.BindingSaveKey, null);
-            if (path != saved) return true;
+            if (!data.keyBindings.TryGetValue(btn.BindingSaveKey, out string savedPath) || path != savedPath)
+                return true;
         }
         return false;
     }
     public void SaveAll()
     {
+        var data = SaveLoadManager.LoadGame() ?? new SaveData();
+
         foreach (var btn in rebindButtons)
         {
-            btn.SaveBinding();
+            var path = btn.GetCurrentPath();
+            data.keyBindings[btn.BindingSaveKey] = path;
         }
-        PlayerPrefs.Save();
+
+        SaveLoadManager.SaveGame(data);
         isSaved = true;
         Debug.Log("모든 키 바인딩 저장 완료");
     }
-
     public void CancelAll()
     {
         if (isSaved)
