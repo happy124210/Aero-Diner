@@ -210,36 +210,37 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// </summary>
     public bool CanPlaceIngredient(FoodData data)
     {
-        // 첫 번째 재료
-        if (currentIngredients.Count == 0)
-        {
-            // StationData.stationType이 FoodData.stationType 배열에 들어 있는지 검사
-            bool typeMatch = data.stationType.Contains(stationData.stationType);
-            if (showDebugInfo) Debug.Log($"[Station] 첫 번째 재료 시도: {data.foodName} | 타입 일치: {typeMatch}");
-            return typeMatch;
-        }
-
-        // 레시피가 아직 정해지지 않았을 때
-        if (cookedIngredient == null)
-        {
-            if (showDebugInfo) Debug.LogWarning("[Station] 현재 설정된 레시피가 없습니다.");
-            return false;
-        }
-
-        // 중복 검사
+        // 중복 방지
         if (currentIngredients.Contains(data.id))
         {
             if (showDebugInfo) Debug.LogWarning($"[Station] 중복 재료: {data.id} 이미 추가됨");
             return false;
         }
 
-        // 이미 결정된 레시피에 이 재료가 포함되는지 검사
-        bool isInRecipe = cookedIngredient.ingredients.Contains(data.id);
-        if (showDebugInfo) Debug.Log($"[Station] 레시피 유효성 검사: {data.id} 포함 여부: {isInRecipe}");
+        // 첫 번째 재료
+        if (currentIngredients.Count == 0)
+        {
+            bool typeMatch = data.stationType.Any(type => type == stationData.stationType);
+            if (showDebugInfo) Debug.Log($"[Debug] Food station types: {string.Join(",", data.stationType)}");
+            if (showDebugInfo) Debug.Log($"[Debug] Station type: {stationData.stationType}");
+            return typeMatch;
+        }
 
-        return isInRecipe;
+        // 이후에는 matchedRecipeNames에 포함된 재료만 허용
+        if (matchedRecipeNames.Contains(data.id))
+        {
+            if (showDebugInfo) Debug.Log($"[Station] '{data.id}' matchedRecipeNames에 포함 → 등록 가능");
+            return true;
+        }
+
+        if (showDebugInfo) Debug.Log($"[Station] '{data.id}'은 현재 어떤 레시피에도 포함되지 않음");
+        return false;
     }
 
+    /// <summary>
+    /// 현재 스테이션에 놓인 재료 목록을 기반으로 가능한 레시피 후보를 탐색하고
+    /// 가장 일치하는 요리를 선정함
+    /// </summary>
     /// <summary>
     /// 현재 스테이션에 놓인 재료 목록을 기반으로 가능한 레시피 후보를 탐색하고
     /// 가장 일치하는 요리를 선정함
@@ -255,19 +256,26 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         // 모든 재료를 포함한 레시피만 후보로 선정
         if (matches != null && matches.Count > 0)
         {
+            // bestMatchedRecipe도 갱신
+            var best = matches
+                .OrderByDescending(m => m.MatchRatio)
+                .ThenByDescending(m => m.matchedCount)
+                .First();
+
             // 전체 매칭된 레시피 저장
             availableMatchedRecipes = matches.Select(m => m.recipe).ToList();
-            cookedIngredient = matches[0].recipe;
+            cookedIngredient = best.recipe;
 
-            // bestMatchedRecipe도 갱신
-            var best = matches[0];
             bestMatchedRecipe = $"{best.recipe.id} ({best.matchedCount}/{best.totalRequired})";
 
             foreach (var recipe in availableMatchedRecipes)
             {
                 foreach (var ingredientId in recipe.ingredients)
                 {
-                    matchedRecipeNames.Add(ingredientId);
+                    if (!matchedRecipeNames.Contains(ingredientId))
+                    {
+                        matchedRecipeNames.Add(ingredientId);
+                    }
                 }
             }
 
@@ -304,7 +312,11 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         if (matches.Count > 0)
         {
             // 가장 일치하는 레시피 저장
-            var best = matches[0];
+            var best = matches
+                .OrderByDescending(m => m.MatchRatio)
+                .ThenByDescending(m => m.matchedCount)
+                .First();
+
             bestMatchedRecipe = $"{best.recipe.displayName} ({best.matchedCount}/{best.totalRequired})";
 
             // 전체 매칭 리스트 업데이트

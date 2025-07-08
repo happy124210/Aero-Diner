@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -29,7 +29,7 @@ public class MenuManager : Singleton<MenuManager>
    
     // Menu 조회
     public List<Menu> GetAllMenus() => new List<Menu>(playerMenus);
-    public List<Menu> GetTodayMenus() => todayMenus; // Menu 리스트 (해금, 선택정보 포함)
+    public List<Menu> TodayMenus => todayMenus; // Menu 리스트 (해금, 선택정보 포함)
     public List<Menu> PlayerMenus => playerMenus; // 플레이어가 해금한 레시피 전부
     
     // 전체 판매량 조회
