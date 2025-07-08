@@ -224,24 +224,19 @@ public class PlayerController : MonoBehaviour
     }
     private void Animate()
     {
-        if (moveInput != Vector2.zero)
+        if (moveInput.sqrMagnitude > 0.01f)
         {
             animator.SetFloat("MoveX", moveInput.x);
             animator.SetFloat("MoveY", moveInput.y);
             animator.SetBool("IsMoving", true);
 
-            // 마지막 방향 기억
-            if (moveInput.sqrMagnitude > 0.01f)
-            {
-                lastMoveDir = moveInput.normalized;
-            }
+            lastMoveDir = moveInput.normalized;
+            animator.SetFloat("LastMoveX", lastMoveDir.x);
+            animator.SetFloat("LastMoveY", lastMoveDir.y);
         }
         else
         {
             animator.SetBool("IsMoving", false);
-            // 마지막 방향 유지
-            animator.SetFloat("MoveX", lastMoveDir.x);
-            animator.SetFloat("MoveY", lastMoveDir.y);
         }
     }
     private void SetDirectionParams()
