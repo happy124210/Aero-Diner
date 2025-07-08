@@ -343,6 +343,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66cd8db881468df40bb1c35ba1f8b2da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  monthText: {fileID: 5110746364264061732}
+  dayText: {fileID: 6412343085081319228}
 --- !u!1 &1888713864693901242
 GameObject:
   m_ObjectHideFlags: 0

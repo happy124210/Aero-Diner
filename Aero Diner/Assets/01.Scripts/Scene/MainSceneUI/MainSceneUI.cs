@@ -1,9 +1,27 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class MainSceneUI : MonoBehaviour
 {
+    [Header("Date Display")]
+    [SerializeField] private TextMeshProUGUI monthText;
+    [SerializeField] private TextMeshProUGUI dayText;
+
+    private void Start()
+    {
+        UpdateDate();
+    }
+
+    private void UpdateDate()
+    {
+        RestaurantManager.Instance.GetCurrentDate(out int month, out int day);
+        monthText.text = $"{month}월";
+        dayText.text = $"{day}일";
+
+    }
     public void OnClickPause()
     {
         EventBus.Raise(UIEventType.OpenPause);
@@ -12,4 +30,5 @@ public class MainSceneUI : MonoBehaviour
     {
         EventBus.Raise(UIEventType.ShowInventory);
     }
+
 }
