@@ -33,6 +33,23 @@ public class RestaurantManager : Singleton<RestaurantManager>
     [Tooltip("하루 제한 시간 (초 단위)")]
     [SerializeField] private float gameTimeLimit;
 
+    //PlayerPref 저장용 변수
+    private const string EarningsKey = "TotalEarnings";
+
+    //달력 UI를 위한 변수와 리스트
+    private static readonly int[] DaysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    [SerializeField] private int currentDay = 1;
+    //내일로 안넘어가서 스타트 함수 추가 + 중복실행 방지를 위한 불값
+    private bool started = false;
+
+    private void Start()
+    {
+        if (!started)
+        {
+            started = true;
+            StartGame();
+        }
+    }
     private void Update()
     {
         if (gameRunning)
@@ -100,7 +117,12 @@ public class RestaurantManager : Singleton<RestaurantManager>
         gameTime = 0f;
         customersServed = 0;
         totalEarnings = 0;
-        
+        //돈 불러오기
+        LoadEarnings();
+        //날짜 불러오기
+        LoadDay();
+
+
         if (customerSpawner)
         {
             customerSpawner.StartSpawning();
@@ -135,9 +157,14 @@ public class RestaurantManager : Singleton<RestaurantManager>
         
         if (showDebugInfo) Debug.Log($"Game ended: {reason}");
         if (showDebugInfo) Debug.Log($"Final Stats - Served: {customersServed}, Earnings: {totalEarnings}");
-        
+
+        Debug.Log($"[RestaurantManager] Incrementing day from {currentDay} → {currentDay + 1}");
+
+        IncrementDay();
+
         EventBus.Raise(UIEventType.HideRoundTimer);
         EventBus.Raise(UIEventType.ShowResultPanel);
+        
     }
 
     public void OnCustomerEntered()
@@ -150,13 +177,59 @@ public class RestaurantManager : Singleton<RestaurantManager>
     {
         customersServed++;
         totalEarnings += amount;
-        
+
+        //돈 저장
+        SaveEarnings();
+
         // UI 이벤트
         EventBus.Raise(UIEventType.UpdateEarnings, totalEarnings);
         
         if (showDebugInfo) Debug.Log($"Customer paid {amount}! Total served: {customersServed}, Total earnings: {totalEarnings}");
     }
+    private void SaveEarnings()
+    {
+        PlayerPrefs.SetInt(EarningsKey, totalEarnings);
+        PlayerPrefs.Save();
+    }
+    private void LoadEarnings()
+    {
+        totalEarnings = PlayerPrefs.GetInt(EarningsKey, 0); // 없으면 0으로 초기화
+    }
 
+    public void IncrementDay()
+    {
+        currentDay++;
+        Debug.Log($"[RestaurantManager] Day incremented to {currentDay}");
+
+        PlayerPrefs.SetInt("CurrentDay", currentDay);
+        PlayerPrefs.Save();
+    }
+
+    public void LoadDay()
+    {
+        currentDay = Mathf.Max(1, PlayerPrefs.GetInt("CurrentDay", 1));
+    }
+
+    public void GetCurrentDate(out int month, out int day)
+    {
+        int totalDays = currentDay;
+        month = 1;
+
+        foreach (var daysInThisMonth in DaysInMonth)
+        {
+            if (totalDays > daysInThisMonth)
+            {
+                totalDays -= daysInThisMonth;
+                month++;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        day = totalDays;
+    }
     #region public getters
 
     // 레스토랑 레이아웃
@@ -173,11 +246,13 @@ public class RestaurantManager : Singleton<RestaurantManager>
     
     // 돈
     public int TotalEarnings => totalEarnings;
+    //달력 UI를 위한 날짜 Getter
+    public int CurrentDay => currentDay;
 
     #endregion
-    
+
     #region Debug Commands
-    
+
     [ContextMenu("Force End Game")]
     public void ForceEndGame()
     {

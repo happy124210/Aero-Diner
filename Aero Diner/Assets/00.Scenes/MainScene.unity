@@ -2657,6 +2657,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4711894738966735290, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
+      propertyPath: showDebugInfo
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7413637340875454940, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
       propertyPath: m_Name
       value: Restaurant

@@ -29,7 +29,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 611bdcedeffbff14dac5f6fbbe93040d, type: 2}
   - {fileID: 11400000, guid: 542ac65e81b538642a53411828a14d66, type: 2}
   - {fileID: 11400000, guid: c3a8710e7ce26ab439b119a0445b789d, type: 2}
-  - {fileID: 11400000, guid: 8d83e5bbe7914fb45bd8b92251c0b00a, type: 2}
+  - {fileID: 11400000, guid: 75c62b34e6c1c5c44810dc34b5641358, type: 2}
   - {fileID: 11400000, guid: 9bcc300ea765ce4419c99976f009c04e, type: 2}
   ingredientSlots: 3
   slotDisplays:

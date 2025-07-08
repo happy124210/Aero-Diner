@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class TableManager : Singleton<TableManager>
@@ -100,7 +100,7 @@ public class TableManager : Singleton<TableManager>
                 tables[i].AssignCustomer(customer);
                 
                 if (showDebugInfo)
-                    Debug.Log($"[TableManager]: 테이블 {i}번 할당 완료 - {customer.name}");
+                   // Debug.Log($"[TableManager]: 테이블 {i}번 할당 완료 - {customer.name}");
                 
                 return true;
             }

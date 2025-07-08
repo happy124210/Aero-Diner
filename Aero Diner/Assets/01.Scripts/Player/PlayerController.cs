@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
     public IInteractable currentTarget;
     private IInteractable previousTarget;
 
+    private Animator animator;
+
     private Vector2 moveInput;
     private Vector2 lastMoveDir = Vector2.down;
     private Rigidbody2D rb;
@@ -34,6 +36,7 @@ public class PlayerController : MonoBehaviour
 
         inputActions = new PlayerInputActions();
         inputActions.Enable(); // 중요!
+        animator = GetComponent<Animator>();
 
         interactAction = inputActions.Player.Interact;
     }
@@ -44,16 +47,21 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-        if (moveInput != Vector2.zero)
-            lastMoveDir = moveInput;
+     
 
+        Animate();
         UpdateItemSlotPosition();
         RaycastForInteractable();
+
+        animator.SetBool("IsCarrying", playerInventory.IsHoldingItem);
 
         if (interactAction == null) return;
 
         bool isHolding = interactAction.IsPressed();
         bool justPressed = interactAction.WasPressedThisFrame();
+
+        bool isInteracting = currentTarget != null && interactionType == InteractionType.Use && isHolding;
+        animator.SetBool("IsInteract", isInteracting);
 
         if (currentTarget != null)
         {
@@ -135,8 +143,14 @@ public class PlayerController : MonoBehaviour
 
         if (playerInventory.IsHoldingItem)
         {
+            // PutDown 처리
             if (currentTarget != null)
             {
+                // 애니메이션 처리
+                SetDirectionParams();
+                animator.SetTrigger("PutDown");
+
+                // 실제 내려놓기 처리
                 playerInventory.DropItem(currentTarget);
             }
             else
@@ -146,8 +160,21 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            // PickUp 처리
             var pickupTarget = FindBestInteractable(InteractionType.Pickup);
-            playerInventory.TryPickup(pickupTarget);
+            if (pickupTarget != null)
+            {
+                // 애니메이션 처리
+                SetDirectionParams();
+                animator.SetTrigger("PickUp");
+
+                // 실제 줍기 처리
+                playerInventory.TryPickup(pickupTarget);
+            }
+            else
+            {
+                Debug.Log("줍기 대상이 없습니다.");
+            }
         }
     }
     //j키와 k키 상호작용 분리를 위한 함수
@@ -194,5 +221,30 @@ public class PlayerController : MonoBehaviour
         Vector3 forward = (Vector3)(Application.isPlaying ? lastMoveDir : Vector2.down);
         Gizmos.color = Color.green;
         Gizmos.DrawLine(transform.position, transform.position + forward.normalized * interactionRadius);
+    }
+    private void Animate()
+    {
+        if (moveInput.sqrMagnitude > 0.01f)
+        {
+            animator.SetFloat("MoveX", moveInput.x);
+            animator.SetFloat("MoveY", moveInput.y);
+            animator.SetBool("IsMoving", true);
+
+            lastMoveDir = moveInput.normalized;
+            animator.SetFloat("LastMoveX", lastMoveDir.x);
+            animator.SetFloat("LastMoveY", lastMoveDir.y);
+        }
+        else
+        {
+            animator.SetBool("IsMoving", false);
+        }
+    }
+    private void SetDirectionParams()
+    {
+        if (lastMoveDir == Vector2.zero)
+            lastMoveDir = Vector2.down;
+
+        animator.SetFloat("LastMoveX", lastMoveDir.x);
+        animator.SetFloat("LastMoveY", lastMoveDir.y);
     }
 }
