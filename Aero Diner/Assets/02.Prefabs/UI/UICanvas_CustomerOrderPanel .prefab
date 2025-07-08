@@ -111,9 +111,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5435362459853692338}
-  - component: {fileID: 9086249389287047176}
+  - component: {fileID: 5701568694781430096}
   m_Layer: 0
-  m_Name: 'UICanvas_CostomerOrderPanel '
+  m_Name: 'UICanvas_CustomerOrderPanel '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -135,7 +135,7 @@ Transform:
   - {fileID: 2701845176852096440}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9086249389287047176
+--- !u!114 &5701568694781430096
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

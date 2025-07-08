@@ -38,6 +38,30 @@ public static class Util
             .Split('-', StringSplitOptions.RemoveEmptyEntries)
             .Select(word => char.ToUpper(word[0]) + word.Substring(1)));
     }
+
+    public static Color ChangeColorByRatio(float ratio)
+    {
+        Color color = ratio switch
+        {
+            > 0.66f => Color.green,
+            > 0.33f => Color.yellow,
+            _ => Color.red
+        };
+
+        return color;
+    }
+    
+    public static int ChangeIndexByRatio(float ratio)
+    {
+        int index = ratio switch
+        {
+            > 0.66f => 0,
+            > 0.33f => 1,
+            _ => 2
+        };
+
+        return index;
+    }
 }
 
 /// <summary>

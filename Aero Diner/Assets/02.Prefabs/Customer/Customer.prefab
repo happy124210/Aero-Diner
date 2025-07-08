@@ -339,6 +339,7 @@ GameObject:
   m_Component:
   - component: {fileID: 827439604232109475}
   - component: {fileID: 1972717361886391384}
+  - component: {fileID: 7711696206720905983}
   - component: {fileID: 7523355939073356595}
   m_Layer: 0
   m_Name: Customer
@@ -376,13 +377,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef9a20ea1a69060438a4232c70708316, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentData: {fileID: 0}
-  currentOrder: {fileID: 0}
+  view: {fileID: 7711696206720905983}
+  showDebugInfo: 0
+  currentNodeName: 
+--- !u!114 &7711696206720905983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6986737310238590579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0135006d42352cb4ca494595ae9f9199, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   customerUI: {fileID: 5070177583603407402}
   orderBubble: {fileID: 3525487760294110372}
   patienceTimer: {fileID: 3569666337585117268}
+  navAgent: {fileID: 7523355939073356595}
   showDebugInfo: 0
-  currentNodeName: 
 --- !u!195 &7523355939073356595
 NavMeshAgent:
   m_ObjectHideFlags: 0

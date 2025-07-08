@@ -144,7 +144,7 @@ public class EatingState : CustomerState
     
     public override CustomerState Update(CustomerController customer)
     {
-        if (customer.IsEatingFinished())
+        if (customer.IsCustomerEating())
             return new PayingState();
             
         return this;
