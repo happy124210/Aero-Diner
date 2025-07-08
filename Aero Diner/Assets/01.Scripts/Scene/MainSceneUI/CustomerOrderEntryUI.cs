@@ -11,7 +11,7 @@ public class CustomerOrderEntryUI : MonoBehaviour
     private void Reset()
     {
         foodIcon = transform.FindChild<Image>("Img_FoodIcon");
-        patienceTimer = transform.FindChild<Image>("PatienceTimer");
+        patienceTimer = transform.FindChild<Image>("Img_PatienceTimer");
     }
 
     public void Init(Sprite orderSprite)
