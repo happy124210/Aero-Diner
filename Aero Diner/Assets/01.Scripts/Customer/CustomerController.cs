@@ -17,6 +17,21 @@ public class CustomerController : MonoBehaviour, IPoolable
     // 상태 관리
     private CustomerState currentState;
 
+    #region Public Getters & methods (Model 데이터 접근)
+    
+    public CustomerData CurrentData => model.CustomerData;
+    public FoodData CurrentOrder => model.CurrentOrder;
+    public float PatienceRatio => model.CurrentPatience / model.MaxPatience;
+    public bool HasPatience() => model.HasPatience;
+    public Table GetAssignedTable() => model.AssignedTable;
+    public Vector3 GetAssignedStopPosition() => model.AssignedTable?.GetStopPosition() ?? Vector3.zero;
+    
+    public bool IsFoodServed() => model.IsServed;
+    public bool IsCustomerEating() => model.IsEating;
+    public bool IsPaymentCompleted() => model.IsPaymentCompleted;
+    
+    #endregion
+    
     #region Unity Events
     private void Awake()
     {
@@ -99,9 +114,10 @@ public class CustomerController : MonoBehaviour, IPoolable
     }
 
     #region Model Event Handlers (Controller가 Model 변경사항을 View에 전달)
+    
     private void HandlePatienceChanged(float currentPatience)
     {
-        view.UpdatePatienceUI(currentPatience, model.MaxPatience);
+        view.UpdatePatienceUI(PatienceRatio);
     }
 
     private void HandlePatienceStateChanged(bool isDecreasing)
@@ -133,6 +149,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     {
         view.SetAnimationState(state);
     }
+    
     #endregion
 
     #region Customer Actions
@@ -286,19 +303,5 @@ public class CustomerController : MonoBehaviour, IPoolable
         StopAllCoroutines();
     }
     #endregion
-
-    #region Public Getters & methods (Model 데이터 접근)
     
-    public CustomerData CurrentData => model.CustomerData;
-    public FoodData CurrentOrder => model.CurrentOrder;
-    
-    public bool HasPatience() => model.HasPatience;
-    public Table GetAssignedTable() => model.AssignedTable;
-    public Vector3 GetAssignedStopPosition() => model.AssignedTable?.GetStopPosition() ?? Vector3.zero;
-    
-    public bool IsFoodServed() => model.IsServed;
-    public bool IsCustomerEating() => model.IsEating;
-    public bool IsPaymentCompleted() => model.IsPaymentCompleted;
-    
-    #endregion
 }

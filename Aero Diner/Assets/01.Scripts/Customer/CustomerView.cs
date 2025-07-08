@@ -128,21 +128,11 @@ public class CustomerView : MonoBehaviour
     #endregion
 
     #region UI Updates (Controller로부터 호출)
-    public void UpdatePatienceUI(float currentPatience, float maxPatience)
+    public void UpdatePatienceUI(float patienceRatio)
     {
         if (!patienceTimer) return;
-
-        float patienceRatio = currentPatience / maxPatience;
         patienceTimer.fillAmount = patienceRatio;
-
-        // 색상 변경
-        Color timerColor = patienceRatio switch
-        {
-            > 0.66f => Color.green,
-            > 0.33f => Color.yellow,
-            _ => Color.red
-        };
-        patienceTimer.color = timerColor;
+        patienceTimer.color = Util.ChangeColorByRatio(patienceRatio);
     }
 
     public void UpdatePatienceVisibility(bool isDecreasing)
