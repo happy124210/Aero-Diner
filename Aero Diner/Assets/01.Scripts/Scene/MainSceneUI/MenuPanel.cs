@@ -14,6 +14,7 @@ public class MenuPanel : MonoBehaviour
     private void OnEnable()
     {
         GenerateFoodList();
+        EventBus.OnBGMRequested(BGMEventType.PlayRecipeChoice);
     }
 
     public void GenerateFoodList()
@@ -80,6 +81,7 @@ public class MenuPanel : MonoBehaviour
             });
         
         RestaurantManager.Instance.StartGame();
+        EventBus.OnBGMRequested(BGMEventType.PlayMainTheme);
     }
 
     private void ShowNoMenuSelectedPopup()

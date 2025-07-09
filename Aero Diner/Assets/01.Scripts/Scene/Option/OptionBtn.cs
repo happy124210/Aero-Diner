@@ -4,18 +4,17 @@ using UnityEngine;
 
 public class OptionBtn : MonoBehaviour
 {
-    private bool IsKeyChanged() => UIRoot.Instance.keyRebindManager?.HasUnsavedChanges() ?? false;
-    private bool IsVolumeChanged() => UIRoot.Instance.volumeHandler?.HasUnsavedChanges() ?? false;
-    private bool IsVideoChanged() => UIRoot.Instance.videoSettingPanel?.HasUnsavedChanges() ?? false;
     [SerializeField] private SavePopupFader popupFader;
     public GameObject saveWarningPanel;
     public void OnClickOption()
     {
         EventBus.Raise(UIEventType.OpenOption);
+        EventBus.PlaySFX(SFXType.ButtonClick);
     }
 
     public void OnClickSoundTab()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         if (UIRoot.Instance.volumeHandler.HasUnsavedChanges() ||
             UIRoot.Instance.videoSettingPanel.HasUnsavedChanges())
         {
@@ -38,6 +37,7 @@ public class OptionBtn : MonoBehaviour
 
     public void OnClickVideoTab()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         if (UIRoot.Instance.volumeHandler.HasUnsavedChanges() ||
             UIRoot.Instance.keyRebindManager.HasUnsavedChanges())
         {
@@ -60,6 +60,7 @@ public class OptionBtn : MonoBehaviour
 
     public void OnClickControlTab()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         if (UIRoot.Instance.volumeHandler.HasUnsavedChanges() ||
             UIRoot.Instance.videoSettingPanel.HasUnsavedChanges())
         {
@@ -83,31 +84,38 @@ public class OptionBtn : MonoBehaviour
     public void OnSaveClick()
     {
         popupFader.ShowPopup("설정이 저장되었습니다!");
+        EventBus.PlaySFX(SFXType.ButtonClick);
     }
     public void GotoStartScene()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         EventBus.Raise(UIEventType.ClosePause);
         FadeManager.Instance.FadeOutAndLoadSceneWithLoading("StartScene");
     }
     public void OnClickStartGame()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         EventBus.Raise(UIEventType.LoadMainScene);
     }
 
     public void QuitGame()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         EventBus.Raise(UIEventType.QuitGame);
     }
     public void OnClickNewGame()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         saveWarningPanel.SetActive(true);
     }
     public void OnClickCancel()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         saveWarningPanel.SetActive(false);
     }
     public void NewGameNoSave()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         EventBus.Raise(UIEventType.OnClickNewGame);
     }
 }

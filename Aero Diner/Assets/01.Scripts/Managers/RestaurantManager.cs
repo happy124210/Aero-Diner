@@ -158,6 +158,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
         EventBus.Raise(UIEventType.HideRoundTimer);
         EventBus.Raise(UIEventType.ShowResultPanel);
+        EventBus.OnBGMRequested(BGMEventType.PlayResultTheme);
     }
 
     public void OnCustomerEntered()

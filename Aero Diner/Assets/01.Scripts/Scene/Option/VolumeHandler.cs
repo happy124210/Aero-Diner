@@ -92,7 +92,7 @@ public class VolumeHandler : MonoBehaviour
 
         UpdateBGMVolumeUI(0.5f);
         UpdateSFXVolumeUI(0.5f);
-
+        EventBus.PlaySFX(SFXType.ButtonClick);
         SaveVolumes();
     }
 
