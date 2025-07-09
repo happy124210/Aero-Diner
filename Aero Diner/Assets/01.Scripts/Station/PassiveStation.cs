@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEditor;
 using UnityEngine.Serialization;
+using System.Collections;
 
 /// <summary>
 /// 플레이어가 상호작용하면 재료를 가공하여 가공된 재료를 생성하는 스테이션
@@ -34,10 +35,10 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     public List<string> currentIngredients = new();
 
     [Header("레시피 매칭 결과")]
-    [SerializeField, ReadOnly] private string bestMatchedRecipe;
+    [SerializeField] private string bestMatchedRecipe;
     
     [Header("가능한 레시피에 포함된 음식 ID들")]
-    [SerializeField, ReadOnly] private List<string> availableFoodIds = new();
+    [SerializeField] private List<string> availableFoodIds = new();
 
     [Header("아이콘 디스플레이")]
     [SerializeField] private FoodSlotIconDisplay iconDisplay;
@@ -53,6 +54,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     private FoodData cookedIngredient;                               // 조리 완료 시 결과가 되는 레시피
     private bool isCooking = false;                                  // 현재 조리 중인지 여부 플래그
     private OutlineShaderController outline;                         // 외곽선 효과를 제어하는 컴포넌트
+    private bool hasInitialized = false;                             // 아이콘 초기화 플래그
     private FoodData selectedIngredient;
 
     private void Awake()
@@ -67,8 +69,10 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
 
         if (stationData != null && stationData.slotDisplays != null)
         {
+            var types = stationData.slotDisplays.ConvertAll(s => s.foodType);
             iconDisplay.Initialize(stationData.slotDisplays);
             iconDisplay.ResetAll();
+            hasInitialized = true;
         }
         else
         {
@@ -391,41 +395,65 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     }
 
     /// <summary>
-    /// 플레이어가 재료를 들 때 호출
+    /// 플레이어가 결과물을 픽업할 때 호출됨
     /// </summary>
     public void OnPlayerPickup()
     {
-        // 배치된 재료 시각 오브젝트 모두 제거
-        foreach (var obj in placedIngredients)
-        {
-            if (obj) Destroy(obj);
-        }
-
-        // 관련 리스트와 변수 초기화
-        placedIngredients.Clear();          // 시각 오브젝트 리스트 초기화
         currentIngredients.Clear();         // 현재 재료 목록 초기화
         currentCookingTime = cookingTime;   // 타이머 초기화
         UpdateCookingTimeText();            // UI 갱신
 
-        iconDisplay?.ResetAll(); // 아이콘 리셋
-
-        string foodId = currentIngredients.Last();
-        selectedIngredient = RecipeManager.Instance.FindFoodDataById(foodId);
-        
-        // 조리 완료된 데이터가 존재하면 그걸 사용, 없으면 마지막 선택된 재료 사용
-        FoodData data = cookedIngredient
-            ? cookedIngredient
-            : selectedIngredient;
-
-        // 이름이나 아이콘이 비어있으면 중단
-        string name = data.displayName;
-        Sprite icon = data.foodIcon;
-        if (string.IsNullOrEmpty(name) || !icon)
-            return;
-
-        if (showDebugInfo) Debug.Log($"플레이어가 '{name}' 획득");
+        StartCoroutine(HandlePickup());
     }
-    
+
+    /// <summary>
+    /// 플레이어가 재료 또는 요리 결과물을 픽업할 때 실행되는 코루틴 핸들러
+    /// - 조리된 결과물이 있는 경우: 아이콘 초기화 후 종료
+    /// - 조리되지 않은 경우: 기존 재료 오브젝트 제거 후 딜레이를 두고, 선택된 재료를 시각화 오브젝트로 재생성
+    /// - 해당 재료가 등록된 재료인지 확인한 뒤, UI 상태 및 아이콘 복구를 수행
+    /// 프레임 딜레이를 통해 생성/삭제 타이밍 간 충돌을 방지하고 상호작용 안정성을 확보
+    /// </summary>
+
+    private IEnumerator HandlePickup()
+    {
+        // 아이콘 복구, 상태 초기화
+        FoodData data = cookedIngredient ?? selectedIngredient; // 조리 결과가 있으면 그걸 기준, 없으면 선택된 재료 기준
+
+        if (cookedIngredient != null)
+        {
+            iconDisplay?.ResetAll();
+            if (showDebugInfo) Debug.Log($"플레이어가 '{cookedIngredient.displayName}' 요리 결과 획득");
+            yield break;
+        }
+
+        if (selectedIngredient != null && currentIngredients.Contains(selectedIngredient.id))
+        {
+            // 오브젝트 제거 & 프레임 대기
+            foreach (var obj in placedIngredients)
+            {
+                if (obj) Destroy(obj);
+            }
+
+            placedIngredients.Clear();
+
+            yield return new WaitForEndOfFrame(); // 물리 엔진 업데이트 이후 오브젝트 생성
+
+            GameObject result = VisualObjectFactory.PlaceIngredientVisual(transform, selectedIngredient.foodName, selectedIngredient.foodIcon);
+            if (result)
+            {
+                var display = result.AddComponent<FoodDisplay>(); // 재료 오브젝트에 FoodDisplay를 붙여 픽업 가능하게 설정
+                display.foodData = selectedIngredient;
+                display.originPlace = this;
+
+                iconDisplay?.ShowSlot(selectedIngredient.foodType); // 해당 타입의 슬롯 아이콘 다시 표시
+
+                placedIngredients.Add(result);
+
+                if (showDebugInfo) Debug.Log($"조리되지 않은 등록 재료 '{selectedIngredient.displayName}' 재생성 완료");
+            }
+        }
+    }
+
     public void OnHoverEnter()
     {
         if (CompareTag("Ingredient")) return; // 재료는 아웃라인 적용 안 함
