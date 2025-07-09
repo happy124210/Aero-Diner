@@ -178,6 +178,7 @@ public class OrderingState : CustomerState
     public override void Exit(CustomerController customer) 
     {
         customer.SetPatienceTimerActive(false);
+        EventBus.Raise(UIEventType.HideOrderPanel, customer);
     }
 }
 

@@ -56,9 +56,9 @@ public class Customer
     }
     
     // 음식 받기
-    public void ReceiveFood(FoodData servedMen)
+    public void ReceiveFood(FoodData servedMenu)
     {
-        runtimeData.CurrentOrder = servedMen;
+        runtimeData.CurrentOrder = servedMenu;
         OnMenuServed?.Invoke();
     }
 }

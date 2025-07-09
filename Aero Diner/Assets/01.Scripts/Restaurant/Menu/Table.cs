@@ -30,13 +30,6 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
         menuSpawnPosition = transform.Find("Menu Spawn Position");
     }
 
-    private void Awake()
-    {
-        stopPoint = transform.Find("Stop Position");
-        seatPoint = transform.Find("Seat Position");
-        menuSpawnPosition = transform.Find("Menu Spawn Position");
-    }
-
     #endregion
 
     #region TableManager 연동

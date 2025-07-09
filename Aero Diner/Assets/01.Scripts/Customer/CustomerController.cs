@@ -138,7 +138,6 @@ public class CustomerController : MonoBehaviour
     private void HandleMenuServed()
     {
         view.OnServedStateChanged();
-        EventBus.Raise(UIEventType.HideOrderPanel, model);
         ChangeState(new EatingState());
     }
 
@@ -179,8 +178,7 @@ public class CustomerController : MonoBehaviour
     {
         transform.position = GetAssignedTable().SeatPoint.position;
     }
-
-
+    
     public void PlaceOrder()
     {
         // TODO: 이벤트 연결
@@ -190,14 +188,20 @@ public class CustomerController : MonoBehaviour
 
     public void ReceiveFood(FoodData servedMenu)
     {
-        model.ReceiveFood(servedMenu);
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 음식 서빙됨!");
+        if (GetCurrentOrder() == servedMenu)
+        {
+            model.ReceiveFood(servedMenu);
+            // TODO: view의 happy 이펙트  부르기
+            if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 음식 서빙됨!");
+        }
     }
 
     public void ProcessPayment()
     {
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 결제 시작!");
         // TODO: view의 결제 부르기
+        RestaurantManager.Instance.OnCustomerPaid(GetCurrentOrder().foodCost);
+        EventBus.Raise(UIEventType.UpdateEarnings);
+        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 결제 시작!");
     }
 
     public void ForceLeave()
@@ -287,6 +291,7 @@ public class CustomerController : MonoBehaviour
     public CustomerData CustomerData => model.Data;
     public float GetEatingTime() => model.Data.eatTime;
     public Table GetAssignedTable() => model.RuntimeData.AssignedTable;
+    public FoodData GetCurrentOrder() => model.RuntimeData.CurrentOrder;
     public Vector3 GetStopPosition() => GetAssignedTable().GetStopPosition();
     public bool HasPatience() => model.RuntimeData.CurrentPatience > 0;
     private bool ShouldPatienceDecrease() => currentState != null && (currentState.Name == CustomerStateName.Ordering || currentState.Name == CustomerStateName.WaitingInLine);
