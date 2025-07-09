@@ -1,11 +1,23 @@
 using UnityEngine;
 
+public enum CustomerStateName
+{
+    MovingToEntrance,
+    MovingToLine,
+    WaitingInLine,
+    MovingToSeat,
+    Ordering,
+    Eating,
+    Paying,
+    Leaving
+}
+
 public abstract class CustomerState
 {
     public abstract void Enter(CustomerController customer);
     public abstract CustomerState Update(CustomerController customer);
     public abstract void Exit(CustomerController customer);
-    public abstract string StateName { get; }
+    public abstract CustomerStateName Name { get; }
 }
 
 /// <summary>
@@ -13,29 +25,30 @@ public abstract class CustomerState
 /// </summary>
 public class MovingToEntranceState : CustomerState
 {
-    public override string StateName => "MovingToEntrance";
+    public override CustomerStateName Name => CustomerStateName.MovingToEntrance;
     
     public override void Enter(CustomerController customer)
     {
         Vector3 entrance = RestaurantManager.Instance.GetEntrancePoint();
         customer.SetDestination(entrance);
+        customer.SetAnimationState(CustomerAnimState.Walking);
     }
     
     public override CustomerState Update(CustomerController customer)
     {
+        // 좌석 할당 시도
         if (TableManager.Instance.TryAssignSeat(customer))
         {
-            // 좌석 할당 성공 시
+            // 바로 좌석 할당됨
             if (customer.GetAssignedTable())
             {
-                // 바로 좌석으로 이동
                 return new MovingToSeatState();
             }
-            
-            // 없으면 줄 서기 상태
-            return new WaitingInLineState();
+                
+            // 줄 서기
+            return new MovingToLineState();
         }
-        
+        // 레스토랑 꽉 참
         return new LeavingState();
     }
     
@@ -43,56 +56,99 @@ public class MovingToEntranceState : CustomerState
 }
 
 /// <summary>
-/// 줄 서기
+/// 계산된 줄서기 위치로 이동
 /// </summary>
-public class WaitingInLineState : CustomerState
+public class MovingToLineState : CustomerState
 {
-    public override string StateName => "WaitingInLine";
-
-    public override void Enter(CustomerController customer) { }
+    public override CustomerStateName Name => CustomerStateName.MovingToLine;
     
+    public override void Enter(CustomerController customer)
+    {
+        Vector3 queuePosition = TableManager.Instance.GetCustomerQueuePosition(customer);
+        customer.SetDestination(queuePosition);
+        customer.SetAnimationState(CustomerAnimState.Walking);
+    }
+
     public override CustomerState Update(CustomerController customer)
     {
         if (customer.HasReachedDestination())
-            customer.StartPatienceTimer();
+        {
+            return new WaitingInLineState();
+        }
         
         if (!customer.HasPatience())
+        {
             return new LeavingState();
-        
+        }
+
         return this;
     }
 
-    public override void Exit(CustomerController customer)
+    public override void Exit(CustomerController customer) 
     {
-        customer.StopPatienceTimer();
+        customer.StopMovement();
+        customer.SetAnimationState(CustomerAnimState.Idle);
     }
 }
+
+
+/// <summary>
+/// 줄 서서 대기
+/// </summary>
+public class WaitingInLineState : CustomerState
+{
+    public override CustomerStateName Name => CustomerStateName.WaitingInLine;
+
+    public override void Enter(CustomerController customer) 
+    {
+        customer.SetPatienceTimerActive(true);
+    }
+
+    public override CustomerState Update(CustomerController customer)
+    {
+        if (!customer.HasPatience())
+        {
+            return new LeavingState();
+        }
+
+        return this;
+    }
+
+    public override void Exit(CustomerController customer) 
+    {
+        customer.SetPatienceTimerActive(false);
+    }
+}
+
 
 /// <summary>
 /// 할당된 좌석으로 이동
 /// </summary>
 public class MovingToSeatState : CustomerState
 {
-    public override string StateName => "MovingToSeat";
+    public override CustomerStateName Name => CustomerStateName.MovingToSeat;
     
     public override void Enter(CustomerController customer)
     {
-        Vector3 seatPos = customer.GetAssignedStopPosition();
-        customer.SetDestination(seatPos);
+        customer.SetDestination(customer.GetStopPosition());
+        customer.SetAnimationState(CustomerAnimState.Walking);
     }
     
     public override CustomerState Update(CustomerController customer)
     {
         if (customer.HasReachedDestination())
         {
-            customer.AdjustSeatPosition();
             return new OrderingState();
         }
         
         return this;
     }
 
-    public override void Exit(CustomerController customer) { }
+    public override void Exit(CustomerController customer)
+    {
+        customer.AdjustSeatPosition();
+        customer.SetAnimationState(CustomerAnimState.Sitting);
+    }
 }
 
 /// <summary>
@@ -100,65 +156,61 @@ public class MovingToSeatState : CustomerState
 /// </summary>
 public class OrderingState : CustomerState
 {
-    public override string StateName => "Ordering";
-    private bool orderPlaced;
+    public override CustomerStateName Name => CustomerStateName.Ordering;
     
     public override void Enter(CustomerController customer) 
     {
         customer.StopMovement();
+        customer.PlaceOrder();
+        customer.SetPatienceTimerActive(true);
     }
     
     public override CustomerState Update(CustomerController customer)
     {
-        // 인내심 소진 체크
         if (!customer.HasPatience())
+        {
             return new LeavingState();
-            
-        if (!orderPlaced)
-        {
-            customer.PlaceOrder();
-            orderPlaced = true;
-            customer.StartPatienceTimer();
-        }
-
-        if (customer.IsFoodServed())
-        {
-            return new EatingState();
         }
             
         return this;
     }
     
-    public override void Exit(CustomerController customer)
+    public override void Exit(CustomerController customer) 
     {
-        customer.StopPatienceTimer();
+        customer.SetPatienceTimerActive(false);
     }
 }
 
 /// <summary>
-/// 먹기
+/// 식사하기
 /// </summary>
 public class EatingState : CustomerState
 {
-    public override string StateName => "Eating";
+    public override CustomerStateName Name => CustomerStateName.Eating;
+    private float eatTimer;
     
     public override void Enter(CustomerController customer)
     {
-        customer.StartEating();
-
-        Table table = customer.GetAssignedTable();
-        table.GetCurrentFood().isPickupable = false;
+        customer.GetAssignedTable().GetCurrentFood().isPickupable = false;
+        eatTimer = customer.GetEatingTime();
+        customer.SetAnimationState(CustomerAnimState.Sitting);
     }
     
     public override CustomerState Update(CustomerController customer)
     {
-        if (customer.IsCustomerEating())
+        eatTimer -= Time.deltaTime;
+        if (eatTimer <= 0)
+        {
             return new PayingState();
+        }
             
         return this;
     }
     
-    public override void Exit(CustomerController customer) { }
+    public override void Exit(CustomerController customer) 
+    {
+        customer.SetAnimationState(CustomerAnimState.Sitting);
+    }
 }
 
 /// <summary>
@@ -166,14 +218,14 @@ public class EatingState : CustomerState
 /// </summary>
 public class PayingState : CustomerState
 {
-    public override string StateName => "Paying";
+    public override CustomerStateName Name => CustomerStateName.Paying;
     
-    // TODO: 임시 시간! 나중에 연출 시간이랑 맞춰야함
     private const float PAYMENT_TIME = 1f;
     private float paymentTimer;
     
     public override void Enter(CustomerController customer)
     {
+        paymentTimer = 0;
         customer.ProcessPayment();
     }
     
@@ -181,7 +233,9 @@ public class PayingState : CustomerState
     {
         paymentTimer += Time.deltaTime;
         if (paymentTimer >= PAYMENT_TIME)
+        {
             return new LeavingState();
+        }
             
         return this;
     }
@@ -194,13 +248,16 @@ public class PayingState : CustomerState
 /// </summary>
 public class LeavingState : CustomerState
 {
-    public override string StateName => "Leaving";
+    public override CustomerStateName Name => CustomerStateName.Leaving;
     
     public override void Enter(CustomerController customer)
     {
         Vector3 exit = RestaurantManager.Instance.GetExitPoint();
         customer.SetDestination(exit);
+        customer.SetAnimationState(CustomerAnimState.Walking);
+        
         TableManager.Instance.ReleaseSeat(customer);
+        TableManager.Instance.RemoveCustomerFromQueue(customer);
     }
     
     public override CustomerState Update(CustomerController customer)

@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 /// <summary>
 /// 고객의 모든 데이터를 관리하는 Model
@@ -11,29 +10,23 @@ public class Customer
     public event Action<float> OnPatienceChanged; // 인내심 줄어들고 있음
     public event Action<bool> OnPatienceStateChanged; // 인내심 줄어들어야 하는지 아닌지
     public event Action<FoodData> OnOrderPlaced; // 주문함
-    public event Action OnServedStateChanged; // 서빙됨
-    public event Action OnEatingStateChanged; // 다 먹음
-    public event Action<bool> OnPaymentStateChanged; // 결제 끝남
+    public event Action OnMenuServed; // 서빙됨
+    public event Action OnEatingFinished; // 다 먹음
+    public event Action<bool> OnPaymentEnd; // 결제 끝남
     
     // 데이터 컨테이너
     private CustomerData _data;
     private CustomerRuntimeData runtimeData;
     
     // === Properties & helper ===
-    public CustomerData CustomerData => _data;
-    public CustomerRuntimeData CustomerRuntimeData => runtimeData;
+    public CustomerData Data => _data;
+    public CustomerRuntimeData RuntimeData => runtimeData;
     public float GetPatienceRatio() => runtimeData.CurrentPatience / _data.waitTime;
 
     public void Initialize(CustomerData data)
     {
         _data = data;
         runtimeData = new CustomerRuntimeData(data.waitTime, data.eatTime);
-    }
-
-    // Controller가 호출하는 모델 상태변경 메서드. 본인의 상태값만 변경함.
-    public void UpdateState(CustomerStateName newState)
-    {
-        runtimeData.CurrentState = newState;
     }
     
     // 인내심시간 변경, 알림 보내기
@@ -55,10 +48,17 @@ public class Customer
         runtimeData.CurrentOrder = MenuManager.Instance.GetRandomMenu();
         OnOrderPlaced?.Invoke(runtimeData.CurrentOrder);
     }
+
+    // 앉는 테이블 번호 받기
+    public void SetAssignedTable(Table assignedTable)
+    {
+        runtimeData.AssignedTable = assignedTable;
+    }
     
     // 음식 받기
-    public void OnFoodServed()
+    public void ReceiveFood(FoodData servedMen)
     {
-        OnServedStateChanged?.Invoke();
+        runtimeData.CurrentOrder = servedMen;
+        OnMenuServed?.Invoke();
     }
 }

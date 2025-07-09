@@ -394,6 +394,7 @@ MonoBehaviour:
   customerUI: {fileID: 5070177583603407402}
   orderBubble: {fileID: 3525487760294110372}
   patienceTimer: {fileID: 3569666337585117268}
+  animator: {fileID: 6136237864647170741}
   showDebugInfo: 0
 --- !u!195 &7523355939073356595
 NavMeshAgent:

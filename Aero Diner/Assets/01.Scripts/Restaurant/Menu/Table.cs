@@ -120,7 +120,8 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
 
     public void OnOrderMatch()
     {
-        // TODO: 주문 일치 시 식사 시작
+        // TODO: 주문 일치 시 FoodDisplay 비활성화
+        // 이벤트 연결 필요
     }
 
     /// <summary>

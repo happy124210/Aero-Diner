@@ -1,12 +1,11 @@
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.UI;
 
 public enum CustomerAnimState
 {
     Idle,
     Walking,
-    Sit
+    Sitting,
 }
 
 /// <summary>
@@ -18,12 +17,17 @@ public class CustomerView : MonoBehaviour
     [SerializeField] private Canvas customerUI;
     [SerializeField] private Image orderBubble;
     [SerializeField] private Image patienceTimer;
+    
+    [Header("Animation Components")]
+    [SerializeField] private Animator animator;
 
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo;
-
+    
+    // private fields
+    
     #region Initialization
-    public void Initialize(float speed)
+    public void Initialize()
     {
         SetupComponents();
         HidePatienceTimer();
@@ -34,6 +38,8 @@ public class CustomerView : MonoBehaviour
         if (!customerUI) customerUI = transform.FindChild<Canvas>("Group_Customer");
         if (!orderBubble) orderBubble = transform.FindChild<Image>("Img_OrderBubble");
         if (!patienceTimer) patienceTimer = transform.FindChild<Image>("Img_PatienceTimer");
+        
+        animator = GetComponentInChildren<Animator>();
     }
     
     #endregion
@@ -84,12 +90,9 @@ public class CustomerView : MonoBehaviour
         patienceTimer.gameObject.SetActive(false);
     }
     
-    public void OnServedStateChanged(bool isServed)
+    public void OnServedStateChanged()
     {
-        if (isServed)
-        {
-            HidePatienceTimer();
-        }
+        HidePatienceTimer();
     }
 
     public void OnPaymentStateChanged(bool isCompleted)
