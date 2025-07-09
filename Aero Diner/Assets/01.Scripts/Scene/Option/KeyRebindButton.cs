@@ -36,7 +36,7 @@ public class KeyRebindButton : MonoBehaviour
     private void StartRebind()
     {
         if (waitingForKey) return;
-
+        EventBus.PlaySFX(SFXType.ButtonClick);
         keyText.text = "Press any key...";
         waitingForKey = true;
 

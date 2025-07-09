@@ -5,18 +5,16 @@ using System.Collections.Generic;
 [RequireComponent(typeof(AudioSource))]
 public class BGMManager : Singleton<BGMManager>
 {
-    [Header("씬별 배경음악")]
-    public List<SceneBGM> sceneBGMs = new List<SceneBGM>();
-
-    private AudioSource audioSource;
-
     [System.Serializable]
-    public class SceneBGM
+    public class NamedBGM
     {
-        public string sceneName;
+        public BGMEventType type;
         public AudioClip bgmClip;
     }
 
+    public List<NamedBGM> bgmClips = new();
+
+    private AudioSource audioSource;
     protected override void Awake()
     {
         base.Awake();
@@ -26,22 +24,19 @@ public class BGMManager : Singleton<BGMManager>
 
     private void OnEnable()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        EventBus.OnBGMRequested += HandleBGMEvent;
     }
 
     private void OnDisable()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        EventBus.OnBGMRequested -= HandleBGMEvent;
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        PlayBGMForScene(scene.name);
-    }
 
-    private void PlayBGMForScene(string sceneName)
+
+    private void HandleBGMEvent(BGMEventType type)
     {
-        var entry = sceneBGMs.Find(b => b.sceneName == sceneName);
+        var entry = bgmClips.Find(b => b.type == type);
         if (entry != null && entry.bgmClip != null)
         {
             if (audioSource.clip != entry.bgmClip)
@@ -51,10 +46,13 @@ public class BGMManager : Singleton<BGMManager>
                 audioSource.Play();
             }
         }
+        else if (type == BGMEventType.StopBGM)
+        {
+            audioSource.Stop();
+        }
         else
         {
-            Debug.LogWarning($"[BGMManager] {sceneName}에 해당하는 BGM이 설정되지 않았습니다.");
-            audioSource.Stop();
+            Debug.LogWarning($"[BGMManager] {type}에 해당하는 BGM이 없습니다.");
         }
     }
 
