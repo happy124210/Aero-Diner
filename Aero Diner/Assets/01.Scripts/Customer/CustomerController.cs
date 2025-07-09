@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.AI;
 
 /// <summary>
 /// MVC 패턴의 Controller
@@ -6,19 +7,24 @@
 /// </summary>
 public class CustomerController : MonoBehaviour, IPoolable
 {
-    [Header("MVC Components")]
-    [SerializeField] private Customer model;
-    [SerializeField] private CustomerView view;
-
+    [Header("Movement")]
+    [SerializeField] private NavMeshAgent navAgent;
+    private const float AGENT_DRIFT = 0.0001f;
+    private const float ARRIVAL_THRESHOLD = 0.5f;
+    private const float VELOCITY_THRESHOLD = 0.1f;
+    
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo;
-    [SerializeField] public string currentNodeName;
 
     // 상태 관리
     private CustomerState currentState;
     private CustomerEventBridge bridge;
+   
+    private Customer model;
+    private CustomerView view;
+    
     #region Public Getters & methods (Model 데이터 접근)
-
+    
     public CustomerData CurrentData => model.CustomerData;
     public FoodData CurrentOrder => model.CurrentOrder;
     public float PatienceRatio => model.CurrentPatience / model.MaxPatience;
@@ -43,8 +49,13 @@ public class CustomerController : MonoBehaviour, IPoolable
         {
             view = gameObject.AddComponent<CustomerView>();
         }
+        
         bridge = new CustomerEventBridge();
         bridge.Bind(model);
+        
+        // NavMesh
+        navAgent = GetComponent<NavMeshAgent>();
+        if (!navAgent) Debug.LogError($"[CustomerView]: {gameObject.name} NavMeshAgent 없음!");
     }
 
     private void Start()
@@ -54,6 +65,7 @@ public class CustomerController : MonoBehaviour, IPoolable
             InitializeMVC();
             ChangeState(new MovingToEntranceState());
         }
+        SetupNavMeshAgent(CurrentData.speed);
     }
     
     private void Update()
@@ -102,6 +114,18 @@ public class CustomerController : MonoBehaviour, IPoolable
         model.OnEatingStateChanged -= HandleEatingStateChanged;
         model.OnPaymentStateChanged -= HandlePaymentStateChanged;
     }
+    
+    private void SetupNavMeshAgent(float speed)
+    {
+        if (!navAgent) return;
+        
+        navAgent.updateRotation = false;
+        navAgent.updateUpAxis = false;
+        navAgent.speed = speed;
+        navAgent.stoppingDistance = 0.1f;
+        navAgent.angularSpeed = 120f;
+        navAgent.acceleration = 8f;
+    }
     #endregion
     
     private void ChangeState(CustomerState newState)
@@ -128,7 +152,6 @@ public class CustomerController : MonoBehaviour, IPoolable
     private void HandleOrderPlaced(FoodData order)
     {
         view.ShowOrderBubble(order);
-
     }
 
     private void HandleServedStateChanged(bool isServed)
@@ -157,12 +180,12 @@ public class CustomerController : MonoBehaviour, IPoolable
     #region Customer Actions
     public void UpdateQueuePosition(Vector3 newPosition)
     {
-        view.SetDestination(newPosition);
+        SetDestination(newPosition);
     }
 
     public void StartWaitingInLine(Vector3 queuePosition)
     {
-        view.SetDestination(queuePosition);
+        SetDestination(queuePosition);
         ChangeState(new WaitingInLineState());
     }
 
@@ -178,8 +201,8 @@ public class CustomerController : MonoBehaviour, IPoolable
 
     public void AdjustSeatPosition()
     {
-        if (model.AssignedTable == null) return;
-        view.AdjustSeatPosition(model.AssignedTable.SeatPoint.position);
+        transform.position = GetAssignedTable().transform.position;
+        view.SetAnimationState(CustomerAnimState.Idle);
     }
 
     public void PlaceOrder()
@@ -222,26 +245,6 @@ public class CustomerController : MonoBehaviour, IPoolable
         
         CancelInvoke();
         PoolManager.Instance.DespawnCustomer(this);
-    }
-    #endregion
-
-    #region Movement & Animation (Controller -> View)
-    public void SetDestination(Vector3 destination)
-    {
-        // View에 직접 명령
-        view.SetDestination(destination);
-        view.SetAnimationState(CustomerAnimState.Walking);
-    }
-
-    public void StopMovement()
-    {
-        view.StopMovement();
-        view.SetAnimationState(CustomerAnimState.Idle);
-    }
-
-    public bool HasReachedDestination()
-    {
-        return view.HasReachedDestination();
     }
     #endregion
 
@@ -292,6 +295,14 @@ public class CustomerController : MonoBehaviour, IPoolable
         TableManager.Instance.RemoveCustomerFromQueue(this);
         TableManager.Instance.ReleaseSeat(this);
         
+        // NavMesh 정리
+        if (navAgent && navAgent.isOnNavMesh)
+        {
+            navAgent.ResetPath();
+            navAgent.velocity = Vector3.zero;
+            navAgent.isStopped = true;
+        }
+        
         CancelInvoke();
         StopAllCoroutines();
     }
@@ -304,6 +315,53 @@ public class CustomerController : MonoBehaviour, IPoolable
         CancelInvoke();
         StopAllCoroutines();
     }
+    #endregion
+    
+    #region Movement & Animation
+    public void SetDestination(Vector3 destination)
+    {
+        if (!navAgent || !navAgent.isOnNavMesh)
+        {
+            if (showDebugInfo) Debug.LogWarning($"[CustomerView]: {gameObject.name} NavMesh 문제!");
+            return;
+        }
+
+        navAgent.isStopped = false;
+        
+        // NavMeshPlus Y축 버그 방지
+        if (Mathf.Abs(transform.position.x - destination.x) < AGENT_DRIFT)
+        {
+            destination.x += AGENT_DRIFT;
+        }
+
+        navAgent.SetDestination(destination);
+        
+        if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 목적지 설정: {destination}");
+    }
+
+    public void StopMovement()
+    {
+        if (!navAgent) return;
+        
+        navAgent.isStopped = true;
+        navAgent.ResetPath();
+        navAgent.velocity = Vector3.zero;
+    }
+
+    public bool HasReachedDestination()
+    {
+        if (!navAgent || !navAgent.isOnNavMesh) return false;
+
+        bool reached = !navAgent.pathPending && 
+                       navAgent.remainingDistance < ARRIVAL_THRESHOLD && 
+                       navAgent.velocity.sqrMagnitude < VELOCITY_THRESHOLD;
+
+        if (reached && showDebugInfo) 
+            Debug.Log($"[CustomerView]: {gameObject.name} 목적지 도착!");
+
+        return reached;
+    }
+    
     #endregion
     
 }
