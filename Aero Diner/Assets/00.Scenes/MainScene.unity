@@ -626,9 +626,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 729759458647446734, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.73
+      objectReference: {fileID: 0}
+    - target: {fileID: 2834826194511950515, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.73
+      objectReference: {fileID: 0}
     - target: {fileID: 3351993008619990083, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
       propertyPath: m_Name
       value: StationSet
+      objectReference: {fileID: 0}
+    - target: {fileID: 3481563508650698633, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.73
+      objectReference: {fileID: 0}
+    - target: {fileID: 4179612114422278084, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.73
       objectReference: {fileID: 0}
     - target: {fileID: 7003341941849820173, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
       propertyPath: m_LocalPosition.x
@@ -669,6 +685,10 @@ PrefabInstance:
     - target: {fileID: 7003341941849820173, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8129676756106716180, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.73
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
