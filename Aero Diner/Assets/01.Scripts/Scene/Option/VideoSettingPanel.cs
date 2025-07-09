@@ -90,24 +90,28 @@ public class VideoSettingPanel : MonoBehaviour
 
     public void OnClickLeft_ScreenMode()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         screenModeIndex = (screenModeIndex - 1 + screenModes.Length) % screenModes.Length;
         UpdateUI();
     }
 
     public void OnClickRight_ScreenMode()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         screenModeIndex = (screenModeIndex + 1) % screenModes.Length;
         UpdateUI();
     }
 
     public void OnClickLeft_Resolution()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         resolutionIndex = (resolutionIndex - 1 + resolutions.Count) % resolutions.Count;
         UpdateUI();
     }
 
     public void OnClickRight_Resolution()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         resolutionIndex = (resolutionIndex + 1) % resolutions.Count;
         UpdateUI();
     }

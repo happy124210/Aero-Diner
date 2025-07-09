@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Vector2 slotOffsetDown = new Vector2(0, -0.5f);
     [SerializeField] private Vector2 slotOffsetLeft = new Vector2(-0.5f, 0);
     [SerializeField] private Vector2 slotOffsetRight = new Vector2(0.5f, 0);
+    [SerializeField] private AudioSource moveSFXSource;
+    [SerializeField] private AudioClip moveSFXClip;
 
     public InteractionType interactionType;
     public IInteractable currentTarget;
@@ -44,6 +46,7 @@ public class PlayerController : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
+        
     }
     private void Update()
     {
@@ -152,6 +155,8 @@ public class PlayerController : MonoBehaviour
 
                 // 실제 내려놓기 처리
                 playerInventory.DropItem(currentTarget);
+                EventBus.OnSFXRequested(SFXType.Itemlaydown);
+
             }
             else
             {
@@ -173,10 +178,13 @@ public class PlayerController : MonoBehaviour
                 {
                     // Interact를 직접 호출해서 재료 생성
                     pickupTarget.Interact(playerInventory, InteractionType.Pickup);
+                    EventBus.OnSFXRequested(SFXType.ItemPickup);
                 }
                 else
                 {
                     playerInventory.TryPickup(pickupTarget);
+                    EventBus.OnSFXRequested(SFXType.ItemPickup);
+
                 }
             }
             else
@@ -241,10 +249,24 @@ public class PlayerController : MonoBehaviour
             lastMoveDir = moveInput.normalized;
             animator.SetFloat("LastMoveX", lastMoveDir.x);
             animator.SetFloat("LastMoveY", lastMoveDir.y);
+
+            // 루프 SFX 재생
+            if (!moveSFXSource.isPlaying)
+            {
+                moveSFXSource.clip = moveSFXClip;
+                moveSFXSource.loop = true;
+                moveSFXSource.Play();
+            }
         }
         else
         {
             animator.SetBool("IsMoving", false);
+
+            // 루프 SFX 정지
+            if (moveSFXSource.isPlaying)
+            {
+                moveSFXSource.Stop();
+            }
         }
     }
     private void SetDirectionParams()

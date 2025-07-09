@@ -38,7 +38,6 @@ public class PlayerInventory : MonoBehaviour
         if (col) col.enabled = false;
 
         Debug.Log($"[Inventory] {holdingItem.foodData.foodName} 획득");
-
         // 마지막에 스테이션 초기화 호출 (재료 오브젝트 파괴 방지)
         if (food.originPlace != null) { food.originPlace.OnPlayerPickup(); }
     }

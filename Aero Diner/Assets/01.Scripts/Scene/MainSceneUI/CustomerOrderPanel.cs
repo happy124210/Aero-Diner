@@ -18,9 +18,10 @@ public class CustomerOrderPanel : MonoBehaviour
         customers.Add(customer);
         var go = Instantiate(customerEntryPrefab, contentParent);
         var entry = go.GetComponent<CustomerOrderEntryUI>();
-        if (entry == null) return;
+        
+        if (!entry) return;
 
-        entry.Init(customer.CurrentOrder.foodIcon);
+        entry.Init(customer.RuntimeData.CurrentOrder.foodIcon);
         uiMap[customer] = entry;
     }
 
@@ -40,9 +41,9 @@ public class CustomerOrderPanel : MonoBehaviour
     {
         foreach (var customer in customers)
         {
-            if (!customer.HasPatience || !uiMap.ContainsKey(customer)) continue;
+            if (customer.RuntimeData.CurrentPatience < 0 || !uiMap.ContainsKey(customer)) continue;
 
-            uiMap[customer].UpdatePatienceColor(customer.CurrentPatience / customer.MaxPatience);
+            uiMap[customer].UpdatePatienceColor(customer.GetPatienceRatio());
         }
     }
 }

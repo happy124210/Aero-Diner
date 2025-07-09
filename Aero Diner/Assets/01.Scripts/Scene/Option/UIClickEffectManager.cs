@@ -15,6 +15,7 @@ public class UIClickEffectManager : MonoBehaviour
             if (!IsPointerOverUI())
             {
                 CreateEffect(Input.mousePosition);
+                EventBus.OnSFXRequested(SFXType.BlankClick);
             }
             else
             {

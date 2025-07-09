@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -37,7 +38,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
     //PlayerPref 저장용 변수
     private const string EARNINGS_KEY = "TotalEarnings";
     private static readonly int[] DaysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-    
+
     private void Update()
     {
         if (gameRunning)
@@ -68,7 +69,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
         GUILayout.Label("=== Restaurant Status ===");
         GUILayout.Label($"Game Running: {gameRunning}");
         GUILayout.Label($"Active Customers: {PoolManager.Instance.ActiveCustomerCount}");
-        GUILayout.Label($"Available Seats: {TableManager.Instance.GetAvailableSeatCount()}/{TableManager.Instance.TotalSeatCount}");
         GUILayout.Label($"Customers Served: {customersServed}/{targetCustomersServed}");
         GUILayout.Label($"Total Earnings: {totalEarnings}");
         GUILayout.Label($"Game Time: {gameTime:F1}s / {gameTimeLimit}s");
@@ -158,6 +158,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
         EventBus.Raise(UIEventType.HideRoundTimer);
         EventBus.Raise(UIEventType.ShowResultPanel);
+        EventBus.OnBGMRequested(BGMEventType.PlayResultTheme);
     }
 
     public void OnCustomerEntered()
@@ -173,7 +174,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
         // UI 이벤트
         EventBus.Raise(UIEventType.UpdateEarnings, totalEarnings);
-        
+        EventBus.OnSFXRequested(SFXType.CostomerPayed);
         if (showDebugInfo) Debug.Log($"Customer paid {amount}! Total served: {customersServed}, Total earnings: {totalEarnings}");
     }
 
