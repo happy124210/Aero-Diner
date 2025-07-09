@@ -15,59 +15,49 @@ public class CustomerOrderPanel : MonoBehaviour
         Instance = this;
     }
 
-    public void RegisterCustomer(CustomerController customer)
+    public void ShowOrderPanel(CustomerController customer)
     {
-        //if (customers.Contains(customer))
-        //{
-        //    return;
-        //}
+        if (customers.Contains(customer))
+        {
+            return;
+        }
 
-        //customers.Add(customer);
-        //var go = Instantiate(customerEntryPrefab, contentParent);
-        //var entry = go.GetComponent<CustomerOrderEntryUI>();
+        customers.Add(customer);
+        var go = Instantiate(customerEntryPrefab, contentParent);
+        var entry = go.GetComponent<CustomerOrderEntryUI>();
 
-        //if (entry == null)
-        //{
-        //    return;
-        //}
+        if (entry == null)
+        {
+            return;
+        }
 
 
-        //entry.Init(customer.CurrentOrder.foodIcon);
-        //uiMap[customer] = entry;
+        entry.Init(customer.CurrentOrder.foodIcon);
+        uiMap[customer] = entry;
     }
 
-    public void UnregisterCustomer(CustomerController customer)
+    public void HideOrderPanel(CustomerController customer)
     {
-        //if (!customers.Contains(customer))
-        //{
-        //    return;
-        //}
+        if (!customers.Contains(customer))
+        {
+            return;
+        }
 
-        //customers.Remove(customer);
-        //if (uiMap.TryGetValue(customer, out var entry))
-        //{
-        //    Destroy(entry.gameObject);
-        //    uiMap.Remove(customer);
-        //}
+        customers.Remove(customer);
+        if (uiMap.TryGetValue(customer, out var entry))
+        {
+            Destroy(entry.gameObject);
+            uiMap.Remove(customer);
+        }
     }
 
     private void Update()
     {
         foreach (var customer in customers)
         {
-            if (!customer.HasPatience())
-            {
-                continue;
-            }
+            if (!customer.HasPatience() || !uiMap.ContainsKey(customer)) continue;
 
-            float current = customer.GetCurrentPatience();
-            float max = customer.GetMaxPatience();
-            if (!uiMap.ContainsKey(customer))
-            {
-                continue;
-            }
-
-            uiMap[customer].UpdatePatience(current, max);
+            uiMap[customer].UpdatePatienceColor(customer.PatienceRatio);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using TMPro;
 using UnityEditor;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// 플레이어가 상호작용하면 재료를 가공하여 가공된 재료를 생성하는 스테이션
@@ -32,11 +33,11 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     [Header("현재 등록된 재료 ID 목록")]
     public List<string> currentIngredients = new();
 
-    [Header("레시피 매칭 결과 (읽기 전용)")]
-    [SerializeField] private string bestMatchedRecipe;
-
-    [Header("모든 매칭 레시피 목록 (읽기 전용)")]
-    [SerializeField] private List<string> matchedRecipeNames = new();
+    [Header("레시피 매칭 결과")]
+    [SerializeField, ReadOnly] private string bestMatchedRecipe;
+    
+    [Header("가능한 레시피에 포함된 음식 ID들")]
+    [SerializeField, ReadOnly] private List<string> availableFoodIds = new();
 
     [Header("아이콘 디스플레이")]
     [SerializeField] private FoodSlotIconDisplay iconDisplay;
@@ -221,13 +222,15 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         if (currentIngredients.Count == 0)
         {
             bool typeMatch = data.stationType.Any(type => type == stationData.stationType);
+            
             if (showDebugInfo) Debug.Log($"[Debug] Food station types: {string.Join(",", data.stationType)}");
             if (showDebugInfo) Debug.Log($"[Debug] Station type: {stationData.stationType}");
+            
             return typeMatch;
         }
 
         // 이후에는 matchedRecipeNames에 포함된 재료만 허용
-        if (matchedRecipeNames.Contains(data.id))
+        if (availableFoodIds.Contains(data.id))
         {
             if (showDebugInfo) Debug.Log($"[Station] '{data.id}' matchedRecipeNames에 포함 → 등록 가능");
             return true;
@@ -248,7 +251,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     private void UpdateCandidateRecipes()
     {
         availableMatchedRecipes.Clear();
-        matchedRecipeNames.Clear();
+        availableFoodIds.Clear();
 
         // 오늘 메뉴 기준으로 레시피 매칭 진행
         var matches = RecipeManager.Instance.FindMatchingTodayRecipes(currentIngredients);
@@ -272,9 +275,9 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             {
                 foreach (var ingredientId in recipe.ingredients)
                 {
-                    if (!matchedRecipeNames.Contains(ingredientId))
+                    if (!availableFoodIds.Contains(ingredientId))
                     {
-                        matchedRecipeNames.Add(ingredientId);
+                        availableFoodIds.Add(ingredientId);
                     }
                 }
             }
@@ -286,7 +289,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         {
             cookedIngredient = null;
             availableMatchedRecipes.Clear();
-            matchedRecipeNames.Clear();
+            availableFoodIds.Clear();
 
             if (showDebugInfo)
                 Debug.Log("조건에 맞는 레시피가 없습니다.");
@@ -307,7 +310,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         var matches = RecipeManager.Instance.FindMatchingTodayRecipes(currentIngredients);
 
         // 매칭 목록 초기화
-        matchedRecipeNames.Clear();
+        availableFoodIds.Clear();
 
         if (matches.Count > 0)
         {
@@ -324,20 +327,20 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             {
                 foreach (var id in recipe.ingredients)
                 {
-                    matchedRecipeNames.Add(id);
+                    availableFoodIds.Add(id);
                 }
             }
 
             if (showDebugInfo)
             {
-                var previewList = string.Join("\n", matchedRecipeNames.Select(r => "- " + r));
+                var previewList = string.Join("\n", availableFoodIds.Select(r => "- " + r));
                 Debug.Log("[레시피 미리보기]\n" + previewList);
             }
         }
         else
         {
             bestMatchedRecipe = "매칭되는 레시피 없음";
-            matchedRecipeNames.Clear();
+            availableFoodIds.Clear();
 
             if (showDebugInfo) Debug.Log("[PassiveStation] 일치하는 레시피 없음");
         }
@@ -387,7 +390,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             cookingTimeText.text = currentCookingTime.ToString("F1");
     }
 
-
     /// <summary>
     /// 플레이어가 재료를 들 때 호출
     /// </summary>
@@ -407,6 +409,9 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
 
         iconDisplay?.ResetAll(); // 아이콘 리셋
 
+        string foodId = currentIngredients.Last();
+        selectedIngredient = RecipeManager.Instance.FindFoodDataById(foodId);
+        
         // 조리 완료된 데이터가 존재하면 그걸 사용, 없으면 마지막 선택된 재료 사용
         FoodData data = cookedIngredient
             ? cookedIngredient
@@ -420,8 +425,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
 
         if (showDebugInfo) Debug.Log($"플레이어가 '{name}' 획득");
     }
-
-
+    
     public void OnHoverEnter()
     {
         if (CompareTag("Ingredient")) return; // 재료는 아웃라인 적용 안 함

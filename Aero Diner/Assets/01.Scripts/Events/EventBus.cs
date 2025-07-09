@@ -22,16 +22,20 @@ public enum UIEventType
     CloseSound, CloseVideo,
     CloseControl, ShowSoundTab,
     ShowVideoTab, ShowControlTab,
+    OnClickNewGame,
+    
     //StartScene
     ShowStartWarningPanel, ShowStartMenuWithSave,
     ShowStartMenuNoSave, LoadMainScene,
-    QuitGame, ShowPressAnyKey,OnClickNewGame,
+    QuitGame, ShowPressAnyKey,
+    
     //MainSceneUI
     ShowRoundTimer, HideRoundTimer,
-    UpdateEarnings, ShowMenuPanel, UpdateMenuPanel,
-    HideMenuPanel, ShowResultPanel,
-    HideResultPanel, ShowInventory,
-    HideInventory
+    UpdateEarnings, 
+    ShowMenuPanel, UpdateMenuPanel, HideMenuPanel, 
+    ShowResultPanel, HideResultPanel, 
+    ShowInventory, HideInventory,
+    ShowOrderPanel, HideOrderPanel
 }
 
 public static class EventBus

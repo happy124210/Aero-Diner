@@ -355,8 +355,9 @@ MonoBehaviour:
   customersVisited: 0
   totalEarnings: 0
   gameTime: 0
-  showDebugInfo: 0
+  showDebugInfo: 1
   gameTimeLimit: 300
+  currentDay: 1
 --- !u!114 &5796004451528270688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -369,7 +370,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14419fe36a1778f40a2dc5a7f2af6854, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allFoodData: []
   allMenus: []
   playerMenus: []
   todayMenus: []
