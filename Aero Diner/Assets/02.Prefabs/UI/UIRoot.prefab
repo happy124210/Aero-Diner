@@ -194,6 +194,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   popupFader: {fileID: 946601932784583129}
+  saveWarningPanel: {fileID: 0}
 --- !u!114 &4910507528603062709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,6 +333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3163e8cd07ad95a468e7761f73c8be40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showDebugInfo: 0
   sceneUIPrefabs:
   - sceneName: StartScene
     uiPrefabs:
@@ -804,6 +806,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 6379105854829957512}
+    - target: {fileID: 94020167979111950, guid: 1e730fc6af6da5f48868d4c18562c68b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: RequestSelectTab
+      objectReference: {fileID: 0}
     - target: {fileID: 305787230076347971, guid: 1e730fc6af6da5f48868d4c18562c68b, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -864,6 +870,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 6379105854829957512}
+    - target: {fileID: 474696787932606691, guid: 1e730fc6af6da5f48868d4c18562c68b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: RequestSelectTab
+      objectReference: {fileID: 0}
     - target: {fileID: 527997822527449973, guid: 1e730fc6af6da5f48868d4c18562c68b, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -1784,6 +1794,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 6379105854829957512}
+    - target: {fileID: 7379397460001033427, guid: 1e730fc6af6da5f48868d4c18562c68b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: RequestSelectTab
+      objectReference: {fileID: 0}
     - target: {fileID: 7483419304262285794, guid: 1e730fc6af6da5f48868d4c18562c68b, type: 3}
       propertyPath: m_Sprite
       value: 

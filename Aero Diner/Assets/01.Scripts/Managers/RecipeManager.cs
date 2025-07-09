@@ -39,6 +39,11 @@ public class RecipeManager : Singleton<RecipeManager>
         if (showDebugInfo) Debug.Log($"[MenuManager] {FoodDatabase.Count}개 음식 데이터 로드 완료");
     }
 
+    public FoodData FindFoodDataById(string id)
+    {
+        return FoodDatabase.GetValueOrDefault(id);
+    }
+
     #region 레시피 원재료 찾기
 
     /// <summary>
@@ -134,37 +139,7 @@ public class RecipeManager : Singleton<RecipeManager>
     /// <returns>일치율 순으로 정렬된 레시피 결과 리스트</returns>
     public List<RecipeMatchResult> FindMatchingTodayRecipes(List<string> ingredientIds)
     {
-        var menuManager = MenuManager.Instance;
-
-        // MenuManager 또는 읽기 전용 todayMenus 속성이 없을 경우 안전하게 빈 결과 반환
-        var todayMenuList = menuManager?.TodayMenus;
-
-        if (todayMenuList == null || todayMenuList.Count == 0)
-        {
-            Debug.LogWarning("[RecipeManager] MenuManager 또는 TodayMenus가 존재하지 않음");
-            return new List<RecipeMatchResult>();
-        }
-
-        // 오늘 메뉴에 포함된 유효한 FoodData만 추출
-        var todayRecipes = todayMenuList
-            .Select(menu => menu.foodData)
-            .Where(food => food != null && food.ingredients != null && food.ingredients.Length > 0)
-            .ToList();
-
-        // 예외 재료 레시피도 포함시키기
-        var exceptionRecipes = FoodDatabase.Values
-            .Where(food => AlwaysIncludedRecipeIds.Contains(food.id))
-            .Where(food => food.ingredients != null && food.ingredients.Length > 0)
-            .ToList();
-
-        // 최종 레시피 후보 결합
-        var finalCandidates = todayRecipes
-            .Concat(exceptionRecipes)
-            .Distinct()
-            .ToList();
-
-        // 기존의 매칭 함수 호출 — 유저 재료 ID와 오늘 메뉴 레시피 간 매칭
-        return FindMatchingRecipes(finalCandidates, ingredientIds);
+        return FindMatchingRecipes(MenuManager.Instance.GetTodayRecipes(), ingredientIds);
     }
 
     /// <summary>
