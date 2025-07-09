@@ -174,7 +174,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
         // UI 이벤트
         EventBus.Raise(UIEventType.UpdateEarnings, totalEarnings);
-        
+        EventBus.OnSFXRequested(SFXType.CostomerPayed);
         if (showDebugInfo) Debug.Log($"Customer paid {amount}! Total served: {customersServed}, Total earnings: {totalEarnings}");
     }
 

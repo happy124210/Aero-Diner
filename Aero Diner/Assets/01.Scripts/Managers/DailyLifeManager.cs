@@ -10,6 +10,7 @@ public class DailyLifeManager : Singleton<DailyLifeManager>
 
     public void OnOpenButtonClick()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         FadeManager.Instance.FadeOutAndLoadSceneWithLoading("MainScene");
     }
 }

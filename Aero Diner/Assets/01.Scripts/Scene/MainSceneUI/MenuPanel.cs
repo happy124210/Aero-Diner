@@ -51,6 +51,7 @@ public class MenuPanel : MonoBehaviour
     }
     public void OnClickDayStartBtn()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         // 체크된 토글이 하나라도 있는지 확인
         bool anyToggled = false;
 
