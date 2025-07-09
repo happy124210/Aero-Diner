@@ -245,10 +245,27 @@ public class UIManager : Singleton<UIManager>
                 break;
 
             case UIEventType.ShowOrderPanel:
+                if (payload is Customer customerToShow)
+                {
+                    foreach (var ui in currentSceneUIs)
+                    {
+                        var panel = ui?.GetComponentInChildren<CustomerOrderPanel>(true);
+                        panel?.ShowOrderPanel(customerToShow);
+                    }
+                }
                 break;
-                
+
             case UIEventType.HideOrderPanel:
+                if (payload is Customer customerToHide)
+                {
+                    foreach (var ui in currentSceneUIs)
+                    {
+                        var panel = ui?.GetComponentInChildren<CustomerOrderPanel>(true);
+                        panel?.HideOrderPanel(customerToHide);
+                    }
+                }
                 break;
+
         }
     }
 }

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// MVC 패턴의 Controller
@@ -16,9 +16,9 @@ public class CustomerController : MonoBehaviour, IPoolable
 
     // 상태 관리
     private CustomerState currentState;
-
+    private CustomerEventBridge bridge;
     #region Public Getters & methods (Model 데이터 접근)
-    
+
     public CustomerData CurrentData => model.CustomerData;
     public FoodData CurrentOrder => model.CurrentOrder;
     public float PatienceRatio => model.CurrentPatience / model.MaxPatience;
@@ -43,6 +43,8 @@ public class CustomerController : MonoBehaviour, IPoolable
         {
             view = gameObject.AddComponent<CustomerView>();
         }
+        bridge = new CustomerEventBridge();
+        bridge.Bind(model);
     }
 
     private void Start()
@@ -126,11 +128,13 @@ public class CustomerController : MonoBehaviour, IPoolable
     private void HandleOrderPlaced(FoodData order)
     {
         view.ShowOrderBubble(order);
+
     }
 
     private void HandleServedStateChanged(bool isServed)
     {
         view.OnServedStateChanged(isServed);
+
     }
 
     private void HandleEatingStateChanged(bool isEating)
