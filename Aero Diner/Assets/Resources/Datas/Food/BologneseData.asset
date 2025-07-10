@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca77332d7f9b4134e9c53ece37a21432, type: 3}
-  m_Name: BologneseData
+  m_Name: 
   m_EditorClassIdentifier: 
   id: f29
   foodName: Bolognese
   displayName: "\uBCFC\uB85C\uB124\uC81C"
-  foodType: 0
-  foodIcon: {fileID: 21300000, guid: c4259458a5f83094dbea53d1366e5d14, type: 3}
+  foodType: 4
+  foodIcon: {fileID: 0}
   description: "\uBCFC\uB85C\uB124\uC81C \uC785\uB2C8\uB2E4"
   stationType: 06000000
   ingredients:

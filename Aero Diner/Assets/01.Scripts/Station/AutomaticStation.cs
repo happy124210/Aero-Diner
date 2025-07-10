@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.Serialization;
 using System.Collections;
+using UnityEngine.UI;
 
 /// <summary>
 /// 자동 조리 스테이션: 재료를 놓으면 자동으로 조리되고, 완료 시 결과물이 생성됨
@@ -16,8 +17,9 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     [Header("요리 시간 (초)")]
     public float cookingTime = 5f;
 
-    [Header("조리 시간 표시용 UI 텍스트")]
-    public TextMeshProUGUI cookingTimeText;
+    [Header("타이머 애니메이션")]
+    [SerializeField] private Animator stationTimerAnimator;
+    [SerializeField] private Image stationTimerImage;
 
     [Header("스테이션 데이터")]
     public StationData stationData;
@@ -27,7 +29,7 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
 
     [Header("레시피 매칭 결과")]
     [SerializeField] private string bestMatchedRecipe;
-    
+
     [Header("가능한 레시피에 포함된 음식 ID들")]
     [SerializeField] private List<string> availableFoodIds = new();
 
@@ -75,11 +77,8 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         // 조리 중이 아니라면 아무 작업도 하지 않음
         if (!isCooking) return;
 
-        // 경과 시간 만큼 남은 조리 시간 차감
-        currentCookingTime -= Time.deltaTime;
-
         // 남은 시간 UI에 갱신
-        UpdateCookingTimeText();
+        UpdateCookingProgress();
 
         // 시간이 다 되었으면 결과 처리 및 스테이션 초기화
         if (currentCookingTime <= 0f)
@@ -99,24 +98,27 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// </summary>
     public void PlaceObject(FoodData data)
     {
+        // 유효하지 않은 데이터거나 등록 불가한 재료일 경우 경고 출력 후 무시
         if (!CanPlaceIngredient(data))
         {
-            if (showDebugInfo) Debug.LogWarning($"[PlaceObject] '{data.foodName}' 등록 실패");
+            if (showDebugInfo) Debug.LogWarning($"'{data.foodName}'은 등록할 수 없는 재료입니다.");
             return;
         }
 
-        iconDisplay.UseSlot(data.foodType); // 오직 아이콘 사용만 처리
+        iconDisplay.UseSlot(data.foodType); // 아이콘 끄기
 
-        RegisterIngredient(data);
-        UpdateCandidateRecipes();
+        RegisterIngredient(data);     // 재료 등록 및 선택 처리
+        UpdateCandidateRecipes();     // 현재 재료 조합으로 가능한 레시피 탐색
 
+        // 모든 필요한 재료가 충족되었는지 확인 후 조리 시작
         if (cookedIngredient != null && cookedIngredient.ingredients.All(id => currentIngredients.Contains(id)))
         {
-            StartCooking();
+            StartCooking(); // 타이머 초기화
         }
         else
         {
             isCooking = false;
+            if (showDebugInfo) Debug.Log("조건에 맞는 레시피가 부족하여 대기 중...");
         }
     }
 
@@ -258,7 +260,7 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     {
         currentCookingTime = cookingTime;
         isCooking = true;
-        UpdateCookingTimeText();
+        UpdateCookingProgress();
     }
 
     /// <summary>
@@ -275,6 +277,7 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         }
 
         if (showDebugInfo) Debug.Log($"조리 완료: '{cookedIngredient.foodName}' 생성");
+
         GameObject result = VisualObjectFactory.CreateIngredientVisual(transform, cookedIngredient.foodName, cookedIngredient.foodIcon);
         if (result)
         {
@@ -302,7 +305,7 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     private void ResetCookingTimer()
     {
         currentCookingTime = cookingTime;
-        UpdateCookingTimeText();
+        UpdateCookingProgress();
     }
 
     /// <summary>
@@ -316,12 +319,21 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     }
 
     /// <summary>
-    /// 남은 조리 시간을 UI에 표시
+    /// 조리 시간 감소, 게이지 Fill, 텍스트 업데이트, 완료 처리까지 전반적 시간 진행 처리
     /// </summary>
-    private void UpdateCookingTimeText()
+    private void UpdateCookingProgress()
     {
-        if (cookingTimeText)
-            cookingTimeText.text = Mathf.Max(currentCookingTime, 0f).ToString("F1");
+        currentCookingTime -= Time.deltaTime;
+
+        float progress = Mathf.Clamp01(currentCookingTime / cookingTime);
+        if (stationTimerImage != null)
+            stationTimerImage.fillAmount = progress;
+
+        if (currentCookingTime <= 0f)
+        {
+            ProcessCookingResult();
+            ResetStation();
+        }
     }
 
     /// <summary>
@@ -365,7 +377,7 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     {
         currentIngredients.Clear();         // 현재 재료 목록 초기화
         currentCookingTime = cookingTime;   // 타이머 초기화
-        UpdateCookingTimeText();            // UI 갱신
+        UpdateCookingProgress();
 
         StartCoroutine(HandlePickup());
     }

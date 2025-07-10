@@ -5,6 +5,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine.Serialization;
 using System.Collections;
+using UnityEngine.UI;
 
 /// <summary>
 /// 플레이어가 상호작용하면 재료를 가공하여 가공된 재료를 생성하는 스테이션
@@ -25,8 +26,9 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     [Header("요리 시간 (초)")]
     public float cookingTime = 5f;
 
-    [Header("조리 시간 표시용 UI 텍스트")]
-    public TextMeshProUGUI cookingTimeText;
+    [Header("타이머 애니메이션")]
+    [SerializeField] private Animator stationTimerAnimator;
+    [SerializeField] private Image stationTimerImage;
 
     [Header("스테이션 데이터")]
     public StationData stationData;
@@ -64,8 +66,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
 
     private void Start()
     {
-        currentCookingTime = cookingTime;
-        UpdateCookingTimeText();
+        UpdateCookingProgress();
 
         if (stationData != null && stationData.slotDisplays != null)
         {
@@ -78,9 +79,63 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         {
             if (showDebugInfo) Debug.LogWarning("stationData 또는 slotDisplays가 null입니다.");
         }
+    }
 
-        currentCookingTime = cookingTime;
-        UpdateCookingTimeText(); // UI 초기화
+    /// <summary>
+    /// 플레이어가 J 키 등으로 상호작용할 때 호출
+    /// </summary>
+    public void Interact(PlayerInventory playerInventory, InteractionType interactionType)
+    {
+        // 재료가 없는 경우 조리 타이머 초기화 후 종료
+        if (currentIngredients.Count == 0)
+        {
+            currentCookingTime = cookingTime;
+            UpdateCookingProgress();
+            if (showDebugInfo) Debug.Log("재료가 없어 조리 타이머가 리셋되었습니다.");
+            return;
+        }
+
+        // 필요한 재료 그룹이 지정되어 있다면 유효성 검사
+        if (neededIngredients.Any())
+        {
+            bool hasInvalid = currentIngredients.Any(id => !IsIngredientIDAllowed(id));
+
+            if (hasInvalid)
+            {
+                if (showDebugInfo) Debug.Log("요구된 재료가 아닌 항목이 포함되어 있어 타이머가 리셋됨.");
+                currentCookingTime = cookingTime;
+                UpdateCookingProgress();
+                return;
+            }
+        }
+
+        // 실제 상호작용이 'Use'일 때만 처리
+        if (interactionType == InteractionType.Use)
+        {
+            currentCookingTime -= Time.deltaTime;
+            UpdateCookingProgress();
+
+            if (currentCookingTime <= 0f)
+            {
+                ProcessCookingResult();
+                currentIngredients.Clear();
+                currentCookingTime = cookingTime;
+            }
+        }
+        else
+        {
+            if (showDebugInfo) Debug.Log("[PassiveStation] InteractionType.Use가 아니므로 무시됩니다.");
+        }
+    }
+
+
+
+    private bool IsIngredientIDAllowed(string id)
+    {
+        if (neededIngredients == null || !neededIngredients.Any())
+            return true;
+
+        return neededIngredients.Any(entry => entry.id == id);
     }
 
     /// <summary>
@@ -101,8 +156,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         UpdateCandidateRecipes();     // 현재 재료 조합으로 가능한 레시피 탐색
 
         // 모든 필요한 재료가 충족되었는지 확인 후 조리 시작
-        if (cookedIngredient != null &&
-            cookedIngredient.ingredients.All(id => currentIngredients.Contains(id)))
+        if (cookedIngredient != null && cookedIngredient.ingredients.All(id => currentIngredients.Contains(id)))
         {
             StartCooking(); // 타이머 초기화
         }
@@ -113,141 +167,35 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         }
     }
 
+    /// <summary>
+    /// 재료를 등록하고 시각화 목록 생성
+    /// </summary>
     private void RegisterIngredient(FoodData data)
     {
-        // 재료 고유 ID 등록
-        string id = data.id;
-        currentIngredients.Add(id);
+        if (data == null)
+        {
+            if (showDebugInfo) Debug.LogError("[RegisterIngredient] 등록 시도된 데이터가 null입니다!");
+            return;
+        }
+
+        // 시각 오브젝트 생성
+        if (showDebugInfo) Debug.Log($"[RegisterIngredient] ID: {data.id}, Name: {data.foodName}");
+        currentIngredients.Add(data.id);
         placedIngredientList.Add(data);
-    }
 
-    private void StartCooking()
-    {
-        currentCookingTime = cookingTime;  // 타이머 초기화
-        UpdateCookingTimeText();           // UI 갱신
-        if (showDebugInfo) Debug.Log($"'{cookedIngredient.foodName}' 조리 시작!");
-    }
-
-    /// <summary>
-    /// 플레이어가 J 키 등으로 상호작용할 때 호출
-    /// </summary>
-    public void Interact(PlayerInventory playerInventory, InteractionType interactionType)
-    {
-        // 재료가 없는 경우 조리 타이머 초기화 후 종료
-        if (currentIngredients.Count == 0)
+        GameObject visual = VisualObjectFactory.PlaceIngredientVisual(transform, data.foodName, data.foodIcon);
+        if (visual)
         {
-            currentCookingTime = cookingTime;
-            UpdateCookingTimeText();
-            if (showDebugInfo) Debug.Log("재료가 없어 조리 타이머가 리셋되었습니다.");
-            return;
-        }
+            var display = visual.AddComponent<FoodDisplay>();
+            display.foodData = data;
+            display.originPlace = this;
 
-        // 필요한 재료 그룹이 지정되어 있다면 유효성 검사
-        if (neededIngredients.Any())
-        {
-            bool hasInvalid = currentIngredients.Any(id => !IsIngredientIDAllowed(id));
+            placedIngredients.Add(visual); // 오브젝트 추적 리스트에 등록
 
-            if (hasInvalid)
-            {
-                if (showDebugInfo) Debug.Log("요구된 재료가 아닌 항목이 포함되어 있어 타이머가 리셋됨.");
-                currentCookingTime = cookingTime;
-                UpdateCookingTimeText();
-                return;
-            }
-        }
-
-        // 실제 상호작용이 'Use'일 때만 처리
-        if (interactionType == InteractionType.Use)
-        {
-            currentCookingTime -= Time.deltaTime;
-            UpdateCookingTimeText();
-
-            if (currentCookingTime <= 0f)
-            {
-                ProcessIngredient(cookedIngredient);
-                currentIngredients.Clear();
-                currentCookingTime = cookingTime;
-            }
-        }
-        else
-        {
-            if (showDebugInfo) Debug.Log("[PassiveStation] InteractionType.Use가 아니므로 무시됩니다.");
+            if (showDebugInfo) Debug.Log($"'{data.foodName}' 시각 오브젝트 생성 및 배치 완료");
         }
     }
 
-    private bool IsIngredientIDAllowed(string id)
-    {
-        if (neededIngredients == null || !neededIngredients.Any())
-            return true;
-
-        return neededIngredients.Any(entry => entry.id == id);
-    }
-
-    /// <summary>
-    /// 조리 완료 시 호출되어 결과 재료 생성
-    /// </summary>
-    private void ProcessIngredient(FoodData data)
-    {
-        // 기존 재료 오브젝트 제거
-        foreach (var obj in placedIngredients)
-        {
-            if (obj)
-                Destroy(obj);
-        }
-
-        placedIngredients.Clear(); // 리스트 초기화
-
-        // 레시피가 유효하지 않을 경우 경고
-        if (!data)
-        {
-            if (showDebugInfo) Debug.LogWarning("가공된 레시피 데이터가 없습니다.");
-            return;
-        }
-
-        if (showDebugInfo) Debug.Log("가공 완료된 재료 생성됨: " + data.foodName);
-
-        // 결과물 시각화 생성
-        CreateProcessedIngredientDisplay(data);
-    }
-
-    /// <summary>
-    /// 현재 재료를 추가할 수 있는지 검사
-    /// </summary>
-    public bool CanPlaceIngredient(FoodData data)
-    {
-        // 중복 방지
-        if (currentIngredients.Contains(data.id))
-        {
-            if (showDebugInfo) Debug.LogWarning($"[Station] 중복 재료: {data.id} 이미 추가됨");
-            return false;
-        }
-
-        // 첫 번째 재료
-        if (currentIngredients.Count == 0)
-        {
-            bool typeMatch = data.stationType.Any(type => type == stationData.stationType);
-            
-            if (showDebugInfo) Debug.Log($"[Debug] Food station types: {string.Join(",", data.stationType)}");
-            if (showDebugInfo) Debug.Log($"[Debug] Station type: {stationData.stationType}");
-            
-            return typeMatch;
-        }
-
-        // 이후에는 matchedRecipeNames에 포함된 재료만 허용
-        if (availableFoodIds.Contains(data.id))
-        {
-            if (showDebugInfo) Debug.Log($"[Station] '{data.id}' matchedRecipeNames에 포함 → 등록 가능");
-            return true;
-        }
-
-        if (showDebugInfo) Debug.Log($"[Station] '{data.id}'은 현재 어떤 레시피에도 포함되지 않음");
-        return false;
-    }
-
-    /// <summary>
-    /// 현재 스테이션에 놓인 재료 목록을 기반으로 가능한 레시피 후보를 탐색하고
-    /// 가장 일치하는 요리를 선정함
-    /// </summary>
     /// <summary>
     /// 현재 스테이션에 놓인 재료 목록을 기반으로 가능한 레시피 후보를 탐색하고
     /// 가장 일치하는 요리를 선정함
@@ -350,30 +298,46 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         }
     }
 
-    /// <summary>
-    /// 조리 결과물 오브젝트 생성
-    /// </summary>
-    private GameObject CreateProcessedIngredientDisplay(FoodData data)
+    private void StartCooking()
     {
-        // 필수 데이터가 누락되었는지 확인
-        if (!data || !spawnPoint)
+        currentCookingTime = cookingTime;
+        isCooking = true;
+        UpdateCookingProgress();
+    }
+
+    /// <summary>
+    /// 조리 완료 시 결과물 생성
+    /// </summary>
+    private void ProcessCookingResult()
+    {
+        ClearPlacedObjects();
+
+        if (!cookedIngredient)
         {
-            if (showDebugInfo) Debug.LogError("필수 데이터가 누락되었습니다.");
-            return null;
+            if (showDebugInfo) Debug.LogWarning("조리 결과 레시피가 없습니다.");
+            return;
         }
 
-        if (showDebugInfo) Debug.Log($"조리 완료: '{data.foodName}' 생성");
-
-        // 시각 오브젝트 생성
-        GameObject result = VisualObjectFactory.CreateIngredientVisual(transform, data.foodName, data.foodIcon);
-
+        if (showDebugInfo) Debug.Log($"조리 완료: '{cookedIngredient.foodName}' 생성");
+        GameObject result = VisualObjectFactory.CreateIngredientVisual(transform, cookedIngredient.foodName, cookedIngredient.foodIcon);
         if (result)
         {
             var display = result.AddComponent<FoodDisplay>();
-            display.foodData = data;
+            display.foodData = cookedIngredient;
         }
+    }
 
-        return result;
+    /// <summary>
+    /// 스테이션을 초기 상태로 리셋
+    /// </summary>
+    private void ResetStation()
+    {
+        isCooking = false;
+        cookedIngredient = null;
+        ResetCookingTimer();
+        currentIngredients.Clear();
+        placedIngredientList.Clear();
+        ClearPlacedObjects();
     }
 
     /// <summary>
@@ -382,16 +346,69 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     private void ResetCookingTimer()
     {
         currentCookingTime = cookingTime;
-        UpdateCookingTimeText();
+        UpdateCookingProgress(); ;
     }
 
     /// <summary>
-    /// UI에 남은 조리 시간 업데이트
+    /// 화면에 놓인 재료 오브젝트 제거
     /// </summary>
-    private void UpdateCookingTimeText()
+    private void ClearPlacedObjects()
     {
-        if (cookingTimeText)
-            cookingTimeText.text = currentCookingTime.ToString("F1");
+        foreach (var obj in placedIngredients)
+            if (obj) Destroy(obj);
+        placedIngredients.Clear();
+    }
+
+    /// <summary>
+    /// 조리 시간 감소, 게이지 Fill, 텍스트 업데이트, 완료 처리까지 전반적 시간 진행 처리
+    /// </summary>
+    private void UpdateCookingProgress()
+    {
+        currentCookingTime -= Time.deltaTime;
+
+        float progress = Mathf.Clamp01(currentCookingTime / cookingTime);
+        if (stationTimerImage != null)
+            stationTimerImage.fillAmount = progress;
+
+        if (currentCookingTime <= 0f)
+        {
+            ProcessCookingResult();
+            ResetStation();
+        }
+    }
+
+    /// <summary>
+    /// 현재 재료를 추가할 수 있는지 검사
+    /// </summary>
+    public bool CanPlaceIngredient(FoodData data)
+    {
+        // 중복 방지
+        if (currentIngredients.Contains(data.id))
+        {
+            if (showDebugInfo) Debug.LogWarning($"[Station] 중복 재료: {data.id} 이미 추가됨");
+            return false;
+        }
+
+        // 첫 번째 재료
+        if (currentIngredients.Count == 0)
+        {
+            bool typeMatch = data.stationType.Any(type => type == stationData.stationType);
+
+            if (showDebugInfo) Debug.Log($"[Debug] Food station types: {string.Join(",", data.stationType)}");
+            if (showDebugInfo) Debug.Log($"[Debug] Station type: {stationData.stationType}");
+
+            return typeMatch;
+        }
+
+        // 이후에는 matchedRecipeNames에 포함된 재료만 허용
+        if (availableFoodIds.Contains(data.id))
+        {
+            if (showDebugInfo) Debug.Log($"[Station] '{data.id}' matchedRecipeNames에 포함 → 등록 가능");
+            return true;
+        }
+
+        if (showDebugInfo) Debug.Log($"[Station] '{data.id}'은 현재 어떤 레시피에도 포함되지 않음");
+        return false;
     }
 
     /// <summary>
@@ -401,7 +418,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     {
         currentIngredients.Clear();         // 현재 재료 목록 초기화
         currentCookingTime = cookingTime;   // 타이머 초기화
-        UpdateCookingTimeText();            // UI 갱신
+        UpdateCookingProgress();            
 
         StartCoroutine(HandlePickup());
     }
@@ -413,7 +430,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// - 해당 재료가 등록된 재료인지 확인한 뒤, UI 상태 및 아이콘 복구를 수행
     /// 프레임 딜레이를 통해 생성/삭제 타이밍 간 충돌을 방지하고 상호작용 안정성을 확보
     /// </summary>
-
     private IEnumerator HandlePickup()
     {
         // 아이콘 복구, 상태 초기화

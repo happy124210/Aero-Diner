@@ -24,7 +24,11 @@ public class CustomerView : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo;
     
-    // private fields
+    // animation hash
+    private static readonly int IsWalking = Animator.StringToHash("IsWalking");
+    private static readonly int IsSitting = Animator.StringToHash("IsSitting");
+    private static readonly int MoveX = Animator.StringToHash("MoveX");
+    private static readonly int MoveY = Animator.StringToHash("MoveY");
     
     #region Initialization
     public void Initialize()
@@ -109,8 +113,18 @@ public class CustomerView : MonoBehaviour
 
     public void SetAnimationState(CustomerAnimState state)
     {
-        // TODO: 실제 애니메이터 연동
+        if (!animator) return;
         
+        animator.SetBool(IsWalking, state == CustomerAnimState.Walking);
+        animator.SetBool(IsSitting, state == CustomerAnimState.Sitting);
+    }
+    
+    public void UpdateAnimationDirection(Vector2 direction)
+    {
+        if (!animator) return;
+
+        animator.SetFloat(MoveX, direction.x);
+        animator.SetFloat(MoveY, direction.y);
     }
 
     #endregion

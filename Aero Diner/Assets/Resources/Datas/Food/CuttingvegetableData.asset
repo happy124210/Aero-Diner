@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca77332d7f9b4134e9c53ece37a21432, type: 3}
-  m_Name: CuttingvegetableData
+  m_Name: 
   m_EditorClassIdentifier: 
   id: f20
   foodName: CuttingVegetable
   displayName: "\uC190\uC9C8\uD55C \uCC44\uC18C"
-  foodType: 0
-  foodIcon: {fileID: 21300000, guid: cbd3dd75e3397814d88b7175da7d1544, type: 3}
+  foodType: 1
+  foodIcon: {fileID: 21300000, guid: 1117961d638c84d4796044d7a13cee2c, type: 3}
   description: "\uC190\uC9C8\uD55C \uCC44\uC18C \uC785\uB2C8\uB2E4"
   stationType: 0100000007000000
   ingredients:

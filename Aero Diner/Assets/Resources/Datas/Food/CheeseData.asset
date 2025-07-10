@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca77332d7f9b4134e9c53ece37a21432, type: 3}
-  m_Name: CheeseData
+  m_Name: 
   m_EditorClassIdentifier: 
   id: f8
   foodName: Cheese
   displayName: "\uCE58\uC988 \uB369\uC774"
-  foodType: 0
-  foodIcon: {fileID: 21300000, guid: 3baeee0e2942c974caadff9760957090, type: 3}
+  foodType: 6
+  foodIcon: {fileID: 21300000, guid: 3f60966c2d83b1c4b9b3a5fc65d737b4, type: 3}
   description: "\uCE58\uC988 \uB369\uC774 \uC785\uB2C8\uB2E4"
   stationType: 03000000
   ingredients: []
