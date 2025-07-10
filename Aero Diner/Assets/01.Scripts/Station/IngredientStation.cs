@@ -35,38 +35,49 @@ public class IngredientStation : MonoBehaviour, IInteractable
             if (showDebugInfo) Debug.Log("플레이어가 이미 아이템을 들고 있음");
             return;
         }
-        
+        switch (interactionType)
+        {
+            case InteractionType.Pickup:
+                CreateIngredient(playerInventory);
+                break;
+
+            case InteractionType.Use:
+                // 향후 확장용: 예) 레시피 변경, UI 열기 등
+                if (showDebugInfo) Debug.Log("Use 상호작용은 현재 정의되어 있지 않음");
+                break;
+        }
+    }
+
+    private void CreateIngredient(PlayerInventory playerInventory)
+    {
         string displayName = selectedIngredient.foodName;
         Sprite displayIcon = selectedIngredient.foodIcon;
 
-        // VisualObjectFactory로 시각 오브젝트 생성 (부모: 플레이어 손 슬롯)
         Transform slot = playerInventory.GetItemSlotTransform();
         GameObject pickupObj = VisualObjectFactory.CreateIngredientVisual(
             parent: slot,
             name: displayName,
             icon: displayIcon
         );
+
         if (!pickupObj)
         {
             if (showDebugInfo) Debug.LogError("비주얼 오브젝트 생성 실패");
             return;
         }
 
-        // FoodDisplay 세팅
         var display = pickupObj.AddComponent<FoodDisplay>();
         display.foodData = selectedIngredient;
 
-        // Collider / Rigidbody 비활성화
         var col = pickupObj.GetComponent<Collider2D>();
         if (col != null) col.enabled = false;
         var rb = pickupObj.GetComponent<Rigidbody2D>();
         if (rb != null) rb.simulated = false;
 
-        // 인벤토리에 등록
         playerInventory.SetHeldItem(display);
-
         if (showDebugInfo) Debug.Log($"[{name}] {displayName} 생성 → 즉시 플레이어 손으로 이동");
     }
+
 
     public bool PlaceIngredient(FoodData data)
     {
