@@ -435,7 +435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c18f0b5c014fdd4b9df973a7af67051, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Txt_Earning: {fileID: 8693995645194989768}
+  earningText: {fileID: 8693995645194989768}
   animateDuration: 0.5
   flashColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &2707516432517122105
@@ -914,7 +914,7 @@ GameObject:
   - component: {fileID: 7998059951480774362}
   - component: {fileID: 6412343085081319228}
   m_Layer: 5
-  m_Name: Txt_Date
+  m_Name: Tmp_Date
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1125,7 +1125,7 @@ GameObject:
   - component: {fileID: 5317903142527131063}
   - component: {fileID: 5110746364264061732}
   m_Layer: 5
-  m_Name: Txt_Month
+  m_Name: Tmp_Month
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1259,7 +1259,7 @@ GameObject:
   - component: {fileID: 7288473615826793518}
   - component: {fileID: 8693995645194989768}
   m_Layer: 5
-  m_Name: Txt_Earning
+  m_Name: Tmp_Earning
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

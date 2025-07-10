@@ -301,7 +301,7 @@ public class CustomerController : MonoBehaviour
     
     #endregion
     
-    # region property & public getters
+    # region property & public methods
     
     public CustomerData CustomerData => model.Data;
     public float GetEatingTime() => model.Data.eatTime;

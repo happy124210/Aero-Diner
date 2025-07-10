@@ -22,7 +22,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
     [Header("Statistics")]
     [SerializeField] private int customersServed;
     [SerializeField] private int customersVisited;
-    [SerializeField] private int totalEarnings;
 
     [Tooltip("현재까지 경과한 시간")]
     [SerializeField] private float gameTime;
@@ -33,11 +32,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
     [Header("라운드 시간 설정")]
     [Tooltip("하루 제한 시간 (초 단위)")]
     [SerializeField] private float gameTimeLimit;
-    [SerializeField] private int currentDay = 1;
-
-    //PlayerPref 저장용 변수
-    private const string EARNINGS_KEY = "TotalEarnings";
-    private static readonly int[] DaysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
     private void Update()
     {
@@ -70,7 +64,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
         GUILayout.Label($"Game Running: {gameRunning}");
         GUILayout.Label($"Active Customers: {PoolManager.Instance.ActiveCustomerCount}");
         GUILayout.Label($"Customers Served: {customersServed}/{targetCustomersServed}");
-        GUILayout.Label($"Total Earnings: {totalEarnings}");
+        GUILayout.Label($"Total Earnings: {GameManager.Instance.TotalEarnings}");
         GUILayout.Label($"Game Time: {gameTime:F1}s / {gameTimeLimit}s");
         
         GUILayout.Space(10);
@@ -104,11 +98,9 @@ public class RestaurantManager : Singleton<RestaurantManager>
         gameRunning = true;
         gameTime = 0f;
         customersServed = 0;
-        totalEarnings = 0;
 
-        LoadEarnings();
-        LoadDay();
-
+        GameManager.Instance.LoadEarnings();
+        
         if (customerSpawner)
         {
             customerSpawner.StartSpawning();
@@ -116,7 +108,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
         // UI 이벤트
         EventBus.Raise(UIEventType.ShowRoundTimer);
-        EventBus.Raise(UIEventType.UpdateEarnings, totalEarnings);
         
         if (showDebugInfo) Debug.Log("Restaurant game started!");
     }
@@ -145,17 +136,11 @@ public class RestaurantManager : Singleton<RestaurantManager>
         yield return new WaitUntil(() => PoolManager.Instance.ActiveCustomerCount == 0);
         
         if (showDebugInfo) Debug.Log($"Game ended: {reason}");
-        if (showDebugInfo) Debug.Log($"Final Stats - Served: {customersServed}, Earnings: {totalEarnings}");
-        if (showDebugInfo) Debug.Log($"[RestaurantManager] Incrementing day from {currentDay} → {currentDay + 1}");
-
-        //  하루 증가
-        currentDay++;
-
+        if (showDebugInfo) Debug.Log($"Final Stats - Served: {customersServed}, Earnings: {GameManager.Instance.TotalEarnings}");
+        
         //  하루 종료 시점에 저장
-        var data = SaveLoadManager.LoadGame() ?? new SaveData();
-        data.totalEarnings = totalEarnings;
-        data.currentDay = currentDay;
-        SaveLoadManager.SaveGame(data);
+        GameManager.Instance.IncreaseDay();
+        GameManager.Instance.SaveData();
 
         if (showDebugInfo) Debug.Log("[RestaurantManager] 저장 완료");
 
@@ -173,45 +158,9 @@ public class RestaurantManager : Singleton<RestaurantManager>
     public void OnCustomerPaid(int amount)
     {
         customersServed++;
-        totalEarnings += amount;
-
-        // UI 이벤트
-        EventBus.Raise(UIEventType.UpdateEarnings, totalEarnings);
-        EventBus.OnSFXRequested(SFXType.CostomerPayed);
-        if (showDebugInfo) Debug.Log($"Customer paid {amount}! Total served: {customersServed}, Total earnings: {totalEarnings}");
-    }
-    
-    private void LoadEarnings()
-    {
-        var data = SaveLoadManager.LoadGame();
-        totalEarnings = data?.totalEarnings ?? 0;
-    }
-    
-    private void LoadDay()
-    {
-        var data = SaveLoadManager.LoadGame();
-        currentDay = Mathf.Max(1, data?.currentDay ?? 1);
-    }
-
-    public void GetCurrentDate(out int month, out int day)
-    {
-        int totalDays = currentDay;
-        month = 1;
-
-        foreach (var daysInThisMonth in DaysInMonth)
-        {
-            if (totalDays > daysInThisMonth)
-            {
-                totalDays -= daysInThisMonth;
-                month++;
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        day = totalDays;
+        GameManager.Instance.AddMoney(amount);
+        
+        if (showDebugInfo) Debug.Log($"Customer paid {amount}! Total served: {customersServed}, Total earnings: {GameManager.Instance.TotalEarnings}");
     }
     
     #region public getters
@@ -227,11 +176,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
     // 손님
     public int CustomersServed => customersServed;
     public int CustomersVisited => customersVisited;
-    
-    // 돈
-    public int TotalEarnings => totalEarnings;
-    //달력 UI를 위한 날짜 Getter
-    public int CurrentDay => currentDay;
 
     #endregion
 
