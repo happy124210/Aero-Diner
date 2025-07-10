@@ -21,8 +21,15 @@ public class VolumeHandler : MonoBehaviour
 
     private void Start()
     {
-        // SaveData에서 로드
-        var data = SaveLoadManager.LoadGame() ?? new SaveData();
+        var data = SaveLoadManager.LoadGame();
+
+        if (data == null)
+        {
+            Debug.Log("[VolumeHandler] 저장 파일 없음 → 기본 볼륨 설정 적용 및 저장");
+            ResetVolumes(); // 내부에서 SaveVolumes도 호출됨
+            return;
+        }
+
         originalBGMVolume = data.bgmVolume == 0 ? 0.5f : data.bgmVolume;
         originalSFXVolume = data.sfxVolume == 0 ? 0.5f : data.sfxVolume;
 
@@ -64,8 +71,19 @@ public class VolumeHandler : MonoBehaviour
     }
     public bool HasUnsavedChanges()
     {
-        return !Mathf.Approximately(pendingBGMVolume, originalBGMVolume)
-            || !Mathf.Approximately(pendingSFXVolume, originalSFXVolume);
+        bool bgmChanged = !Mathf.Approximately(pendingBGMVolume, originalBGMVolume);
+        bool sfxChanged = !Mathf.Approximately(pendingSFXVolume, originalSFXVolume);
+
+        if (bgmChanged || sfxChanged)
+        {
+            Debug.LogWarning("[VolumeHandler] 변경사항 감지됨:");
+            if (bgmChanged)
+                Debug.LogWarning($"  - BGM 변경됨: 현재={pendingBGMVolume}, 원본={originalBGMVolume}");
+            if (sfxChanged)
+                Debug.LogWarning($"  - SFX 변경됨: 현재={pendingSFXVolume}, 원본={originalSFXVolume}");
+        }
+
+        return bgmChanged || sfxChanged;
     }
     /// <summary> 저장 버튼 클릭 시 호출 </summary>
     public void SaveVolumes()

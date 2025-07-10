@@ -98,15 +98,21 @@ public class KeyRebindButton : MonoBehaviour
     {
         actionRef.action.RemoveBindingOverride(bindingIndex);
 
-        var data = SaveLoadManager.LoadGame() ?? new SaveData();
-        if (data.keyBindings.ContainsKey(BindingSaveKey))
+        string defaultPath = actionRef.action.bindings[bindingIndex].path;
+        if (string.IsNullOrEmpty(defaultPath))
         {
-            data.keyBindings.Remove(BindingSaveKey);
-            SaveLoadManager.SaveGame(data);
+            Debug.LogError($"[KeyRebindButton] 기본 바인딩 경로가 비어 있음! action: {actionRef.action.name}, index: {bindingIndex}");
         }
+
+        var data = SaveLoadManager.LoadGame() ?? new SaveData();
+        data.keyBindings[BindingSaveKey] = defaultPath;
+        SaveLoadManager.SaveGame(data);
+
+        Debug.Log($"[KeyRebindButton] 기본값 저장됨: {BindingSaveKey} → {defaultPath}");
 
         UpdateKeyText();
     }
+
 
     public void UpdateKeyText()
     {
