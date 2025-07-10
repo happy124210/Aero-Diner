@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class SFXManager : Singleton<SFXManager>
 {
-
+    private List<AudioSource> additionalSources = new List<AudioSource>();
     [System.Serializable]
     public class SFXEntry
     {
@@ -37,7 +37,11 @@ public class SFXManager : Singleton<SFXManager>
 
         }
     }
-
+    public void RegisterAdditionalSource(AudioSource source)
+    {
+        if (!additionalSources.Contains(source))
+            additionalSources.Add(source);
+    }
     private void OnEnable()
     {
         EventBus.OnSFXRequested += HandleSFXRequest;
@@ -79,6 +83,12 @@ public class SFXManager : Singleton<SFXManager>
     {
         if (audioSource != null)
             audioSource.volume = volume;
+
+        foreach (var source in additionalSources)
+        {
+            if (source != null)
+                source.volume = volume;
+        }
     }
 
     public float GetVolume()

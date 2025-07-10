@@ -26,7 +26,7 @@ public class MenuPanel : MonoBehaviour
         }
 
         // 메뉴 가져오기
-        var menuList = MenuManager.Instance.GetTodayMenuData();
+        var menuList = MenuManager.Instance.GetUnlockedMenus();
 
         if (menuList == null)
         {
@@ -81,7 +81,7 @@ public class MenuPanel : MonoBehaviour
                 EventBus.Raise(UIEventType.HideMenuPanel);
             });
         
-        RestaurantManager.Instance.StartGame();
+        RestaurantManager.Instance.StartRestaurant();
         EventBus.OnBGMRequested(BGMEventType.PlayMainTheme);
     }
 

@@ -48,13 +48,13 @@ public class RestaurantManager : Singleton<RestaurantManager>
             // 시간 제한 체크
             if (gameTime >= gameTimeLimit)
             {
-                EndGame("시간 종료!");
+                EndRestaurant("시간 종료!");
             }
             
             // 목표 달성 체크
             if (customersServed >= targetCustomersServed)
             {
-                EndGame("목표 달성!");
+                EndRestaurant("목표 달성!");
             }
         }
     }
@@ -85,9 +85,9 @@ public class RestaurantManager : Singleton<RestaurantManager>
         if (GUILayout.Button(gameRunning ? "Stop Game" : "Start Game"))
         {
             if (gameRunning)
-                EndGame("수동 정지");
+                EndRestaurant("수동 정지");
             else
-                StartGame();
+                StartRestaurant();
         }
         
         if (GUILayout.Button("Unlock All Menus"))
@@ -99,7 +99,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
         GUILayout.EndArea();
     }
     
-    public void StartGame()
+    public void StartRestaurant()
     {
         gameRunning = true;
         gameTime = 0f;
@@ -121,8 +121,10 @@ public class RestaurantManager : Singleton<RestaurantManager>
         if (showDebugInfo) Debug.Log("Restaurant game started!");
     }
     
-    public void EndGame(string reason)
+    public void EndRestaurant(string reason)
     {
+        if (gameRunning == false) return;
+        
         gameRunning = false;
         
         if (customerSpawner)
@@ -138,6 +140,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
         if (showDebugInfo) Debug.Log("영업 종료 - 손님들이 떠나기를 기다리는 중...");
         
         TableManager.Instance.ReleaseAllQueues();
+        
         // 모든 손님이 떠날 때까지 대기
         yield return new WaitUntil(() => PoolManager.Instance.ActiveCustomerCount == 0);
         
@@ -177,17 +180,13 @@ public class RestaurantManager : Singleton<RestaurantManager>
         EventBus.OnSFXRequested(SFXType.CostomerPayed);
         if (showDebugInfo) Debug.Log($"Customer paid {amount}! Total served: {customersServed}, Total earnings: {totalEarnings}");
     }
-
-
-
+    
     private void LoadEarnings()
     {
         var data = SaveLoadManager.LoadGame();
         totalEarnings = data?.totalEarnings ?? 0;
     }
-
-
-
+    
     private void LoadDay()
     {
         var data = SaveLoadManager.LoadGame();
@@ -241,7 +240,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
     [ContextMenu("Force End Game")]
     public void ForceEndGame()
     {
-        EndGame("강제 종료");
+        EndRestaurant("강제 종료");
     }
     
     [ContextMenu("Add 10 Customers Served")]
