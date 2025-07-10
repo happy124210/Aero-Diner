@@ -17,7 +17,7 @@ public class MainSceneUI : MonoBehaviour
 
     private void UpdateDate()
     {
-        RestaurantManager.Instance.GetCurrentDate(out int month, out int day);
+        GameManager.Instance.GetCurrentDate(out int month, out int day);
         monthText.text = $"{month}월";
         dayText.text = $"{day}일";
 
