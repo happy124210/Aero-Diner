@@ -109,7 +109,7 @@ public class CSVImporter
             return;
         }
         
-        string targetFolder = $"Assets/03.Datas/{folderName}/";
+        string targetFolder = $"Assets/Resources/Datas/{folderName}/";
         if (!Directory.Exists(targetFolder)) 
         {
             Directory.CreateDirectory(targetFolder);
@@ -195,7 +195,6 @@ public class CSVImporter
         if (icon == null)
         {
             Debug.LogWarning($"[LoadIcon] Icon 없어요!!!: Resources/{path}");
-            //Debug.LogWarning($"Resources/{path}.png 형태 있나 확인해주세요 !!!");
         }
         else
         {
