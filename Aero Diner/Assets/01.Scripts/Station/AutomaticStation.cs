@@ -53,6 +53,32 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     private void Awake()
     {
         outline = GetComponent<OutlineShaderController>();
+
+        string objName = gameObject.name;
+        string resourcePath = $"Datas/Station/{objName}Data";
+
+        // SO 로드
+        StationData data = Resources.Load<StationData>(resourcePath);
+        if (data != null)
+        {
+            // stationData 필드 연결
+            stationData = data;
+
+            // 스프라이트 아이콘 설정
+            if (TryGetComponent<SpriteRenderer>(out var sr) && data.stationIcon != null)
+            {
+                sr.sprite = data.stationIcon;
+            }
+            else
+            {
+                Debug.LogWarning($"[IconLoader] SpriteRenderer가 없거나 stationIcon이 null입니다. 오브젝트: '{objName}'");
+            }
+        }
+        else
+        {
+            Debug.LogError($"[IconLoader] StationData를 찾을 수 없습니다: 경로 = '{resourcePath}'");
+        }
+
     }
 
     private void Start()
@@ -79,13 +105,6 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
 
         // 남은 시간 UI에 갱신
         UpdateCookingProgress();
-
-        // 시간이 다 되었으면 결과 처리 및 스테이션 초기화
-        if (currentCookingTime <= 0f)
-        {
-            ProcessCookingResult();
-            ResetStation();
-        }
     }
 
     /// <summary>
@@ -261,6 +280,11 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         currentCookingTime = cookingTime;
         isCooking = true;
         UpdateCookingProgress();
+
+        if (stationTimerAnimator != null)
+        {
+            stationTimerAnimator.SetTrigger("StartCook"); 
+        }
     }
 
     /// <summary>
@@ -326,8 +350,6 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         currentCookingTime -= Time.deltaTime;
 
         float progress = Mathf.Clamp01(currentCookingTime / cookingTime);
-        if (stationTimerImage != null)
-            stationTimerImage.fillAmount = progress;
 
         if (currentCookingTime <= 0f)
         {
