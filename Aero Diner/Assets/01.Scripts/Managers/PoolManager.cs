@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -39,8 +36,7 @@ public class PoolManager : Singleton<PoolManager>
     private void InitializePools()
     {
         LoadResourceData();
-
-        // poolContainer 없을 경우 생성
+        
         if (poolContainer == null)
         {
             GameObject container = new GameObject("CustomerContainer");
@@ -105,8 +101,7 @@ public class PoolManager : Singleton<PoolManager>
     {
         GameObject customerObj = Instantiate(customerPrefab, customerPoolParents[customerData]);
         CustomerController customer = customerObj.GetComponent<CustomerController>();
-
-        // 컴포넌트 없을 경우
+        
         if (!customer)
         {
             Debug.LogError("[ObjectPoolManager]: CustomerController 컴포넌트 없음 !!!");
@@ -162,7 +157,7 @@ public class PoolManager : Singleton<PoolManager>
     /// <param name="position"> 스폰 위치 </param>
     /// <param name="rotation"> 회전값 </param>
     /// <returns></returns>
-    public CustomerController SpawnCustomer(CustomerData customerData, Vector3 position, Quaternion rotation = default)
+    public void SpawnCustomer(CustomerData customerData, Vector3 position, Quaternion rotation = default)
     {
         if (!customerData)
         {
@@ -181,8 +176,6 @@ public class PoolManager : Singleton<PoolManager>
             customer.transform.position = position;
             customer.transform.rotation = rotation == default ? Quaternion.identity : rotation;
         }
-        
-        return customer;
     }
 
     /// <summary>
@@ -193,7 +186,7 @@ public class PoolManager : Singleton<PoolManager>
     {
         if (!customer) return;
 
-        CustomerData customerData = customer.CurrentData;
+        CustomerData customerData = customer.CustomerData;
         if (customerData && customerPools.ContainsKey(customerData))
         {
             customerPools[customerData].Release(customer);

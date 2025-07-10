@@ -7,37 +7,27 @@ using Random = UnityEngine.Random;
 public class CustomerSpawner : MonoBehaviour
 {
     [Header("스폰 세팅")]
-    [SerializeField] private float minSpawnInterval = 2f;
-    [SerializeField] private float maxSpawnInterval = 5f;
+    [SerializeField] private float minSpawnInterval;
+    [SerializeField] private float maxSpawnInterval;
     [SerializeField] private int maxCustomers = 10;
     [SerializeField] private Transform[] spawnPoints;
     
-    // 줄서기 큐 (앞에서부터 순서대로)
-    private bool isAssigningSeat;
-    
-    [Header("손님 타입 리스트 (자동 로드됨)")]
-    [SerializeField] private List<string> customerDataIds = new List<string>();
-    
-    [Header("스폰 확률 - 임시")]
-    [SerializeField] private float normalCustomerChance = 0.6f;
-    [SerializeField] private float rareCustomerChance = 0.2f;
+    [Header("스폰 확률")]
+    [Range(0f, 1f)]
+    [SerializeField] private float normalCustomerChance;
     
     [Header("Debug")]
     [SerializeField] private bool autoSpawn = true;
     [SerializeField] private bool showDebugInfo = true;
     
     private Coroutine spawnCoroutine;
+    private CustomerData[] availableCustomers;
 
     #region Unity events
     
-    private void Awake()
+    private void Start()
     {
-        CustomerData[] customerDatas = Resources.LoadAll<CustomerData>("Datas/Customer");
-
-        foreach (CustomerData customerData in customerDatas)
-        {
-            customerDataIds.Add(customerData.id);
-        }
+        availableCustomers = PoolManager.Instance.AvailableCustomers;
     }
     
     private void OnDestroy()
@@ -70,9 +60,10 @@ public class CustomerSpawner : MonoBehaviour
 
     private IEnumerator SpawnCustomerCoroutine()
     {
-        while (true)
+        while (autoSpawn)
         {
-            if (PoolManager.Instance.ActiveCustomerCount < maxCustomers && TableManager.Instance.CanAcceptNewCustomer())
+            if (PoolManager.Instance.ActiveCustomerCount < maxCustomers && 
+                TableManager.Instance.CanAcceptNewCustomer())
             {
                 SpawnRandomCustomer();
             }
@@ -86,63 +77,55 @@ public class CustomerSpawner : MonoBehaviour
     {
         if (spawnPoints == null || spawnPoints.Length == 0)
         {
-            if (showDebugInfo) Debug.LogError("[CustomerSpawner]: 스폰 지점 설정해주세요 !!!");
+            Debug.LogError("[CustomerSpawner]: 스폰 지점을 설정해주세요!");
             return;
         }
 
         // 스폰 포인트 중 랜덤으로 선택
-        Vector3 spawnPosition = spawnPoints[Random.Range(0, spawnPoints.Length)].position;
+        Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
         
-        CustomerData customerData = SelectRandomCustomer();
+        CustomerData customerData = SelectRandomCustomerByRarity();
         if (!customerData)
         {
-            // 확률 선택 실패 시 일반 랜덤
-            var availableCustomers = PoolManager.Instance.AvailableCustomers;
-            if (availableCustomers != null && availableCustomers.Length > 0)
-            {
-                customerData = availableCustomers[Random.Range(0, availableCustomers.Length)];
-            }
+             if (showDebugInfo) Debug.LogWarning("[CustomerSpawner]: 스폰할 손님 데이터를 찾지 못했습니다. 스폰을 건너뜁니다.");
+             return;
         }
 
-        if (customerData)
-        {
-            CustomerController selectedCustomer = PoolManager.Instance.SpawnCustomer(customerData, spawnPosition);
-            if (selectedCustomer && showDebugInfo) 
-                Debug.Log($"[CustomerSpawner]: {customerData.customerName} 스폰 완료!"); 
-        }
+        PoolManager.Instance.SpawnCustomer(customerData, spawnPoint.position, spawnPoint.rotation);
+        if (showDebugInfo) 
+            Debug.Log($"[CustomerSpawner]: {customerData.customerName} (등급: {customerData.rarity}) 스폰 완료!"); 
     }
 
-    private CustomerData SelectRandomCustomer()
+    private CustomerData SelectRandomCustomerByRarity()
     {
-        float random = Random.Range(0f, 1f);
-
-        // 확률별 선택 로직
-        if (random < normalCustomerChance)
+        float randomValue = Random.value;
+        
+        CustomerRarity selectedRarity = (randomValue < normalCustomerChance) ? CustomerRarity.Normal : CustomerRarity.Rare;
+        
+        List<CustomerData> candidates = availableCustomers
+            .Where(c => c && c.rarity == selectedRarity)
+            .ToList();
+        
+        if (candidates.Count == 0)
         {
-            return FindCustomerByRarity(CustomerRarity.Normal);
+            selectedRarity = (selectedRarity == CustomerRarity.Normal) ? CustomerRarity.Rare : CustomerRarity.Normal;
+            candidates = availableCustomers
+                .Where(c => c && c.rarity == selectedRarity)
+                .ToList();
         }
-        else
-        {
-            return FindCustomerByRarity(CustomerRarity.Rare);
-        }
+        
+        return candidates.Count == 0 ? null : candidates[Random.Range(0, candidates.Count)];
     }
 
-    private CustomerData FindCustomerByRarity(CustomerRarity rarity)
-    {
-        var availableCustomers = PoolManager.Instance.AvailableCustomers;
-
-        return availableCustomers?.FirstOrDefault(customerData => customerData && customerData.rarity == rarity);
-    }
-    
     #endregion
     
-    #region Manual Control (디버그용)
-    
-    [ContextMenu("Spawn Random Customer")]
     public void SpawnSingleCustomer()
     {
+        if (!Application.isPlaying)
+        {
+            Debug.LogWarning("게임 실행 중에만 손님을 스폰할 수 있습니다.");
+            return;
+        }
         SpawnRandomCustomer();
     }
-    
-    #endregion
 }

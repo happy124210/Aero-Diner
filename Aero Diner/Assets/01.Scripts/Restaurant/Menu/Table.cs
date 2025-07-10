@@ -30,13 +30,6 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
         menuSpawnPosition = transform.Find("Menu Spawn Position");
     }
 
-    private void Awake()
-    {
-        stopPoint = transform.Find("Stop Position");
-        seatPoint = transform.Find("Seat Position");
-        menuSpawnPosition = transform.Find("Menu Spawn Position");
-    }
-
     #endregion
 
     #region TableManager 연동
@@ -120,7 +113,8 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
 
     public void OnOrderMatch()
     {
-        // TODO: 주문 일치 시 식사 시작
+        // TODO: 주문 일치 시 FoodDisplay 비활성화
+        // 이벤트 연결 필요
     }
 
     /// <summary>

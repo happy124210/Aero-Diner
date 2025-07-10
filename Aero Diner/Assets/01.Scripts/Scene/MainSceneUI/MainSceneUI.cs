@@ -24,10 +24,12 @@ public class MainSceneUI : MonoBehaviour
     }
     public void OnClickPause()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         EventBus.Raise(UIEventType.OpenPause);
     }
     public void OnClickInventory()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         EventBus.Raise(UIEventType.ShowInventory);
     }
 
