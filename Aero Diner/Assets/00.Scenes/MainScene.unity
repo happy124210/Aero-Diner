@@ -138,7 +138,7 @@ PrefabInstance:
     - target: {fileID: 4420809329719931962, guid: fe9d7506fb3ca39478945786748061c2, type: 3}
       propertyPath: tables.Array.data[0]
       value: 
-      objectReference: {fileID: 1115497215}
+      objectReference: {fileID: 0}
     - target: {fileID: 4420809329719931962, guid: fe9d7506fb3ca39478945786748061c2, type: 3}
       propertyPath: tables.Array.data[1]
       value: 
@@ -480,6 +480,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5808419587469950342, guid: 95f1c94ddbcf5404691a4d504b3a43e2, type: 3}
+      propertyPath: m_NavMeshData
+      value: 
+      objectReference: {fileID: 23800000, guid: 01458671f22d5d4439ea1730bc26d2eb, type: 2}
     - target: {fileID: 7183592348503508313, guid: 95f1c94ddbcf5404691a4d504b3a43e2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -607,17 +611,6 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
---- !u!114 &1115497215 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1836848469579017435, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
-  m_PrefabInstance: {fileID: 7245931879355692583}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 134016640f0dce440b6d565ec97d2ed7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1974700348
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -727,7 +720,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Restaurant
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3911784552021709749, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
+    - {fileID: 4071540524528396142, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
+    - {fileID: 8591096987163007348, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
+    - {fileID: 2993569781334214158, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
+    - {fileID: 6296635703824261502, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
+    - {fileID: 7819746442030966617, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
+    - {fileID: 8532448264808261065, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
+    - {fileID: 8416035326124746845, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
+    - {fileID: 4570219652183782721, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

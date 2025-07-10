@@ -146,7 +146,7 @@ public class MovingToSeatState : CustomerState
 
     public override void Exit(CustomerController customer)
     {
-        customer.AdjustSeatPosition();
+        customer.StopMovement();
         customer.SetAnimationState(CustomerAnimState.Sitting);
     }
 }
@@ -160,7 +160,7 @@ public class OrderingState : CustomerState
     
     public override void Enter(CustomerController customer) 
     {
-        customer.StopMovement();
+        customer.AdjustSeatPosition();
         customer.PlaceOrder();
         customer.SetPatienceTimerActive(true);
     }
