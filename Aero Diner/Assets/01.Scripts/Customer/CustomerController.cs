@@ -176,7 +176,6 @@ public class CustomerController : MonoBehaviour
         // TODO: 이벤트 연결
         RestaurantManager.Instance.OnCustomerEntered();
         model.PlaceOrder();
-        RestaurantManager.Instance.OnCustomerPaid(GetCurrentOrder().foodCost);
     }
 
     public void ReceiveFood(FoodData servedMenu)
