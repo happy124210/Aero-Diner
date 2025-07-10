@@ -160,7 +160,7 @@ public class OrderingState : CustomerState
     
     public override void Enter(CustomerController customer) 
     {
-        customer.AdjustSeatPosition();
+        customer.AdjustToSeatPosition();
         customer.PlaceOrder();
         customer.SetPatienceTimerActive(true);
     }
@@ -241,7 +241,10 @@ public class PayingState : CustomerState
         return this;
     }
 
-    public override void Exit(CustomerController customer) { }
+    public override void Exit(CustomerController customer)
+    {
+        customer.AdjustToStopPosition();
+    }
 }
 
 /// <summary>

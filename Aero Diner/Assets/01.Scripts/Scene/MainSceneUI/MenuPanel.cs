@@ -81,7 +81,7 @@ public class MenuPanel : MonoBehaviour
                 EventBus.Raise(UIEventType.HideMenuPanel);
             });
         
-        RestaurantManager.Instance.StartGame();
+        RestaurantManager.Instance.StartRestaurant();
         EventBus.OnBGMRequested(BGMEventType.PlayMainTheme);
     }
 
