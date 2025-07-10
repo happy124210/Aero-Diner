@@ -152,34 +152,65 @@ public class PlayerController : MonoBehaviour
     private IInteractable FindBestInteractable(InteractionType interactionType)
     {
         Vector2 origin = transform.position;
-        Vector2 direction = lastMoveDir;
         float distance = interactionRadius;
+        float fanAngle = 105f;
+        int rayCount = 7;
 
-        RaycastHit2D[] hits = Physics2D.RaycastAll(origin, direction, distance, interactableLayer);
-        IInteractable fallback = null;
+        Vector2 forward = lastMoveDir == Vector2.zero ? Vector2.down : lastMoveDir;
+        float startAngle = Mathf.Atan2(forward.y, forward.x) * Mathf.Rad2Deg - fanAngle / 2f;
 
-        foreach (var hit in hits)
+        IInteractable best = null;
+        float closestDist = Mathf.Infinity;
+
+        for (int i = 0; i < rayCount; i++)
         {
-            var interactable = hit.collider.GetComponent<IInteractable>();
-            if (interactable == null) continue;
+            float angle = startAngle + (fanAngle / (rayCount - 1)) * i;
+            Vector2 dir = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
 
-            switch (interactionType)
+            RaycastHit2D[] hits = Physics2D.RaycastAll(origin, dir, distance, interactableLayer);
+            Debug.DrawRay(origin, dir * distance, Color.magenta, 0.2f);
+
+            foreach (var hit in hits)
             {
-                case InteractionType.Use:
-                    if (interactable is PassiveStation || interactable is AutomaticStation || interactable is IngredientStation)
-                        return interactable;
-                    break;
-                case InteractionType.Pickup:
-                    if (interactable is FoodDisplay || interactable is IngredientStation)
-                        return interactable;
-                    break;
-            }
+                if (hit.collider == null) continue;
 
-            if (fallback == null) fallback = interactable;
+                var interactable = hit.collider.GetComponent<IInteractable>();
+                if (interactable == null) continue;
+
+                // 거리 측정
+                float dist = Vector2.Distance(origin, hit.point);
+                if (dist >= closestDist) continue;
+
+                // InteractionType에 따라 타입 우선순위 판단
+                if (interactionType == InteractionType.Pickup)
+                {
+                    if (interactable is FoodDisplay)
+                    {
+                        best = interactable;
+                        closestDist = dist;
+                        break; // 최우선, 더 이상 탐색 X
+                    }
+                    else if (interactable is IngredientStation)
+                    {
+                        best = interactable;
+                        closestDist = dist;
+                        // 계속 탐색: 혹시 더 가까운 FoodDisplay가 있을 수도 있으므로
+                    }
+                }
+                else if (interactionType == InteractionType.Use)
+                {
+                    if (interactable is PassiveStation || interactable is AutomaticStation || interactable is IngredientStation)
+                    {
+                        best = interactable;
+                        closestDist = dist;
+                    }
+                }
+            }
         }
 
-        return fallback;
+        return best;
     }
+
 
     private void Animate()
     {
