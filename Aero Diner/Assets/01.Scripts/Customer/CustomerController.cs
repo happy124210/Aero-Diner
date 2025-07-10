@@ -170,11 +170,6 @@ public class CustomerController : MonoBehaviour
     {
         model.SetAssignedTable(table);
     }
-
-    public void AdjustSeatPosition()
-    {
-        transform.position = GetSeatPosition();
-    }
     
     public void PlaceOrder()
     {
@@ -253,12 +248,9 @@ public class CustomerController : MonoBehaviour
     #region Movement & Animation
     public void SetDestination(Vector3 destination)
     {
-        if (!navAgent || !navAgent.isOnNavMesh)
-        {
-            if (showDebugInfo) Debug.LogWarning($"[CustomerController]: {gameObject.name} NavMesh 문제!");
-            return;
-        }
-
+        if (!navAgent) return;
+        
+        navAgent.enabled = true;
         navAgent.isStopped = false;
         navAgent.SetDestination(destination);
     }
@@ -273,12 +265,24 @@ public class CustomerController : MonoBehaviour
 
     public bool HasReachedDestination()
     {
-        if (!navAgent) return false;
+        if (!navAgent || navAgent.enabled == false) return false;
         
         bool reached = navAgent.remainingDistance <= ARRIVAL_THRESHOLD 
                                  && navAgent.velocity.sqrMagnitude < VELOCITY_THRESHOLD * VELOCITY_THRESHOLD;
         
         return reached;
+    }
+    
+    public void AdjustToSeatPosition()
+    {
+        navAgent.enabled = false;
+        transform.position = GetSeatPosition();
+    }
+    
+    public void AdjustToStopPosition()
+    {
+        navAgent.enabled = false;
+        transform.position = GetStopPosition();
     }
     
     private void UpdateAnimation()
