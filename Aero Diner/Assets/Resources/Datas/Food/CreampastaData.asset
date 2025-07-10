@@ -15,7 +15,7 @@ MonoBehaviour:
   id: f30
   foodName: CreamPasta
   displayName: "\uD06C\uB9BC \uD30C\uC2A4\uD0C0"
-  foodType: 4
+  foodType: 0
   foodIcon: {fileID: 21300000, guid: 8bf7690ad19a744488b0a8ecf35f2157, type: 3}
   description: "\uD06C\uB9BC \uD30C\uC2A4\uD0C0 \uC785\uB2C8\uB2E4"
   stationType: 0c000000
