@@ -29,7 +29,7 @@ public static class VisualObjectFactory
         obj.layer = 6;
 
         var renderer = obj.AddComponent<SpriteRenderer>();
-        renderer.sortingOrder = 55;
+        renderer.sortingOrder = 110;
         renderer.sprite = icon;
         if (icon == null) renderer.color = Color.gray;
 
@@ -60,7 +60,7 @@ public static class VisualObjectFactory
         obj.layer = 6;
 
         var renderer = obj.AddComponent<SpriteRenderer>();
-        renderer.sortingOrder = 55;
+        renderer.sortingOrder = 110;
         renderer.sprite = icon;
         if (icon == null) renderer.color = Color.gray;
 

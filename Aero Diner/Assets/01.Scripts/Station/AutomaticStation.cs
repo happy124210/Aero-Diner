@@ -48,7 +48,6 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     private bool isCooking = false;                                  // 현재 조리 중인지 여부 플래그
     private OutlineShaderController outline;                         // 외곽선 효과를 제어하는 컴포넌트
     private bool hasInitialized = false;                             // 아이콘 초기화 플래그
-    private FoodData selectedIngredient;
 
     private void Awake()
     {
@@ -179,48 +178,54 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         availableMatchedRecipes.Clear();
         availableFoodIds.Clear();
 
-        // 오늘 메뉴 기준으로 레시피 매칭 진행
         var matches = RecipeManager.Instance.FindMatchingTodayRecipes(currentIngredients);
 
-        // 모든 재료를 포함한 레시피만 후보로 선정
         if (matches != null && matches.Count > 0)
         {
-            // bestMatchedRecipe도 갱신
+            // MatchRatio가 1.0(완전일치)인 경우에만 cookedIngredient 설정
             var best = matches
                 .OrderByDescending(m => m.MatchRatio)
                 .ThenByDescending(m => m.matchedCount)
                 .First();
 
-            // 전체 매칭된 레시피 저장
             availableMatchedRecipes = matches.Select(m => m.recipe).ToList();
-            cookedIngredient = best.recipe;
 
-            bestMatchedRecipe = $"{best.recipe.id} ({best.matchedCount}/{best.totalRequired})";
-
-            foreach (var recipe in availableMatchedRecipes)
+            // 이 조건 추가: 완전히 일치할 때만 cookedIngredient 지정
+            if (best.MatchRatio >= 1f)
             {
-                foreach (var ingredientId in recipe.ingredients)
-                {
-                    if (!availableFoodIds.Contains(ingredientId))
-                    {
-                        availableFoodIds.Add(ingredientId);
-                    }
-                }
+                cookedIngredient = best.recipe;
+                bestMatchedRecipe = $"{best.recipe.id} ({best.matchedCount}/{best.totalRequired})";
+
+                if (showDebugInfo)
+                    Debug.Log($"완전 일치 — '{cookedIngredient.foodName}' 선택됨");
+            }
+            else
+            {
+                cookedIngredient = null; // 아직은 요리 준비 안 됨
+                bestMatchedRecipe = "요리 대기 중 (재료 부족)";
             }
 
-            if (showDebugInfo)
-                Debug.Log($"{matches.Count}개 일치 — '{cookedIngredient.foodName}' 선택됨");
+            // 모든 가능한 재료 ID 저장
+            foreach (var recipe in availableMatchedRecipes)
+            {
+                foreach (var id in recipe.ingredients)
+                {
+                    if (!availableFoodIds.Contains(id))
+                        availableFoodIds.Add(id);
+                }
+            }
         }
         else
         {
+            // 완전 초기화는 하지 않음: 재료가 일부라도 있으면 가능한 후보는 남겨둠
             cookedIngredient = null;
-            availableMatchedRecipes.Clear();
-            availableFoodIds.Clear();
+            bestMatchedRecipe = "조건에 맞는 레시피 없음";
 
             if (showDebugInfo)
                 Debug.Log("조건에 맞는 레시피가 없습니다.");
         }
     }
+
 
     /// <summary>
     /// 현재 재료를 기반으로 가장 적합한 레시피를 찾아서 저장
@@ -247,6 +252,8 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
                 .First();
 
             bestMatchedRecipe = $"{best.recipe.displayName} ({best.matchedCount}/{best.totalRequired})";
+
+            cookedIngredient = best.recipe;
 
             // 전체 매칭 리스트 업데이트
             foreach (var recipe in matches.Select(m => m.recipe))
@@ -316,7 +323,6 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     private void ResetStation()
     {
         isCooking = false;
-        cookedIngredient = null;
         ResetCookingTimer();
         currentIngredients.Clear();
         placedIngredientList.Clear();
@@ -400,7 +406,6 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         currentIngredients.Clear();         // 현재 재료 목록 초기화
         currentCookingTime = cookingTime;   // 타이머 초기화
         UpdateCookingProgress();
-
         StartCoroutine(HandlePickup());
     }
 
@@ -414,41 +419,80 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
 
     private IEnumerator HandlePickup()
     {
-        // 아이콘 복구, 상태 초기화
-        FoodData data = cookedIngredient ?? selectedIngredient; // 조리 결과가 있으면 그걸 기준, 없으면 선택된 재료 기준
-
         if (cookedIngredient != null)
         {
-            iconDisplay?.ResetAll();
-            if (showDebugInfo) Debug.Log($"플레이어가 '{cookedIngredient.displayName}' 요리 결과 획득");
+            // 마지막으로 사용된 재료의 타입으로 아이콘 복구
+            if (placedIngredientList.Count > 0)
+            {
+                var lastIngredient = placedIngredientList.Last();
+
+                // 아이콘 다시 표시
+                iconDisplay?.ShowSlot(lastIngredient.foodType);
+
+                // currentIngredients에서 ID 제거
+                if (currentIngredients.Contains(lastIngredient.id))
+                {
+                    currentIngredients.Remove(lastIngredient.id);
+                    if (showDebugInfo) Debug.Log($"currentIngredients에서 '{lastIngredient.id}' 제거됨");
+                }
+
+                // placedIngredientList에서도 제거
+                placedIngredientList.RemoveAt(placedIngredientList.Count - 1);
+
+                // 레시피 후보 다시 계산
+                UpdateCandidateRecipes();
+            }
+
+            cookedIngredient = null;
             yield break;
         }
 
-        if (selectedIngredient != null && currentIngredients.Contains(selectedIngredient.id))
+        if (placedIngredientList.Count > 0)
         {
-            // 오브젝트 제거 & 프레임 대기
-            foreach (var obj in placedIngredients)
-            {
-                if (obj) Destroy(obj);
-            }
+            FoodData food = placedIngredientList.Last(); // 마지막 재료 꺼냄
 
-            placedIngredients.Clear();
-
-            yield return new WaitForEndOfFrame(); // 물리 엔진 업데이트 이후 오브젝트 생성
-
-            GameObject result = VisualObjectFactory.PlaceIngredientVisual(transform, selectedIngredient.foodName, selectedIngredient.foodIcon);
+            GameObject result = VisualObjectFactory.PlaceIngredientVisual(transform, food.foodName, food.foodIcon);
             if (result)
             {
-                var display = result.AddComponent<FoodDisplay>(); // 재료 오브젝트에 FoodDisplay를 붙여 픽업 가능하게 설정
-                display.foodData = selectedIngredient;
-                display.originPlace = this;
+                // 플레이어의 아이템 슬롯 위치 가져오기
+                Transform itemSlot = GameObject.FindGameObjectWithTag("Player")?.transform.Find("Itemslot");
 
-                iconDisplay?.ShowSlot(selectedIngredient.foodType); // 해당 타입의 슬롯 아이콘 다시 표시
+                if (itemSlot != null)
+                {
+                    result.transform.SetParent(itemSlot);
+                    result.transform.localPosition = Vector3.zero;
+                    result.transform.localRotation = Quaternion.identity;
 
-                placedIngredients.Add(result);
+                    // 충돌 제거 및 중력 비활성화
+                    var rb = result.GetComponent<Rigidbody2D>();
+                    if (rb) rb.simulated = false;
 
-                if (showDebugInfo) Debug.Log($"조리되지 않은 등록 재료 '{selectedIngredient.displayName}' 재생성 완료");
+                    var col = result.GetComponent<Collider2D>();
+                    if (col) col.enabled = false;
+
+                    // 식별 정보
+                    var display = result.AddComponent<FoodDisplay>();
+                    display.foodData = food;
+                    display.originPlace = this;
+
+                    if (showDebugInfo)
+                        Debug.Log($"[HandlePickup] 플레이어 손에 재료 '{food.foodName}' 생성 및 이동 완료");
+                }
+                else
+                {
+                    Debug.LogWarning("[HandlePickup] Player 또는 Itemslot을 찾을 수 없습니다.");
+                }
             }
+
+            // 아이콘 복구
+            iconDisplay?.ShowSlot(food.foodType);
+
+            // 목록 제거
+            currentIngredients.Remove(food.id);
+            placedIngredientList.Remove(food);
+
+            // 레시피 갱신
+            UpdateCandidateRecipes();
         }
     }
 
