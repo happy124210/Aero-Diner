@@ -30,7 +30,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     [SerializeField] private Animator stationTimerAnimator;
     [SerializeField] private Image stationTimerImage;
 
-
     [Header("스테이션 데이터")]
     public StationData stationData;
 

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 117d233d9fc2bff418b6e4c7d9135079, type: 3}
+  m_Name: AutocutterData
+  m_EditorClassIdentifier: 
+  id: s11
+  stationName: AutoCutter
+  displayName: "\uC804\uB3D9 \uCC44\uCE7C"
+  stationType: 0
+  workType: 1
+  stationIcon: {fileID: 21300000, guid: 41909a59935871047b0f032faba2487a, type: 3}
+  description: "\uC804\uB3D9 \uCC44\uCE7C \uC785\uB2C8\uB2E4"
+  stationCost: 100
+  availableRecipes:
+  - {fileID: 11400000, guid: ff5d9b526cfdc9d4ea5d00308db03749, type: 2}
+  - {fileID: 11400000, guid: c1b65a060901fe44689f1b6821c8776c, type: 2}
+  - {fileID: 11400000, guid: 6f74b333018cbf540950f52f148c2281, type: 2}
+  - {fileID: 11400000, guid: 11fc209d50dd7f84c819d65cee7c2cf4, type: 2}
+  - {fileID: 11400000, guid: 1ad4f7bbe831eeb4aad0d2fe6c2202d9, type: 2}
+  ingredientSlots: 3
+  slotDisplays: []

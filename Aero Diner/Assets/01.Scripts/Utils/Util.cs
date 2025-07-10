@@ -39,12 +39,12 @@ public static class Util
             .Select(word => char.ToUpper(word[0]) + word.Substring(1)));
     }
     
-    public static string PascalToKebab(this string pascal)
+    public static string PascalToSnake(this string pascal)
     {
         if (string.IsNullOrEmpty(pascal))
             return string.Empty;
 
-        return string.Concat(pascal.Select((x, i) => i > 0 && char.IsUpper(x) ? "-" + x : x.ToString())).ToLower();
+        return string.Concat(pascal.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x : x.ToString())).ToLower();
     }
 
     public static Color ChangeColorByRatio(float ratio)

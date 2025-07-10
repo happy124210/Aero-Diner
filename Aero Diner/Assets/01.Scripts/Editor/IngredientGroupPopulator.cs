@@ -15,7 +15,7 @@ public static class IngredientGroupPopulator
             return;
         }
 
-        string[] guids = AssetDatabase.FindAssets("t:FoodData", new[] { "Assets/03.Datas/Food" });
+        string[] guids = AssetDatabase.FindAssets("t:FoodData", new[] {"Resource/Datas/Food"});
         var validTypes = new HashSet<FoodType> {
             FoodType.Raw,
             FoodType.Water,
