@@ -55,7 +55,7 @@ public class CSVImporter
         data.displayName = cols[2].Trim();
         data.stationType = (StationType)Enum.Parse(typeof(StationType), cols[3].Trim());
         data.workType = (WorkType)Enum.Parse(typeof(WorkType), cols[4].Trim());
-        data.stationIcon = LoadIcon($"{data.stationName}-icon", "Station");
+        data.stationIcon = LoadIcon($"{data.stationName}", "Station");
         data.description = cols[5].Trim();
         data.stationCost = int.Parse(cols[6]);
 
@@ -81,7 +81,7 @@ public class CSVImporter
         data.foodName = cols[1].Trim();
         data.displayName = cols[2].Trim();
         data.foodType = (FoodType)Enum.Parse(typeof(FoodType), cols[3].Trim());
-        data.foodIcon = LoadIcon($"{}-icon", "Food"); // Resources에서 아이콘 로드
+        data.foodIcon = LoadIcon($"{data.foodName}", "Food"); // Resources에서 아이콘 로드
         data.description = cols[4].Trim();
         data.stationType = ParseEnumArray<StationType>(cols[5]); // StationType enum값 parse
         data.ingredients = ParseStringArray(cols[6]);
@@ -187,7 +187,7 @@ public class CSVImporter
     private static Sprite LoadIcon(string name, string category = "")
     {
         if (string.IsNullOrEmpty(name)) return null;
-        string iconName = name.PascalToKebab();
+        string iconName = name.PascalToSnake();
         
         string path = string.IsNullOrEmpty(category) 
             ? $"Icons/{iconName.Trim()}" 
