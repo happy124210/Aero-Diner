@@ -161,17 +161,25 @@ public class UIManager : Singleton<UIManager>
             case UIEventType.UpdateEarnings:
                 if (showDebugInfo)
                     Debug.Log($"[UIManager] UpdateEarnings 이벤트 발생: {payload}");
+
+                if (payload is not int newEarnings)
+                {
+                    return;
+                }
+
                 foreach (var ui in currentSceneUIs)
                 {
                     var ed = ui?.GetComponentInChildren<EarningsDisplay>(true);
                     if (ed != null)
                     {
-                        if (showDebugInfo)
-                            Debug.Log($"[UIManager] EarningsDisplay 찾음: {ed.name}");
-                        ed.AnimateEarnings((int)payload);
+                        ed.AnimateEarnings(newEarnings);
                     }
-
+                    else if (showDebugInfo)
+                    {
+                        Debug.LogWarning($"[UIManager] EarningsDisplay를 찾을 수 없음: {ui.name}");
+                    }
                 }
+                break;
                 break;
             case UIEventType.ShowStartMenuWithSave:
                 foreach (var ui in currentSceneUIs)

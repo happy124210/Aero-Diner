@@ -15,7 +15,7 @@ MonoBehaviour:
   id: f4
   foodName: Vegetable
   displayName: "\uCC44\uC18C"
-  foodType: 5
+  foodType: 0
   foodIcon: {fileID: 21300000, guid: 686cfd7f3222cd343a2010178cb9277a, type: 3}
   description: "\uCC44\uC18C \uC785\uB2C8\uB2E4"
   stationType: 00000000

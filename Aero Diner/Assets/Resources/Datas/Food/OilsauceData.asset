@@ -15,7 +15,7 @@ MonoBehaviour:
   id: f13
   foodName: OilSauce
   displayName: "\uC624\uC77C"
-  foodType: 2
+  foodType: 0
   foodIcon: {fileID: 21300000, guid: 3c970f9a1c665a54ea947faf697f0361, type: 3}
   description: "\uC624\uC77C \uC785\uB2C8\uB2E4"
   stationType: 01000000

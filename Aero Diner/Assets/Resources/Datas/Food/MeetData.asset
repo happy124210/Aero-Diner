@@ -15,7 +15,7 @@ MonoBehaviour:
   id: f3
   foodName: Meet
   displayName: "\uACE0\uAE30"
-  foodType: 5
+  foodType: 0
   foodIcon: {fileID: 21300000, guid: 95ce90dbcfafbca49bbfa9de6327dcdd, type: 3}
   description: "\uACE0\uAE30 \uC785\uB2C8\uB2E4"
   stationType: 00000000

@@ -15,7 +15,7 @@ MonoBehaviour:
   id: f16
   foodName: CarbonaraSauce
   displayName: "\uAE4C\uB974\uBCF4\uB098\uB77C \uC18C\uC2A4"
-  foodType: 2
+  foodType: 0
   foodIcon: {fileID: 21300000, guid: c711059426f35f7468fa91a666af6275, type: 3}
   description: "\uAE4C\uB974\uBCF4\uB098\uB77C \uC18C\uC2A4 \uC785\uB2C8\uB2E4"
   stationType: 01000000

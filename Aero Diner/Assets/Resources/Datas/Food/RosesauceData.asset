@@ -15,7 +15,7 @@ MonoBehaviour:
   id: f15
   foodName: RoseSauce
   displayName: "\uB85C\uC81C \uC18C\uC2A4"
-  foodType: 2
+  foodType: 0
   foodIcon: {fileID: 21300000, guid: 4240913b3ac7fa04eb4b2c4f92633645, type: 3}
   description: "\uB85C\uC81C \uC18C\uC2A4 \uC785\uB2C8\uB2E4"
   stationType: 01000000

@@ -15,7 +15,7 @@ MonoBehaviour:
   id: f20
   foodName: CuttingVegetable
   displayName: "\uC190\uC9C8\uD55C \uCC44\uC18C"
-  foodType: 1
+  foodType: 0
   foodIcon: {fileID: 21300000, guid: cbd3dd75e3397814d88b7175da7d1544, type: 3}
   description: "\uC190\uC9C8\uD55C \uCC44\uC18C \uC785\uB2C8\uB2E4"
   stationType: 0100000007000000
