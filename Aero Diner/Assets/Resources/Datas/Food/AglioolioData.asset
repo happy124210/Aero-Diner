@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca77332d7f9b4134e9c53ece37a21432, type: 3}
-  m_Name: AglioolioData
+  m_Name: 
   m_EditorClassIdentifier: 
   id: f28
   foodName: AglioOlio
   displayName: "\uC54C\uB9AC\uC624 \uC62C\uB9AC\uC624"
-  foodType: 0
-  foodIcon: {fileID: 21300000, guid: b67b098f922488e4689147948adada70, type: 3}
+  foodType: 4
+  foodIcon: {fileID: 21300000, guid: 10a0115c785c0e84da3888f04e63b196, type: 3}
   description: "\uC54C\uB9AC\uC624 \uC62C\uB9AC\uC624 \uC785\uB2C8\uB2E4"
-  stationType: 01000000
+  stationType: 0c000000
   ingredients:
   - f18
   - f13

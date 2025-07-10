@@ -12,15 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 724bbaddb3e0f984abccbb8ce9260606, type: 3}
   m_Name: IngredientGroup
   m_EditorClassIdentifier: 
-  ingredientList:
-  - ingredientData: {fileID: 11400000, guid: ff5d9b526cfdc9d4ea5d00308db03749, type: 2}
-  - ingredientData: {fileID: 11400000, guid: aae9a85be31d0c240ba479fda8f0a43f, type: 2}
-  - ingredientData: {fileID: 11400000, guid: c387cad776abb584b83df8bf77c8eda3, type: 2}
-  - ingredientData: {fileID: 11400000, guid: e71f89a2de2d4ea4dbed63fe30c48463, type: 2}
-  - ingredientData: {fileID: 11400000, guid: f02da3cce38effa4c95245798ef86752, type: 2}
-  - ingredientData: {fileID: 11400000, guid: 6f74b333018cbf540950f52f148c2281, type: 2}
-  - ingredientData: {fileID: 11400000, guid: 88a44882a6155d7419c7589471c18497, type: 2}
-  - ingredientData: {fileID: 11400000, guid: 63001436fe09b304d82f0a93ef9c428d, type: 2}
-  - ingredientData: {fileID: 11400000, guid: 11fc209d50dd7f84c819d65cee7c2cf4, type: 2}
-  - ingredientData: {fileID: 11400000, guid: 1ad4f7bbe831eeb4aad0d2fe6c2202d9, type: 2}
-  - ingredientData: {fileID: 11400000, guid: efb9dca86fe9fa14e880869ef50db4cf, type: 2}
+  ingredientList: []

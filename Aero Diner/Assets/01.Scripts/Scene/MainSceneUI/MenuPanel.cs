@@ -26,7 +26,7 @@ public class MenuPanel : MonoBehaviour
         }
 
         // 메뉴 가져오기
-        var menuList = MenuManager.Instance.PlayerMenus;
+        var menuList = MenuManager.Instance.GetTodayMenuData();
 
         if (menuList == null)
         {

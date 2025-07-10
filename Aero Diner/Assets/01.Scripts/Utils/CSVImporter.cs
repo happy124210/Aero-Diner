@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Diagnostics;
 
 #if UNITY_EDITOR
 /// <summary>
@@ -54,7 +55,7 @@ public class CSVImporter
         data.displayName = cols[2].Trim();
         data.stationType = (StationType)Enum.Parse(typeof(StationType), cols[3].Trim());
         data.workType = (WorkType)Enum.Parse(typeof(WorkType), cols[4].Trim());
-        data.stationIcon = LoadIcon($"{data.stationName}-icon", "Station");
+        data.stationIcon = LoadIcon($"{data.stationName}", "Station");
         data.description = cols[5].Trim();
         data.stationCost = int.Parse(cols[6]);
 
@@ -80,7 +81,7 @@ public class CSVImporter
         data.foodName = cols[1].Trim();
         data.displayName = cols[2].Trim();
         data.foodType = (FoodType)Enum.Parse(typeof(FoodType), cols[3].Trim());
-        data.foodIcon = LoadIcon($"{data.foodName}-icon", "Food"); // Resources에서 아이콘 로드
+        data.foodIcon = LoadIcon($"{data.foodName}", "Food"); // Resources에서 아이콘 로드
         data.description = cols[4].Trim();
         data.stationType = ParseEnumArray<StationType>(cols[5]); // StationType enum값 parse
         data.ingredients = ParseStringArray(cols[6]);
@@ -109,7 +110,7 @@ public class CSVImporter
             return;
         }
         
-        string targetFolder = $"Assets/03.Datas/{folderName}/";
+        string targetFolder = $"Assets/Resources/Datas/{folderName}/";
         if (!Directory.Exists(targetFolder)) 
         {
             Directory.CreateDirectory(targetFolder);
@@ -183,9 +184,10 @@ public class CSVImporter
     /// <summary>
     /// Resources 폴더에서 아이콘 로드
     /// </summary>
-    private static Sprite LoadIcon(string iconName, string category = "")
+    private static Sprite LoadIcon(string name, string category = "")
     {
-        if (string.IsNullOrEmpty(iconName)) return null;
+        if (string.IsNullOrEmpty(name)) return null;
+        string iconName = name.PascalToSnake();
         
         string path = string.IsNullOrEmpty(category) 
             ? $"Icons/{iconName.Trim()}" 
@@ -195,7 +197,6 @@ public class CSVImporter
         if (icon == null)
         {
             Debug.LogWarning($"[LoadIcon] Icon 없어요!!!: Resources/{path}");
-            //Debug.LogWarning($"Resources/{path}.png 형태 있나 확인해주세요 !!!");
         }
         else
         {

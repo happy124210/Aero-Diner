@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca77332d7f9b4134e9c53ece37a21432, type: 3}
-  m_Name: SpicyspiceData
+  m_Name: 
   m_EditorClassIdentifier: 
   id: f25
   foodName: SpicySpice
   displayName: "\uB9E4\uCF64 \uD5A5\uC2E0\uB8CC"
-  foodType: 0
-  foodIcon: {fileID: 21300000, guid: afae42a2d9cb09f48bed8cda45930181, type: 3}
+  foodType: 1
+  foodIcon: {fileID: 21300000, guid: 9b275baadf2ebac4e8c53436180d6274, type: 3}
   description: "\uB9E4\uCF64 \uD5A5\uC2E0\uB8CC \uC785\uB2C8\uB2E4"
   stationType: 01000000
   ingredients:
