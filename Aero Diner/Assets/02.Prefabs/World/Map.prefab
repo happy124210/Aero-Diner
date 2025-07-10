@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2085977357632275251}
   - component: {fileID: 4769735151550501808}
   - component: {fileID: 8047745893291255581}
+  - component: {fileID: 534069367536294973}
   m_Layer: 0
   m_Name: outer_wall
   m_TagString: Untagged
@@ -1694,6 +1695,22 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!114 &534069367536294973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 518713956136397055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &913852251032342586
 GameObject:
   m_ObjectHideFlags: 0
@@ -1705,6 +1722,7 @@ GameObject:
   - component: {fileID: 4961024686165948170}
   - component: {fileID: 2716906190700912581}
   - component: {fileID: 3193551587268333976}
+  - component: {fileID: 3053599227145233274}
   m_Layer: 0
   m_Name: ship
   m_TagString: Untagged
@@ -3778,6 +3796,22 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!114 &3053599227145233274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913852251032342586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &1054830373281701486
 GameObject:
   m_ObjectHideFlags: 0
