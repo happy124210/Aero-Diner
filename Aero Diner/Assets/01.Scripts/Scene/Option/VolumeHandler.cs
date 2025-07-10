@@ -30,8 +30,8 @@ public class VolumeHandler : MonoBehaviour
             return;
         }
 
-        originalBGMVolume = data.bgmVolume == 0 ? 0.5f : data.bgmVolume;
-        originalSFXVolume = data.sfxVolume == 0 ? 0.5f : data.sfxVolume;
+        originalBGMVolume = data.bgmVolume < 0 ? 0.5f : data.bgmVolume;
+        originalSFXVolume = data.sfxVolume < 0 ? 0.5f : data.sfxVolume;
 
         pendingBGMVolume = originalBGMVolume;
         pendingSFXVolume = originalSFXVolume;

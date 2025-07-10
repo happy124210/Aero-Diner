@@ -129,9 +129,11 @@ public class UIManager : Singleton<UIManager>
             // === Start Scene ===
             case UIEventType.OpenPause:
                 UIRoot.Instance.pausePanel?.SetActive(true);
+                GameManager.Instance.PauseGame();
                 break;
             case UIEventType.ClosePause:
                 UIRoot.Instance.pausePanel?.SetActive(false);
+                GameManager.Instance.ContinueGame();
                 break;
             case UIEventType.OpenOption:
                 UIRoot.Instance.pausePanel.SetActive(false);
@@ -179,7 +181,6 @@ public class UIManager : Singleton<UIManager>
                         Debug.LogWarning($"[UIManager] EarningsDisplay를 찾을 수 없음: {ui.name}");
                     }
                 }
-                break;
                 break;
             case UIEventType.ShowStartMenuWithSave:
                 foreach (var ui in currentSceneUIs)

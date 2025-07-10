@@ -10,6 +10,7 @@ public class LoadingManager : MonoBehaviour
 
     private void Start()
     {
+        EventBus.PlayBGM(BGMEventType.StopBGM);
         targetScene = LoadingTargetHolder.TargetScene;
         StartCoroutine(LoadSceneAsync());
     }
