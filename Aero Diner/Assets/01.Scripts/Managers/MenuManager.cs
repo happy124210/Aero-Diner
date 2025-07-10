@@ -23,6 +23,11 @@ public class MenuManager : Singleton<MenuManager>
     // Menu 조회는 전부 id로 함 !!!
     // 메뉴 조회하기
     public Menu FindMenuById(string id) => menuDatabase.FirstOrDefault(m => m.foodData.id == id);
+    
+    // 플레이어 해제 메뉴만 가져오기
+    public List<Menu> GetUnlockedMenus() => menuDatabase.Where(menu => menu.isUnlocked).ToList();
+    
+    // 오늘 영업 Menu/FoodData 가져오기
     public List<Menu> GetTodayMenuData() => todayMenuIds.Select(FindMenuById).Where(data => data != null).ToList();
     public List<FoodData> GetTodayFoodData() => todayMenuIds.Select(id => FindMenuById(id).foodData).Where(data => data != null).ToList();
     
@@ -195,6 +200,8 @@ public class MenuManager : Singleton<MenuManager>
         {
             UnlockMenu(menu.foodData.id);
         }
+        
+        UpdateTodayMenus();
     }
     
     #endregion
