@@ -16,7 +16,7 @@ MonoBehaviour:
   foodName: Bolognese
   displayName: "\uBCFC\uB85C\uB124\uC81C"
   foodType: 4
-  foodIcon: {fileID: 0}
+  foodIcon: {fileID: 21300000, guid: 009b6e9fea635074c84cec2059173195, type: 3}
   description: "\uBCFC\uB85C\uB124\uC81C \uC785\uB2C8\uB2E4"
   stationType: 06000000
   ingredients:
