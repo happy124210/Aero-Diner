@@ -38,6 +38,7 @@ public class CustomerController : MonoBehaviour
         if (currentState == null) return;
         
         UpdateTimers(Time.deltaTime);
+        UpdateAnimation();
         
         var nextState = currentState?.Update(this);
         if (nextState != null && nextState.Name != currentState.Name)
@@ -102,16 +103,6 @@ public class CustomerController : MonoBehaviour
     }
     #endregion
     
-    private void UpdateTimers(float deltaTime)
-    {
-        // 인내심 타이머
-        if (ShouldPatienceDecrease())
-        {
-            float newPatience = Mathf.Max(0, model.RuntimeData.CurrentPatience - deltaTime);
-            model.UpdatePatience(newPatience);
-        }
-    }
-    
     #region Model Event Handlers (Controller가 Model 변경사항을 View에 전달)
     
     private void HandlePatienceChanged(float currentPatience)
@@ -150,15 +141,21 @@ public class CustomerController : MonoBehaviour
     {
         view.OnPaymentStateChanged(isCompleted);
     }
-
-    public void SetAnimationState(CustomerAnimState state)
-    {
-        view.SetAnimationState(state);
-    }
     
     #endregion
 
     #region Customer Actions
+    
+    private void UpdateTimers(float deltaTime)
+    {
+        // 인내심 타이머
+        if (ShouldPatienceDecrease())
+        {
+            float newPatience = Mathf.Max(0, model.RuntimeData.CurrentPatience - deltaTime);
+            model.UpdatePatience(newPatience);
+        }
+    }
+    
     public void UpdateQueuePosition(Vector3 newPosition)
     {
         SetDestination(newPosition);
@@ -176,7 +173,7 @@ public class CustomerController : MonoBehaviour
 
     public void AdjustSeatPosition()
     {
-        transform.position = GetAssignedTable().SeatPoint.position;
+        transform.position = GetSeatPosition();
     }
     
     public void PlaceOrder()
@@ -284,6 +281,20 @@ public class CustomerController : MonoBehaviour
         return reached;
     }
     
+    private void UpdateAnimation()
+    {
+        if (!navAgent || !view) return;
+        
+        Vector3 localVelocity = transform.InverseTransformDirection(navAgent.velocity);
+        Vector2 direction = new Vector2(localVelocity.x, localVelocity.z).normalized;
+    
+        view.UpdateAnimationDirection(direction);
+    }
+    public void SetAnimationState(CustomerAnimState state)
+    {
+        view.SetAnimationState(state);
+    }
+    
     #endregion
     
     # region property & public getters
@@ -292,7 +303,9 @@ public class CustomerController : MonoBehaviour
     public float GetEatingTime() => model.Data.eatTime;
     public Table GetAssignedTable() => model.RuntimeData.AssignedTable;
     public FoodData GetCurrentOrder() => model.RuntimeData.CurrentOrder;
-    public Vector3 GetStopPosition() => GetAssignedTable().GetStopPosition();
+    public Vector3 GetStopPosition() => GetAssignedTable().GetStopPoint();
+    public Vector3 GetSeatPosition() => GetAssignedTable().GetSeatPoint();
+    
     public bool HasPatience() => model.RuntimeData.CurrentPatience > 0;
     private bool ShouldPatienceDecrease() => currentState != null && (currentState.Name == CustomerStateName.Ordering || currentState.Name == CustomerStateName.WaitingInLine);
     

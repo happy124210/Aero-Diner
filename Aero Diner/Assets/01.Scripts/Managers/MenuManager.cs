@@ -188,7 +188,7 @@ public class MenuManager : Singleton<MenuManager>
 
     public FoodData GetRandomMenu()
     {
-        return todayMenus[Random.Range(0, todayMenus.Count)].foodData;
+        return todayMenus.Count != 0 ? todayMenus[Random.Range(0, todayMenus.Count)].foodData : null;
     }
 
     #endregion
