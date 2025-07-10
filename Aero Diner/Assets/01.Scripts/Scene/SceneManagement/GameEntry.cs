@@ -44,7 +44,7 @@ public class GameEntry : MonoBehaviour
         {
             currentDay = 1,
             totalEarnings = 0,
-            unlockedMenuIds = new HashSet<string>(),
+            menuDatabase = new HashSet<string>(),
 
             bgmVolume = 0.5f,
             sfxVolume = 0.5f,

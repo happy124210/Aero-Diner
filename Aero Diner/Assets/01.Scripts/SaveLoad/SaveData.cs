@@ -11,7 +11,7 @@ public class SaveData
     public int totalEarnings;
 
     //  메뉴 관련 정보
-    public HashSet<string> unlockedMenuIds;         // 해금된 메뉴 ID들 (중복 방지용)
+    public HashSet<string> menuDatabase;         // 해금된 메뉴 ID들 (중복 방지용)
 
     //  설정 정보 (기존 PlayerPrefs → 통합 저장)
     public float bgmVolume = 0.5f;
@@ -25,7 +25,7 @@ public class SaveData
     public int resolutionIndex = 0;        // 기본값: 목록 첫 번째
     public SaveData()
     {
-        unlockedMenuIds = new HashSet<string>();
+        menuDatabase = new HashSet<string>();
         keyBindings = new Dictionary<string, string>();
     }
 }

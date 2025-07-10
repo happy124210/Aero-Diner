@@ -5,24 +5,18 @@ using UnityEngine;
 public static class MenuSaveHandler
 {
     /// 저장
-    public static void SaveUnlockedMenus()
+    public static void SaveMenuDatabase()
     {
         var data = SaveLoadManager.LoadGame() ?? new SaveData();
-        data.unlockedMenuIds = new HashSet<string>(MenuManager.Instance.GetPlayerMenuIds());
+        data.menuDatabase = new HashSet<string>(MenuManager.Instance.GetPlayerMenuIds());
         SaveLoadManager.SaveGame(data);
 
-        Debug.Log($"[MenuSaveHandler] 해금 메뉴 저장됨: {data.unlockedMenuIds.Count}개");
+        Debug.Log($"[MenuSaveHandler] 해금 메뉴 저장됨: {data.menuDatabase.Count}개");
     }
 
     /// 불러오기 (초기화 시 호출)
-    public static void LoadUnlockedMenus()
+    public static void LoadMenuDatabase()
     {
         var data = SaveLoadManager.LoadGame();
-        if (data?.unlockedMenuIds == null) return;
-
-        foreach (string id in data.unlockedMenuIds)
-        {
-            MenuManager.Instance.UnlockMenu(id); // 내부 중복 방지
-        }
     }
 }
