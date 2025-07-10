@@ -38,6 +38,14 @@ public static class Util
             .Split('-', StringSplitOptions.RemoveEmptyEntries)
             .Select(word => char.ToUpper(word[0]) + word.Substring(1)));
     }
+    
+    public static string PascalToKebab(this string pascal)
+    {
+        if (string.IsNullOrEmpty(pascal))
+            return string.Empty;
+
+        return string.Concat(pascal.Select((x, i) => i > 0 && char.IsUpper(x) ? "-" + x : x.ToString())).ToLower();
+    }
 
     public static Color ChangeColorByRatio(float ratio)
     {

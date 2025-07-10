@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Diagnostics;
 
 #if UNITY_EDITOR
 /// <summary>
@@ -80,7 +81,7 @@ public class CSVImporter
         data.foodName = cols[1].Trim();
         data.displayName = cols[2].Trim();
         data.foodType = (FoodType)Enum.Parse(typeof(FoodType), cols[3].Trim());
-        data.foodIcon = LoadIcon($"{data.foodName}-icon", "Food"); // Resources에서 아이콘 로드
+        data.foodIcon = LoadIcon($"{}-icon", "Food"); // Resources에서 아이콘 로드
         data.description = cols[4].Trim();
         data.stationType = ParseEnumArray<StationType>(cols[5]); // StationType enum값 parse
         data.ingredients = ParseStringArray(cols[6]);
@@ -183,9 +184,10 @@ public class CSVImporter
     /// <summary>
     /// Resources 폴더에서 아이콘 로드
     /// </summary>
-    private static Sprite LoadIcon(string iconName, string category = "")
+    private static Sprite LoadIcon(string name, string category = "")
     {
-        if (string.IsNullOrEmpty(iconName)) return null;
+        if (string.IsNullOrEmpty(name)) return null;
+        string iconName = name.PascalToKebab();
         
         string path = string.IsNullOrEmpty(category) 
             ? $"Icons/{iconName.Trim()}" 
