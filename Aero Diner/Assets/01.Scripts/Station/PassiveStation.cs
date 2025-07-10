@@ -62,6 +62,32 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     private void Awake()
     {
         outline = GetComponent<OutlineShaderController>(); // 외곽선 컴포넌트 연결
+
+        string objName = gameObject.name;
+        string resourcePath = $"Datas/Station/{objName}Data";
+
+        // SO 로드
+        StationData data = Resources.Load<StationData>(resourcePath);
+        if (data != null)
+        {
+            // stationData 필드 연결
+            stationData = data;
+
+            // 스프라이트 아이콘 설정
+            if (TryGetComponent<SpriteRenderer>(out var sr) && data.stationIcon != null)
+            {
+                sr.sprite = data.stationIcon;
+            }
+            else
+            {
+                Debug.LogWarning($"[IconLoader] SpriteRenderer가 없거나 stationIcon이 null입니다. 오브젝트: '{objName}'");
+            }
+        }
+        else
+        {
+            Debug.LogError($"[IconLoader] StationData를 찾을 수 없습니다: 경로 = '{resourcePath}'");
+        }
+
     }
 
     private void Start()
@@ -127,8 +153,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             if (showDebugInfo) Debug.Log("[PassiveStation] InteractionType.Use가 아니므로 무시됩니다.");
         }
     }
-
-
 
     private bool IsIngredientIDAllowed(string id)
     {
@@ -319,7 +343,9 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         }
 
         if (showDebugInfo) Debug.Log($"조리 완료: '{cookedIngredient.foodName}' 생성");
+
         GameObject result = VisualObjectFactory.CreateIngredientVisual(transform, cookedIngredient.foodName, cookedIngredient.foodIcon);
+
         if (result)
         {
             var display = result.AddComponent<FoodDisplay>();

@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca77332d7f9b4134e9c53ece37a21432, type: 3}
-  m_Name: 
+  m_Name: BoilednoodlesData
   m_EditorClassIdentifier: 
   id: f18
   foodName: BoiledNoodles
   displayName: "\uC0B6\uC740 \uBA74"
   foodType: 3
-  foodIcon: {fileID: 0}
+  foodIcon: {fileID: 21300000, guid: 4dca00c71c1ec294f9c661d9639a7620, type: 3}
   description: "\uC0B6\uC740 \uBA74 \uC785\uB2C8\uB2E4"
   stationType: 01000000
   ingredients:
