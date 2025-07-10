@@ -15,7 +15,7 @@ MonoBehaviour:
   id: f8
   foodName: Cheese
   displayName: "\uCE58\uC988 \uB369\uC774"
-  foodType: 6
+  foodType: 0
   foodIcon: {fileID: 21300000, guid: 3baeee0e2942c974caadff9760957090, type: 3}
   description: "\uCE58\uC988 \uB369\uC774 \uC785\uB2C8\uB2E4"
   stationType: 03000000

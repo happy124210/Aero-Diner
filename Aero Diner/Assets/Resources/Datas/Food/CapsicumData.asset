@@ -15,7 +15,7 @@ MonoBehaviour:
   id: f10
   foodName: Capsicum
   displayName: "\uD30C\uD504\uB9AC\uCE74"
-  foodType: 8
+  foodType: 0
   foodIcon: {fileID: 21300000, guid: e2b602853d023bc428f022c70343b891, type: 3}
   description: "\uD30C\uD504\uB9AC\uCE74 \uC785\uB2C8\uB2E4"
   stationType: 04000000
