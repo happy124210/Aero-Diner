@@ -326,6 +326,7 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         ResetCookingTimer();
         currentIngredients.Clear();
         placedIngredientList.Clear();
+        iconDisplay?.ResetAll();
         ClearPlacedObjects();
     }
 

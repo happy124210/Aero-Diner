@@ -377,6 +377,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         ResetCookingTimer();
         currentIngredients.Clear();
         placedIngredientList.Clear();
+        iconDisplay?.ResetAll();
         ClearPlacedObjects();
     }
 
@@ -479,7 +480,8 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
 
         if (cookedIngredient != null)
         {
-            iconDisplay?.ResetAll();
+            var lastIngredient = placedIngredientList.Last();
+            iconDisplay?.ShowSlot(lastIngredient.foodType);
             if (showDebugInfo) Debug.Log($"플레이어가 '{cookedIngredient.displayName}' 요리 결과 획득");
             yield break;
         }
