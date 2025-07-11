@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -66,7 +65,6 @@ public class MenuManager : Singleton<MenuManager>
         
         InitializeMenuDatabase();
         LoadMenuDatabase();
-        InitializeTodayStats();
     }
 
     private void Start()
@@ -74,7 +72,7 @@ public class MenuManager : Singleton<MenuManager>
         EventBus.Raise(UIEventType.UpdateMenuPanel);
     }
 
-    private void InitializeTodayStats()
+    private void UpdateTodayStats()
     {
         todayMenuSales.Clear();
         foreach (var menuId in todayMenuIds)
@@ -183,6 +181,8 @@ public class MenuManager : Singleton<MenuManager>
             .ToList();
         
         if (showDebugInfo) Debug.Log($"[MenuManager]: 오늘 메뉴 - {todayMenuIds.Count}개");
+        
+        UpdateTodayStats();
     }
 
     /// <summary>
@@ -233,8 +233,6 @@ public class MenuManager : Singleton<MenuManager>
         {
             UnlockMenu(menu.foodData.id);
         }
-        
-        UpdateTodayMenus();
     }
     
     #endregion
