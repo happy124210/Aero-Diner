@@ -106,12 +106,9 @@ public class RestaurantManager : Singleton<RestaurantManager>
     }
     
     // 손님이 결제했을 때 호출되는 메서드
-    public void OnCustomerPaid(int amount)
+    public void IncreaseCustomerStat()
     {
         customersServed++;
-        GameManager.Instance.AddMoney(amount);
-        
-        if (showDebugInfo) Debug.Log($"Customer paid {amount}! Total served: {customersServed}, Total earnings: {GameManager.Instance.TotalEarnings}");
     }
     
     #region public getters
@@ -172,8 +169,10 @@ public class RestaurantManager : Singleton<RestaurantManager>
         if (GUILayout.Button("강제 종료"))
         {
             if (gameRunning)
+            {
                 EndRestaurant("수동 정지");
                 CustomerManager.Instance.ForceAllCustomersToLeave();
+            }
         }
         
         GUILayout.EndArea();
