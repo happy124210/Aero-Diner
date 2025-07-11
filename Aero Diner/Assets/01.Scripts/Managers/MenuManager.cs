@@ -63,7 +63,6 @@ public class MenuManager : Singleton<MenuManager>
         base.Awake();
         
         InitializePlayerMenus();
-        InitializeTodayStats();
     }
 
     private void InitializeTodayStats()
@@ -73,6 +72,8 @@ public class MenuManager : Singleton<MenuManager>
         {
             todayMenuSales[menuId] = 0;
         }
+        
+        EventBus.Raise(UIEventType.UpdateMenuPanel);
     }
 
     /// <summary>
@@ -99,7 +100,6 @@ public class MenuManager : Singleton<MenuManager>
         {
             UnlockMenu(startMenuId);
             SetMenuSelection(startMenuId, true);
-            if (showDebugInfo) Debug.Log($"[MenuManager]: 시작메뉴 {startMenuId} 해금됨");
         }
         
         UpdateTodayMenus();

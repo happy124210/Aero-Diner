@@ -227,10 +227,8 @@ public class UIManager : Singleton<UIManager>
                     if (resultPanel != null)
                     {
                         GameManager.Instance.IncreaseDay();
-                        GameManager.Instance.SaveData();
                         resultPanel.gameObject.SetActive(true);
                         resultPanel.Init(); // 초기화 명시적 호출
-                        EventBus.OnBGMRequested(BGMEventType.PlayResultTheme);
                     }
                 }
                 break;
