@@ -21,11 +21,11 @@ MonoBehaviour:
   description: "\uB3C4\uB9C8 \uC785\uB2C8\uB2E4"
   stationCost: 100
   availableRecipes:
-  - {fileID: 11400000, guid: ff5d9b526cfdc9d4ea5d00308db03749, type: 2}
-  - {fileID: 11400000, guid: c1b65a060901fe44689f1b6821c8776c, type: 2}
-  - {fileID: 11400000, guid: 6f74b333018cbf540950f52f148c2281, type: 2}
-  - {fileID: 11400000, guid: 11fc209d50dd7f84c819d65cee7c2cf4, type: 2}
-  - {fileID: 11400000, guid: 1ad4f7bbe831eeb4aad0d2fe6c2202d9, type: 2}
+  - {fileID: 11400000, guid: 01a26afbc788c8a45a17280417a7eb9f, type: 2}
+  - {fileID: 11400000, guid: 9c816b746a0a9c3458d2701328884a4d, type: 2}
+  - {fileID: 11400000, guid: 167f20b2e9914a840b29c3a43b08a957, type: 2}
+  - {fileID: 11400000, guid: aeac6e2a980c5db4f9554530098c7b1d, type: 2}
+  - {fileID: 11400000, guid: 751086e2dafafb94080110c1346453e1, type: 2}
   ingredientSlots: 1
   slotDisplays:
   - foodType: 5
