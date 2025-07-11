@@ -72,8 +72,8 @@ public class Customer
 
     public void LeaveSeat()
     {
+        OnLeaving?.Invoke();
         RuntimeData.AssignedTable = null;
         RuntimeData.CurrentOrder = null;
-        OnLeaving?.Invoke();
     }
 }
