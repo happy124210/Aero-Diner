@@ -12,6 +12,7 @@ public class Customer
     public event Action<FoodData> OnMenuServed; // 서빙됨
     public event Action OnEating; // 먹기 시작함
     public event Action OnPaymentEnd; // 결제 끝남
+    public event Action OnLeaving; // 자리에서 일어남
     
     // 데이터 컨테이너
     private CustomerData _data;
@@ -51,7 +52,8 @@ public class Customer
     // 음식 받기
     public void ReceiveFood(FoodData servedMenu)
     {
-        OnMenuServed?.Invoke(servedMenu);
+        if (servedMenu == RuntimeData.CurrentOrder)
+            OnMenuServed?.Invoke(servedMenu);
     }
 
     public void EatFood()
@@ -63,9 +65,15 @@ public class Customer
         OnEating?.Invoke();
     }
 
-    public void PayMoney(int amount)
+    public void PayMoney()
     {
-        GameManager.Instance.AddMoney(amount);
         OnPaymentEnd?.Invoke();
+    }
+
+    public void LeaveSeat()
+    {
+        OnLeaving?.Invoke();
+        RuntimeData.AssignedTable = null;
+        RuntimeData.CurrentOrder = null;
     }
 }
