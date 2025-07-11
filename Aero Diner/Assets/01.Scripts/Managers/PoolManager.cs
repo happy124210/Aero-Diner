@@ -5,9 +5,9 @@ using UnityEngine.Pool;
 public class PoolManager : Singleton<PoolManager>
 {
     [Header("Pool 설정")]
-    private const int POOL_CAPACITY = 20;
-    private const int MAX_POOL_SIZE = 40;
     [SerializeField] private Transform poolContainer;
+    [SerializeField] private int poolCapacity = 20;
+    [SerializeField] private int maxPoolSize = 40;
     
     [Header("리소스 데이터 경로")]
     private const string CUSTOMER_DATA_PATH = "Datas/Customer";
@@ -15,157 +15,139 @@ public class PoolManager : Singleton<PoolManager>
     [Header("공통 프리팹")]
     [SerializeField] private GameObject customerPrefab;
     
-    [Header("사용가능 데이터들 (자동 로드 됨)")]
-    [SerializeField] private CustomerData[] customerTypes;
+    [Header("사용가능 손님 타입")]
+    [SerializeField, ReadOnly] private CustomerData[] customerTypes;
     
     [Header("Runtime 정보")]
     private Dictionary<CustomerData, ObjectPool<CustomerController>> customerPools = new();
     private Dictionary<CustomerData, Transform> customerPoolParents = new();
-    private List<CustomerController> activeCustomers = new();
-
+    private readonly List<CustomerController> activeCustomers = new();
+    
+    #region properties
+    
+    public CustomerData[] CustomerTypes => customerTypes;
+    
+    #endregion
+    
     protected override void Awake()
     {
         base.Awake();
-
         InitializePools();
     }
 
-    /// <summary>
-    /// 풀 초기화
-    /// </summary>
     private void InitializePools()
     {
         LoadResourceData();
         
+        // 컨테이너가 없으면 PoolManager의 자식으로 생성
         if (poolContainer == null)
         {
-            GameObject container = new GameObject("CustomerContainer");
-            container.transform.SetParent(poolContainer);
+            GameObject container = new GameObject("PoolContainer");
             poolContainer = container.transform;
+            poolContainer.SetParent(transform);
         }
 
-        // 손님 타입별 pool 생성
-        if (customerTypes != null)
+        // 미리 정의된 손님 타입에 대한 풀을 미리 생성
+        if (customerTypes != null && customerPrefab != null)
         {
             foreach (var customerData in customerTypes)
             {
-                if (customerPrefab != null)
-                {
-                    CreateCustomerPool(customerData);
-                }
+                CreateCustomerPool(customerData);
             }
         }
     }
-
-    /// <summary>
-    /// Resources 폴더에서 데이터 로드
-    /// </summary>
+    
     private void LoadResourceData()
     {
         customerTypes = Resources.LoadAll<CustomerData>(CUSTOMER_DATA_PATH);
-
         if (customerTypes.Length == 0)
         {
-            Debug.LogError($"[ObjectPoolManager]: 데이터가 Resources/{CUSTOMER_DATA_PATH}에 있는 거 맞나요???");
+            Debug.LogError($"[PoolManager] Resources/{CUSTOMER_DATA_PATH} 경로에 CustomerData가 없습니다.");
         }
     }
 
-    #region 손님 풀 데이터
+    #region 손님 풀링 로직
 
-    /// <summary>
-    /// 손님 풀 생성
-    /// </summary>
     private void CreateCustomerPool(CustomerData customerData)
     {
-        // 부모 오브젝트 생성
-        GameObject poolParent = new GameObject($"CustomerPool_{customerData.customerName}");
-        poolParent.transform.SetParent(poolContainer);
-        customerPoolParents[customerData] = poolParent.transform;
+        // 이미 해당 풀이 있으면 생성하지 않음
+        if (customerPools.ContainsKey(customerData)) return;
+
+        var poolParent = new GameObject($"Pool_{customerData.customerName}").transform;
+        poolParent.SetParent(poolContainer);
+        customerPoolParents[customerData] = poolParent;
         
-        // Unity ObjectPool 생성
-        customerPools[customerData] = new ObjectPool<CustomerController>(
+        var newPool = new ObjectPool<CustomerController>(
             createFunc: () => CreateNewCustomer(customerData),
             actionOnGet: (customer) => OnGetCustomer(customer, customerData),
             actionOnRelease: (customer) => OnReleaseCustomer(customer, customerData),
             actionOnDestroy: (customer) => DestroyCustomer(customer),
             collectionCheck: true,
-            defaultCapacity: POOL_CAPACITY,
-            maxSize: MAX_POOL_SIZE
+            defaultCapacity: poolCapacity,
+            maxSize: maxPoolSize
         );
         
-        Debug.Log($"[ObjectPoolManager]: {customerData.customerName} 손님 풀 생성 완료");
+        customerPools[customerData] = newPool;
+        Debug.Log($"[PoolManager] {customerData.customerName} 손님 풀 생성 완료");
     }
-
 
     private CustomerController CreateNewCustomer(CustomerData customerData)
     {
+        // 생성 시 부모 지정
         GameObject customerObj = Instantiate(customerPrefab, customerPoolParents[customerData]);
-        CustomerController customer = customerObj.GetComponent<CustomerController>();
-        
-        if (!customer)
+        if (!customerObj.TryGetComponent<CustomerController>(out var customer))
         {
-            Debug.LogError("[ObjectPoolManager]: CustomerController 컴포넌트 없음 !!!");
+            Debug.LogError("[PoolManager] CustomerController 없음 !!!", customerObj);
             Destroy(customerObj);
             return null;
         }
-        
         return customer;
     }
 
-    /// <summary>
-    /// (풀 내부용) 손님 활성화
-    /// </summary>
     private void OnGetCustomer(CustomerController customer, CustomerData customerData)
     {
         if (!customer) return;
         
+        // 활성화 및 데이터 초기화
         customer.gameObject.SetActive(true);
         customer.InitializeFromPool(customerData);
+        
+        // 활성 리스트에 추가
         activeCustomers.Add(customer);
     }
 
-    /// <summary>
-    /// (풀 내부용) 손님 비활성화
-    /// </summary>
     private void OnReleaseCustomer(CustomerController customer, CustomerData customerData)
     {
         if (!customer) return;
 
-        if (activeCustomers.Contains(customer))
-        {
-            activeCustomers.Remove(customer);
-        }
+        // 활성 리스트에서 제거
+        activeCustomers.Remove(customer);
         
-        customer.gameObject.SetActive(false);
+        // 풀로 돌아갈 때 처리
+        customer.OnReturnToPool();
         customer.transform.SetParent(customerPoolParents[customerData]);
     }
     
-    /// <summary>
-    /// 손님 파괴
-    /// </summary>
     private void DestroyCustomer(CustomerController customer)
     {
-        if (!customer) return;
-        
-        Destroy(customer.gameObject);
+        if (customer)
+        {
+            Destroy(customer.gameObject);
+        }
     }
 
-    /// <summary>
-    /// 풀에서 손님 스폰
-    /// </summary>
-    /// <param name="customerData"> 스폰할 손님 데이터 </param>
-    /// <param name="position"> 스폰 위치 </param>
-    /// <param name="rotation"> 회전값 </param>
-    /// <returns></returns>
     public void SpawnCustomer(CustomerData customerData, Vector3 position, Quaternion rotation = default)
     {
         if (!customerData)
         {
-            Debug.LogError("[ObjectPoolManager]: 손님 데이터 없음 !!!");
+            Debug.LogError("[PoolManager] 손님 데이터 없음 !!!");
+            return;
         }
 
+        // 풀이 없으면 즉시 생성
         if (!customerPools.ContainsKey(customerData))
         {
+            Debug.LogWarning($"[PoolManager] {customerData.name} 풀 없어서 새로 생성함");
             CreateCustomerPool(customerData);
         }
 
@@ -173,56 +155,44 @@ public class PoolManager : Singleton<PoolManager>
 
         if (customer)
         {
-            customer.transform.position = position;
-            customer.transform.rotation = rotation == default ? Quaternion.identity : rotation;
+            customer.transform.SetPositionAndRotation(position, rotation == default ? Quaternion.identity : rotation);
         }
     }
 
-    /// <summary>
-    /// 손님 풀로 반환
-    /// </summary>
-    /// <param name="customer"></param>
     public void DespawnCustomer(CustomerController customer)
     {
         if (!customer) return;
 
-        CustomerData customerData = customer.CustomerData;
-        if (customerData && customerPools.ContainsKey(customerData))
+        CustomerData data = customer.CustomerData;
+        
+        if (data && customerPools.TryGetValue(data, out var pool))
         {
-            customerPools[customerData].Release(customer);
+            pool.Release(customer);
         }
         else
         {
-            if (activeCustomers.Contains(customer))
-            {
-                activeCustomers.Remove(customer);
-            }
-            Debug.LogError($"[ObjectPoolManager]: {customer.name} 손님 데이터 없음 !!!");
+            Debug.LogWarning($"[PoolManager] '{customer.name}' 풀에 없음 !!!");
+            activeCustomers.Remove(customer);
             Destroy(customer.gameObject);
         }
     }
     
-    /// <summary>
-    /// 모든 활성 손님 반환
-    /// </summary>
     public void ReturnAllActiveCustomers()
     {
-        List<CustomerController> customersToReturn = new List<CustomerController>(activeCustomers);
+        var customersToReturn = new List<CustomerController>(activeCustomers);
         
         foreach (var customer in customersToReturn)
         {
-            DespawnCustomer(customer);
+            customer.ForceLeave();
         }
         
-        Debug.Log("[ObjectPoolManager] : 모든 활성 손님을 풀로 반환!");
+        Debug.Log($"[PoolManager] 모든 활성 손님({customersToReturn.Count}명) 쫓아내기");
     }
 
     #endregion
 
-    #region public getters
-
+    #region Public Getters
     public int ActiveCustomerCount => activeCustomers.Count;
-    public CustomerData[] AvailableCustomers => customerTypes;
-
+    public IReadOnlyCollection<CustomerData> AvailableCustomers => customerTypes;
     #endregion
 }

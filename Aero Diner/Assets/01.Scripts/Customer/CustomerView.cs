@@ -34,7 +34,7 @@ public class CustomerView : MonoBehaviour
     public void Initialize()
     {
         SetupComponents();
-        HidePatienceTimer();
+        SetPatienceVisibility(false);
     }
 
     private void SetupComponents()
@@ -56,57 +56,36 @@ public class CustomerView : MonoBehaviour
         patienceTimer.color = Util.ChangeColorByRatio(patienceRatio);
     }
 
-    public void UpdatePatienceVisibility(bool isDecreasing)
+    public void SetPatienceVisibility(bool isActive)
     {
-        if (isDecreasing)
-        {
-            ShowPatienceTimer();
-        }
-        else
-        {
-            HidePatienceTimer();
-        }
+        if (!customerUI || !patienceTimer) return;
+
+        customerUI.gameObject.SetActive(isActive);
+        orderBubble.gameObject.SetActive(isActive);
+        patienceTimer.gameObject.SetActive(isActive);
     }
 
     public void ShowOrderBubble(FoodData order)
     {
         if (!orderBubble || !order) return;
-
-        customerUI.gameObject.SetActive(true);
+        
         orderBubble.gameObject.SetActive(true);
         orderBubble.sprite = order.foodIcon;
     } 
-
-    private void ShowPatienceTimer()
+    
+    public void ShowEatingEffect()
     {
-        if (!customerUI || !patienceTimer) return;
-
-        customerUI.gameObject.SetActive(true);
-        patienceTimer.gameObject.SetActive(true);
+        // TODO: 먹는중 이펙트 표시
+        if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 먹는중 이펙트");
     }
 
-    private void HidePatienceTimer()
+    public void ShowPayEffect()
     {
-        if (!customerUI || !patienceTimer) return;
+        // TODO: 결제 이펙트 표시
         
-        customerUI.gameObject.SetActive(false);
-        orderBubble.gameObject.SetActive(false);
-        patienceTimer.gameObject.SetActive(false);
+        if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 결제 완료 이펙트");
     }
     
-    public void OnServedStateChanged()
-    {
-        HidePatienceTimer();
-    }
-
-    public void OnPaymentStateChanged(bool isCompleted)
-    {
-        if (isCompleted)
-        {
-            // TODO: 결제 이펙트 표시
-            if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 결제 완료 이펙트");
-        }
-    }
     #endregion
 
     #region Animations
@@ -132,7 +111,7 @@ public class CustomerView : MonoBehaviour
     #region Cleanup
     public void Cleanup()
     {
-        HidePatienceTimer();
+        SetPatienceVisibility(false);
 
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;

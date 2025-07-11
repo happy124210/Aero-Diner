@@ -47,6 +47,16 @@ public class CustomerController : MonoBehaviour
         }
     }
     
+    private void UpdateTimers(float deltaTime)
+    {
+        // 인내심 타이머
+        if (ShouldPatienceDecrease())
+        {
+            float newPatience = Mathf.Max(0, model.RuntimeData.CurrentPatience - deltaTime);
+            model.UpdatePatience(newPatience);
+        }
+    }
+    
     private void OnDestroy()
     {
         UnsubscribeFromModelEvents();
@@ -73,20 +83,18 @@ public class CustomerController : MonoBehaviour
     private void SubscribeToModelEvents()
     {
         model.OnPatienceChanged += HandlePatienceChanged;
-        model.OnPatienceStateChanged += HandlePatienceStateChanged;
         model.OnOrderPlaced += HandleOrderPlaced;
         model.OnMenuServed += HandleMenuServed;
-        model.OnEatingFinished += HandleEatingFinished;
+        model.OnEating += HandleEating;
         model.OnPaymentEnd += HandlePaymentEnd;
     }
 
     private void UnsubscribeFromModelEvents()
     {
         model.OnPatienceChanged -= HandlePatienceChanged;
-        model.OnPatienceStateChanged -= HandlePatienceStateChanged;
         model.OnOrderPlaced -= HandleOrderPlaced;
         model.OnMenuServed -= HandleMenuServed;
-        model.OnEatingFinished -= HandleEatingFinished;
+        model.OnEating -= HandleEating;
         model.OnPaymentEnd -= HandlePaymentEnd;
     }
     
@@ -103,109 +111,64 @@ public class CustomerController : MonoBehaviour
     }
     #endregion
     
-    #region Model Event Handlers (Controller가 Model 변경사항을 View에 전달)
+    #region Model Event Handlers (Controller가 Model 변경사항받고 model / view 조정)
     
     private void HandlePatienceChanged(float currentPatience)
     {
         view.UpdatePatienceUI(model.GetPatienceRatio());
     }
 
-    public void SetPatienceTimerActive(bool isActive)
-    {
-        model.SetPatienceTimerActive(isActive);
-    }
-
-    private void HandlePatienceStateChanged(bool isDecreasing)
-    {
-        view.UpdatePatienceVisibility(isDecreasing);
-    }
-
     private void HandleOrderPlaced(FoodData order)
     {
+        view.SetPatienceVisibility(true);
         view.ShowOrderBubble(order);
+        
+        RestaurantManager.Instance.OnCustomerEntered();
         EventBus.Raise(UIEventType.ShowOrderPanel, model);
+        
+        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 주문 접수됨!");
     }
 
-    private void HandleMenuServed()
+    private void HandleMenuServed(FoodData servedMenu)
     {
-        view.OnServedStateChanged();
+        view.SetPatienceVisibility(false);
+        // TODO: view의 happy 이펙트  부르기
+        
         ChangeState(new EatingState());
+        
+        MenuManager.Instance.OnMenuServed(servedMenu.id);
+        EventBus.Raise(UIEventType.HideOrderPanel, model);
+        
+        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 음식 서빙됨!");
     }
 
-    private void HandleEatingFinished()
+    private void HandleEating()
     {
-        ChangeState(new PayingState());
+        // TODO: view의 먹는 중 이펙트
+        SetAnimationState(CustomerAnimState.Sitting);
     }
 
-    private void HandlePaymentEnd(bool isCompleted)
+    private void HandlePaymentEnd()
     {
-        view.OnPaymentStateChanged(isCompleted);
+        view.ShowPayEffect();
+        
+        RestaurantManager.Instance.IncreaseCustomerStat();
     }
     
     #endregion
 
-    #region Customer Actions
+    #region 외부 연결 함수
+
+    public void SetPatienceVisibility(bool isActive) => view.SetPatienceVisibility(isActive);
+    public void PlaceOrder() => model.PlaceOrder();
+    public void ReceiveFood(FoodData servedMenu) =>  model.ReceiveFood(servedMenu);
+    public void EatFood() => model.EatFood();
+    public void UpdateQueuePosition(Vector3 newPosition) =>  SetDestination(newPosition);
+    public void MoveToAssignedSeat() => ChangeState(new MovingToSeatState());
+    public void SetAssignedTable(Table table) => model.SetAssignedTable(table);
+    public void ProcessPayment() => model.PayMoney(GetCurrentOrder().foodCost);
+    public void ForceLeave() => ChangeState(new LeavingState());
     
-    private void UpdateTimers(float deltaTime)
-    {
-        // 인내심 타이머
-        if (ShouldPatienceDecrease())
-        {
-            float newPatience = Mathf.Max(0, model.RuntimeData.CurrentPatience - deltaTime);
-            model.UpdatePatience(newPatience);
-        }
-    }
-    
-    public void UpdateQueuePosition(Vector3 newPosition)
-    {
-        SetDestination(newPosition);
-    }
-
-    public void MoveToAssignedSeat()
-    {
-        ChangeState(new MovingToSeatState());
-    }
-
-    public void SetAssignedTable(Table table)
-    {
-        model.SetAssignedTable(table);
-    }
-    
-    public void PlaceOrder()
-    {
-        // TODO: 이벤트 연결
-        RestaurantManager.Instance.OnCustomerEntered();
-        model.PlaceOrder();
-    }
-
-    public void ReceiveFood(FoodData servedMenu)
-    {
-        if (GetCurrentOrder() == servedMenu)
-        {
-            model.ReceiveFood(servedMenu);
-            // TODO: view의 happy 이펙트  부르기
-            if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 음식 서빙됨!");
-        }
-    }
-
-    public void ProcessPayment()
-    {
-        // TODO: view의 결제 부르기
-        RestaurantManager.Instance.OnCustomerPaid(GetCurrentOrder().foodCost);
-        EventBus.Raise(UIEventType.UpdateEarnings);
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 결제 시작!");
-    }
-
-    public void ForceLeave()
-    {
-        ChangeState(new LeavingState());
-    }
-
-    public void Despawn()
-    {
-        PoolManager.Instance.DespawnCustomer(this);
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 퇴장 및 비활성화");
-    }
     #endregion
 
     #region IPoolable Implementation
@@ -228,8 +191,6 @@ public class CustomerController : MonoBehaviour
 
     public void OnReturnToPool()
     {
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 풀로 반환");
-
         // 정리 작업
         currentState = null;
         UnsubscribeFromModelEvents();
@@ -242,6 +203,15 @@ public class CustomerController : MonoBehaviour
             navAgent.ResetPath();
             navAgent.velocity = Vector3.zero;
         }
+        
+        gameObject.SetActive(false);
+        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 풀로 반환");
+    }
+    
+    public void Despawn()
+    {
+        PoolManager.Instance.DespawnCustomer(this);
+        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 퇴장 및 비활성화");
     }
     #endregion
     
@@ -304,7 +274,6 @@ public class CustomerController : MonoBehaviour
     # region property & public methods
     
     public CustomerData CustomerData => model.Data;
-    public float GetEatingTime() => model.Data.eatTime;
     public Table GetAssignedTable() => model.RuntimeData.AssignedTable;
     public FoodData GetCurrentOrder() => model.RuntimeData.CurrentOrder;
     public Vector3 GetStopPosition() => GetAssignedTable().GetStopPoint();

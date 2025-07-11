@@ -23,7 +23,17 @@ public class GameManager : Singleton<GameManager>
         LoadDay();
     }
     
-    #region money
+    public void PauseGame()
+    {
+        Time.timeScale = 0;
+    }
+
+    public void ContinueGame()
+    {
+        Time.timeScale = 1;
+    }
+    
+    #region 돈 관리
     
     public void LoadEarnings()
     {
@@ -50,7 +60,7 @@ public class GameManager : Singleton<GameManager>
     
     #endregion
 
-    #region day
+    #region 날짜 관리
     
     private void LoadDay()
     {
@@ -91,17 +101,10 @@ public class GameManager : Singleton<GameManager>
         data.totalEarnings = TotalEarnings;
         data.currentDay = currentDay;
         SaveLoadManager.SaveGame(data);
+        MenuManager.Instance.SaveMenuDatabase();
+        
+        if (showDebugInfo) Debug.Log("[GameManager] 저장 완료");
     }
     
     #endregion
-    
-    public void PauseGame()
-    {
-        Time.timeScale = 0;
-    }
-
-    public void ContinueGame()
-    {
-        Time.timeScale = 1;
-    }
 }
