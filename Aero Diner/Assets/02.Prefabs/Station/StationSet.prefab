@@ -8522,7 +8522,7 @@ MonoBehaviour:
   availableFoodIds: []
   iconDisplay: {fileID: 3437475423995128164}
   slotSpacing: 0.5
-  showDebugInfo: 0
+  showDebugInfo: 1
 --- !u!50 &2650720676867945480
 Rigidbody2D:
   serializedVersion: 4

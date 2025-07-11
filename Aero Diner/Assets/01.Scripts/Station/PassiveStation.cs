@@ -124,11 +124,22 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         // 필요한 재료 그룹이 지정되어 있다면 유효성 검사
         if (neededIngredients.Any())
         {
+            // 허용되지 않은 재료가 들어있는지 검사
             bool hasInvalid = currentIngredients.Any(id => !IsIngredientIDAllowed(id));
-
             if (hasInvalid)
             {
                 if (showDebugInfo) Debug.Log("요구된 재료가 아닌 항목이 포함되어 있어 타이머가 리셋됨.");
+                currentCookingTime = cookingTime;
+                UpdateCookingProgress();
+                return;
+            }
+
+            // 모든 필요한 재료가 있는지 검사
+            List<string> neededIds = neededIngredients.Select(n => n.id).ToList();
+            bool allRequiredPresent = neededIds.All(id => currentIngredients.Contains(id));
+            if (!allRequiredPresent)
+            {
+                if (showDebugInfo) Debug.Log("모든 재료가 준비되지 않아 조리가 시작되지 않습니다.");
                 currentCookingTime = cookingTime;
                 UpdateCookingProgress();
                 return;
@@ -138,6 +149,8 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         // 실제 상호작용이 'Use'일 때만 처리
         if (interactionType == InteractionType.Use)
         {
+            if (!isCooking) return;
+
             currentCookingTime -= Time.deltaTime;
             UpdateCookingProgress();
 
@@ -153,6 +166,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             if (showDebugInfo) Debug.Log("[PassiveStation] InteractionType.Use가 아니므로 무시됩니다.");
         }
     }
+
 
     private bool IsIngredientIDAllowed(string id)
     {
@@ -363,6 +377,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         ResetCookingTimer();
         currentIngredients.Clear();
         placedIngredientList.Clear();
+        iconDisplay?.ResetAll();
         ClearPlacedObjects();
     }
 
@@ -390,6 +405,8 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// </summary>
     private void UpdateCookingProgress()
     {
+        if (!isCooking) return;
+
         currentCookingTime -= Time.deltaTime;
 
         float progress = Mathf.Clamp01(currentCookingTime / cookingTime);
@@ -463,7 +480,8 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
 
         if (cookedIngredient != null)
         {
-            iconDisplay?.ResetAll();
+            var lastIngredient = placedIngredientList.Last();
+            iconDisplay?.ShowSlot(lastIngredient.foodType);
             if (showDebugInfo) Debug.Log($"플레이어가 '{cookedIngredient.displayName}' 요리 결과 획득");
             yield break;
         }
