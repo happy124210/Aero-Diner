@@ -23,7 +23,17 @@ public class GameManager : Singleton<GameManager>
         LoadDay();
     }
     
-    #region money
+    public void PauseGame()
+    {
+        Time.timeScale = 0;
+    }
+
+    public void ContinueGame()
+    {
+        Time.timeScale = 1;
+    }
+    
+    #region 돈 관리
     
     public void LoadEarnings()
     {
@@ -50,7 +60,7 @@ public class GameManager : Singleton<GameManager>
     
     #endregion
 
-    #region day
+    #region 날짜 관리
     
     private void LoadDay()
     {
@@ -96,14 +106,4 @@ public class GameManager : Singleton<GameManager>
     }
     
     #endregion
-    
-    public void PauseGame()
-    {
-        Time.timeScale = 0;
-    }
-
-    public void ContinueGame()
-    {
-        Time.timeScale = 1;
-    }
 }
