@@ -139,7 +139,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
         if (showDebugInfo) Debug.Log($"Final Stats - Served: {customersServed}, Earnings: {GameManager.Instance.TotalEarnings}");
         
         //  하루 종료 시점에 저장
-        GameManager.Instance.IncreaseDay();
         GameManager.Instance.SaveData();
 
         if (showDebugInfo) Debug.Log("[RestaurantManager] 저장 완료");
