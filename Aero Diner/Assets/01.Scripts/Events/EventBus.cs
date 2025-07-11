@@ -42,7 +42,7 @@ public enum UIEventType
     
     //MainSceneUI
     ShowRoundTimer, HideRoundTimer,
-    UpdateEarnings, 
+    UpdateEarnings,
     ShowMenuPanel, UpdateMenuPanel, HideMenuPanel, 
     ShowResultPanel, HideResultPanel, 
     ShowInventory, HideInventory,
