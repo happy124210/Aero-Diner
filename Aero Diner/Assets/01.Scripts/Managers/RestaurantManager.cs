@@ -29,7 +29,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
     
     [Header("라운드 시간 설정")]
     [Tooltip("하루 제한 시간 (초 단위)")]
-    [SerializeField] private float gameTimeLimit;
+    [SerializeField] private float gameTimeLimit = 300f;
 
     protected override void Awake()
     {
