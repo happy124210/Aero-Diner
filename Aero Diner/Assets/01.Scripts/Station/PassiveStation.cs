@@ -478,7 +478,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// </summary>
     public void OnPlayerPickup()
     {
-        currentIngredients.Clear();         // 현재 재료 목록 초기화
+        //currentIngredients.Clear();         // 현재 재료 목록 초기화
         currentCookingTime = cookingTime;   // 타이머 초기화
         UpdateCookingProgress();            
 
@@ -555,7 +555,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
                 }
                 else
                 {
-                    Debug.LogWarning("[HandlePickup] Player 또는 Itemslot을 찾을 수 없습니다.");
+                    if (showDebugInfo) Debug.LogWarning("[HandlePickup] Player 또는 Itemslot을 찾을 수 없습니다.");
                 }
             }
 
