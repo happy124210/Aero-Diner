@@ -82,7 +82,7 @@ public class GameManager : Singleton<GameManager>
     public void IncreaseDay()
     {
         currentDay++;
-        if (showDebugInfo) Debug.Log($"[RestaurantManager] Incrementing day from {currentDay} → {currentDay + 1}");
+        if (showDebugInfo) Debug.Log($"[GameManager] Incrementing day from {currentDay} → {currentDay + 1}");
     }
 
     public void SaveData()
@@ -91,6 +91,8 @@ public class GameManager : Singleton<GameManager>
         data.totalEarnings = TotalEarnings;
         data.currentDay = currentDay;
         SaveLoadManager.SaveGame(data);
+        
+        if (showDebugInfo) Debug.Log("[GameManager] 저장 완료");
     }
     
     #endregion
