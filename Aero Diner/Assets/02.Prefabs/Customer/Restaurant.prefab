@@ -321,7 +321,7 @@ MonoBehaviour:
   customersServed: 0
   customersVisited: 0
   gameTime: 0
-  showDebugInfo: 1
+  showDebugInfo: 0
   gameTimeLimit: 300
 --- !u!114 &5796004451528270688
 MonoBehaviour:

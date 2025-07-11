@@ -245,12 +245,7 @@ public class LeavingState : CustomerState
     
     public override void Enter(CustomerController customer)
     {
-        Vector3 exit = RestaurantManager.Instance.GetExitPoint();
-        customer.SetDestination(exit);
-        customer.SetAnimationState(CustomerAnimState.Walking);
-        
-        TableManager.Instance.ReleaseSeat(customer);
-        TableManager.Instance.RemoveCustomerFromQueue(customer);
+        customer.LeaveSeat();
     }
     
     public override CustomerState Update(CustomerController customer)
