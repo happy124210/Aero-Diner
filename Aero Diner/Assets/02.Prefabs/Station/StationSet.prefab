@@ -28,7 +28,7 @@ RectTransform:
   m_GameObject: {fileID: 65928299937541616}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8781300006457856969}
@@ -130,7 +130,7 @@ RectTransform:
   m_GameObject: {fileID: 103660864196228977}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2058448299571924216}
@@ -279,7 +279,7 @@ RectTransform:
   m_GameObject: {fileID: 417903394536773976}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4796683758201357760}
@@ -412,7 +412,7 @@ GameObject:
   - component: {fileID: 111520733386049381}
   - component: {fileID: 6926337267970876314}
   - component: {fileID: 2523186165771975001}
-  - component: {fileID: 1430407858768567628}
+  - component: {fileID: 4656811015611376273}
   m_Layer: 5
   m_Name: StationTimerUI
   m_TagString: Untagged
@@ -428,7 +428,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 660195981927212089}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.049384885}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -436,8 +436,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 965.56, y: 529.88}
-  m_SizeDelta: {x: 48, y: 96}
+  m_AnchoredPosition: {x: 0, y: 105}
+  m_SizeDelta: {x: 64, y: 144}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6926337267970876314
 CanvasRenderer:
@@ -467,7 +467,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  m_Sprite: {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -477,27 +477,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!95 &1430407858768567628
-Animator:
-  serializedVersion: 5
+--- !u!114 &4656811015611376273
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 660195981927212089}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 02be80423581a484fb3807b61f733be2, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69f72297906c1d44cb9932815474430c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1969070253, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1242721572, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1385629252, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 807758907, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -159639402, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 1873570143, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
 --- !u!1 &719951508960132023
 GameObject:
   m_ObjectHideFlags: 0
@@ -526,7 +526,7 @@ RectTransform:
   m_GameObject: {fileID: 719951508960132023}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6176747134420394811}
@@ -955,8 +955,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 5415545099906950688}
   cookingTime: 5
-  stationTimerAnimator: {fileID: 2062152592685504080}
-  stationTimerImage: {fileID: 2213799580522958726}
   stationData: {fileID: 11400000, guid: d160a9cc1e04c634f99a2a43df2cd532, type: 2}
   currentIngredients: []
   bestMatchedRecipe: 
@@ -964,6 +962,7 @@ MonoBehaviour:
   iconDisplay: {fileID: 518600258065958192}
   slotSpacing: 0.5
   showDebugInfo: 0
+  timerController: {fileID: 0}
 --- !u!50 &4238375708139498439
 Rigidbody2D:
   serializedVersion: 4
@@ -1092,7 +1091,7 @@ RectTransform:
   m_GameObject: {fileID: 1541016410979054274}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 111520733386049381}
@@ -1177,7 +1176,7 @@ GameObject:
   - component: {fileID: 7972169765305071792}
   - component: {fileID: 7660458188689969578}
   - component: {fileID: 4139516340855562248}
-  - component: {fileID: 2238717289984476042}
+  - component: {fileID: 7268199882583470312}
   m_Layer: 5
   m_Name: StationTimerUI
   m_TagString: Untagged
@@ -1201,8 +1200,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 958.06, y: 529.88}
-  m_SizeDelta: {x: 48, y: 96}
+  m_AnchoredPosition: {x: 0, y: 105}
+  m_SizeDelta: {x: 64, y: 144}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7660458188689969578
 CanvasRenderer:
@@ -1232,7 +1231,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  m_Sprite: {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1242,27 +1241,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!95 &2238717289984476042
-Animator:
-  serializedVersion: 5
+--- !u!114 &7268199882583470312
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2037324016395963226}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 02be80423581a484fb3807b61f733be2, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69f72297906c1d44cb9932815474430c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1969070253, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1242721572, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1385629252, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 807758907, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -159639402, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 1873570143, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
 --- !u!1 &2120450951659274912
 GameObject:
   m_ObjectHideFlags: 0
@@ -1572,8 +1571,6 @@ MonoBehaviour:
   spawnPoint: {fileID: 8150871292611599561}
   neededIngredients: []
   cookingTime: 5
-  stationTimerAnimator: {fileID: 1430407858768567628}
-  stationTimerImage: {fileID: 2523186165771975001}
   stationData: {fileID: 11400000, guid: ac62d39755eda7744acf7b77c351a37f, type: 2}
   currentIngredients: []
   bestMatchedRecipe: "\uB9E4\uCE6D\uB418\uB294 \uB808\uC2DC\uD53C \uC5C6\uC74C"
@@ -1581,6 +1578,7 @@ MonoBehaviour:
   iconDisplay: {fileID: 8797346020837964626}
   slotSpacing: 0.5
   showDebugInfo: 0
+  timerController: {fileID: 0}
 --- !u!50 &8053021395616812788
 Rigidbody2D:
   serializedVersion: 4
@@ -2489,8 +2487,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 2186915114526774667}
   cookingTime: 5
-  stationTimerAnimator: {fileID: 3669981140996122686}
-  stationTimerImage: {fileID: 8016385230890834529}
   stationData: {fileID: 11400000, guid: a79c8c43a68771f49ae47eed78b341ef, type: 2}
   currentIngredients: []
   bestMatchedRecipe: 
@@ -2498,6 +2494,7 @@ MonoBehaviour:
   iconDisplay: {fileID: 8841047111053585131}
   slotSpacing: 0.5
   showDebugInfo: 0
+  timerController: {fileID: 0}
 --- !u!50 &971601178443578792
 Rigidbody2D:
   serializedVersion: 4
@@ -2651,7 +2648,7 @@ GameObject:
   - component: {fileID: 6176747134420394811}
   - component: {fileID: 4538847865277694615}
   - component: {fileID: 9183041221550719096}
-  - component: {fileID: 555761304430010861}
+  - component: {fileID: 3546742701036481855}
   m_Layer: 5
   m_Name: StationTimerUI
   m_TagString: Untagged
@@ -2675,8 +2672,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 965.48, y: 536.38}
-  m_SizeDelta: {x: 48, y: 96}
+  m_AnchoredPosition: {x: 0, y: 105}
+  m_SizeDelta: {x: 64, y: 144}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4538847865277694615
 CanvasRenderer:
@@ -2706,7 +2703,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  m_Sprite: {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2716,27 +2713,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!95 &555761304430010861
-Animator:
-  serializedVersion: 5
+--- !u!114 &3546742701036481855
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3368060640193002976}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 02be80423581a484fb3807b61f733be2, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69f72297906c1d44cb9932815474430c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1969070253, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1242721572, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1385629252, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 807758907, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -159639402, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 1873570143, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
 --- !u!1 &3485481835088518093
 GameObject:
   m_ObjectHideFlags: 0
@@ -2951,7 +2948,7 @@ GameObject:
   - component: {fileID: 2058448299571924216}
   - component: {fileID: 2652438074825802933}
   - component: {fileID: 2462640182514224259}
-  - component: {fileID: 1630113616593088248}
+  - component: {fileID: 256036749208510858}
   m_Layer: 5
   m_Name: StationTimerUI
   m_TagString: Untagged
@@ -2975,8 +2972,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 961.06, y: 529.88}
-  m_SizeDelta: {x: 48, y: 96}
+  m_AnchoredPosition: {x: 0, y: 105}
+  m_SizeDelta: {x: 64, y: 144}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2652438074825802933
 CanvasRenderer:
@@ -3006,7 +3003,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  m_Sprite: {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3016,27 +3013,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!95 &1630113616593088248
-Animator:
-  serializedVersion: 5
+--- !u!114 &256036749208510858
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3526894667635378541}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 02be80423581a484fb3807b61f733be2, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69f72297906c1d44cb9932815474430c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1969070253, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1242721572, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1385629252, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 807758907, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -159639402, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 1873570143, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
 --- !u!1 &3555209606782607883
 GameObject:
   m_ObjectHideFlags: 0
@@ -3805,7 +3802,7 @@ RectTransform:
   m_GameObject: {fileID: 4157127760106682962}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7972169765305071792}
@@ -3890,7 +3887,7 @@ GameObject:
   - component: {fileID: 5889572564893396517}
   - component: {fileID: 699696634957814631}
   - component: {fileID: 8016385230890834529}
-  - component: {fileID: 3669981140996122686}
+  - component: {fileID: 54713800876394262}
   m_Layer: 5
   m_Name: StationTimerUI
   m_TagString: Untagged
@@ -3914,8 +3911,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 956.56, y: 529.88}
-  m_SizeDelta: {x: 48, y: 96}
+  m_AnchoredPosition: {x: 0, y: 105}
+  m_SizeDelta: {x: 64, y: 144}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &699696634957814631
 CanvasRenderer:
@@ -3945,7 +3942,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  m_Sprite: {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3955,27 +3952,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!95 &3669981140996122686
-Animator:
-  serializedVersion: 5
+--- !u!114 &54713800876394262
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4319645361008627527}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 02be80423581a484fb3807b61f733be2, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69f72297906c1d44cb9932815474430c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1969070253, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1242721572, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1385629252, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 807758907, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -159639402, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 1873570143, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
 --- !u!1 &4346113971895264834
 GameObject:
   m_ObjectHideFlags: 0
@@ -4410,7 +4407,7 @@ RectTransform:
   m_GameObject: {fileID: 4557874787656890305}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 203437669039232464}
@@ -4495,7 +4492,7 @@ GameObject:
   - component: {fileID: 4932399214060499464}
   - component: {fileID: 2181351884242030499}
   - component: {fileID: 7060432978202980839}
-  - component: {fileID: 8787786438551234750}
+  - component: {fileID: 3274363050908065210}
   m_Layer: 5
   m_Name: StationTimerUI
   m_TagString: Untagged
@@ -4511,7 +4508,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4601737377482067502}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.049384885}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4519,8 +4516,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 963.41, y: 536.38}
-  m_SizeDelta: {x: 48, y: 96}
+  m_AnchoredPosition: {x: 0, y: 105}
+  m_SizeDelta: {x: 64, y: 144}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2181351884242030499
 CanvasRenderer:
@@ -4550,7 +4547,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  m_Sprite: {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4560,27 +4557,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!95 &8787786438551234750
-Animator:
-  serializedVersion: 5
+--- !u!114 &3274363050908065210
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4601737377482067502}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 02be80423581a484fb3807b61f733be2, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69f72297906c1d44cb9932815474430c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1969070253, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1242721572, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1385629252, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 807758907, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -159639402, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 1873570143, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
 --- !u!1 &4667325646701915282
 GameObject:
   m_ObjectHideFlags: 0
@@ -4592,7 +4589,7 @@ GameObject:
   - component: {fileID: 4796683758201357760}
   - component: {fileID: 4507538516909247833}
   - component: {fileID: 7236620882258995537}
-  - component: {fileID: 3789503513700345872}
+  - component: {fileID: 6659173810337344624}
   m_Layer: 5
   m_Name: StationTimerUI
   m_TagString: Untagged
@@ -4616,8 +4613,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 962.56, y: 529.88}
-  m_SizeDelta: {x: 48, y: 96}
+  m_AnchoredPosition: {x: 0, y: 105}
+  m_SizeDelta: {x: 64, y: 144}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4507538516909247833
 CanvasRenderer:
@@ -4647,7 +4644,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  m_Sprite: {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4657,27 +4654,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!95 &3789503513700345872
-Animator:
-  serializedVersion: 5
+--- !u!114 &6659173810337344624
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4667325646701915282}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 02be80423581a484fb3807b61f733be2, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69f72297906c1d44cb9932815474430c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1969070253, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1242721572, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1385629252, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 807758907, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -159639402, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 1873570143, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
 --- !u!1 &4709700849059972983
 GameObject:
   m_ObjectHideFlags: 0
@@ -4924,8 +4921,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 1401825894292575542}
   cookingTime: 5
-  stationTimerAnimator: {fileID: 1630113616593088248}
-  stationTimerImage: {fileID: 2462640182514224259}
   stationData: {fileID: 11400000, guid: f8a9f81cc2cbccf4b8219a540e54b46e, type: 2}
   currentIngredients: []
   bestMatchedRecipe: 
@@ -4933,6 +4928,7 @@ MonoBehaviour:
   iconDisplay: {fileID: 8038720050282133297}
   slotSpacing: 0.5
   showDebugInfo: 0
+  timerController: {fileID: 0}
 --- !u!50 &3772415074696767218
 Rigidbody2D:
   serializedVersion: 4
@@ -5138,8 +5134,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 2151378581868345341}
   cookingTime: 5
-  stationTimerAnimator: {fileID: 3789503513700345872}
-  stationTimerImage: {fileID: 7236620882258995537}
   stationData: {fileID: 11400000, guid: 068a8e1282c0fd745a0ea1a0604bbf55, type: 2}
   currentIngredients: []
   bestMatchedRecipe: 
@@ -5147,6 +5141,7 @@ MonoBehaviour:
   iconDisplay: {fileID: 7857475033717353370}
   slotSpacing: 0.5
   showDebugInfo: 0
+  timerController: {fileID: 0}
 --- !u!50 &4537783116809232242
 Rigidbody2D:
   serializedVersion: 4
@@ -6010,8 +6005,6 @@ MonoBehaviour:
   spawnPoint: {fileID: 3486134707807749421}
   neededIngredients: []
   cookingTime: 5
-  stationTimerAnimator: {fileID: 8787786438551234750}
-  stationTimerImage: {fileID: 7060432978202980839}
   stationData: {fileID: 11400000, guid: 47e7ce222e494a247a4778c1c5be3e93, type: 2}
   currentIngredients: []
   bestMatchedRecipe: "\uB9E4\uCE6D\uB418\uB294 \uB808\uC2DC\uD53C \uC5C6\uC74C"
@@ -6019,6 +6012,7 @@ MonoBehaviour:
   iconDisplay: {fileID: 2368891911857988211}
   slotSpacing: 0.5
   showDebugInfo: 0
+  timerController: {fileID: 0}
 --- !u!50 &2515193293862300635
 Rigidbody2D:
   serializedVersion: 4
@@ -6333,7 +6327,7 @@ GameObject:
   - component: {fileID: 8781300006457856969}
   - component: {fileID: 7809434088329777739}
   - component: {fileID: 5294152031693769156}
-  - component: {fileID: 5619327330955797713}
+  - component: {fileID: 8354576409165053788}
   m_Layer: 5
   m_Name: StationTimerUI
   m_TagString: Untagged
@@ -6357,8 +6351,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 967.48, y: 536.38}
-  m_SizeDelta: {x: 48, y: 96}
+  m_AnchoredPosition: {x: 0, y: 105}
+  m_SizeDelta: {x: 64, y: 144}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7809434088329777739
 CanvasRenderer:
@@ -6388,7 +6382,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  m_Sprite: {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -6398,27 +6392,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!95 &5619327330955797713
-Animator:
-  serializedVersion: 5
+--- !u!114 &8354576409165053788
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5837864917131192293}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 02be80423581a484fb3807b61f733be2, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69f72297906c1d44cb9932815474430c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1969070253, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1242721572, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1385629252, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 807758907, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -159639402, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 1873570143, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
 --- !u!1 &5885247135448678388
 GameObject:
   m_ObjectHideFlags: 0
@@ -6447,7 +6441,7 @@ RectTransform:
   m_GameObject: {fileID: 5885247135448678388}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5889572564893396517}
@@ -6931,8 +6925,6 @@ MonoBehaviour:
   spawnPoint: {fileID: 133127399808337944}
   neededIngredients: []
   cookingTime: 5
-  stationTimerAnimator: {fileID: 1350911073547242058}
-  stationTimerImage: {fileID: 8860515536277168155}
   stationData: {fileID: 11400000, guid: c9863b7b9d7b37a4da3bcbc3c9aeb91d, type: 2}
   currentIngredients: []
   bestMatchedRecipe: "\uB9E4\uCE6D\uB418\uB294 \uB808\uC2DC\uD53C \uC5C6\uC74C"
@@ -6940,6 +6932,7 @@ MonoBehaviour:
   iconDisplay: {fileID: 4415209505255441822}
   slotSpacing: 0.5
   showDebugInfo: 1
+  timerController: {fileID: 0}
 --- !u!50 &4877016985972356948
 Rigidbody2D:
   serializedVersion: 4
@@ -7145,8 +7138,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 4443007952934525341}
   cookingTime: 5
-  stationTimerAnimator: {fileID: 5619327330955797713}
-  stationTimerImage: {fileID: 5294152031693769156}
   stationData: {fileID: 11400000, guid: cae44f9c00942634c9c87c8b038577b6, type: 2}
   currentIngredients: []
   bestMatchedRecipe: 
@@ -7154,6 +7145,7 @@ MonoBehaviour:
   iconDisplay: {fileID: 4666510379072612039}
   slotSpacing: 0.5
   showDebugInfo: 0
+  timerController: {fileID: 0}
 --- !u!50 &4775125544918320079
 Rigidbody2D:
   serializedVersion: 4
@@ -7485,7 +7477,7 @@ RectTransform:
   m_GameObject: {fileID: 6674202012121680128}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1364544646955733931}
@@ -7609,7 +7601,7 @@ GameObject:
   - component: {fileID: 1364544646955733931}
   - component: {fileID: 7963742132462136727}
   - component: {fileID: 8396176899217562391}
-  - component: {fileID: 7229250616842598186}
+  - component: {fileID: 1403382855504912694}
   m_Layer: 5
   m_Name: StationTimerUI
   m_TagString: Untagged
@@ -7633,8 +7625,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 959.56, y: 529.88}
-  m_SizeDelta: {x: 48, y: 96}
+  m_AnchoredPosition: {x: 0, y: 105}
+  m_SizeDelta: {x: 64, y: 144}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7963742132462136727
 CanvasRenderer:
@@ -7664,7 +7656,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  m_Sprite: {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -7674,27 +7666,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!95 &7229250616842598186
-Animator:
-  serializedVersion: 5
+--- !u!114 &1403382855504912694
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6780238256949762193}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 02be80423581a484fb3807b61f733be2, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69f72297906c1d44cb9932815474430c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1969070253, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1242721572, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1385629252, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 807758907, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -159639402, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 1873570143, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
 --- !u!1 &6807471182963200751
 GameObject:
   m_ObjectHideFlags: 0
@@ -7801,8 +7793,6 @@ MonoBehaviour:
   spawnPoint: {fileID: 7420223699146943749}
   neededIngredients: []
   cookingTime: 5
-  stationTimerAnimator: {fileID: 1094964882806706541}
-  stationTimerImage: {fileID: 4618598497975663067}
   stationData: {fileID: 11400000, guid: 84aaeba3bd8007a458ba48a734520623, type: 2}
   currentIngredients: []
   bestMatchedRecipe: "\uB9E4\uCE6D\uB418\uB294 \uB808\uC2DC\uD53C \uC5C6\uC74C"
@@ -7810,6 +7800,7 @@ MonoBehaviour:
   iconDisplay: {fileID: 5888116414515942548}
   slotSpacing: 0.5
   showDebugInfo: 0
+  timerController: {fileID: 0}
 --- !u!50 &642921725403637055
 Rigidbody2D:
   serializedVersion: 4
@@ -7938,7 +7929,7 @@ RectTransform:
   m_GameObject: {fileID: 6943762667875785545}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 786553079421742610}
@@ -8335,7 +8326,7 @@ RectTransform:
   m_GameObject: {fileID: 7059567179619944222}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4932399214060499464}
@@ -8514,8 +8505,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 6719169846448364786}
   cookingTime: 5
-  stationTimerAnimator: {fileID: 555761304430010861}
-  stationTimerImage: {fileID: 9183041221550719096}
   stationData: {fileID: 11400000, guid: 272a983b5a938804db36dcf429586c2a, type: 2}
   currentIngredients: []
   bestMatchedRecipe: 
@@ -8523,6 +8512,7 @@ MonoBehaviour:
   iconDisplay: {fileID: 3437475423995128164}
   slotSpacing: 0.5
   showDebugInfo: 1
+  timerController: {fileID: 0}
 --- !u!50 &2650720676867945480
 Rigidbody2D:
   serializedVersion: 4
@@ -8901,7 +8891,7 @@ RectTransform:
   m_GameObject: {fileID: 7488277424980434913}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 311599336037097309}
@@ -9283,8 +9273,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 8549338608371954225}
   cookingTime: 5
-  stationTimerAnimator: {fileID: 7229250616842598186}
-  stationTimerImage: {fileID: 8396176899217562391}
   stationData: {fileID: 11400000, guid: 09edbc6e8bb2a3c4e89406a23ef6df9d, type: 2}
   currentIngredients: []
   bestMatchedRecipe: 
@@ -9292,6 +9280,7 @@ MonoBehaviour:
   iconDisplay: {fileID: 3073248164261241817}
   slotSpacing: 0.5
   showDebugInfo: 0
+  timerController: {fileID: 0}
 --- !u!50 &396226562802920935
 Rigidbody2D:
   serializedVersion: 4
@@ -9403,7 +9392,7 @@ GameObject:
   - component: {fileID: 203437669039232464}
   - component: {fileID: 3419893794199651365}
   - component: {fileID: 4618598497975663067}
-  - component: {fileID: 1094964882806706541}
+  - component: {fileID: 2794162392796552349}
   m_Layer: 5
   m_Name: StationTimerUI
   m_TagString: Untagged
@@ -9419,7 +9408,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8292856127414371839}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.049384885}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9427,8 +9416,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 967.06, y: 529.88}
-  m_SizeDelta: {x: 48, y: 96}
+  m_AnchoredPosition: {x: 0, y: 105}
+  m_SizeDelta: {x: 64, y: 144}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3419893794199651365
 CanvasRenderer:
@@ -9458,7 +9447,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  m_Sprite: {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -9468,27 +9457,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!95 &1094964882806706541
-Animator:
-  serializedVersion: 5
+--- !u!114 &2794162392796552349
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8292856127414371839}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 02be80423581a484fb3807b61f733be2, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69f72297906c1d44cb9932815474430c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1969070253, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1242721572, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1385629252, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 807758907, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -159639402, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 1873570143, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
 --- !u!1 &8490015309242145713
 GameObject:
   m_ObjectHideFlags: 0
@@ -9500,7 +9489,7 @@ GameObject:
   - component: {fileID: 786553079421742610}
   - component: {fileID: 6836546705356595071}
   - component: {fileID: 2213799580522958726}
-  - component: {fileID: 2062152592685504080}
+  - component: {fileID: 2414272188609821064}
   m_Layer: 5
   m_Name: StationTimerUI
   m_TagString: Untagged
@@ -9524,8 +9513,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 966.507, y: 536.38}
-  m_SizeDelta: {x: 48, y: 96}
+  m_AnchoredPosition: {x: 0, y: 105}
+  m_SizeDelta: {x: 64, y: 144}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6836546705356595071
 CanvasRenderer:
@@ -9555,7 +9544,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  m_Sprite: {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -9565,27 +9554,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!95 &2062152592685504080
-Animator:
-  serializedVersion: 5
+--- !u!114 &2414272188609821064
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8490015309242145713}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 02be80423581a484fb3807b61f733be2, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69f72297906c1d44cb9932815474430c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1969070253, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1242721572, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1385629252, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 807758907, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -159639402, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 1873570143, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
 --- !u!1 &8554935117949368177
 GameObject:
   m_ObjectHideFlags: 0
@@ -10038,7 +10027,7 @@ GameObject:
   - component: {fileID: 311599336037097309}
   - component: {fileID: 2165331283240428097}
   - component: {fileID: 8860515536277168155}
-  - component: {fileID: 1350911073547242058}
+  - component: {fileID: 968558536286391365}
   m_Layer: 5
   m_Name: StationTimerUI
   m_TagString: Untagged
@@ -10054,7 +10043,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8900162368438591194}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.049384885}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10062,8 +10051,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 964.47, y: 536.38}
-  m_SizeDelta: {x: 48, y: 96}
+  m_AnchoredPosition: {x: 0, y: 105}
+  m_SizeDelta: {x: 64, y: 144}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2165331283240428097
 CanvasRenderer:
@@ -10093,7 +10082,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  m_Sprite: {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10103,27 +10092,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!95 &1350911073547242058
-Animator:
-  serializedVersion: 5
+--- !u!114 &968558536286391365
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8900162368438591194}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 02be80423581a484fb3807b61f733be2, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69f72297906c1d44cb9932815474430c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: -666998385, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1969070253, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1242721572, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1385629252, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 807758907, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -159639402, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 1873570143, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
 --- !u!1 &8970077956676934232
 GameObject:
   m_ObjectHideFlags: 0
@@ -10445,8 +10434,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 915025595844906954}
   cookingTime: 5
-  stationTimerAnimator: {fileID: 2238717289984476042}
-  stationTimerImage: {fileID: 4139516340855562248}
   stationData: {fileID: 11400000, guid: d74dc1c0cafcd314387afaac004d0f7c, type: 2}
   currentIngredients: []
   bestMatchedRecipe: 
@@ -10454,6 +10441,7 @@ MonoBehaviour:
   iconDisplay: {fileID: 8581770355257148601}
   slotSpacing: 0.5
   showDebugInfo: 0
+  timerController: {fileID: 0}
 --- !u!50 &3987061272319247326
 Rigidbody2D:
   serializedVersion: 4

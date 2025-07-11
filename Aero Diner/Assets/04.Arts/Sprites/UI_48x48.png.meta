@@ -106,6 +106,32 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -1412,7 +1438,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_48x48_62
+      name: StationTimer_01
       rect:
         serializedVersion: 2
         x: 0
@@ -1433,7 +1459,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_48x48_63
+      name: StationTimer_02
       rect:
         serializedVersion: 2
         x: 48
@@ -1454,7 +1480,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_48x48_64
+      name: StationTimer_03
       rect:
         serializedVersion: 2
         x: 96
@@ -1475,7 +1501,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_48x48_65
+      name: StationTimer_04
       rect:
         serializedVersion: 2
         x: 144
@@ -1496,7 +1522,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_48x48_66
+      name: StationTimer_05
       rect:
         serializedVersion: 2
         x: 192
@@ -1517,7 +1543,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_48x48_67
+      name: StationTimer_06
       rect:
         serializedVersion: 2
         x: 240
@@ -1538,7 +1564,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_48x48_68
+      name: StationTimer_07
       rect:
         serializedVersion: 2
         x: 288
@@ -1559,7 +1585,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_48x48_69
+      name: StationTimer_00
       rect:
         serializedVersion: 2
         x: 335
@@ -2535,6 +2561,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      StationTimer_00: -666998385
+      StationTimer_01: -1387021731
+      StationTimer_02: 1873570143
+      StationTimer_03: -159639402
+      StationTimer_04: 807758907
+      StationTimer_05: -1385629252
+      StationTimer_06: -1242721572
+      StationTimer_07: -1969070253
       UI_48x48_0: -902504591
       UI_48x48_1: 50674586
       UI_48x48_10: 135814509
@@ -2609,14 +2643,6 @@ TextureImporter:
       UI_48x48_6: -536257544
       UI_48x48_60: 1701484446
       UI_48x48_61: 233296679
-      UI_48x48_62: -1387021731
-      UI_48x48_63: 1873570143
-      UI_48x48_64: -159639402
-      UI_48x48_65: 807758907
-      UI_48x48_66: -1385629252
-      UI_48x48_67: -1242721572
-      UI_48x48_68: -1969070253
-      UI_48x48_69: -666998385
       UI_48x48_7: -1566683908
       UI_48x48_70: 647281990
       UI_48x48_71: 1099998936

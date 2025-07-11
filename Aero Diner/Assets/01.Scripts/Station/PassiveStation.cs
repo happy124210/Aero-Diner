@@ -26,10 +26,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     [Header("요리 시간 (초)")]
     public float cookingTime = 5f;
 
-    [Header("타이머 애니메이션")]
-    [SerializeField] private Animator stationTimerAnimator;
-    [SerializeField] private Image stationTimerImage;
-
     [Header("스테이션 데이터")]
     public StationData stationData;
 
@@ -49,6 +45,8 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo;
 
+    [SerializeField] private StationTimerController timerController; // 타이머 UI 컨트롤러
+
     private List<FoodData> placedIngredientList = new();             // 실제 등록된 재료의 데이터 목록
     private List<GameObject> placedIngredients = new();              // 화면에 보여지는 재료 오브젝트들
     private List<FoodData> availableMatchedRecipes = new();          // 현재 조건에서 가능한 레시피 리스트
@@ -57,10 +55,12 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     private bool isCooking = false;                                  // 현재 조리 중인지 여부 플래그
     private OutlineShaderController outline;                         // 외곽선 효과를 제어하는 컴포넌트
     private bool hasInitialized = false;                             // 아이콘 초기화 플래그
-    private FoodData selectedIngredient;
+    private bool timerVisible = false;                               // 타이머 UI가 켜졌는지 여부
 
     private void Awake()
     {
+        timerController = transform.GetComponentInChildren<StationTimerController>();
+
         outline = GetComponent<OutlineShaderController>(); // 외곽선 컴포넌트 연결
 
         string objName = gameObject.name;
@@ -130,7 +130,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             {
                 if (showDebugInfo) Debug.Log("요구된 재료가 아닌 항목이 포함되어 있어 타이머가 리셋됨.");
                 currentCookingTime = cookingTime;
-                UpdateCookingProgress();
                 return;
             }
 
@@ -141,7 +140,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             {
                 if (showDebugInfo) Debug.Log("모든 재료가 준비되지 않아 조리가 시작되지 않습니다.");
                 currentCookingTime = cookingTime;
-                UpdateCookingProgress();
                 return;
             }
         }
@@ -379,6 +377,13 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         placedIngredientList.Clear();
         iconDisplay?.ResetAll();
         ClearPlacedObjects();
+
+        //// 타이머 UI 숨기기
+        //if (timerController != null)
+        //{
+        //    timerController.gameObject.SetActive(false);
+        //    timerVisible = false;
+        //}
     }
 
     /// <summary>
@@ -407,11 +412,18 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     {
         if (!isCooking) return;
 
+        //// 처음 조리 시작 시, 타이머 UI가 보이도록 설정
+        //if (!timerVisible)
+        //{
+        //    timerController.gameObject.SetActive(true);
+        //    timerVisible = true;
+        //}
+
         currentCookingTime -= Time.deltaTime;
 
         float progress = Mathf.Clamp01(currentCookingTime / cookingTime);
-        if (stationTimerImage != null)
-            stationTimerImage.fillAmount = progress;
+
+        timerController.UpdateTimer(currentCookingTime, cookingTime);
 
         if (currentCookingTime <= 0f)
         {
