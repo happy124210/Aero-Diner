@@ -21,20 +21,15 @@ MonoBehaviour:
   description: "\uB864\uD32C \uC785\uB2C8\uB2E4"
   stationCost: 100
   availableRecipes:
-  - {fileID: 11400000, guid: b0dd8c4087595ef448023fc38062377e, type: 2}
-  - {fileID: 11400000, guid: 98f0e40cf6800e54a807774e0137e3ba, type: 2}
-  - {fileID: 11400000, guid: 9cc2e1b8abab949478b254ce603a0fde, type: 2}
-  - {fileID: 11400000, guid: 01a26afbc788c8a45a17280417a7eb9f, type: 2}
-  - {fileID: 11400000, guid: 9c816b746a0a9c3458d2701328884a4d, type: 2}
-  - {fileID: 11400000, guid: 9a0ed7fd8ea6b4e45ba56587546cae8a, type: 2}
-  - {fileID: 11400000, guid: 167f20b2e9914a840b29c3a43b08a957, type: 2}
-  - {fileID: 11400000, guid: aeac6e2a980c5db4f9554530098c7b1d, type: 2}
-  - {fileID: 11400000, guid: 751086e2dafafb94080110c1346453e1, type: 2}
-  - {fileID: 11400000, guid: 8892d509911c1184bbd8bd2120d1e3f8, type: 2}
-  - {fileID: 11400000, guid: cea4ac0e999051546ad78ffe2201e5a3, type: 2}
-  - {fileID: 11400000, guid: 8d08fe2aedf48774f9796b0b22d980b4, type: 2}
-  - {fileID: 11400000, guid: fb715715dd6057a47955e293b07103f8, type: 2}
-  - {fileID: 11400000, guid: 8a82aaffbce19a94a93d2735f338d2e3, type: 2}
+  - {fileID: 11400000, guid: 0f5a68b1c98b3b7428510bfc3dd8af76, type: 2}
+  - {fileID: 11400000, guid: 6d0fa4d43c22e1f439b0e7bba6ff32b0, type: 2}
+  - {fileID: 11400000, guid: 31507687f85afd441a5787915156f229, type: 2}
+  - {fileID: 11400000, guid: 542ac65e81b538642a53411828a14d66, type: 2}
+  - {fileID: 11400000, guid: c3a8710e7ce26ab439b119a0445b789d, type: 2}
+  - {fileID: 11400000, guid: 8d83e5bbe7914fb45bd8b92251c0b00a, type: 2}
+  - {fileID: 11400000, guid: 75c62b34e6c1c5c44810dc34b5641358, type: 2}
+  - {fileID: 11400000, guid: 611bdcedeffbff14dac5f6fbbe93040d, type: 2}
+  - {fileID: 11400000, guid: b9aae12dc41169c488516b13b9c8f89b, type: 2}
   ingredientSlots: 3
   slotDisplays:
   - foodType: 3
