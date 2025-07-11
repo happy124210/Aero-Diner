@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -33,6 +31,12 @@ public class RestaurantManager : Singleton<RestaurantManager>
     [Tooltip("하루 제한 시간 (초 단위)")]
     [SerializeField] private float gameTimeLimit;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        InitializeRestaurant();
+    }
+
     private void Update()
     {
         if (gameRunning)
@@ -52,12 +56,16 @@ public class RestaurantManager : Singleton<RestaurantManager>
             }
         }
     }
+
+    public void InitializeRestaurant()
+    {
+        gameTime = 0f;
+        customersServed = 0;
+    }
     
     public void StartRestaurant()
     {
         gameRunning = true;
-        gameTime = 0f;
-        customersServed = 0;
 
         GameManager.Instance.LoadEarnings();
         
@@ -81,8 +89,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
         {
             customerSpawner.StopSpawning();
         }
-
-        // 손님 처리 완료 대기 코루틴
+        
         StartCoroutine(WaitAndCleanup(reason));
     }
 
@@ -99,7 +106,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
         if (showDebugInfo) Debug.Log($"Final Stats - Served: {customersServed}, Earnings: {GameManager.Instance.TotalEarnings}");
         
         EventBus.OnBGMRequested(BGMEventType.PlayResultTheme);
-                
+
         // 게임 저장
         GameManager.Instance.IncreaseDay();
         GameManager.Instance.SaveData();
@@ -179,7 +186,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
             if (gameRunning)
             {
                 EndRestaurant("수동 정지");
-                PoolManager.Instance.ReturnAllActiveCustomers();
             }
         }
         

@@ -11,10 +11,10 @@ public class MenuPanel : MonoBehaviour
     [SerializeField] private CanvasGroup warningPopupCanvas; // 팝업의 CanvasGroup
     [SerializeField] private float popupFadeDuration = 0.5f;
     [SerializeField] private float popupVisibleTime = 2f;
+
     private void OnEnable()
     {
         GenerateFoodList();
-        EventBus.OnBGMRequested(BGMEventType.PlayRecipeChoice);
     }
 
     public void GenerateFoodList()
@@ -48,6 +48,8 @@ public class MenuPanel : MonoBehaviour
             var foodUI = go.GetComponent<MenuPanelContent>();
             foodUI.SetData(menu);
         }
+        
+        EventBus.Raise(UIEventType.ShowMenuPanel);
     }
     public void OnClickDayStartBtn()
     {
