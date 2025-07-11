@@ -177,6 +177,8 @@ public class PoolManager : Singleton<PoolManager>
             customer.transform.position = position;
             customer.transform.rotation = rotation == default ? Quaternion.identity : rotation;
         }
+        
+        CustomerManager.Instance.AddCustomer(customer);
     }
 
     /// <summary>
@@ -191,6 +193,7 @@ public class PoolManager : Singleton<PoolManager>
         if (customerData && customerPools.ContainsKey(customerData))
         {
             customerPools[customerData].Release(customer);
+            CustomerManager.Instance.RemoveCustomer(customer);
         }
         else
         {

@@ -14,12 +14,10 @@ public class CustomerManager : Singleton<CustomerManager>
     /// </summary>
     public void AddCustomer(CustomerController customer)
     {
-        if (!activeCustomers.Contains(customer))
-        {
-            activeCustomers.Add(customer);
-            
-            if (showDebugInfo) Debug.Log($"[Customer Manager] : {customer.name} 추가됨");
-        }
+        if (activeCustomers.Contains(customer)) return;
+        activeCustomers.Add(customer);
+        
+        if (showDebugInfo) Debug.Log($"[Customer Manager] : {customer.name} 추가됨");
     }
 
     /// <summary>
@@ -27,12 +25,10 @@ public class CustomerManager : Singleton<CustomerManager>
     /// </summary>
     public void RemoveCustomer(CustomerController customer)
     {
-        if (activeCustomers.Contains(customer))
-        {
-            activeCustomers.Remove(customer);
+        if (!activeCustomers.Contains(customer)) return;
+        activeCustomers.Remove(customer);
             
-            if (showDebugInfo) Debug.Log($"[Customer Manager] : {customer.name} 제거됨");
-        }
+        if (showDebugInfo) Debug.Log($"[Customer Manager] : {customer.name} 제거됨");
     }
     
     /// <summary>
