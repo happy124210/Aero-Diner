@@ -15,7 +15,8 @@ public class MenuManager : Singleton<MenuManager>
     [SerializeField] private string startMenuId;
     [SerializeField] private bool showDebugInfo;
 
-    private readonly List<Menu> menuDatabase = new(); // 전체 Menu타입 푸드데이터 담음
+    private List<Menu> menuDatabase = new(); // 전체 Menu타입 푸드데이터 담음
+    private List<string> unlockedMenuIds = new(); // 플레이어가 해금한 메뉴 ID
     private readonly Dictionary<string, int> todayMenuSales = new();
     
     #region public getters & methods
@@ -40,7 +41,7 @@ public class MenuManager : Singleton<MenuManager>
 
     // Menu 조회
     public List<Menu> GetAllMenus() => menuDatabase;
-    public string[] GetPlayerMenuIds() => menuDatabase.Where(m => m.isUnlocked).Select(m => m.foodData.id).ToArray();
+    public string[] GetPlayerMenuIds() => menuDatabase.Where(m => m.isUnlocked).Select(m => m.foodData.id).ToArray(); // 해금한 메뉴만
 
     // 전체 판매량 / 판매액 조회
     public int GetTotalSalesToday() => todayMenuSales.Values.Sum();
@@ -64,6 +65,9 @@ public class MenuManager : Singleton<MenuManager>
         
         InitializePlayerMenus();
         InitializeTodayStats();
+
+        LoadMenuDatabase();
+        EventBus.Raise(UIEventType.UpdateMenuPanel);
     }
 
     private void InitializeTodayStats()
@@ -73,8 +77,6 @@ public class MenuManager : Singleton<MenuManager>
         {
             todayMenuSales[menuId] = 0;
         }
-        
-        EventBus.Raise(UIEventType.UpdateMenuPanel);
     }
 
     /// <summary>
@@ -84,26 +86,15 @@ public class MenuManager : Singleton<MenuManager>
     {
         menuDatabase.Clear();
         
-        // RecipeManager에서 모든 FoodData를 가져와 Menu 객체로 변환
         foreach (var foodData in RecipeManager.Instance.FoodDatabase.Values)
         {
             if (foodData.foodType == FoodType.Menu)
             {
                 menuDatabase.Add(new Menu(foodData));
             }
+            
         }
         
-        // 세이브 로드
-        MenuSaveHandler.LoadMenuDatabase();
-        
-        // 데이터 없으면 시작 메뉴 자동 해금
-        if (!string.IsNullOrEmpty(startMenuId))
-        {
-            UnlockMenu(startMenuId);
-            SetMenuSelection(startMenuId, true);
-        }
-        
-        UpdateTodayMenus();
         if (showDebugInfo) Debug.Log($"[MenuManager]: 전체 {menuDatabase.Count}개 메뉴 데이터베이스 생성 완료");
     }
 
@@ -138,6 +129,40 @@ public class MenuManager : Singleton<MenuManager>
     }
     
     #endregion
+
+    #region 저장
+
+    public void SaveMenuDatabase()
+    {
+        var data = SaveLoadManager.LoadGame() ?? new SaveData();
+        data.menuDatabase = new HashSet<string>(GetPlayerMenuIds());
+        SaveLoadManager.SaveGame(data);
+
+        Debug.Log($"[MenuManager] 해금 메뉴 저장됨: {data.menuDatabase.Count}개");
+    }
+
+    public void LoadMenuDatabase()
+    {
+        SaveData data = SaveLoadManager.LoadGame();
+        unlockedMenuIds = data.menuDatabase.ToList().ConvertAll(menuId => menuId.ToString());
+        
+        // 해금 데이터 없을 때 시작메뉴 해금
+        if (unlockedMenuIds.Count == 0)
+        {
+            UnlockMenu(startMenuId);
+            SetMenuSelection(startMenuId, true);
+            return;
+        }
+        
+        // 해금 데이터 Id 받아서 복원
+        foreach (var menuId in unlockedMenuIds)
+        {
+            UnlockMenu(menuId);
+        }
+    }
+
+    #endregion
+    
     
     #region 외부 사용 함수
     
@@ -160,8 +185,9 @@ public class MenuManager : Singleton<MenuManager>
     /// <param name="foodId"> 해금하려는 메뉴의 foodData.id </param>
     public void UnlockMenu(string foodId)
     {
+        if (string.IsNullOrEmpty(foodId)) return;
+        
         Menu menuToUnlock = FindMenuById(foodId);
-
         if (menuToUnlock == null)
         {
             Debug.LogError($"[MenuManager] ID '{foodId}'인 메뉴 없음 !!!");

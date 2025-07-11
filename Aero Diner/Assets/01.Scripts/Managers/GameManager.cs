@@ -101,6 +101,7 @@ public class GameManager : Singleton<GameManager>
         data.totalEarnings = TotalEarnings;
         data.currentDay = currentDay;
         SaveLoadManager.SaveGame(data);
+        MenuManager.Instance.SaveMenuDatabase();
         
         if (showDebugInfo) Debug.Log("[GameManager] 저장 완료");
     }
