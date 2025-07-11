@@ -452,7 +452,7 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         {
             FoodData food = placedIngredientList.Last(); // 마지막 재료 꺼냄
 
-            GameObject result = VisualObjectFactory.PlaceIngredientVisual(transform, food.foodName, food.foodIcon);
+            GameObject result = placedIngredients.Last();
             if (result)
             {
                 // 플레이어의 아이템 슬롯 위치 가져오기
