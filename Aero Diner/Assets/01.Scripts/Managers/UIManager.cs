@@ -226,6 +226,7 @@ public class UIManager : Singleton<UIManager>
                     var resultPanel = ui?.GetComponentInChildren<ResultPanel>(true);
                     if (resultPanel != null)
                     {
+                        GameManager.Instance.IncreaseDay();
                         resultPanel.gameObject.SetActive(true);
                         resultPanel.Init(); // 초기화 명시적 호출
                     }
