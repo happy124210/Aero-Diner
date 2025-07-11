@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -84,6 +82,9 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
         // 손님 처리 완료 대기 코루틴
         StartCoroutine(WaitAndCleanup(reason));
+        
+        EventBus.Raise(UIEventType.HideRoundTimer);
+        EventBus.Raise(UIEventType.ShowResultPanel);
     }
 
     private IEnumerator WaitAndCleanup(string reason)
@@ -97,15 +98,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
         
         if (showDebugInfo) Debug.Log($"Game ended: {reason}");
         if (showDebugInfo) Debug.Log($"Final Stats - Served: {customersServed}, Earnings: {GameManager.Instance.TotalEarnings}");
-        
-        EventBus.OnBGMRequested(BGMEventType.PlayResultTheme);
-                
-        // 게임 저장
-        GameManager.Instance.IncreaseDay();
-        GameManager.Instance.SaveData();
-        
-        EventBus.Raise(UIEventType.HideRoundTimer);
-        EventBus.Raise(UIEventType.ShowResultPanel);
     }
 
     public void OnCustomerEntered()
