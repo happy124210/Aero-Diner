@@ -8,11 +8,10 @@ public class Customer
 {
     // Events
     public event Action<float> OnPatienceChanged; // 인내심 줄어들고 있음
-    public event Action<bool> OnPatienceStateChanged; // 인내심 줄어들어야 하는지 아닌지
     public event Action<FoodData> OnOrderPlaced; // 주문함
-    public event Action OnMenuServed; // 서빙됨
-    public event Action OnEatingFinished; // 다 먹음
-    public event Action<bool> OnPaymentEnd; // 결제 끝남
+    public event Action<FoodData> OnMenuServed; // 서빙됨
+    public event Action OnEating; // 먹기 시작함
+    public event Action OnPaymentEnd; // 결제 끝남
     
     // 데이터 컨테이너
     private CustomerData _data;
@@ -35,12 +34,6 @@ public class Customer
         runtimeData.CurrentPatience = newPatience;
         OnPatienceChanged?.Invoke(GetPatienceRatio());
     }
-
-    // 인내심UI 알림 보내기
-    public void SetPatienceTimerActive(bool isActive)
-    {
-        OnPatienceStateChanged?.Invoke(isActive);
-    }
     
     // 주문하기
     public void PlaceOrder()
@@ -58,7 +51,21 @@ public class Customer
     // 음식 받기
     public void ReceiveFood(FoodData servedMenu)
     {
-        runtimeData.CurrentOrder = servedMenu;
-        OnMenuServed?.Invoke();
+        OnMenuServed?.Invoke(servedMenu);
+    }
+
+    public void EatFood()
+    {
+        runtimeData.AssignedTable.GetCurrentFood().isPickupable = false;
+        
+        // TODO: 먹는 코루틴
+        
+        OnEating?.Invoke();
+    }
+
+    public void PayMoney(int amount)
+    {
+        GameManager.Instance.AddMoney(amount);
+        OnPaymentEnd?.Invoke();
     }
 }

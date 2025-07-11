@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1242533044616223631}
   - component: {fileID: 1505992858030839643}
   - component: {fileID: -8958949799900379551}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -195,7 +195,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 100
-  m_Sprite: {fileID: -2098789256, guid: 46623c8c5fb027c47853c3df217aa06f, type: 3}
+  m_Sprite: {fileID: -801662914, guid: 18f3829fb15487749a6843d3531437c1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -333,7 +333,7 @@ GameObject:
   m_Component:
   - component: {fileID: 655597845425705884}
   - component: {fileID: 7364323254855150473}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Itemslot
   m_TagString: Untagged
   m_Icon: {fileID: 0}

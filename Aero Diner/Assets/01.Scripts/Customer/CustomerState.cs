@@ -101,7 +101,7 @@ public class WaitingInLineState : CustomerState
 
     public override void Enter(CustomerController customer) 
     {
-        customer.SetPatienceTimerActive(true);
+        customer.SetPatienceVisibility(true);
     }
 
     public override CustomerState Update(CustomerController customer)
@@ -116,7 +116,7 @@ public class WaitingInLineState : CustomerState
 
     public override void Exit(CustomerController customer) 
     {
-        customer.SetPatienceTimerActive(false);
+        customer.SetPatienceVisibility(false);
     }
 }
 
@@ -162,7 +162,6 @@ public class OrderingState : CustomerState
     {
         customer.AdjustToSeatPosition();
         customer.PlaceOrder();
-        customer.SetPatienceTimerActive(true);
     }
     
     public override CustomerState Update(CustomerController customer)
@@ -171,13 +170,14 @@ public class OrderingState : CustomerState
         {
             return new LeavingState();
         }
+        
+        // EatingState 이동은 Controller가 진행함
             
         return this;
     }
     
     public override void Exit(CustomerController customer) 
     {
-        customer.SetPatienceTimerActive(false);
         EventBus.Raise(UIEventType.HideOrderPanel, customer);
     }
 }
@@ -192,26 +192,15 @@ public class EatingState : CustomerState
     
     public override void Enter(CustomerController customer)
     {
-        customer.GetAssignedTable().GetCurrentFood().isPickupable = false;
-        eatTimer = customer.GetEatingTime();
-        customer.SetAnimationState(CustomerAnimState.Sitting);
+        customer.EatFood();
     }
     
     public override CustomerState Update(CustomerController customer)
     {
-        eatTimer -= Time.deltaTime;
-        if (eatTimer <= 0)
-        {
-            return new PayingState();
-        }
-            
-        return this;
+        return new PayingState();
     }
     
-    public override void Exit(CustomerController customer) 
-    {
-        customer.SetAnimationState(CustomerAnimState.Sitting);
-    }
+    public override void Exit(CustomerController customer) { }
 }
 
 /// <summary>
