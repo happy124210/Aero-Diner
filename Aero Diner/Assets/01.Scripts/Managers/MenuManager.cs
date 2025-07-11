@@ -147,9 +147,9 @@ public class MenuManager : Singleton<MenuManager>
 
     public void LoadMenuDatabase()
     {
-        
         SaveData data = SaveLoadManager.LoadGame();
-        unlockedMenuIds = data.menuDatabase.ToList().ConvertAll(menuId => menuId.ToString());
+        if (data != null)
+            unlockedMenuIds = data.menuDatabase.ToList().ConvertAll(menuId => menuId.ToString());
         
         if (unlockedMenuIds == null || unlockedMenuIds.Count == 0)
         {
