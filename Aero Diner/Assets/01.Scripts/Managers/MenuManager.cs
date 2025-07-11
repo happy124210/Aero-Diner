@@ -72,6 +72,8 @@ public class MenuManager : Singleton<MenuManager>
         {
             todayMenuSales[menuId] = 0;
         }
+        
+        EventBus.Raise(UIEventType.UpdateMenuPanel);
     }
 
     /// <summary>
@@ -149,7 +151,6 @@ public class MenuManager : Singleton<MenuManager>
             .ToList();
             
         InitializeTodayStats();
-
         if (showDebugInfo) Debug.Log($"[MenuManager]: 오늘 메뉴 - {todayMenuIds.Count}개");
     }
 
