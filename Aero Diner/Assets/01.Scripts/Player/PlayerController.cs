@@ -177,50 +177,48 @@ public class PlayerController : MonoBehaviour
 
     private IInteractable FindBestInteractable(InteractionType interactionType)
     {
-        Vector2 origin = transform.position;
+        Vector2 origin = rb.position;
+        Vector2 direction = lastMoveDir == Vector2.zero ? Vector2.down : lastMoveDir;
         float distance = interactionRadius;
-        float fanAngle = 105f;
-        int rayCount = 7;
-
-        Vector2 forward = lastMoveDir == Vector2.zero ? Vector2.down : lastMoveDir;
-        float startAngle = Mathf.Atan2(forward.y, forward.x) * Mathf.Rad2Deg - fanAngle / 2f;
+        int rayCount = 5;
+        float spread = 0.3f; // 좌우로 퍼지는 폭
 
         IInteractable best = null;
         float closestDist = Mathf.Infinity;
 
+        // 직각 방향을 기준으로 좌우 퍼지게 offset 계산
+        Vector2 perpendicular = new Vector2(-direction.y, direction.x); // 직각 벡터
+
         for (int i = 0; i < rayCount; i++)
         {
-            float angle = startAngle + (fanAngle / (rayCount - 1)) * i;
-            Vector2 dir = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
+            float t = (i / (float)(rayCount - 1)) - 0.5f; // -0.5 ~ 0.5
+            Vector2 offset = perpendicular * t * spread;
+            Vector2 rayOrigin = origin + offset;
 
-            RaycastHit2D[] hits = Physics2D.RaycastAll(origin, dir, distance, interactableLayer);
-            Debug.DrawRay(origin, dir * distance, Color.magenta, 0.2f);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(rayOrigin, direction, distance, interactableLayer);
+            Debug.DrawRay(rayOrigin, direction * distance, Color.cyan, 0.2f);
 
             foreach (var hit in hits)
             {
                 if (hit.collider == null) continue;
-
                 var interactable = hit.collider.GetComponent<IInteractable>();
                 if (interactable == null) continue;
 
-                // 거리 측정
                 float dist = Vector2.Distance(origin, hit.point);
                 if (dist >= closestDist) continue;
 
-                // InteractionType에 따라 타입 우선순위 판단
                 if (interactionType == InteractionType.Pickup)
                 {
                     if (interactable is FoodDisplay)
                     {
                         best = interactable;
                         closestDist = dist;
-                        break; // 최우선, 더 이상 탐색 X
+                        break; // 최우선
                     }
                     else if (interactable is IngredientStation)
                     {
                         best = interactable;
                         closestDist = dist;
-                        // 계속 탐색: 혹시 더 가까운 FoodDisplay가 있을 수도 있으므로
                     }
                 }
                 else if (interactionType == InteractionType.Use)
@@ -236,7 +234,6 @@ public class PlayerController : MonoBehaviour
 
         return best;
     }
-
 
     private void Animate()
     {
@@ -293,10 +290,26 @@ public class PlayerController : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, interactionRadius);
-        Vector3 forward = (Vector3)(Application.isPlaying ? lastMoveDir : Vector2.down);
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position, transform.position + forward.normalized * interactionRadius);
+#if UNITY_EDITOR
+        if (!Application.isPlaying) return;
+
+        Vector2 origin = rb.position;
+        Vector2 direction = lastMoveDir == Vector2.zero ? Vector2.down : lastMoveDir;
+        int rayCount = 5;
+        float spread = 0.3f;
+        float distance = interactionRadius;
+
+        Vector2 perpendicular = new Vector2(-direction.y, direction.x);
+
+        for (int i = 0; i < rayCount; i++)
+        {
+            float t = (i / (float)(rayCount - 1)) - 0.5f; // -0.5 ~ 0.5
+            Vector2 offset = perpendicular * t * spread;
+            Vector2 rayOrigin = origin + offset;
+
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawLine(rayOrigin, rayOrigin + direction.normalized * distance);
+        }
+#endif
     }
 }
