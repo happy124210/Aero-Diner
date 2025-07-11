@@ -15,7 +15,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
     
     [Header("Game State")]
     [SerializeField] private bool gameRunning;
-    [SerializeField] private int targetCustomersServed;
+    [SerializeField] private int targetCustomersServed = 50;
 
     [Header("Statistics")]
     [SerializeField] private int customersServed;
