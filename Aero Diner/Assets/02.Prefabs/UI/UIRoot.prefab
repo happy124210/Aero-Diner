@@ -363,14 +363,22 @@ MonoBehaviour:
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
+    - m_AssetGUID: 65a5a665ac7e95049a202ab7ad8d1124
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
   - sceneName: LoadingScene
     uiPrefabs:
     - m_AssetGUID: 57c7f4e59bd49494a850032ef34ba337
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
-  - sceneName: LivingScene
-    uiPrefabs: []
+  - sceneName: DayScene
+    uiPrefabs:
+    - m_AssetGUID: 4f04806a308443a428151319d7678021
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
 --- !u!1 &6784009097632759853
 GameObject:
   m_ObjectHideFlags: 0
