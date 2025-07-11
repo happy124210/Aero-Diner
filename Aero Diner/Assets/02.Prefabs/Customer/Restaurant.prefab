@@ -276,6 +276,8 @@ GameObject:
   - component: {fileID: 2374614055684473981}
   - component: {fileID: 4711894738966735290}
   - component: {fileID: 5796004451528270688}
+  - component: {fileID: 6540181293035203181}
+  - component: {fileID: 2591050042534666559}
   m_Layer: 0
   m_Name: Restaurant
   m_TagString: Untagged
@@ -319,11 +321,9 @@ MonoBehaviour:
   targetCustomersServed: 50
   customersServed: 0
   customersVisited: 0
-  totalEarnings: 0
   gameTime: 0
   showDebugInfo: 1
   gameTimeLimit: 300
-  currentDay: 1
 --- !u!114 &5796004451528270688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -339,6 +339,36 @@ MonoBehaviour:
   todayMenuIds: []
   startMenuId: f26
   showDebugInfo: 1
+--- !u!114 &6540181293035203181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7413637340875454940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93ceb28a0b654d642a2e314bf35e6426, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebugInfo: 0
+--- !u!114 &2591050042534666559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7413637340875454940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d55a6e3b0cb53740a58acf2ca5a1346, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  poolContainer: {fileID: 0}
+  poolCapacity: 20
+  maxPoolSize: 40
+  customerPrefab: {fileID: 6986737310238590579, guid: abe38c57c0dcb1946ae8e552e8cb90e0, type: 3}
+  customerTypes: []
 --- !u!1 &8184824362609732755
 GameObject:
   m_ObjectHideFlags: 0
