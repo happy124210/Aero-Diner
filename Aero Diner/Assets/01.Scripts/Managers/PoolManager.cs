@@ -5,9 +5,9 @@ using UnityEngine.Pool;
 public class PoolManager : Singleton<PoolManager>
 {
     [Header("Pool 설정")]
-    private const int POOL_CAPACITY = 20;
-    private const int MAX_POOL_SIZE = 40;
-    [SerializeField] private Transform poolContainer;
+    [SerializeField, ReadOnly] private Transform poolContainer;
+    [SerializeField] private int poolCapacity = 20;
+    [SerializeField] private int maxPoolSize = 40;
     
     [Header("리소스 데이터 경로")]
     private const string CUSTOMER_DATA_PATH = "Datas/Customer";
@@ -15,14 +15,15 @@ public class PoolManager : Singleton<PoolManager>
     [Header("공통 프리팹")]
     [SerializeField] private GameObject customerPrefab;
     
-    [Header("사용가능 데이터들 (자동 로드 됨)")]
-    [SerializeField] private CustomerData[] customerTypes;
+    [Header("사용가능 손님 타입")]
+    [SerializeField, ReadOnly] private CustomerData[] customerTypes;
     
     [Header("Runtime 정보")]
     private Dictionary<CustomerData, ObjectPool<CustomerController>> customerPools = new();
     private Dictionary<CustomerData, Transform> customerPoolParents = new();
     private List<CustomerController> activeCustomers = new();
-
+    
+    
     protected override void Awake()
     {
         base.Awake();
@@ -89,8 +90,8 @@ public class PoolManager : Singleton<PoolManager>
             actionOnRelease: (customer) => OnReleaseCustomer(customer, customerData),
             actionOnDestroy: (customer) => DestroyCustomer(customer),
             collectionCheck: true,
-            defaultCapacity: POOL_CAPACITY,
-            maxSize: MAX_POOL_SIZE
+            defaultCapacity: poolCapacity,
+            maxSize: maxPoolSize
         );
         
         Debug.Log($"[ObjectPoolManager]: {customerData.customerName} 손님 풀 생성 완료");
