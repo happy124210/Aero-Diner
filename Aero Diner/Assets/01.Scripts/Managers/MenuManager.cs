@@ -63,6 +63,7 @@ public class MenuManager : Singleton<MenuManager>
         base.Awake();
         
         InitializePlayerMenus();
+        InitializeTodayStats();
     }
 
     private void InitializeTodayStats()
@@ -149,8 +150,7 @@ public class MenuManager : Singleton<MenuManager>
             .Where(menu => menu.CanServeToday)
             .Select(menu => menu.foodData.id)
             .ToList();
-            
-        InitializeTodayStats();
+        
         if (showDebugInfo) Debug.Log($"[MenuManager]: 오늘 메뉴 - {todayMenuIds.Count}개");
     }
 
