@@ -73,4 +73,20 @@ public class FoodSlotIconDisplay : MonoBehaviour
             foreach (var icon in list)
                 if (icon) icon.SetActive(true);
     }
+
+    public void ShowSlot(FoodType type)
+    {
+        if (iconMap.TryGetValue(type, out var list))
+        {
+            foreach (var icon in list)
+            {
+                if (!icon.activeSelf)
+                {
+                    icon.SetActive(true);
+                    break;
+                }
+            }
+        }
+    }
+
 }

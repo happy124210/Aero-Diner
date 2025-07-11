@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class TableManager : Singleton<TableManager>
@@ -33,7 +34,6 @@ public class TableManager : Singleton<TableManager>
 
     private void InitializeTables()
     {
-        // 테이블 초기화
         tables = GetComponentsInChildren<Table>();
         if (tables == null || tables.Length == 0)
         {
@@ -41,19 +41,16 @@ public class TableManager : Singleton<TableManager>
             return;
         }
 
-        // 좌석 초기화
         seatOccupied = new bool[tables.Length];
         for (int i = 0; i < tables.Length; i++)
         {
             seatOccupied[i] = false;
-            
             if (tables[i] != null)
             {
                 tables[i].SetSeatIndex(i);
             }
         }
         
-        // 줄서기 초기화
         waitingQueue.Clear();
         customerQueuePositions.Clear();
         
@@ -65,22 +62,23 @@ public class TableManager : Singleton<TableManager>
     #region 좌석 관리
 
     /// <summary>
-    /// 좌석 할당 시도
+    /// 좌석 할당 시도. 자리가 없으면 줄에 세운다.
     /// </summary>
-    /// <returns> 성공 시 true, 실패 시 false </returns>
+    /// <returns> 레스토랑에 들어올 수 있으면 true, 꽉 찼으면 false </returns>
     public bool TryAssignSeat(CustomerController customer)
     {
+        // 바로 앉을 자리가 있는지 확인
         if (AssignSeatToCustomer(customer))
         {
             return true;
         }
         
-        // 좌석 없으면 줄에 추가
+        // 자리가 없으면 줄에 추가
         return AddCustomerToQueue(customer);
     }
 
     /// <summary>
-    /// 직접 좌석 할당
+    /// 빈 좌석에 손님을 직접 할당
     /// </summary>
     private bool AssignSeatToCustomer(CustomerController customer)
     {
@@ -100,7 +98,7 @@ public class TableManager : Singleton<TableManager>
                 tables[i].AssignCustomer(customer);
                 
                 if (showDebugInfo)
-                   // Debug.Log($"[TableManager]: 테이블 {i}번 할당 완료 - {customer.name}");
+                   Debug.Log($"[TableManager]: 테이블 {i}번 할당 완료 - {customer.name}");
                 
                 return true;
             }
@@ -123,6 +121,8 @@ public class TableManager : Singleton<TableManager>
         {
             if (tables[i] == customerTable)
             {
+                if (!seatOccupied[i]) return; // 이미 비어있는 좌석이면 무시
+
                 seatOccupied[i] = false;
                 tables[i].ReleaseCustomer();
                 customer.SetAssignedTable(null);
@@ -147,7 +147,7 @@ public class TableManager : Singleton<TableManager>
     {
         if (waitingQueue.Count >= maxQueueLength)
         {
-            Debug.LogWarning("[TableManager]: 줄이 꽉 찼습니다!");
+            if (showDebugInfo) Debug.LogWarning("[TableManager]: 줄 꽉 참");
             return false;
         }
         
@@ -155,11 +155,10 @@ public class TableManager : Singleton<TableManager>
         Vector3 queuePosition = CalculateQueuePosition(waitingQueue.Count - 1);
         customerQueuePositions[customer] = queuePosition;
         
-        // 손님을 줄서기 상태로 변경
-        customer.StartWaitingInLine(queuePosition);
+        customer.UpdateQueuePosition(queuePosition);
         
         if (showDebugInfo) 
-            Debug.Log($"[TableManager]: 줄 {waitingQueue.Count}번째에 합류 - {customer.name}");
+            Debug.Log($"[TableManager]: {customer.name} 대기열 {waitingQueue.Count}번째에 추가");
         
         return true;
     }
@@ -171,25 +170,24 @@ public class TableManager : Singleton<TableManager>
     {
         if (waitingQueue.Count == 0) return;
         
+        // 바로 앉을 자리가 있는지 다시 확인
+        if (!HasAvailableSeat()) return;
+
         CustomerController nextCustomer = waitingQueue.Dequeue();
         customerQueuePositions.Remove(nextCustomer);
         
-        // 바로 좌석 할당
         if (AssignSeatToCustomer(nextCustomer))
         {
-            // 손님을 좌석으로 이동 상태로 변경
-            nextCustomer.MoveToAssignedSeat();
-            
-            // 줄 재정렬
-            ReorganizeQueue();
-            
             if (showDebugInfo)
-                Debug.Log($"[TableManager]: 줄에서 좌석으로 자동 할당 - {nextCustomer.name}");
+                Debug.Log($"[TableManager]: 줄에서 대기하던 {nextCustomer.name}에게 좌석 할당");
+            
+            // 다음 손님 좌석이동
+            nextCustomer.MoveToAssignedSeat();
+            ReorganizeQueue();
         }
         else
         {
-            Debug.LogError("[TableManager]: 좌석 할당 실패! 줄에서 제거된 손님을 다시 추가");
-            // 예외처리
+            Debug.LogError($"[TableManager]: 좌석 할당 실패함 ..");
         }
     }
 
@@ -198,31 +196,21 @@ public class TableManager : Singleton<TableManager>
     /// </summary>
     public void RemoveCustomerFromQueue(CustomerController customer)
     {
-        if (!customerQueuePositions.ContainsKey(customer)) return;
-        
-        var tempQueue = new Queue<CustomerController>();
-        bool found = false;
-        
-        while (waitingQueue.Count > 0)
+        if (!customerQueuePositions.Remove(customer))
         {
-            var queuedCustomer = waitingQueue.Dequeue();
-            if (queuedCustomer == customer)
-            {
-                found = true;
-                if (showDebugInfo) 
-                    Debug.Log($"[TableManager]: 줄에서 손님 제거 - {customer.name}");
-            }
-            else if (queuedCustomer)
-            {
-                tempQueue.Enqueue(queuedCustomer);
-            }
+            return;
         }
         
-        waitingQueue = tempQueue;
-        customerQueuePositions.Remove(customer);
-        
-        if (found)
+        // 리스트 변환해서 바로 찾기
+        var customerList = new List<CustomerController>(waitingQueue);
+        if (customerList.Remove(customer))
         {
+            // 다시 Queue 생성
+            waitingQueue = new Queue<CustomerController>(customerList);
+        
+            if (showDebugInfo) 
+                Debug.Log($"[TableManager]: 줄에서 손님 제거 - {customer.name}");
+            
             ReorganizeQueue();
         }
     }
@@ -242,6 +230,7 @@ public class TableManager : Singleton<TableManager>
             
             Vector3 newPosition = CalculateQueuePosition(i);
             customerQueuePositions[customer] = newPosition;
+            
             customer.UpdateQueuePosition(newPosition);
         }
     }
@@ -253,12 +242,23 @@ public class TableManager : Singleton<TableManager>
     {
         if (!queueStartPosition)
         {
-            Debug.LogError("[TableManager]: 줄 시작 위치가 설정되지 않음!");
+            Debug.LogError("[TableManager]: 줄 시작 위치 없음 !!!");
             return Vector3.zero;
         }
         
         Vector3 basePosition = queueStartPosition.position;
-        return basePosition + Vector3.left * (queueIndex * queueSpacing);
+        return basePosition + queueStartPosition.right * (queueIndex * queueSpacing); // Vector3.left 대신 Transform의 축을 사용
+    }
+
+    public Vector3 GetCustomerQueuePosition(CustomerController customer)
+    {
+        if (customerQueuePositions.TryGetValue(customer, out Vector3 position))
+        {
+            return position;
+        }
+        Debug.LogError($"[TableManager] {customer.name}의 대기열 위치 없음");
+        
+        return queueStartPosition.position;
     }
 
     #endregion
@@ -267,55 +267,12 @@ public class TableManager : Singleton<TableManager>
     
     public bool CanAcceptNewCustomer() 
     {
-        // 좌석이 있거나 줄에 자리가 있으면
-        return HasAvailableSeat() || waitingQueue.Count < maxQueueLength;
+        // 빈 좌석이 있거나, 줄에 자리가 있으면 새로운 손님을 받을 수 있음
+        return HasAvailableSeat() || !IsQueueFull;
     }
-
-    public int GetAvailableSeatCount()
-    {
-        if (seatOccupied == null) return 0;
-
-        int availableCount = 0;
-        foreach (bool occupied in seatOccupied)
-        {
-            if (!occupied) availableCount++;
-        }
-        return availableCount;
-    }
-
+    
     #endregion
-
-    #region 정리
-
-    /// <summary>
-    /// 모든 좌석 해제
-    /// </summary>
-    public void ReleaseAllSeats()
-    {
-        // 좌석 해제
-        if (seatOccupied != null)
-        {
-            for (int i = 0; i < seatOccupied.Length; i++)
-            {
-                seatOccupied[i] = false;
-            }
-        }
-        
-        if (tables != null)
-        {
-            foreach (var table in tables)
-            {
-                if (table)
-                {
-                    table.ReleaseCustomer();
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// 모든 줄 해제
-    /// </summary>
+    
     public void ReleaseAllQueues()
     {
         var queuedCustomers = waitingQueue.ToArray();
@@ -329,21 +286,19 @@ public class TableManager : Singleton<TableManager>
         
         waitingQueue.Clear();
         customerQueuePositions.Clear();
-        
+    
         if (showDebugInfo) Debug.Log("[TableManager]: 모든 좌석과 줄 해제됨");
     }
-
-    #endregion
-
-    #region Public Getters
+    
+    private bool IsQueueFull => waitingQueue.Count >= maxQueueLength;
+    private bool HasAvailableSeat() => seatOccupied.Any(occupied => !occupied);
+    
+    #region Public Getters & methods
 
     public int TotalSeatCount => tables?.Length ?? 0;
     public int CurrentQueueLength => waitingQueue.Count;
     public int MaxQueueLength => maxQueueLength;
-
-    public bool IsQueueFull => waitingQueue.Count >= maxQueueLength;
-	public bool HasAvailableSeat() => GetAvailableSeatCount() > 0;
+    
 
     #endregion
-    
 }

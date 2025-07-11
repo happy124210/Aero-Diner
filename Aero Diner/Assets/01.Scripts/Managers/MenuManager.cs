@@ -1,85 +1,103 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 /// <summary>
 /// FoodData 관리
 /// </summary>
 public class MenuManager : Singleton<MenuManager>
 {
-    [Header("메뉴 데이터")] 
-    [SerializeField] private FoodData[] allFoodData;
-    [SerializeField] private List<Menu> allMenus = new(); // 게임에 존재하는 모든 메뉴
-    [SerializeField] private List<Menu> playerMenus = new(); // 플레이어가 해금한 메뉴
-
     [Header("오늘 영업 메뉴")] 
-    [SerializeField] private List<Menu> todayMenus = new(); // 오늘 영업할 메뉴
+    [SerializeField] private List<string> todayMenuIds = new(); // 오늘 영업할 메뉴
     
     [Header("디버깅")]
-    [SerializeField] private string startMenuId;
+    [SerializeField] private string startMenuId = "f26";
     [SerializeField] private bool showDebugInfo;
 
-    private Dictionary<string, int> todayMenuSales = new();
+    private List<Menu> menuDatabase = new(); // 전체 Menu타입 푸드데이터 담음
+    private List<string> unlockedMenuIds = new(); // 플레이어가 해금한 메뉴 ID
+    private readonly Dictionary<string, int> todayMenuSales = new();
+    
+    #region public getters & methods
+    
+    // Menu 조회는 전부 id로 함 !!!
+    // 메뉴 조회하기
+    public Menu FindMenuById(string id) => menuDatabase.FirstOrDefault(m => m.foodData.id == id);
+    
+    // 플레이어 해제 메뉴만 가져오기
+    public List<Menu> GetUnlockedMenus() => menuDatabase.Where(menu => menu.isUnlocked).ToList();
+    
+    // 오늘 영업 Menu/FoodData 가져오기
+    public List<Menu> GetTodayMenuData() => todayMenuIds.Select(FindMenuById).Where(data => data != null).ToList();
+    public List<FoodData> GetTodayFoodData() => todayMenuIds.Select(id => FindMenuById(id).foodData).Where(data => data != null).ToList();
+    
+    // 하위 레시피 포함 전체 레시피
+    public List<FoodData> GetTodayRecipes()
+    {
+        var menus = todayMenuIds.Select(FindMenuById).Where(m => m != null).ToList();
+        return RecipeManager.Instance.GetAllRecipe(menus);
+    }
+
+    // Menu 조회
+    public List<Menu> GetAllMenus() => menuDatabase;
+    public string[] GetPlayerMenuIds() => menuDatabase.Where(m => m.isUnlocked).Select(m => m.foodData.id).ToArray(); // 해금한 메뉴만
+
+    // 전체 판매량 / 판매액 조회
+    public int GetTotalSalesToday() => todayMenuSales.Values.Sum();
+    public int GetTotalRevenueToday() => todayMenuIds.Sum(GetTodayMenuRevenue);
+
+    // 메뉴별 판매량 / 판매액 조회
+    public int GetTodayMenuSales(string menuId) => todayMenuSales.GetValueOrDefault(menuId, 0);
+    public int GetTodayMenuRevenue(string menuId)
+    {
+        int soldCount = GetTodayMenuSales(menuId);
+        int price = GetMenuPrice(menuId);
+        return soldCount * price;
+    }
+    private int GetMenuPrice(string menuId) => FindMenuById(menuId)?.Price ?? 0;
+    
+    #endregion
     
     protected override void Awake()
     {
         base.Awake();
         
-        LoadAllFoodData();
-        LoadAllMenu();
-
-        InitializePlayerMenus();
+        InitializeMenuDatabase();
+        LoadMenuDatabase();
     }
 
-    private void InitializeTodayStats()
+    private void Start()
+    {
+        EventBus.Raise(UIEventType.UpdateMenuPanel);
+    }
+
+    private void UpdateTodayStats()
     {
         todayMenuSales.Clear();
-
-        foreach (var menu in todayMenus)
+        foreach (var menuId in todayMenuIds)
         {
-            todayMenuSales[menu.foodData.id] = 0;
+            todayMenuSales[menuId] = 0;
         }
     }
-    
-    public void LoadAllFoodData()
-    {
-        allFoodData = Resources.LoadAll<FoodData>("Datas/Food");
-    }
-    
+
     /// <summary>
-    /// 존재하는 모든 음식 데이터 로드
+    /// 메뉴 데이터베이스 초기화
     /// </summary>
-    public void LoadAllMenu()
+    private void InitializeMenuDatabase()
     {
-        allMenus.Clear();
+        menuDatabase.Clear();
         
-        // Menu 클래스 세팅
-        foreach (var foodData in allFoodData)
+        foreach (var foodData in RecipeManager.Instance.FoodDatabase.Values)
         {
             if (foodData.foodType == FoodType.Menu)
             {
-                var menu = new Menu(foodData);
-                allMenus.Add(menu);
+                menuDatabase.Add(new Menu(foodData));
             }
+            
         }
-
-        if (showDebugInfo) Debug.Log($"[MenuManager]: 전체 {allFoodData.Length}개 데이터 로드");
-    }
-
-    /// <summary>
-    /// 플레이어 메뉴 초기화
-    /// </summary>
-    private void InitializePlayerMenus()
-    {
-        playerMenus.Clear();
         
-        // 시작 메뉴 자동 해금
-        if (!string.IsNullOrEmpty(startMenuId))
-        {
-            UnlockMenu(startMenuId);
-        }
-
-        UpdateTodayMenus();
+        if (showDebugInfo) Debug.Log($"[MenuManager]: 전체 {menuDatabase.Count}개 메뉴 데이터베이스 생성 완료");
     }
 
     #region 판매 통계
@@ -97,21 +115,58 @@ public class MenuManager : Singleton<MenuManager>
     public List<MenuSalesData> GetAllMenuSalesData()
     {
         List<MenuSalesData> salesData = new();
-        
-        foreach (var menu in todayMenus)
+        foreach (var menuId in todayMenuIds)
         {
+            Menu menu = FindMenuById(menuId);
+            if (menu == null) continue;
+
             salesData.Add(new MenuSalesData
             {
                 MenuName = menu.MenuName,
-                SoldCount = GetTodayMenuSales(menu.foodData.id),
-                TotalRevenue = GetTodayMenuSales(menu.foodData.id) * menu.Price,
+                SoldCount = GetTodayMenuSales(menuId),
+                TotalRevenue = GetTodayMenuRevenue(menuId),
             });
         }
-        
         return salesData;
     }
     
     #endregion
+
+    #region 저장
+
+    public void SaveMenuDatabase()
+    {
+        var data = SaveLoadManager.LoadGame() ?? new SaveData();
+        data.menuDatabase = new HashSet<string>(GetPlayerMenuIds());
+        SaveLoadManager.SaveGame(data);
+
+        Debug.Log($"[MenuManager] 해금 메뉴 저장됨: {data.menuDatabase.Count}개");
+    }
+
+    public void LoadMenuDatabase()
+    {
+        SaveData data = SaveLoadManager.LoadGame();
+        if (data != null)
+            unlockedMenuIds = data.menuDatabase.ToList().ConvertAll(menuId => menuId.ToString());
+        
+        if (unlockedMenuIds == null || unlockedMenuIds.Count == 0)
+        {
+            // 해금 데이터 없을 때 시작메뉴 해금
+            if (startMenuId == null) Debug.LogError("startMenuId가 없음");
+            UnlockMenu(startMenuId);
+            SetMenuSelection(startMenuId, true);
+            return;
+        }
+        
+        // 해금 데이터 Id 받아서 복원
+        foreach (var menuId in unlockedMenuIds)
+        {
+            UnlockMenu(menuId);
+        }
+    }
+
+    #endregion
+    
     
     #region 외부 사용 함수
     
@@ -120,50 +175,52 @@ public class MenuManager : Singleton<MenuManager>
     /// </summary>
     public void UpdateTodayMenus()
     {
-        todayMenus = playerMenus.Where(menu => menu.CanServeToday).ToList();
-        InitializeTodayStats();
+        todayMenuIds = menuDatabase
+            .Where(menu => menu.CanServeToday)
+            .Select(menu => menu.foodData.id)
+            .ToList();
         
-        if (showDebugInfo)  Debug.Log($"[MenuManager]: 오늘 메뉴 - {todayMenus.Count}개");
+        if (showDebugInfo) Debug.Log($"[MenuManager]: 오늘 메뉴 - {todayMenuIds.Count}개");
+        
+        UpdateTodayStats();
     }
 
     /// <summary>
     /// id 기반 메뉴 해금
     /// </summary>
     /// <param name="foodId"> 해금하려는 메뉴의 foodData.id </param>
-    public bool UnlockMenu(string foodId)
+    public void UnlockMenu(string foodId)
     {
-        if (playerMenus.Any(m => m.foodData.id == foodId))
-        {
-            if (showDebugInfo) Debug.Log($"[MenuManager] ℹID '{foodId}' 메뉴 이미 해금됨.");
-            return false;
-        }
+        if (string.IsNullOrEmpty(foodId)) return;
         
-        var menuToUnlock = allMenus.FirstOrDefault(m => m.foodData.id == foodId);
+        Menu menuToUnlock = FindMenuById(foodId);
         if (menuToUnlock == null)
         {
             Debug.LogError($"[MenuManager] ID '{foodId}'인 메뉴 없음 !!!");
-            return false;
+            return;
         }
         
-        // 해금 상태로 변경, playerMenus에 추가
+        if (menuToUnlock.isUnlocked) return;
+
         menuToUnlock.isUnlocked = true;
-        playerMenus.Add(menuToUnlock);
-        
-        UpdateTodayMenus();
-        return true;
     }
 
     public void SetMenuSelection(string foodId, bool selection)
     {
-        Menu menu = playerMenus.FirstOrDefault(m => m.foodData.id == foodId);
-        if (menu != null) menu.isSelected = selection;
-        
-        UpdateTodayMenus();
+        Menu menu = FindMenuById(foodId);
+        if (menu != null && menu.isUnlocked)
+        {
+            menu.isSelected = selection;
+            UpdateTodayMenus();
+        }
     }
 
     public FoodData GetRandomMenu()
     {
-        return todayMenus[Random.Range(0, todayMenus.Count)].foodData;
+        if (todayMenuIds.Count == 0) return null;
+        
+        string randomId = todayMenuIds[Random.Range(0, todayMenuIds.Count)];
+        return FindMenuById(randomId)?.foodData;
     }
 
     #endregion
@@ -172,42 +229,12 @@ public class MenuManager : Singleton<MenuManager>
 
     public void UnlockAllMenus()
     {
-        foreach (var menu in allMenus)
+        foreach (var menu in menuDatabase)
         {
             UnlockMenu(menu.foodData.id);
-        }  
-        
-        UpdateTodayMenus();
+        }
     }
     
-    #endregion
-    
-    #region public getters
-
-    // FoodData 조회
-    public FoodData[] AllFoodData => allFoodData;
-    public FoodData[] GetTodayMenuData() => todayMenus.Select(m => m.foodData).ToArray(); // FoodData만
-   
-    // Menu 조회
-    public List<Menu> GetAllMenus() => new List<Menu>(playerMenus);
-    public List<Menu> GetTodayMenus() => todayMenus; // Menu 리스트 (해금, 선택정보 포함)
-    public List<Menu> PlayerMenus => playerMenus; // 플레이어가 해금한 레시피 전부
-    
-    // 전체 판매량 조회
-    public int GetTotalSalesToday() => todayMenus.Sum(menu => GetTodayMenuSales(menu.foodData.id));
-    public int GetTotalRevenueToday() => todayMenus.Sum(menu => GetTodayMenuRevenue(menu.foodData.id));
-    
-    // 메뉴별 판매량 조회 (id로 조회함)
-    public int GetTodayMenuSales(string menuId) => todayMenuSales.GetValueOrDefault(menuId, 0);
-    
-    public int GetTodayMenuRevenue(string menuId)
-    {
-        int soldCount = GetTodayMenuSales(menuId);
-        int price = GetMenuPrice(menuId);
-        return soldCount * price;
-    }
-    
-    private int GetMenuPrice(string menuId) => todayMenus.Find(m => m.foodData.id == menuId).Price;
     #endregion
 
 }

@@ -24,6 +24,7 @@ public class UIExitPopup : MonoBehaviour
 
     public void OnClickBack()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         Hide();
     }
 
@@ -33,7 +34,7 @@ public class UIExitPopup : MonoBehaviour
         UIRoot.Instance.keyRebindManager?.CancelAll();
         UIRoot.Instance.volumeHandler?.RollbackVolumes();
         UIRoot.Instance.videoSettingPanel?.RollbackPending();
-
+        EventBus.PlaySFX(SFXType.ButtonClick);
         Hide();
 
         pendingAction?.Invoke();

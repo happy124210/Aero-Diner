@@ -16,7 +16,7 @@ MonoBehaviour:
   foodName: PestoPasta
   displayName: "\uD398\uC2A4\uD1A0 \uD30C\uC2A4\uD0C0"
   foodType: 4
-  foodIcon: {fileID: 21300000, guid: 6409fe14c16709b438aa5e4bae385728, type: 3}
+  foodIcon: {fileID: 21300000, guid: 44697543e9a830e43ba8ff531b42463c, type: 3}
   description: "\uD398\uC2A4\uD1A0 \uD30C\uC2A4\uD0C0 \uC785\uB2C8\uB2E4"
   stationType: 0c000000
   ingredients:

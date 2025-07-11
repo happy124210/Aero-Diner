@@ -16,7 +16,7 @@ MonoBehaviour:
   foodName: VongolePasta
   displayName: "\uBD09\uACE8\uB808 \uD30C\uC2A4\uD0C0"
   foodType: 4
-  foodIcon: {fileID: 21300000, guid: ef45664c4dddd474a84da67398457ac9, type: 3}
+  foodIcon: {fileID: 21300000, guid: c08b07c214b3cd747860865a02b1ee17, type: 3}
   description: "\uBD09\uACE8\uB808 \uD30C\uC2A4\uD0C0 \uC785\uB2C8\uB2E4"
   stationType: 0c000000
   ingredients:

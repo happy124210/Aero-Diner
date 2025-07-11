@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class SFXManager : Singleton<SFXManager>
 {
-
+    private List<AudioSource> additionalSources = new List<AudioSource>();
     [System.Serializable]
     public class SFXEntry
     {
@@ -14,7 +14,8 @@ public class SFXManager : Singleton<SFXManager>
     public List<SFXEntry> sfxList;
     private Dictionary<SFXType, AudioClip> sfxDict;
     [SerializeField] private AudioSource audioSource;
-
+    [Header("Debug")]
+    [SerializeField] private bool showDebugInfo;
     protected override void Awake()
     {
         base.Awake();
@@ -36,7 +37,11 @@ public class SFXManager : Singleton<SFXManager>
 
         }
     }
-
+    public void RegisterAdditionalSource(AudioSource source)
+    {
+        if (!additionalSources.Contains(source))
+            additionalSources.Add(source);
+    }
     private void OnEnable()
     {
         EventBus.OnSFXRequested += HandleSFXRequest;
@@ -49,11 +54,13 @@ public class SFXManager : Singleton<SFXManager>
 
     private void HandleSFXRequest(SFXType type)
     {
-        Debug.Log($"[SFXManager] SFX 요청 받음: {type}");
+        if (showDebugInfo)
+            Debug.Log($"[SFXManager] SFX 요청 받음: {type}");
 
         if (sfxDict == null)
         {
-            Debug.LogError("[SFXManager] sfxDict가 null입니다! Awake()가 제대로 호출되지 않았을 수 있습니다.");
+            if (showDebugInfo)
+                Debug.LogError("[SFXManager] sfxDict가 null입니다! Awake()가 제대로 호출되지 않았을 수 있습니다.");
             return;
         }
 
@@ -76,6 +83,12 @@ public class SFXManager : Singleton<SFXManager>
     {
         if (audioSource != null)
             audioSource.volume = volume;
+
+        foreach (var source in additionalSources)
+        {
+            if (source != null)
+                source.volume = volume;
+        }
     }
 
     public float GetVolume()

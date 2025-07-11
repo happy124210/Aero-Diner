@@ -16,7 +16,7 @@ MonoBehaviour:
   foodName: Noodle
   displayName: "\uAC74\uC870\uB41C \uBA74"
   foodType: 10
-  foodIcon: {fileID: 21300000, guid: 9e5555104f5f2e043ac79c077b886e7c, type: 3}
+  foodIcon: {fileID: 21300000, guid: d3b9ae91a1940e949be589117be45c31, type: 3}
   description: "\uAC74\uC870\uB41C \uBA74 \uC785\uB2C8\uB2E4"
   stationType: 02000000
   ingredients: []

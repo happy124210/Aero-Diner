@@ -16,7 +16,7 @@ MonoBehaviour:
   foodName: TomatoSauce
   displayName: "\uD1A0\uB9C8\uD1A0 \uC18C\uC2A4"
   foodType: 2
-  foodIcon: {fileID: 21300000, guid: b848a9701d637ec47820f6d8c84f8176, type: 3}
+  foodIcon: {fileID: 21300000, guid: 155114735b10aa9488741e9359708f83, type: 3}
   description: "\uD1A0\uB9C8\uD1A0 \uC18C\uC2A4 \uC785\uB2C8\uB2E4"
   stationType: 01000000
   ingredients: []

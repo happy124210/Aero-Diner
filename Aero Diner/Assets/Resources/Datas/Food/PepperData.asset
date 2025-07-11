@@ -16,7 +16,7 @@ MonoBehaviour:
   foodName: Pepper
   displayName: "\uD6C4\uCD94"
   foodType: 9
-  foodIcon: {fileID: 21300000, guid: 7aeb4bc6b9bbd5c43a4f65d3a46e7f3a, type: 3}
+  foodIcon: {fileID: 21300000, guid: 9f7fc3a79e0f0744a8b45d0257310608, type: 3}
   description: "\uD6C4\uCD94 \uC785\uB2C8\uB2E4"
   stationType: 04000000
   ingredients: []

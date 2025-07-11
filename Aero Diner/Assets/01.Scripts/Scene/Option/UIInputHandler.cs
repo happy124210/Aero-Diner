@@ -5,6 +5,7 @@ public class UIInputHandler : MonoBehaviour
 {
     public void HandleEscapeLikeAction()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         var tracker = UIRoot.Instance.uiTracker;
         if (tracker == null) return;
 
@@ -51,6 +52,7 @@ public class UIInputHandler : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            EventBus.PlaySFX(SFXType.ButtonClick);
             Debug.Log("ESC 눌렸음");
             HandleEscapeLikeAction();
         }

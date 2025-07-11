@@ -16,7 +16,7 @@ MonoBehaviour:
   foodName: Bacon
   displayName: "\uBCA0\uC774\uCEE8"
   foodType: 5
-  foodIcon: {fileID: 21300000, guid: 7e206d896cf569e4eb902504a8460f94, type: 3}
+  foodIcon: {fileID: 21300000, guid: c720f9f6860ca5942b0f73298dff399a, type: 3}
   description: "\uBCA0\uC774\uCEE8 \uC785\uB2C8\uB2E4"
   stationType: 00000000
   ingredients: []

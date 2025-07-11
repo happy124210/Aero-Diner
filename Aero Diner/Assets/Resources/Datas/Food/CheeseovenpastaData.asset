@@ -16,7 +16,7 @@ MonoBehaviour:
   foodName: CheeseOvenPasta
   displayName: "\uCE58\uC988 \uC624\uBE10 \uD30C\uC2A4\uD0C0"
   foodType: 4
-  foodIcon: {fileID: 21300000, guid: 94da77058abdb32469e90adb1b75ac5e, type: 3}
+  foodIcon: {fileID: 21300000, guid: 490a260d48f86f3479b35e552d3f5b45, type: 3}
   description: "\uCE58\uC988 \uC624\uBE10 \uD30C\uC2A4\uD0C0 \uC785\uB2C8\uB2E4"
   stationType: 0c000000
   ingredients:

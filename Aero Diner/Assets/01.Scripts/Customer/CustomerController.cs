@@ -1,502 +1,193 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UI;
 
 /// <summary>
-/// 손님 애니메이션 상태
+/// Model과 View를 연결하고 상태 관리 및 외부 시스템과의 상호작용을 담당
 /// </summary>
-public enum CustomerAnimState
+public class CustomerController : MonoBehaviour
 {
-    Idle,
-    Walking,
-}
-
-public class CustomerController : MonoBehaviour, IPoolable
-{
-    [Header("Customer Stats")]
-    [SerializeField] private CustomerData currentData;
-    private float speed;
-    private float maxPatience;
-    private float eatTime;
-    private float currentPatience;
-    private Table assignedTable;
-    
-    [Header("Order")]
-    [SerializeField] private FoodData currentOrder;
-    
-    [Header("Customer UI")]
-    [SerializeField] private Canvas customerUI;
-    [SerializeField] private Image orderBubble;
-    [SerializeField] private Image patienceTimer;
-    private bool isPatienceDecreasing;
+    [Header("Movement")]
+    [SerializeField] private NavMeshAgent navAgent;
+    private const float AGENT_DRIFT = 0.0001f;
+    private const float ARRIVAL_THRESHOLD = 0.5f;
+    private const float VELOCITY_THRESHOLD = 0.1f;
     
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo;
-    [SerializeField] public string currentNodeName;
+    public CustomerStateName CurrentStateName => currentState?.Name ?? default;
+
+    // 상태 관리
+    private Customer model;
+    private CustomerView view;
+    private CustomerState currentState; // 상태머신의 State
     
-    // 상태 체크용 bool변수들
-    private bool isServed;
-    private bool isEating;
-    private bool isEatingFinished;
-    private bool isPaymentCompleted;
-    private bool hasLeftRestaurant;
-
-    // components
-    private NavMeshAgent navAgent;
-    private CustomerState currentState;
-    private float eatingTimer;
-
-
-
-
-    #region Unity Events
-
-    private void Reset()
-    {
-        customerUI = transform.FindChild<Canvas>("Group_Customer");
-        orderBubble = transform.FindChild<Image>("Img_OrderBubble");
-        patienceTimer = transform.FindChild<Image>("Img_PatienceTimer");    
-    }
-
+    #region Unity Functions
+    
     private void Awake()
     {
+        model = new Customer();
+        view = GetComponent<CustomerView>();
         navAgent = GetComponent<NavMeshAgent>();
-        if (navAgent == null)
-        {
-            Debug.LogError($"[CustomerController]: {gameObject.name} NavMeshAgent 없음 !!!");
-        }
         
-        customerUI = transform.FindChild<Canvas>("Group_Customer");
-        orderBubble = transform.FindChild<Image>("Img_OrderBubble");
-        patienceTimer = transform.FindChild<Image>("Img_PatienceTimer");
+        if (!view) Debug.LogError($"[CustomerController]: {gameObject.name} CustomerView 없음 !!!");
+        if (!navAgent) Debug.LogError($"[CustomerController]: {gameObject.name} NavMeshAgent 없음 !!!");
     }
-
-    private void Start()
-    {
-        SetupNavMeshAgent();
-        SetupCustomerData();
-        ChangeState(new MovingToEntranceState());
-
-    }
-
+    
     private void Update()
     {
-        if (hasLeftRestaurant) return;
+        if (currentState == null) return;
         
-        if (isPatienceDecreasing)
-            currentPatience -= Time.deltaTime;
+        UpdateTimers(Time.deltaTime);
+        UpdateAnimation();
         
-        UpdateCustomerUI();
-        
-        if (currentState != null)
+        var nextState = currentState?.Update(this);
+        if (nextState != null && nextState.Name != currentState.Name)
         {
-            CustomerState nextState = currentState.Update(this);
-            
-            if (nextState != currentState)
-                ChangeState(nextState);
-        }
-        
-        // 식사 중 타이머 처리
-        if (isEating)
-        {
-            eatingTimer += Time.deltaTime;
-            if (eatingTimer >= eatTime)
-            {
-                isEating = false;
-                isEatingFinished = true;
-                if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 식사 완료!");
-            }
+            ChangeState(nextState);
         }
     }
-
-#endregion
     
-#region Setup Functions
-    
-    /// <summary>
-    /// 외부에서 받는 손님 데이터 셋업
-    /// </summary>
-    private void SetupCustomerData()
+    private void UpdateTimers(float deltaTime)
     {
-        if (!currentData)
+        // 인내심 타이머
+        if (ShouldPatienceDecrease())
         {
-            Debug.LogError($"[CustomerController]: {gameObject.name} currentData가 null입니다!");
-            return;
+            float newPatience = Mathf.Max(0, model.RuntimeData.CurrentPatience - deltaTime);
+            model.UpdatePatience(newPatience);
         }
-        
-        speed = currentData.speed;
-        maxPatience = currentData.waitTime;
-        eatTime = currentData.eatTime;
-        
-        currentPatience = maxPatience;
-        
-        ResetCustomerData();
-        
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 데이터 셋업 완료 - 속도: {speed}, 인내심: {maxPatience}");
-    }
-
-    /// <summary>
-    /// 손님 상태 초기화
-    /// </summary>
-    private void ResetCustomerData()
-    {
-        isServed = false;
-        isEating = false;
-        isEatingFinished = false;
-        isPaymentCompleted = false;
-        hasLeftRestaurant = false;
-        eatingTimer = 0f;
-        
-        // UI 초기화
-        HideAllUI();
-        isPatienceDecreasing = false;
-        
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 데이터 리셋 완료");
     }
     
-    /// <summary>
-    /// NavMesh 필드 셋업
-    /// </summary>
-    private void SetupNavMeshAgent()
+    private void OnDestroy()
     {
-        if (!navAgent)
-        {
-            Debug.LogError($"[CustomerController]: {gameObject.name} NavMeshAgent가 없습니다!");
-            return;
-        }
+        UnsubscribeFromModelEvents();
+    }
+    
+    #endregion
 
-        // 2D NavMesh 설정
+    private void ChangeState(CustomerState newState)
+    {
+        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 상태 변경: {currentState?.Name} -> {newState?.Name}");
+        
+        currentState?.Exit(this);
+        currentState = newState;
+        currentState?.Enter(this);
+    }
+    
+    #region 초기화 & 이벤트 구독
+    private void InitializeMVC()
+    {
+        view.Initialize();
+        SubscribeToModelEvents();
+    }
+
+    private void SubscribeToModelEvents()
+    {
+        model.OnPatienceChanged += HandlePatienceChanged;
+        model.OnOrderPlaced += HandleOrderPlaced;
+        model.OnMenuServed += HandleMenuServed;
+        model.OnEating += HandleEating;
+        model.OnPaymentEnd += HandlePaymentEnd;
+        model.OnLeaving += HandleLeaving;
+    }
+
+    private void UnsubscribeFromModelEvents()
+    {
+        model.OnPatienceChanged -= HandlePatienceChanged;
+        model.OnOrderPlaced -= HandleOrderPlaced;
+        model.OnMenuServed -= HandleMenuServed;
+        model.OnEating -= HandleEating;
+        model.OnPaymentEnd -= HandlePaymentEnd;
+        model.OnLeaving -= HandleLeaving;
+    }
+    
+    private void SetupNavMeshAgent(float speed)
+    {
+        if (!navAgent) return;
+        
         navAgent.updateRotation = false;
         navAgent.updateUpAxis = false;
         navAgent.speed = speed;
         navAgent.stoppingDistance = 0.1f;
         navAgent.angularSpeed = 120f;
         navAgent.acceleration = 8f;
+    }
+    #endregion
+    
+    #region Model Event Handlers (Controller가 Model 변경사항받고 model / view 조정)
+    
+    private void HandlePatienceChanged(float currentPatience)
+    {
+        view.UpdatePatienceUI(model.GetPatienceRatio());
+    }
+
+    private void HandleOrderPlaced(FoodData order)
+    {
+        view.SetPatienceVisibility(true);
+        view.ShowOrderBubble(order);
         
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} NavMeshAgent 셋업 완료");
-    }
-
-    private void ChangeState(CustomerState newState)
-    {
-        currentState?.Exit(this);
-        currentState = newState;
-        currentState?.Enter(this);
-        
-        if (showDebugInfo) Debug.Log($"Customer state changed to: {currentState?.StateName}");
-    }
-
-    public void SetCurrentNodeName(string newNodeName)
-    {
-        currentNodeName = newNodeName;
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} Current node: {currentNodeName}");
-    }
-    
-#endregion
-    
-#region Customer Actions & State
-    
-    /// <summary>
-    /// 줄 위치 업데이트
-    /// </summary>
-    public void UpdateQueuePosition(Vector3 newPosition)
-    {
-        SetDestination(newPosition);
-    }
-    
-    /// <summary>
-    /// 줄서기 시작
-    /// </summary>
-    public void StartWaitingInLine(Vector3 queuePosition)
-    {
-        SetDestination(queuePosition);
-        ChangeState(new WaitingInLineState());
-    }
-
-    /// <summary>
-    /// 할당된 좌석으로 이동
-    /// </summary>
-    public void MoveToAssignedSeat()
-    {
-        ChangeState(new MovingToSeatState());
-    }
-    
-    /// <summary>
-    /// 할당된 테이블 설정
-    /// </summary>
-    public void SetAssignedTable(Table table)
-    {
-        assignedTable = table;
-    }
-
-    public void AdjustSeatPosition()
-    {
-        if (!assignedTable) return;
-
-        transform.position = assignedTable.SeatPoint.position;
-        SetAnimationState(CustomerAnimState.Idle);
-    }
-
-    /// <summary>
-    /// 할당된 좌석 위치 반환
-    /// </summary>
-    public Vector3 GetAssignedStopPosition()
-    {
-        return assignedTable.GetStopPosition() ;
-    }
-    
-    public void PlaceOrder()
-    {
         RestaurantManager.Instance.OnCustomerEntered();
-        currentOrder = MenuManager.Instance.GetRandomMenu();
-        orderBubble.sprite = currentOrder.foodIcon;
-        ShowOrderBubble();
-
-        CustomerOrderPanel.Instance?.RegisterCustomer(this);
+        EventBus.Raise(UIEventType.ShowOrderPanel, model);
+        
+        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 주문 접수됨!");
     }
-    
-    public void ReceiveFood(FoodData servedMenu)
-    {
-        if (isServed) return;
 
-        if (currentOrder.id == servedMenu.id)
-        {
-            isServed = true;
-            MenuManager.Instance.OnMenuServed(servedMenu.id);
-        }
+    private void HandleMenuServed(FoodData servedMenu)
+    {
+        view.SetPatienceVisibility(false);
+        
+        ChangeState(new EatingState());
+        
+        MenuManager.Instance.OnMenuServed(servedMenu.id);
+        EventBus.Raise(UIEventType.HideOrderPanel, model);
         
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 음식 서빙됨!");
     }
-    
-    public bool IsFoodServed() => isServed;
-    
-    public void StartEating()
+
+    private void HandleEating()
     {
-        isEating = true;
-        eatingTimer = 0f;
-        isEatingFinished = false;
-        SetAnimationState(CustomerAnimState.Idle);
-        
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 식사 시작");
-    }
-    
-    public bool IsEatingFinished() => isEatingFinished;
-    public bool IsPaymentCompleted() => isPaymentCompleted;
-    
-    public void ProcessPayment()
-    {
-        int payment = Mathf.RoundToInt(currentOrder.foodCost);
-        RestaurantManager.Instance.OnCustomerPaid(payment);
-        isPaymentCompleted = true;
-        
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} {payment} 코인 결제!");
-        // TODO: 결제 이펙트
+        view.ShowEatingEffect();
+        SetAnimationState(CustomerAnimState.Sitting);
     }
 
-    /// <summary>
-    /// 강제로 떠나게 하기
-    /// </summary>
-    public void ForceLeave()
+    private void HandlePaymentEnd()
     {
-        StopPatienceTimer();
-        ChangeState(new LeavingState());
+        view.ShowPayEffect();
+        
+        GameManager.Instance.AddMoney(GetCurrentOrder().foodCost);
+        RestaurantManager.Instance.IncreaseCustomerStat();
     }
 
-    
-    
-#endregion
-
-#region Movement & Animation
-
-    private const float AGENT_DRIFT = 0.0001f;
-    
-    /// <summary>
-    /// 목적지 설정
-    /// </summary>
-    public void SetDestination(Vector3 destination) 
-    { 
-        if (!navAgent)
-        {
-            if (showDebugInfo) Debug.LogError($"[CustomerController]: {gameObject.name} NavMeshAgent가 null입니다!");
-            return;
-        }
-        
-        if (!navAgent.isOnNavMesh)
-        {
-            if (showDebugInfo) Debug.LogWarning($"[CustomerController]: {gameObject.name}이 NavMesh 위에 있지 않습니다!");
-            return;
-        }
-        
-        navAgent.isStopped = false;
-        // NavMeshPlus Y축 버그 방지용
-        if (Mathf.Abs(transform.position.x - destination.x) < AGENT_DRIFT)
-        {
-            destination.x += AGENT_DRIFT;
-        }
-        
-        navAgent.SetDestination(destination);
+    private void HandleLeaving()
+    {
+        Vector3 exit = RestaurantManager.Instance.GetExitPoint();
+        SetDestination(exit);
         SetAnimationState(CustomerAnimState.Walking);
         
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 목적지 설정: {destination}");
-    }
-    
-    public void StopMovement()
-    {
-        if (!navAgent) return;
+        view.SetPatienceVisibility(false);
         
-        navAgent.isStopped = true;
-        navAgent.ResetPath();
-        navAgent.velocity = Vector3.zero;
-    }
-    
-    /// <summary>
-    /// 목적지 도달 체크
-    /// </summary>
-    public bool HasReachedDestination()
-    {
-        const float arrivalThreshold = 0.5f;
-        const float velocityThreshold = 0.1f;
-        
-        if (!navAgent || !navAgent.isOnNavMesh) 
-        {
-            if (showDebugInfo) Debug.LogWarning($"[CustomerController]: {gameObject.name} NavMeshAgent 문제!");
-            return false;
-        }
-        
-        bool reached = !navAgent.pathPending && 
-                      navAgent.remainingDistance < arrivalThreshold && 
-                      navAgent.velocity.sqrMagnitude < velocityThreshold;
-        
-       if (reached && showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 목적지 도착!");
-            
-        return reached;
-    }
-    
-    public void SetAnimationState(CustomerAnimState state) 
-    { 
-        // TODO: 실제 애니메이터 연동
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 애니메이션 상태: {state}");
-    }
-    
-    /// <summary>
-    /// Despawn
-    /// </summary>
-    public void Despawn()
-    {
-        if (hasLeftRestaurant) return;
-        
-        hasLeftRestaurant = true;
-
-        CustomerOrderPanel.Instance?.UnregisterCustomer(this);
-
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 떠남");
-        
-        // 예약된 Invoke 취소
-        CancelInvoke();
-        
-        PoolManager.Instance.DespawnCustomer(this);
-    }
-    
-    #endregion
-    
-#region Customer UI
-    
-    /// <summary>
-    /// 손님 UI 업데이트
-    /// </summary>
-    private void UpdateCustomerUI()
-    {
-        UpdatePatienceTimerUI();
-        
-        // TODO: 만족도 UI 등
-    }
-    
-    /// <summary>
-    /// 인내심 타이머 UI 업데이트
-    /// </summary>
-    private void UpdatePatienceTimerUI()
-    {
-        if (!patienceTimer) return;
-        
-        if (isPatienceDecreasing)
-        {
-            ShowPatienceTimer();
-
-            float patienceRatio = currentPatience / maxPatience;
-            
-            // 이미지 변경
-            patienceTimer.fillAmount = patienceRatio;
-            Color timerColor = patienceRatio switch
-            {
-                > 0.66f => Color.green,
-                > 0.33f => Color.yellow,
-                _ => Color.red
-            };
-            patienceTimer.color = timerColor;
-        }
-        else
-        {
-            HidePatienceTimer();
-        }
-    }
-    
-    /// <summary>
-    /// 인내심 타이머 표시
-    /// </summary>
-    private void ShowPatienceTimer()
-    {
-        customerUI.gameObject.SetActive(true);
-        patienceTimer.gameObject.SetActive(true);
-    }
-    
-    /// <summary>
-    /// 인내심 타이머 숨기기
-    /// </summary>
-    private void HidePatienceTimer()
-    {
-        patienceTimer.gameObject.SetActive(false);
-        orderBubble.gameObject.SetActive(false);
-        customerUI.gameObject.SetActive(false);
-    }
-    
-    /// <summary>
-    /// 주문창 표시
-    /// </summary>
-    private void ShowOrderBubble()
-    {
-        customerUI.gameObject.SetActive(true);
-        orderBubble.gameObject.SetActive(true);
-    }
-    
-    /// <summary>
-    /// 모든 UI 숨기기
-    /// </summary>
-    private void HideAllUI()
-    {
-        HidePatienceTimer();
-        customerUI.gameObject.SetActive(false);
-    }
-    
-    // public
-    public void StartPatienceTimer()
-    {
-        isPatienceDecreasing = true;
-        ShowPatienceTimer();
-    }
-
-    public void StopPatienceTimer()
-    {
-        isPatienceDecreasing = false;
-        currentPatience = maxPatience;
-        HidePatienceTimer();
+        TableManager.Instance.ReleaseSeat(this);
+        TableManager.Instance.RemoveCustomerFromQueue(this);
+        EventBus.Raise(UIEventType.HideOrderPanel, model);
     }
     
     #endregion
 
-#region IPoolable
+    #region 외부 연결 함수
 
-    /// <summary>
-    /// 풀에서 가져온 후 데이터로 초기화
-    /// </summary>
+    public void SetPatienceVisibility(bool isActive) => view.SetPatienceVisibility(isActive);
+    public void PlaceOrder() => model.PlaceOrder();
+    public void ReceiveFood(FoodData servedMenu) =>  model.ReceiveFood(servedMenu);
+    public void EatFood() => model.EatFood();
+    public void UpdateQueuePosition(Vector3 newPosition) =>  SetDestination(newPosition);
+    public void MoveToAssignedSeat() => ChangeState(new MovingToSeatState());
+    public void SetAssignedTable(Table table) => model.SetAssignedTable(table);
+    public void ProcessPayment() => model.PayMoney();
+    public void LeaveSeat() => model.LeaveSeat();
+    public void ForceLeave() => ChangeState(new LeavingState());
+    
+    #endregion
+
+    #region IPoolable Implementation
     public void InitializeFromPool(CustomerData customerData)
     {
         if (!customerData)
@@ -505,79 +196,106 @@ public class CustomerController : MonoBehaviour, IPoolable
             return;
         }
         
-        currentData = customerData;
-        hasLeftRestaurant = false;
+        model.Initialize(customerData);
+        InitializeMVC();
+        SetupNavMeshAgent(model.Data.speed);
         
-        SetupNavMeshAgent();
-        SetupCustomerData();
         ChangeState(new MovingToEntranceState());
         
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 풀에서 초기화 완료 - {customerData.customerName}");
     }
-    
-    public void OnGetFromPool()
-    {
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 풀에서 가져옴");
-    }
 
-    /// <summary>
-    /// 풀로 반환 시 정리
-    /// </summary>
     public void OnReturnToPool()
     {
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 풀로 반환");
+        // 정리 작업
+        currentState = null;
+        UnsubscribeFromModelEvents();
+        view.Cleanup();
         
-        HideAllUI();
-        
-        // 예약된 작업들 취소
-        CancelInvoke();
-        StopAllCoroutines();
-        
-        // BT 정리
-        ChangeState(new MovingToEntranceState());
-        
-        // NavMeshAgent 정리
-        if (navAgent != null && navAgent.isOnNavMesh)
+        // NavMesh 정리
+        if (navAgent && navAgent.isOnNavMesh)
         {
+            navAgent.isStopped = true;
             navAgent.ResetPath();
             navAgent.velocity = Vector3.zero;
-            navAgent.isStopped = true;
         }
         
-        // 대기/좌석 정리
-        TableManager.Instance.RemoveCustomerFromQueue(this);
-        TableManager.Instance.ReleaseSeat(this);
-
-        // Animation 정리
-        SetAnimationState(CustomerAnimState.Idle);
-        transform.localPosition = Vector3.zero;
-        transform.localRotation = Quaternion.identity;
-        
-        // 데이터 초기화
-        ResetCustomerData();
-        currentData = null;
+        gameObject.SetActive(false);
+        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 풀로 반환");
     }
-
-    public void OnDestroyFromPool()
+    
+    public void Despawn()
     {
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 풀에서 삭제");
-
-        CancelInvoke();
-        StopAllCoroutines();
+        PoolManager.Instance.DespawnCustomer(this);
+        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 퇴장 및 비활성화");
+    }
+    #endregion
+    
+    #region Movement & Animation
+    public void SetDestination(Vector3 destination)
+    {
+        if (!navAgent) return;
+        
+        navAgent.enabled = true;
+        navAgent.isStopped = false;
+        navAgent.SetDestination(destination);
     }
 
+    public void StopMovement()
+    {
+        if (!navAgent || !navAgent.isOnNavMesh) return;
+        
+        navAgent.isStopped = true;
+        navAgent.velocity = Vector3.zero;
+    }
+
+    public bool HasReachedDestination()
+    {
+        if (!navAgent || navAgent.enabled == false) return false;
+        
+        bool reached = navAgent.remainingDistance <= ARRIVAL_THRESHOLD 
+                                 && navAgent.velocity.sqrMagnitude < VELOCITY_THRESHOLD * VELOCITY_THRESHOLD;
+        
+        return reached;
+    }
+    
+    public void AdjustToSeatPosition()
+    {
+        navAgent.enabled = false;
+        transform.position = GetSeatPosition();
+    }
+    
+    public void AdjustToStopPosition()
+    {
+        navAgent.enabled = false;
+        transform.position = GetStopPosition();
+    }
+    
+    private void UpdateAnimation()
+    {
+        if (!navAgent || !view) return;
+        
+        Vector3 localVelocity = transform.InverseTransformDirection(navAgent.velocity);
+        Vector2 direction = new Vector2(localVelocity.x, localVelocity.z).normalized;
+    
+        view.UpdateAnimationDirection(direction);
+    }
+    public void SetAnimationState(CustomerAnimState state)
+    {
+        view.SetAnimationState(state);
+    }
+    
     #endregion
     
-#region public Getters
+    # region property & public methods
     
-    public CustomerData CurrentData => currentData;
-    public bool HasPatience() => currentPatience > 0;
-    public Table GetAssignedTable() => assignedTable;
-    public FoodData CurrentOrder => currentOrder;
-    //CostomerOrderPanelUI용 Getter
-    public float GetCurrentPatience() => currentPatience;
-    public float GetMaxPatience() => maxPatience;
-
+    public CustomerData CustomerData => model.Data;
+    public Table GetAssignedTable() => model.RuntimeData.AssignedTable;
+    public FoodData GetCurrentOrder() => model.RuntimeData.CurrentOrder;
+    public Vector3 GetStopPosition() => GetAssignedTable().GetStopPoint();
+    public Vector3 GetSeatPosition() => GetAssignedTable().GetSeatPoint();
+    public bool HasPatience() => model.RuntimeData.CurrentPatience > 0;
+    private bool ShouldPatienceDecrease() => currentState != null && (currentState.Name == CustomerStateName.Ordering || currentState.Name == CustomerStateName.WaitingInLine);
+    
     #endregion
-
 }

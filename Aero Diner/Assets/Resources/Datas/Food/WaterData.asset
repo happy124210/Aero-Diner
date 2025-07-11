@@ -16,7 +16,7 @@ MonoBehaviour:
   foodName: Water
   displayName: "\uBB3C"
   foodType: 0
-  foodIcon: {fileID: 21300000, guid: a5bd7beb64229cc45b1623399451cd58, type: 3}
+  foodIcon: {fileID: 21300000, guid: 0a46c9da3435f1642895e2789ce99de7, type: 3}
   description: "\uBB3C \uC785\uB2C8\uB2E4"
   stationType: 02000000
   ingredients: []

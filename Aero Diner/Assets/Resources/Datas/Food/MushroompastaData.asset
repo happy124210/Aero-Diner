@@ -16,7 +16,7 @@ MonoBehaviour:
   foodName: MushroomPasta
   displayName: "\uBC84\uC12F \uD30C\uC2A4\uD0C0"
   foodType: 4
-  foodIcon: {fileID: 21300000, guid: ea963bc06c2b51f408e9fad93c3b9d14, type: 3}
+  foodIcon: {fileID: 21300000, guid: 22dd7b9b94bfbba4798b2e69b22e9a4e, type: 3}
   description: "\uBC84\uC12F \uD30C\uC2A4\uD0C0 \uC785\uB2C8\uB2E4"
   stationType: 0c000000
   ingredients:

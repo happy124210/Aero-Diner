@@ -11,6 +11,7 @@ public class MenuPanel : MonoBehaviour
     [SerializeField] private CanvasGroup warningPopupCanvas; // 팝업의 CanvasGroup
     [SerializeField] private float popupFadeDuration = 0.5f;
     [SerializeField] private float popupVisibleTime = 2f;
+
     private void OnEnable()
     {
         GenerateFoodList();
@@ -25,7 +26,7 @@ public class MenuPanel : MonoBehaviour
         }
 
         // 메뉴 가져오기
-        var menuList = MenuManager.Instance.PlayerMenus;
+        var menuList = MenuManager.Instance.GetUnlockedMenus();
 
         if (menuList == null)
         {
@@ -47,9 +48,12 @@ public class MenuPanel : MonoBehaviour
             var foodUI = go.GetComponent<MenuPanelContent>();
             foodUI.SetData(menu);
         }
+        
+        EventBus.Raise(UIEventType.ShowMenuPanel);
     }
     public void OnClickDayStartBtn()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         // 체크된 토글이 하나라도 있는지 확인
         bool anyToggled = false;
 
@@ -79,7 +83,8 @@ public class MenuPanel : MonoBehaviour
                 EventBus.Raise(UIEventType.HideMenuPanel);
             });
         
-        RestaurantManager.Instance.StartGame();
+        RestaurantManager.Instance.StartRestaurant();
+        EventBus.OnBGMRequested(BGMEventType.PlayMainTheme);
     }
 
     private void ShowNoMenuSelectedPopup()

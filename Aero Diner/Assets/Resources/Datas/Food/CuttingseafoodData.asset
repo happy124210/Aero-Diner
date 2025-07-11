@@ -16,7 +16,7 @@ MonoBehaviour:
   foodName: CuttingSeafood
   displayName: "\uC190\uC9C8\uD55C \uD574\uC0B0\uBB3C"
   foodType: 1
-  foodIcon: {fileID: 21300000, guid: 1f791dcba3dd23f46b9a9cbe71934789, type: 3}
+  foodIcon: {fileID: 21300000, guid: 39a962487f04bdd408f2d4b35b474bd5, type: 3}
   description: "\uC190\uC9C8\uD55C \uD574\uC0B0\uBB3C \uC785\uB2C8\uB2E4"
   stationType: 01000000
   ingredients:

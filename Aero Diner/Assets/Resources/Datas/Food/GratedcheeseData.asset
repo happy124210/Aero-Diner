@@ -16,7 +16,7 @@ MonoBehaviour:
   foodName: GratedCheese
   displayName: "\uCE58\uC988 \uAC00\uB8E8"
   foodType: 11
-  foodIcon: {fileID: 21300000, guid: d3e6f020d52995e45ba3844fafc9686f, type: 3}
+  foodIcon: {fileID: 21300000, guid: 436f75a905dd73846ad33cb248f5ad51, type: 3}
   description: "\uCE58\uC988 \uAC00\uB8E8 \uC785\uB2C8\uB2E4"
   stationType: 06000000
   ingredients:

@@ -16,7 +16,7 @@ MonoBehaviour:
   foodName: ToowoombaPasta
   displayName: "\uD22C\uC6C0\uBC14 \uD30C\uC2A4\uD0C0"
   foodType: 4
-  foodIcon: {fileID: 21300000, guid: 12b2130f7ebb24c488a5031c7d844e63, type: 3}
+  foodIcon: {fileID: 21300000, guid: c826e753b8f7eee4a8c332f97d0e8775, type: 3}
   description: "\uD22C\uC6C0\uBC14 \uD30C\uC2A4\uD0C0 \uC785\uB2C8\uB2E4"
   stationType: 0c000000
   ingredients:

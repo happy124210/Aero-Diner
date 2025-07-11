@@ -42,75 +42,63 @@ public class VideoSettingPanel : MonoBehaviour
         new Vector2Int(1920, 1080)
     };
 
-    private void Start()
+
+    private void OnEnable()
     {
-        originalScreenModeIndex = GetCurrentScreenModeIndex();
-        originalResolutionIndex = GetCurrentResolutionIndex();
+        var data = SaveLoadManager.LoadGame();
+
+        if (data == null)
+        {
+            OnClickReset(); // 리셋 → 내부적으로 OnClickSave도 실행됨
+            return;
+        }
+
+        // 기존 저장값 로딩
+        originalScreenModeIndex = data.screenModeIndex;
+        originalResolutionIndex = data.resolutionIndex;
 
         screenModeIndex = originalScreenModeIndex;
         resolutionIndex = originalResolutionIndex;
 
-        if (resolutionIndex < 0)
+        // 혹시라도 범위 바깥값이면 안전하게 보정
+        if (resolutionIndex < 0 || resolutionIndex >= resolutions.Count)
         {
             var fallbackRes = new Vector2Int(Screen.width, Screen.height);
-
-            // 동일한 해상도가 중복되지 않도록 확인
             if (!resolutions.Exists(r => r.x == fallbackRes.x && r.y == fallbackRes.y))
-            {
                 resolutions.Insert(0, fallbackRes);
-            }
 
             resolutionIndex = 0;
+            originalResolutionIndex = 0;
         }
 
         UpdateUI();
-    }
-    void OnEnable()
-    {
         UIRoot.Instance.tabButtonController.ApplyTabSelectionVisuals();
-    }
-    private int GetCurrentScreenModeIndex()
-    {
-        for (int i = 0; i < fullScreenModes.Length; i++)
-        {
-            if (Screen.fullScreenMode == fullScreenModes[i])
-                return i;
-        }
-        return 0;
-    }
-
-    private int GetCurrentResolutionIndex()
-    {
-        for (int i = 0; i < resolutions.Count; i++)
-        {
-            if (Screen.currentResolution.width == resolutions[i].x &&
-                Screen.currentResolution.height == resolutions[i].y)
-                return i;
-        }
-
-        return resolutions.FindIndex(r => r.x == Screen.width && r.y == Screen.height);
     }
 
     public void OnClickLeft_ScreenMode()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         screenModeIndex = (screenModeIndex - 1 + screenModes.Length) % screenModes.Length;
         UpdateUI();
     }
 
     public void OnClickRight_ScreenMode()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         screenModeIndex = (screenModeIndex + 1) % screenModes.Length;
         UpdateUI();
     }
 
     public void OnClickLeft_Resolution()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         resolutionIndex = (resolutionIndex - 1 + resolutions.Count) % resolutions.Count;
         UpdateUI();
     }
 
     public void OnClickRight_Resolution()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         resolutionIndex = (resolutionIndex + 1) % resolutions.Count;
         UpdateUI();
     }
@@ -119,11 +107,14 @@ public class VideoSettingPanel : MonoBehaviour
     {
         ApplyPending();
 
-        // Save current as original
         originalScreenModeIndex = screenModeIndex;
         originalResolutionIndex = resolutionIndex;
 
-        Debug.Log("[VideoSettingPanel] 해상도 및 모드 저장 완료");
+        var data = SaveLoadManager.LoadGame() ?? new SaveData();
+        data.screenModeIndex = screenModeIndex;
+        data.resolutionIndex = resolutionIndex;
+        SaveLoadManager.SaveGame(data);
+
     }
 
     public void OnClickReset()
@@ -145,12 +136,22 @@ public class VideoSettingPanel : MonoBehaviour
         resolutionIndex = originalResolutionIndex;
         UpdateUI();
 
-        Debug.Log("[VideoSettingPanel] 변경 사항 롤백됨");
     }
     public bool HasUnsavedChanges()
     {
-        return screenModeIndex != originalScreenModeIndex
-            || resolutionIndex != originalResolutionIndex;
+        bool screenChanged = screenModeIndex != originalScreenModeIndex;
+        bool resolutionChanged = resolutionIndex != originalResolutionIndex;
+
+        if (screenChanged || resolutionChanged)
+        {
+            Debug.LogWarning("[VideoSettingPanel] 변경사항 감지됨:");
+            if (screenChanged)
+                Debug.LogWarning($"  - ScreenMode 변경됨: 현재={screenModeIndex}, 원본={originalScreenModeIndex}");
+            if (resolutionChanged)
+                Debug.LogWarning($"  - Resolution 변경됨: 현재={resolutionIndex}, 원본={originalResolutionIndex}");
+        }
+
+        return screenChanged || resolutionChanged;
     }
     /// <summary>
     /// 실제 해상도 적용
@@ -161,7 +162,6 @@ public class VideoSettingPanel : MonoBehaviour
         FullScreenMode mode = fullScreenModes[screenModeIndex];
 
         Screen.SetResolution(res.x, res.y, mode);
-        Debug.Log($"해상도 적용: {res.x} x {res.y}, 모드: {screenModes[screenModeIndex]}");
     }
 
     private void UpdateUI()

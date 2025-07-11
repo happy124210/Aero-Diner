@@ -21,6 +21,8 @@ public class UIManager : Singleton<UIManager>
         public string sceneName;
         public List<AssetReferenceGameObject> uiPrefabs;
     }
+    [Header("Debug")]
+    [SerializeField] private bool showDebugInfo;
 
     [Header("씬별 UI 매핑")]
     [SerializeField] private List<SceneUIEntry> sceneUIPrefabs;
@@ -72,7 +74,8 @@ public class UIManager : Singleton<UIManager>
 
         if (!uiMap.TryGetValue(sceneName, out var assetRefs))
         {
-            Debug.LogWarning($"[UIManager] UI 프리팹을 찾을 수 없음: {sceneName}");
+            if (showDebugInfo)
+                Debug.LogWarning($"[UIManager] UI 프리팹을 찾을 수 없음: {sceneName}");
             return;
         }
 
@@ -89,7 +92,8 @@ public class UIManager : Singleton<UIManager>
             }
             else
             {
-                Debug.LogError($"[UIManager] UI 로딩 실패: {assetRef.RuntimeKey}");
+                if (showDebugInfo)
+                    Debug.LogError($"[UIManager] UI 로딩 실패: {assetRef.RuntimeKey}");
             }
         }
         foreach (var ui in currentSceneUIs)
@@ -111,7 +115,8 @@ public class UIManager : Singleton<UIManager>
                 if (blinker != null && !blinker.gameObject.activeSelf)
                 {
                     blinker.gameObject.SetActive(true);
-                    Debug.Log("[UIManager] PressAnyKeyBlinker 강제 활성화");
+                    if (showDebugInfo)
+                        Debug.Log("[UIManager] PressAnyKeyBlinker 강제 활성화");
                 }
             }
         }
@@ -119,14 +124,16 @@ public class UIManager : Singleton<UIManager>
 
     private void HandleUIEvent(UIEventType eventType, object payload)
     {
-        // 기존 코드 그대로 유지
         switch (eventType)
         {
+            // === Start Scene ===
             case UIEventType.OpenPause:
                 UIRoot.Instance.pausePanel?.SetActive(true);
+                GameManager.Instance.PauseGame();
                 break;
             case UIEventType.ClosePause:
                 UIRoot.Instance.pausePanel?.SetActive(false);
+                GameManager.Instance.ContinueGame();
                 break;
             case UIEventType.OpenOption:
                 UIRoot.Instance.pausePanel.SetActive(false);
@@ -154,16 +161,25 @@ public class UIManager : Singleton<UIManager>
                 UIRoot.Instance.keysettingPanel.gameObject.SetActive(true);
                 break;
             case UIEventType.UpdateEarnings:
-                Debug.Log($"[UIManager] UpdateEarnings 이벤트 발생: {payload}");
+                if (showDebugInfo)
+                    Debug.Log($"[UIManager] UpdateEarnings 이벤트 발생: {payload}");
+
+                if (payload is not int newEarnings)
+                {
+                    return;
+                }
+
                 foreach (var ui in currentSceneUIs)
                 {
                     var ed = ui?.GetComponentInChildren<EarningsDisplay>(true);
                     if (ed != null)
                     {
-                        Debug.Log($"[UIManager] EarningsDisplay 찾음: {ed.name}");
-                        ed.AnimateEarnings((int)payload);
+                        ed.AnimateEarnings(newEarnings);
                     }
-
+                    else if (showDebugInfo)
+                    {
+                        Debug.LogWarning($"[UIManager] EarningsDisplay를 찾을 수 없음: {ui.name}");
+                    }
                 }
                 break;
             case UIEventType.ShowStartMenuWithSave:
@@ -174,9 +190,34 @@ public class UIManager : Singleton<UIManager>
                 foreach (var ui in currentSceneUIs)
                     ui?.GetComponentInChildren<MenuPanel3>(true)?.gameObject.SetActive(true);
                 break;
+            case UIEventType.OnClickNewGame:
+                SaveLoadManager.DeleteSave(); // 모든 저장 삭제
+
+                // 씬 전환
+                FadeManager.Instance.FadeOutAndLoadSceneWithLoading("MainScene");
+                break;
+            case UIEventType.LoadMainScene:
+                FadeManager.Instance.FadeOutAndLoadSceneWithLoading("MainScene");
+                break;
+            case UIEventType.QuitGame:
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#else
+                Application.Quit();
+#endif
+                break;
+            
+            // === Main Scene ===
             case UIEventType.ShowMenuPanel:
                 foreach (var ui in currentSceneUIs)
-                    ui?.GetComponentInChildren<MenuPanel>(true)?.gameObject.SetActive(true);
+                {
+                    var menuPanel = ui?.GetComponentInChildren<MenuPanel>(true);
+                    if (menuPanel != null)
+                    {
+                        menuPanel.gameObject.SetActive(true);
+                        EventBus.OnBGMRequested(BGMEventType.PlayRecipeChoice);
+                    }
+                }
                 break;
             case UIEventType.UpdateMenuPanel:
                 foreach (var ui in currentSceneUIs)
@@ -218,16 +259,29 @@ public class UIManager : Singleton<UIManager>
                         timer.SetActive(eventType == UIEventType.ShowRoundTimer);
                 }
                 break;
-            case UIEventType.LoadMainScene:
-                FadeManager.Instance.FadeOutAndLoadSceneWithLoading("MainScene");
+
+            case UIEventType.ShowOrderPanel:
+                if (payload is Customer customerToShow)
+                {
+                    foreach (var ui in currentSceneUIs)
+                    {
+                        var panel = ui?.GetComponentInChildren<CustomerOrderPanel>(true);
+                        panel?.ShowOrderPanel(customerToShow);
+                    }
+                }
                 break;
-            case UIEventType.QuitGame:
-#if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-#else
-                Application.Quit();
-#endif
+
+            case UIEventType.HideOrderPanel:
+                if (payload is Customer customerToHide)
+                {
+                    foreach (var ui in currentSceneUIs)
+                    {
+                        var panel = ui?.GetComponentInChildren<CustomerOrderPanel>(true);
+                        panel?.HideOrderPanel(customerToHide);
+                    }
+                }
                 break;
+
         }
     }
 }

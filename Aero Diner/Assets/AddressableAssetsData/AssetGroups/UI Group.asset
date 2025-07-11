@@ -48,7 +48,12 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f2428c66a4b41cf409d3ff99e6dc533e
-    m_Address: Assets/02.Prefabs/UI/UICanvas_CostomerOrderPanel .prefab
+    m_Address: UICanvas_CostomerOrderPanel .prefabmerOrderPanel .prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 65a5a665ac7e95049a202ab7ad8d1124
+    m_Address: Assets/02.Prefabs/UI/TimePanel.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

@@ -16,7 +16,7 @@ MonoBehaviour:
   foodName: Seafood
   displayName: "\uD574\uC0B0\uBB3C"
   foodType: 5
-  foodIcon: {fileID: 21300000, guid: 8f05e9d37fe6028429271482e3194387, type: 3}
+  foodIcon: {fileID: 21300000, guid: 9039941c08fadd44daacb07469b69f35, type: 3}
   description: "\uD574\uC0B0\uBB3C \uC785\uB2C8\uB2E4"
   stationType: 00000000
   ingredients: []

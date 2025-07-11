@@ -3,6 +3,11 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("입력 액션 참조")]
+    public InputActionReference moveActionRef;
+    public InputActionReference interactActionRef;
+    public InputActionReference pickupActionRef;
+
     [Header("이동 속도")]
     public float moveSpeed = 5f;
 
@@ -16,39 +21,55 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Vector2 slotOffsetDown = new Vector2(0, -0.5f);
     [SerializeField] private Vector2 slotOffsetLeft = new Vector2(-0.5f, 0);
     [SerializeField] private Vector2 slotOffsetRight = new Vector2(0.5f, 0);
+    [SerializeField] private AudioSource moveSFXSource;
+    [SerializeField] private AudioClip moveSFXClip;
 
-    public InteractionType interactionType;
-    public IInteractable currentTarget;
-    private IInteractable previousTarget;
-
+    private Rigidbody2D rb;
     private Animator animator;
+
+    private float idleTimer = 0f;
+    private float idleBreakTime = 5f;
+    private bool hasTriggeredIdleBreak = false;
 
     private Vector2 moveInput;
     private Vector2 lastMoveDir = Vector2.down;
-    private Rigidbody2D rb;
 
-    public PlayerInputActions inputActions;
-    private InputAction interactAction;
+    public InteractionType interactionType;
+    public IInteractable currentTarget;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         playerInventory = GetComponent<PlayerInventory>();
-
-        inputActions = new PlayerInputActions();
-        inputActions.Enable(); // 중요!
         animator = GetComponent<Animator>();
-
-        interactAction = inputActions.Player.Interact;
     }
 
-    public void OnMove(InputAction.CallbackContext context)
+    private void OnEnable()
     {
-        moveInput = context.ReadValue<Vector2>();
+        moveActionRef.action.Enable();
+        interactActionRef.action.Enable();
+        pickupActionRef.action.Enable();
+
+        interactActionRef.action.performed += OnInteract;
+        pickupActionRef.action.performed += OnPickupDown;
+    }
+
+    private void OnDisable()
+    {
+        moveActionRef.action.Disable();
+        interactActionRef.action.Disable();
+        pickupActionRef.action.Disable();
+
+        interactActionRef.action.performed -= OnInteract;
+        pickupActionRef.action.performed -= OnPickupDown;
+    }
+    private void Start()
+    {
+        SFXManager.Instance.RegisterAdditionalSource(moveSFXSource);
     }
     private void Update()
     {
-        if (moveInput != Vector2.zero)
-            lastMoveDir = moveInput;
+        moveInput = moveActionRef.action.ReadValue<Vector2>();
 
         Animate();
         UpdateItemSlotPosition();
@@ -56,37 +77,83 @@ public class PlayerController : MonoBehaviour
 
         animator.SetBool("IsCarrying", playerInventory.IsHoldingItem);
 
-        if (interactAction == null) return;
-
-        bool isHolding = interactAction.IsPressed();
-        bool justPressed = interactAction.WasPressedThisFrame();
-
+        bool isHolding = interactActionRef.action.IsPressed();
         bool isInteracting = currentTarget != null && interactionType == InteractionType.Use && isHolding;
         animator.SetBool("IsInteract", isInteracting);
 
-        if (currentTarget != null)
+        if (currentTarget != null && interactionType == InteractionType.Use && isHolding)
         {
-            if (interactionType == InteractionType.Use)
+            currentTarget.Interact(playerInventory, interactionType);
+        }
+
+        // Idle Break 감지 로직
+        if (moveInput.sqrMagnitude < 0.01f)
+        {
+            idleTimer += Time.deltaTime;
+
+            if (!hasTriggeredIdleBreak && idleTimer >= idleBreakTime)
             {
-                if (isHolding)
-                {
-                    currentTarget.Interact(playerInventory, interactionType);
-                }
-            }
-            else
-            {
-                if (justPressed)
-                {
-                    currentTarget.Interact(playerInventory, interactionType);
-                }
+                animator.SetTrigger("TriggerIdleBreak");
+                hasTriggeredIdleBreak = true;
             }
         }
+        else
+        {
+            idleTimer = 0f;
+            hasTriggeredIdleBreak = false;
+        }
     }
+
 
     private void FixedUpdate()
     {
         rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
     }
+
+    private void OnInteract(InputAction.CallbackContext context)
+    {
+        var target = FindBestInteractable(InteractionType.Use);
+        target?.Interact(playerInventory, InteractionType.Use);
+    }
+
+    private void OnPickupDown(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        if (playerInventory == null) return;
+
+        if (playerInventory.IsHoldingItem)
+        {
+            if (currentTarget != null)
+            {
+                SetDirectionParams();
+                animator.SetTrigger("PutDown");
+
+                playerInventory.DropItem(currentTarget);
+                EventBus.OnSFXRequested(SFXType.Itemlaydown);
+            }
+        }
+        else
+        {
+            var pickupTarget = FindBestInteractable(InteractionType.Pickup);
+            if (pickupTarget != null)
+            {
+                SetDirectionParams();
+                animator.SetTrigger("PickUp");
+
+                if (pickupTarget is IngredientStation)
+                {
+                    pickupTarget.Interact(playerInventory, InteractionType.Pickup);
+                }
+                else
+                {
+                    playerInventory.TryPickup(pickupTarget);
+                }
+
+                EventBus.OnSFXRequested(SFXType.ItemPickup);
+            }
+        }
+    }
+
     private void RaycastForInteractable()
     {
         IInteractable newTarget = null;
@@ -100,33 +167,107 @@ public class PlayerController : MonoBehaviour
         if (hit.collider)
             newTarget = hit.collider.GetComponent<IInteractable>();
 
-        //변화가 있을 때만 후처리
         if (newTarget != currentTarget)
         {
-            // 이전 대상 정리
-            if (currentTarget != null)
-                currentTarget.OnHoverExit();
-
-            // 새 대상 처리
-            if (newTarget != null)
-                newTarget.OnHoverEnter();
-
+            currentTarget?.OnHoverExit();
+            newTarget?.OnHoverEnter();
             currentTarget = newTarget;
         }
     }
 
-    public void OnInteract(InputAction.CallbackContext context)
+    private IInteractable FindBestInteractable(InteractionType interactionType)
     {
-        if (!context.performed) return;
+        Vector2 origin = rb.position;
+        Vector2 direction = lastMoveDir == Vector2.zero ? Vector2.down : lastMoveDir;
+        float distance = interactionRadius;
+        int rayCount = 5;
+        float spread = 0.3f; // 좌우로 퍼지는 폭
 
-        var target = FindBestInteractable(InteractionType.Use);
-        target?.Interact(playerInventory, InteractionType.Use);
+        IInteractable best = null;
+        float closestDist = Mathf.Infinity;
+
+        // 직각 방향을 기준으로 좌우 퍼지게 offset 계산
+        Vector2 perpendicular = new Vector2(-direction.y, direction.x); // 직각 벡터
+
+        for (int i = 0; i < rayCount; i++)
+        {
+            float t = (i / (float)(rayCount - 1)) - 0.5f; // -0.5 ~ 0.5
+            Vector2 offset = perpendicular * t * spread;
+            Vector2 rayOrigin = origin + offset;
+
+            RaycastHit2D[] hits = Physics2D.RaycastAll(rayOrigin, direction, distance, interactableLayer);
+            Debug.DrawRay(rayOrigin, direction * distance, Color.cyan, 0.2f);
+
+            foreach (var hit in hits)
+            {
+                if (hit.collider == null) continue;
+                var interactable = hit.collider.GetComponent<IInteractable>();
+                if (interactable == null) continue;
+
+                float dist = Vector2.Distance(origin, hit.point);
+                if (dist >= closestDist) continue;
+
+                if (interactionType == InteractionType.Pickup)
+                {
+                    if (interactable is FoodDisplay)
+                    {
+                        best = interactable;
+                        closestDist = dist;
+                        break; // 최우선
+                    }
+                    else if (interactable is IngredientStation)
+                    {
+                        best = interactable;
+                        closestDist = dist;
+                    }
+                }
+                else if (interactionType == InteractionType.Use)
+                {
+                    if (interactable is PassiveStation || interactable is AutomaticStation || interactable is IngredientStation)
+                    {
+                        best = interactable;
+                        closestDist = dist;
+                    }
+                }
+            }
+        }
+
+        return best;
     }
+
+    private void Animate()
+    {
+        if (moveInput.sqrMagnitude > 0.01f)
+        {
+            animator.SetFloat("MoveX", moveInput.x);
+            animator.SetFloat("MoveY", moveInput.y);
+            animator.SetBool("IsMoving", true);
+
+            lastMoveDir = moveInput.normalized;
+            animator.SetFloat("LastMoveX", lastMoveDir.x);
+            animator.SetFloat("LastMoveY", lastMoveDir.y);
+
+            if (!moveSFXSource.isPlaying)
+            {
+                moveSFXSource.clip = moveSFXClip;
+                moveSFXSource.loop = true;
+                moveSFXSource.Play();
+            }
+        }
+        else
+        {
+            animator.SetBool("IsMoving", false);
+            if (moveSFXSource.isPlaying)
+            {
+                moveSFXSource.Stop();
+            }
+        }
+    }
+
     private void UpdateItemSlotPosition()
     {
         if (itemSlotTransform == null) return;
 
-        // 4방향 중 가장 가까운 방향 결정
         Vector2 dir = lastMoveDir;
         if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
         {
@@ -137,108 +278,38 @@ public class PlayerController : MonoBehaviour
             itemSlotTransform.localPosition = dir.y > 0 ? slotOffsetUp : slotOffsetDown;
         }
     }
-    public void OnPickupDown(InputAction.CallbackContext context)
-    {
-        if (!context.performed) return;
-        if (playerInventory == null) return;
 
-        if (playerInventory.IsHoldingItem)
-        {
-            // PutDown 처리
-            if (currentTarget != null)
-            {
-                // 애니메이션 처리
-                SetDirectionParams();
-                animator.SetTrigger("PutDown");
-
-                // 실제 내려놓기 처리
-                playerInventory.DropItem(currentTarget);
-            }
-            else
-            {
-                Debug.Log("내려놓을 대상이 없습니다.");
-            }
-        }
-        else
-        {
-            // PickUp 처리
-            var pickupTarget = FindBestInteractable(InteractionType.Pickup);
-            if (pickupTarget != null)
-            {
-                // 애니메이션 처리
-                SetDirectionParams();
-                animator.SetTrigger("PickUp");
-
-                // 실제 줍기 처리
-                playerInventory.TryPickup(pickupTarget);
-            }
-            else
-            {
-                Debug.Log("줍기 대상이 없습니다.");
-            }
-        }
-    }
-    //j키와 k키 상호작용 분리를 위한 함수
-    private IInteractable FindBestInteractable(InteractionType interactionType)
-    {
-        Vector2 origin = transform.position;
-        Vector2 direction = lastMoveDir;
-        float distance = interactionRadius;
-
-        RaycastHit2D[] hits = Physics2D.RaycastAll(origin, direction, distance, interactableLayer);
-
-        IInteractable fallback = null;
-
-        foreach (var hit in hits)
-        {
-            var interactable = hit.collider.GetComponent<IInteractable>();
-            if (interactable == null) continue;
-
-            //여기서 상호작용 분리
-            switch (interactionType)
-            {
-                case InteractionType.Use:
-                    if (interactable is PassiveStation || interactable is AutomaticStation || interactable is IngredientStation)
-                        return interactable;
-                    break;
-
-                case InteractionType.Pickup:
-                    if (interactable is FoodDisplay)
-                        return interactable;
-                    break;
-            }
-
-            // Fallback 후보 (없을 경우 대비)
-            if (fallback == null)
-                fallback = interactable;
-        }
-
-        return fallback;
-    }
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, interactionRadius);
-        Vector3 forward = (Vector3)(Application.isPlaying ? lastMoveDir : Vector2.down);
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position, transform.position + forward.normalized * interactionRadius);
-    }
-    private void Animate()
-    {
-        animator.SetFloat("MoveX", moveInput.x);
-        animator.SetFloat("MoveY", moveInput.y);
-        animator.SetBool("IsMoving", moveInput != Vector2.zero);
-
-        // Optional: idle 방향 유지
-        if (moveInput == Vector2.zero)
-        {
-            animator.SetFloat("LastMoveX", lastMoveDir.x);
-            animator.SetFloat("LastMoveY", lastMoveDir.y);
-        }
-    }
     private void SetDirectionParams()
     {
+        if (lastMoveDir == Vector2.zero)
+            lastMoveDir = Vector2.down;
+
         animator.SetFloat("LastMoveX", lastMoveDir.x);
         animator.SetFloat("LastMoveY", lastMoveDir.y);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+#if UNITY_EDITOR
+        if (!Application.isPlaying) return;
+
+        Vector2 origin = rb.position;
+        Vector2 direction = lastMoveDir == Vector2.zero ? Vector2.down : lastMoveDir;
+        int rayCount = 5;
+        float spread = 0.3f;
+        float distance = interactionRadius;
+
+        Vector2 perpendicular = new Vector2(-direction.y, direction.x);
+
+        for (int i = 0; i < rayCount; i++)
+        {
+            float t = (i / (float)(rayCount - 1)) - 0.5f; // -0.5 ~ 0.5
+            Vector2 offset = perpendicular * t * spread;
+            Vector2 rayOrigin = origin + offset;
+
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawLine(rayOrigin, rayOrigin + direction.normalized * distance);
+        }
+#endif
     }
 }
