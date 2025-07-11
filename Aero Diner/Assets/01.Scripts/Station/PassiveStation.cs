@@ -45,6 +45,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo;
 
+    [Header("조리 타이머 UI 컨트롤러")]
     [SerializeField] private StationTimerController timerController; // 타이머 UI 컨트롤러
 
     private List<FoodData> placedIngredientList = new();             // 실제 등록된 재료의 데이터 목록
@@ -59,7 +60,10 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
 
     private void Awake()
     {
-        timerController = transform.GetComponentInChildren<StationTimerController>();
+        if (timerController != null)
+            timerController.gameObject.SetActive(false);
+        else
+            Debug.LogWarning("TimerController가 연결되어 있지 않습니다.");
 
         outline = GetComponent<OutlineShaderController>(); // 외곽선 컴포넌트 연결
 
@@ -104,6 +108,11 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         else
         {
             if (showDebugInfo) Debug.LogWarning("stationData 또는 slotDisplays가 null입니다.");
+        }
+
+        if (timerController != null)
+        {
+            timerController.gameObject.SetActive(false); // 외부에서 꺼줌
         }
     }
 
@@ -378,12 +387,12 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         iconDisplay?.ResetAll();
         ClearPlacedObjects();
 
-        //// 타이머 UI 숨기기
-        //if (timerController != null)
-        //{
-        //    timerController.gameObject.SetActive(false);
-        //    timerVisible = false;
-        //}
+        // 타이머 UI 숨기기
+        if (timerController != null)
+        {
+            timerController.gameObject.SetActive(false);
+            timerVisible = false;
+        }
     }
 
     /// <summary>
@@ -412,16 +421,14 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     {
         if (!isCooking) return;
 
-        //// 처음 조리 시작 시, 타이머 UI가 보이도록 설정
-        //if (!timerVisible)
-        //{
-        //    timerController.gameObject.SetActive(true);
-        //    timerVisible = true;
-        //}
+        // 처음 조리 시작 시, 타이머 UI가 보이도록 설정
+        if (!timerVisible)
+        {
+            timerController.gameObject.SetActive(true);
+            timerVisible = true;
+        }
 
         currentCookingTime -= Time.deltaTime;
-
-        float progress = Mathf.Clamp01(currentCookingTime / cookingTime);
 
         timerController.UpdateTimer(currentCookingTime, cookingTime);
 

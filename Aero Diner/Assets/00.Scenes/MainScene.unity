@@ -562,6 +562,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 790633873640168816, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
+      propertyPath: timerController
+      value: 
+      objectReference: {fileID: 1974700349}
     - target: {fileID: 3351993008619990083, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
       propertyPath: m_Name
       value: StationSet
@@ -611,6 +615,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
+--- !u!114 &1974700349 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3546742701036481855, guid: 84589a182960b7840a9fb68dd9455670, type: 3}
+  m_PrefabInstance: {fileID: 1974700348}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69f72297906c1d44cb9932815474430c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4342467002388702369
 PrefabInstance:
   m_ObjectHideFlags: 0
