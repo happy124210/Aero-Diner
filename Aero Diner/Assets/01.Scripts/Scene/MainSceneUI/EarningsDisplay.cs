@@ -18,6 +18,12 @@ public class EarningsDisplay : MonoBehaviour
             earningText = transform.FindChild<TextMeshProUGUI>("Tmp_Earnings");
 
         originalColor = earningText.color;
+        InitializeEarnings();
+    }
+
+    public void InitializeEarnings()
+    {
+        earningText.text = $"{Mathf.RoundToInt(currentDisplayAmount):N0} G";
     }
 
     public void AnimateEarnings(int newAmount)

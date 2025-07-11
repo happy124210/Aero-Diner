@@ -41,8 +41,6 @@ public class GameManager : Singleton<GameManager>
 
         int money = data?.totalEarnings ?? 0;
         SetMoney(money);
-        
-        EventBus.Raise(UIEventType.UpdateEarnings, TotalEarnings);
     }
 
     public void SetMoney(int amount)

@@ -16,7 +16,6 @@ public class DailyLifeManager : Singleton<DailyLifeManager>
     private IEnumerator ResendEarningsAfterDelay()
     {
         yield return new WaitForSeconds(0.5f);
-        EventBus.Raise(UIEventType.UpdateEarnings, GameManager.Instance.TotalEarnings);
     }
     public void OnOpenButtonClick()
     {
