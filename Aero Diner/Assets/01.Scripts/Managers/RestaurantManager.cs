@@ -179,7 +179,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
             if (gameRunning)
             {
                 EndRestaurant("수동 정지");
-                CustomerManager.Instance.ForceAllCustomersToLeave();
+                PoolManager.Instance.ReturnAllActiveCustomers();
             }
         }
         

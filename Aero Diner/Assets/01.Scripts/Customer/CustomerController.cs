@@ -167,18 +167,7 @@ public class CustomerController : MonoBehaviour
     public void MoveToAssignedSeat() => ChangeState(new MovingToSeatState());
     public void SetAssignedTable(Table table) => model.SetAssignedTable(table);
     public void ProcessPayment() => model.PayMoney(GetCurrentOrder().foodCost);
-
-    
-    public void ForceLeave()
-    {
-        ChangeState(new LeavingState());
-    }
-
-    public void Despawn()
-    {
-        PoolManager.Instance.DespawnCustomer(this);
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 퇴장 및 비활성화");
-    }
+    public void ForceLeave() => ChangeState(new LeavingState());
     
     #endregion
 
@@ -202,8 +191,6 @@ public class CustomerController : MonoBehaviour
 
     public void OnReturnToPool()
     {
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 풀로 반환");
-
         // 정리 작업
         currentState = null;
         UnsubscribeFromModelEvents();
@@ -216,6 +203,15 @@ public class CustomerController : MonoBehaviour
             navAgent.ResetPath();
             navAgent.velocity = Vector3.zero;
         }
+        
+        gameObject.SetActive(false);
+        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 풀로 반환");
+    }
+    
+    public void Despawn()
+    {
+        PoolManager.Instance.DespawnCustomer(this);
+        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 퇴장 및 비활성화");
     }
     #endregion
     

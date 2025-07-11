@@ -27,7 +27,7 @@ public class CustomerSpawner : MonoBehaviour
     
     private void Start()
     {
-        availableCustomers = PoolManager.Instance.AvailableCustomers;
+        availableCustomers = PoolManager.Instance.CustomerTypes;
     }
     
     private void OnDestroy()

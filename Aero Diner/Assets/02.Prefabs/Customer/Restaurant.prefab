@@ -276,7 +276,6 @@ GameObject:
   - component: {fileID: 2374614055684473981}
   - component: {fileID: 4711894738966735290}
   - component: {fileID: 5796004451528270688}
-  - component: {fileID: 6540181293035203181}
   - component: {fileID: 2591050042534666559}
   m_Layer: 7
   m_Name: Restaurant
@@ -322,7 +321,7 @@ MonoBehaviour:
   customersServed: 0
   customersVisited: 0
   gameTime: 0
-  showDebugInfo: 0
+  showDebugInfo: 1
   gameTimeLimit: 300
 --- !u!114 &5796004451528270688
 MonoBehaviour:
@@ -339,19 +338,6 @@ MonoBehaviour:
   todayMenuIds: []
   startMenuId: f26
   showDebugInfo: 1
---- !u!114 &6540181293035203181
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7413637340875454940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93ceb28a0b654d642a2e314bf35e6426, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showDebugInfo: 0
 --- !u!114 &2591050042534666559
 MonoBehaviour:
   m_ObjectHideFlags: 0
