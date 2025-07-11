@@ -163,6 +163,8 @@ public class CustomerController : MonoBehaviour
         SetDestination(exit);
         SetAnimationState(CustomerAnimState.Walking);
         
+        view.SetPatienceVisibility(false);
+        
         TableManager.Instance.ReleaseSeat(this);
         TableManager.Instance.RemoveCustomerFromQueue(this);
         EventBus.Raise(UIEventType.HideOrderPanel, model);
