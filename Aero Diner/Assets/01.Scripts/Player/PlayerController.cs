@@ -27,6 +27,10 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private Animator animator;
 
+    private float idleTimer = 0f;
+    private float idleBreakTime = 5f;
+    private bool hasTriggeredIdleBreak = false;
+
     private Vector2 moveInput;
     private Vector2 lastMoveDir = Vector2.down;
 
@@ -66,6 +70,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         moveInput = moveActionRef.action.ReadValue<Vector2>();
+
         Animate();
         UpdateItemSlotPosition();
         RaycastForInteractable();
@@ -80,7 +85,25 @@ public class PlayerController : MonoBehaviour
         {
             currentTarget.Interact(playerInventory, interactionType);
         }
+
+        // Idle Break 감지 로직
+        if (moveInput.sqrMagnitude < 0.01f)
+        {
+            idleTimer += Time.deltaTime;
+
+            if (!hasTriggeredIdleBreak && idleTimer >= idleBreakTime)
+            {
+                animator.SetTrigger("TriggerIdleBreak");
+                hasTriggeredIdleBreak = true;
+            }
+        }
+        else
+        {
+            idleTimer = 0f;
+            hasTriggeredIdleBreak = false;
+        }
     }
+
 
     private void FixedUpdate()
     {
