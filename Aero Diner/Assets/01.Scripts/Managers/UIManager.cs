@@ -194,10 +194,10 @@ public class UIManager : Singleton<UIManager>
                 SaveLoadManager.DeleteSave(); // 모든 저장 삭제
 
                 // 씬 전환
-                FadeManager.Instance.FadeOutAndLoadSceneWithLoading("MainScene");
+                EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(alpha:1f, duration : 1f, scene: "MainScene"));
                 break;
             case UIEventType.LoadMainScene:
-                FadeManager.Instance.FadeOutAndLoadSceneWithLoading("MainScene");
+                EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(alpha: 1f, duration: 1f, scene: "MainScene"));
                 break;
             case UIEventType.QuitGame:
 #if UNITY_EDITOR
