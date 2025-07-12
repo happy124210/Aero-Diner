@@ -210,7 +210,14 @@ public class UIManager : Singleton<UIManager>
             // === Main Scene ===
             case UIEventType.ShowMenuPanel:
                 foreach (var ui in currentSceneUIs)
-                    ui?.GetComponentInChildren<MenuPanel>(true)?.gameObject.SetActive(true);
+                {
+                    var menuPanel = ui?.GetComponentInChildren<MenuPanel>(true);
+                    if (menuPanel != null)
+                    {
+                        menuPanel.gameObject.SetActive(true);
+                        EventBus.OnBGMRequested(BGMEventType.PlayRecipeChoice);
+                    }
+                }
                 break;
             case UIEventType.UpdateMenuPanel:
                 foreach (var ui in currentSceneUIs)

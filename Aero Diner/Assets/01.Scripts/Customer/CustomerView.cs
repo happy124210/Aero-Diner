@@ -71,7 +71,7 @@ public class CustomerView : MonoBehaviour
         
         orderBubble.gameObject.SetActive(true);
         orderBubble.sprite = order.foodIcon;
-    } 
+    }
     
     public void ShowEatingEffect()
     {

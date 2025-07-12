@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 /// <summary>
 /// FoodData 관리
@@ -12,7 +12,7 @@ public class MenuManager : Singleton<MenuManager>
     [SerializeField] private List<string> todayMenuIds = new(); // 오늘 영업할 메뉴
     
     [Header("디버깅")]
-    [SerializeField] private string startMenuId;
+    [SerializeField] private string startMenuId = "f26";
     [SerializeField] private bool showDebugInfo;
 
     private List<Menu> menuDatabase = new(); // 전체 Menu타입 푸드데이터 담음
@@ -63,14 +63,16 @@ public class MenuManager : Singleton<MenuManager>
     {
         base.Awake();
         
-        InitializePlayerMenus();
-        InitializeTodayStats();
-
+        InitializeMenuDatabase();
         LoadMenuDatabase();
+    }
+
+    private void Start()
+    {
         EventBus.Raise(UIEventType.UpdateMenuPanel);
     }
 
-    private void InitializeTodayStats()
+    private void UpdateTodayStats()
     {
         todayMenuSales.Clear();
         foreach (var menuId in todayMenuIds)
@@ -82,7 +84,7 @@ public class MenuManager : Singleton<MenuManager>
     /// <summary>
     /// 메뉴 데이터베이스 초기화
     /// </summary>
-    private void InitializePlayerMenus()
+    private void InitializeMenuDatabase()
     {
         menuDatabase.Clear();
         
@@ -144,11 +146,13 @@ public class MenuManager : Singleton<MenuManager>
     public void LoadMenuDatabase()
     {
         SaveData data = SaveLoadManager.LoadGame();
-        unlockedMenuIds = data.menuDatabase.ToList().ConvertAll(menuId => menuId.ToString());
+        if (data != null)
+            unlockedMenuIds = data.menuDatabase.ToList().ConvertAll(menuId => menuId.ToString());
         
-        // 해금 데이터 없을 때 시작메뉴 해금
-        if (unlockedMenuIds.Count == 0)
+        if (unlockedMenuIds == null || unlockedMenuIds.Count == 0)
         {
+            // 해금 데이터 없을 때 시작메뉴 해금
+            if (startMenuId == null) Debug.LogError("startMenuId가 없음");
             UnlockMenu(startMenuId);
             SetMenuSelection(startMenuId, true);
             return;
@@ -177,6 +181,8 @@ public class MenuManager : Singleton<MenuManager>
             .ToList();
         
         if (showDebugInfo) Debug.Log($"[MenuManager]: 오늘 메뉴 - {todayMenuIds.Count}개");
+        
+        UpdateTodayStats();
     }
 
     /// <summary>
@@ -227,8 +233,6 @@ public class MenuManager : Singleton<MenuManager>
         {
             UnlockMenu(menu.foodData.id);
         }
-        
-        UpdateTodayMenus();
     }
     
     #endregion

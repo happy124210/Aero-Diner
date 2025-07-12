@@ -87,6 +87,7 @@ public class CustomerController : MonoBehaviour
         model.OnMenuServed += HandleMenuServed;
         model.OnEating += HandleEating;
         model.OnPaymentEnd += HandlePaymentEnd;
+        model.OnLeaving += HandleLeaving;
     }
 
     private void UnsubscribeFromModelEvents()
@@ -96,6 +97,7 @@ public class CustomerController : MonoBehaviour
         model.OnMenuServed -= HandleMenuServed;
         model.OnEating -= HandleEating;
         model.OnPaymentEnd -= HandlePaymentEnd;
+        model.OnLeaving -= HandleLeaving;
     }
     
     private void SetupNavMeshAgent(float speed)
@@ -132,7 +134,6 @@ public class CustomerController : MonoBehaviour
     private void HandleMenuServed(FoodData servedMenu)
     {
         view.SetPatienceVisibility(false);
-        // TODO: view의 happy 이펙트  부르기
         
         ChangeState(new EatingState());
         
@@ -144,7 +145,7 @@ public class CustomerController : MonoBehaviour
 
     private void HandleEating()
     {
-        // TODO: view의 먹는 중 이펙트
+        view.ShowEatingEffect();
         SetAnimationState(CustomerAnimState.Sitting);
     }
 
@@ -152,7 +153,21 @@ public class CustomerController : MonoBehaviour
     {
         view.ShowPayEffect();
         
+        GameManager.Instance.AddMoney(GetCurrentOrder().foodCost);
         RestaurantManager.Instance.IncreaseCustomerStat();
+    }
+
+    private void HandleLeaving()
+    {
+        Vector3 exit = RestaurantManager.Instance.GetExitPoint();
+        SetDestination(exit);
+        SetAnimationState(CustomerAnimState.Walking);
+        
+        view.SetPatienceVisibility(false);
+        
+        TableManager.Instance.ReleaseSeat(this);
+        TableManager.Instance.RemoveCustomerFromQueue(this);
+        EventBus.Raise(UIEventType.HideOrderPanel, model);
     }
     
     #endregion
@@ -166,7 +181,8 @@ public class CustomerController : MonoBehaviour
     public void UpdateQueuePosition(Vector3 newPosition) =>  SetDestination(newPosition);
     public void MoveToAssignedSeat() => ChangeState(new MovingToSeatState());
     public void SetAssignedTable(Table table) => model.SetAssignedTable(table);
-    public void ProcessPayment() => model.PayMoney(GetCurrentOrder().foodCost);
+    public void ProcessPayment() => model.PayMoney();
+    public void LeaveSeat() => model.LeaveSeat();
     public void ForceLeave() => ChangeState(new LeavingState());
     
     #endregion
@@ -278,7 +294,6 @@ public class CustomerController : MonoBehaviour
     public FoodData GetCurrentOrder() => model.RuntimeData.CurrentOrder;
     public Vector3 GetStopPosition() => GetAssignedTable().GetStopPoint();
     public Vector3 GetSeatPosition() => GetAssignedTable().GetSeatPoint();
-    
     public bool HasPatience() => model.RuntimeData.CurrentPatience > 0;
     private bool ShouldPatienceDecrease() => currentState != null && (currentState.Name == CustomerStateName.Ordering || currentState.Name == CustomerStateName.WaitingInLine);
     

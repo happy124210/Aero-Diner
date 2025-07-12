@@ -9,7 +9,7 @@ public class EarningsDisplay : MonoBehaviour
     [SerializeField] private float animateDuration = 0.5f;
     [SerializeField] private Color flashColor = Color.yellow;
 
-    private int currentDisplayAmount = 0;
+    private int currentDisplayAmount;
     private Color originalColor;
 
     private void Awake()
@@ -18,6 +18,13 @@ public class EarningsDisplay : MonoBehaviour
             earningText = transform.FindChild<TextMeshProUGUI>("Tmp_Earnings");
 
         originalColor = earningText.color;
+        InitializeEarnings();
+    }
+
+    public void InitializeEarnings()
+    {
+        currentDisplayAmount = GameManager.Instance.TotalEarnings;
+        earningText.text = $"{Mathf.RoundToInt(currentDisplayAmount):N0} G";
     }
 
     public void AnimateEarnings(int newAmount)

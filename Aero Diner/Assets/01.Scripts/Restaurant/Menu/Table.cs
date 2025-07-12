@@ -14,10 +14,6 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
 
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo;
-
-    
-    
-    
     private GameObject currentFoodObj;
     
     #region UnityEvents
@@ -118,7 +114,6 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
         currentFoodObj = null;
     }
     
-
     #region Public getters & methods
     
     public Vector3 GetSeatPoint() => seatPoint.position;
@@ -132,7 +127,5 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
     public FoodDisplay GetCurrentFood() => currentFoodObj?.GetComponent<FoodDisplay>();
 
     #endregion
-
-    
     
 }
