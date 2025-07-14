@@ -103,7 +103,7 @@ MonoBehaviour:
   tables: []
   seatOccupied: 
   queueStartPosition: {fileID: 99934688092184859}
-  queueSpacing: 1
+  queueSpacing: -1
   maxQueueLength: 6
   showDebugInfo: 0
 --- !u!1 &1233175867066911897

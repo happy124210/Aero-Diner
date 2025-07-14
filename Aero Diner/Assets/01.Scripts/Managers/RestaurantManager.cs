@@ -142,8 +142,9 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
     #endregion
 
+#if UNITY_EDITOR
     #region Debug Commands
-
+    
     private void OnGUI()
     {
         if (!Application.isPlaying) return;
@@ -190,8 +191,18 @@ public class RestaurantManager : Singleton<RestaurantManager>
             }
         }
         
+        if (GUILayout.Button("모든 손님 인내심 제거"))
+        {
+            if (gameRunning)
+            {
+                PoolManager.Instance.MakeAllCustomerAngry();
+            }
+        }
+        
         GUILayout.EndArea();
     }
     
     #endregion
+    
+#endif
 }

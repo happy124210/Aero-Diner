@@ -86,7 +86,7 @@ public class CustomerController : MonoBehaviour
         model.OnOrderPlaced += HandleOrderPlaced;
         model.OnMenuServed += HandleMenuServed;
         model.OnEating += HandleEating;
-        model.OnPaymentEnd += HandlePaymentEnd;
+        model.OnPayment += HandlePayment;
         model.OnLeaving += HandleLeaving;
     }
 
@@ -96,7 +96,7 @@ public class CustomerController : MonoBehaviour
         model.OnOrderPlaced -= HandleOrderPlaced;
         model.OnMenuServed -= HandleMenuServed;
         model.OnEating -= HandleEating;
-        model.OnPaymentEnd -= HandlePaymentEnd;
+        model.OnPayment -= HandlePayment;
         model.OnLeaving -= HandleLeaving;
     }
     
@@ -134,22 +134,25 @@ public class CustomerController : MonoBehaviour
     private void HandleMenuServed(FoodData servedMenu)
     {
         view.SetPatienceVisibility(false);
-        
-        ChangeState(new EatingState());
+        view.ShowServedEffect();
         
         MenuManager.Instance.OnMenuServed(servedMenu.id);
         EventBus.Raise(UIEventType.HideOrderPanel, model);
+        
+        ChangeState(new EatingState());
         
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 음식 서빙됨!");
     }
 
     private void HandleEating()
     {
-        view.ShowEatingEffect();
-        SetAnimationState(CustomerAnimState.Sitting);
+        view.ShowEatingEffect(() => 
+        {
+            ChangeState(new PayingState());
+        });
     }
 
-    private void HandlePaymentEnd()
+    private void HandlePayment()
     {
         view.ShowPayEffect();
         
@@ -173,16 +176,21 @@ public class CustomerController : MonoBehaviour
     #endregion
 
     #region 외부 연결 함수
-
-    public void SetPatienceVisibility(bool isActive) => view.SetPatienceVisibility(isActive);
+    
+    // model
     public void PlaceOrder() => model.PlaceOrder();
     public void ReceiveFood(FoodData servedMenu) =>  model.ReceiveFood(servedMenu);
     public void EatFood() => model.EatFood();
-    public void UpdateQueuePosition(Vector3 newPosition) =>  SetDestination(newPosition);
-    public void MoveToAssignedSeat() => ChangeState(new MovingToSeatState());
     public void SetAssignedTable(Table table) => model.SetAssignedTable(table);
     public void ProcessPayment() => model.PayMoney();
     public void LeaveSeat() => model.LeaveSeat();
+    
+    // view
+    public void SetPatienceVisibility(bool isActive) => view.SetPatienceVisibility(isActive);
+    public void ShowAngryEffect() => view.ShowAngryEffect();
+    
+    // state 전환
+    public void MoveToAssignedSeat() => ChangeState(new MovingToSeatState());
     public void ForceLeave() => ChangeState(new LeavingState());
     
     #endregion
@@ -231,7 +239,7 @@ public class CustomerController : MonoBehaviour
     }
     #endregion
     
-    #region Movement & Animation
+    #region Movement
     public void SetDestination(Vector3 destination)
     {
         if (!navAgent) return;
@@ -295,6 +303,7 @@ public class CustomerController : MonoBehaviour
     public Vector3 GetStopPosition() => GetAssignedTable().GetStopPoint();
     public Vector3 GetSeatPosition() => GetAssignedTable().GetSeatPoint();
     public bool HasPatience() => model.RuntimeData.CurrentPatience > 0;
+    public void EmptyPatience() => model.UpdatePatience(0f);
     private bool ShouldPatienceDecrease() => currentState != null && (currentState.Name == CustomerStateName.Ordering || currentState.Name == CustomerStateName.WaitingInLine);
     
     #endregion

@@ -50,6 +50,7 @@ public class MenuPanel : MonoBehaviour
         }
         
         EventBus.Raise(UIEventType.ShowMenuPanel);
+        EventBus.PlayBGM(BGMEventType.PlayRecipeChoice);
     }
     public void OnClickDayStartBtn()
     {
@@ -84,7 +85,7 @@ public class MenuPanel : MonoBehaviour
             });
         
         RestaurantManager.Instance.StartRestaurant();
-        EventBus.OnBGMRequested(BGMEventType.PlayMainTheme);
+        EventBus.PlayBGM(BGMEventType.PlayMainTheme);
     }
 
     private void ShowNoMenuSelectedPopup()

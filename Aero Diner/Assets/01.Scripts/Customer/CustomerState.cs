@@ -49,7 +49,7 @@ public class MovingToEntranceState : CustomerState
             return new MovingToLineState();
         }
         // 레스토랑 꽉 참
-        return new LeavingState();
+        return new AngryLeavingState();
     }
     
     public override void Exit(CustomerController customer) { }
@@ -78,7 +78,7 @@ public class MovingToLineState : CustomerState
         
         if (!customer.HasPatience())
         {
-            return new LeavingState();
+            return new AngryLeavingState();
         }
 
         return this;
@@ -108,7 +108,7 @@ public class WaitingInLineState : CustomerState
     {
         if (!customer.HasPatience())
         {
-            return new LeavingState();
+            return new AngryLeavingState();
         }
 
         return this;
@@ -127,15 +127,25 @@ public class WaitingInLineState : CustomerState
 public class MovingToSeatState : CustomerState
 {
     public override CustomerStateName Name => CustomerStateName.MovingToSeat;
+    private bool hasStartedMoving;
+
     
     public override void Enter(CustomerController customer)
     {
+        hasStartedMoving = false;
         customer.SetDestination(customer.GetStopPosition());
         customer.SetAnimationState(CustomerAnimState.Walking);
     }
     
     public override CustomerState Update(CustomerController customer)
     {
+        // NavMeshAgent 경로계산 시간 확보용
+        if (!hasStartedMoving)
+        {
+            hasStartedMoving = true;
+            return this;
+        }
+        
         if (customer.HasReachedDestination())
         {
             return new OrderingState();
@@ -168,7 +178,7 @@ public class OrderingState : CustomerState
     {
         if (!customer.HasPatience())
         {
-            return new LeavingState();
+            return new AngryLeavingState();
         }
         
         // EatingState 이동은 Controller가 진행함
@@ -197,7 +207,7 @@ public class EatingState : CustomerState
     
     public override CustomerState Update(CustomerController customer)
     {
-        return new PayingState();
+        return this;
     }
     
     public override void Exit(CustomerController customer) { }
@@ -232,22 +242,14 @@ public class PayingState : CustomerState
 
     public override void Exit(CustomerController customer)
     {
-        customer.AdjustToStopPosition();
     }
 }
 
 /// <summary>
-/// 자리 떠나기
+/// 떠나는 상태의 공통 로직을 담당하는 기본 클래스
 /// </summary>
-public class LeavingState : CustomerState
+public abstract class BaseLeavingState : CustomerState
 {
-    public override CustomerStateName Name => CustomerStateName.Leaving;
-    
-    public override void Enter(CustomerController customer)
-    {
-        customer.LeaveSeat();
-    }
-    
     public override CustomerState Update(CustomerController customer)
     {
         if (customer.HasReachedDestination())
@@ -257,6 +259,34 @@ public class LeavingState : CustomerState
         }
         return this;
     }
-    
+
     public override void Exit(CustomerController customer) { }
+}
+
+/// <summary>
+/// 자리 떠나기 (정상적인 경우)
+/// </summary>
+public class LeavingState : BaseLeavingState
+{
+    public override CustomerStateName Name => CustomerStateName.Leaving;
+
+    public override void Enter(CustomerController customer)
+    {
+        customer.AdjustToStopPosition();
+        customer.LeaveSeat();
+    }
+}
+
+/// <summary>
+/// 화나서 자리 떠나기
+/// </summary>
+public class AngryLeavingState : BaseLeavingState
+{
+    public override CustomerStateName Name => CustomerStateName.Leaving;
+
+    public override void Enter(CustomerController customer)
+    {
+        customer.ShowAngryEffect();
+        customer.LeaveSeat();
+    }
 }

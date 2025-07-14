@@ -91,7 +91,7 @@ public class OptionBtn : MonoBehaviour
         EventBus.PlaySFX(SFXType.ButtonClick);
         EventBus.Raise(UIEventType.ClosePause);
         EventBus.PlayBGM(BGMEventType.StopBGM);
-        FadeManager.Instance.FadeOutAndLoadSceneWithLoading("StartScene");
+        EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(scene: "StartScene"));
         EventBus.PlayBGM(BGMEventType.StopBGM);
     }
     public void OnClickStartGame()

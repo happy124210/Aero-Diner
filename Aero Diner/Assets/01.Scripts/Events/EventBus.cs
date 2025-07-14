@@ -1,6 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
+public enum FadeEventType
+{
+    FadeIn,                 // 밝게
+    FadeOut,                // 어둡게
+    FadeTo,                 // 지정 알파값으로
+    FadeOutAndLoadScene,    // 로딩씬을 거쳐서
+    FadeToSceneDirect       // 바로 해당 씬으로
+}
 public enum BGMEventType
 {
     PlayMainTheme,
@@ -13,17 +21,26 @@ public enum BGMEventType
 
 public enum SFXType
 {
-    PressAnyKey, ButtonClick,BlankClick, PlayerMove,
-    ItemPickup,Itemlaydown,
-    Costomerleave, CostomerOrder, CostomerGetMeal,CostomerPayed,
-    NPCscript, BuyinShop,
+    // UI
+    PressAnyKey, ButtonClick, BlankClick, 
+    
+    // 플레이어
+    PlayerMove, ItemPickup, ItemLaydown,
+    
+    // 손님
+    CustomerOrder, CustomerAngry,
+    CustomerServe, CustomerPay,
+    
+    // 요리
     DoneCooking, ThrowAway,
-    PotSFX, OvenSFX,
-    CuttingBoardSFX, MortalSFX,
-    GrinderSFX, PanSFX,
-    ChopKnifeSFX, BlenderSFX,
-    AutoGrinderSFX, RollPanSFX
+    Pot, Oven,
+    CuttingBoard, Mortal,
+    Grinder, Pan,
+    ChopKnife, Blender,
+    AutoGrinder, RollPan,
 
+    // 일상
+    NPCScript, BuyInShop,
 }
 public enum UIEventType
 {
@@ -54,6 +71,7 @@ public static class EventBus
     public static Action<SFXType> OnSFXRequested;
     public static Action<BGMEventType> OnBGMRequested;
     public static Action<UIEventType, object> OnUIEvent;
+    public static event Action<FadeEventType, FadeEventPayload> OnFadeRequested;
 
     public static void PlaySFX(SFXType type)
     {
@@ -67,6 +85,10 @@ public static class EventBus
     public static void PlayBGM(BGMEventType type)
     {
         OnBGMRequested?.Invoke(type);
+    }
+    public static void RaiseFadeEvent(FadeEventType type, FadeEventPayload payload = null)
+    {
+        OnFadeRequested?.Invoke(type, payload);
     }
     //게임 종료 시점 혹은 씬 변경 시점에 호출하여 메모리 누수 방지
     public static void ClearAll()

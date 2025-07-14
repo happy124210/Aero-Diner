@@ -2,17 +2,23 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
+using System;
+using TMPro;
 
 public class LoadingManager : MonoBehaviour
 {
     public Slider progressBar;
     private string targetScene;
+    private bool fadeCompleted = false;
+    private bool isReadyToActivate = false;
 
     private void Start()
     {
         EventBus.PlayBGM(BGMEventType.StopBGM);
+
         targetScene = LoadingTargetHolder.TargetScene;
         StartCoroutine(LoadSceneAsync());
+        EventBus.RaiseFadeEvent(FadeEventType.FadeIn, new FadeEventPayload(0f, 1f));
     }
 
     private IEnumerator LoadSceneAsync()
@@ -20,18 +26,39 @@ public class LoadingManager : MonoBehaviour
         AsyncOperation asyncOp = SceneManager.LoadSceneAsync(targetScene);
         asyncOp.allowSceneActivation = false;
 
+        // 로딩 진행도 0 ~ 0.9 동안 업데이트
         while (asyncOp.progress < 0.9f)
         {
             float progress = Mathf.Clamp01(asyncOp.progress / 0.9f);
             progressBar.value = progress;
             yield return null;
         }
-        // 로딩 완료 상태
+
+        // 로딩 완료 → 진행바 100%, 텍스트 활성화
         progressBar.value = 1f;
-        // 여기서 페이드 아웃 (어두워지기)
-        yield return StartCoroutine(FadeManager.Instance.FadeToCoroutine(1f));
-        // 다 어두워졌으면 씬 전환
-        FadeManager.Instance.SetFadePlanned(true);
+
+        // 클릭 시점까지 대기 & 전환
+        StartCoroutine(WaitForClickThenFadeOutAndActivate(asyncOp));
+    }
+    private IEnumerator WaitForClickThenFadeOutAndActivate(AsyncOperation asyncOp)
+    {
+
+        fadeCompleted = false;
+        FadeManager.OnFadeCompleted += OnFadeComplete;
+
+        EventBus.RaiseFadeEvent(
+            FadeEventType.FadeOut,
+            new FadeEventPayload(alpha: 1f, duration: 1f, autoFade: true)
+        );
+
+        yield return new WaitUntil(() => fadeCompleted);
+
+        FadeManager.OnFadeCompleted -= OnFadeComplete;
         asyncOp.allowSceneActivation = true;
+    }
+
+    private void OnFadeComplete()
+    {
+        fadeCompleted = true;
     }
 }
