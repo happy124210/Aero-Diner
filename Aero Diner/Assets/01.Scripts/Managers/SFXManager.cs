@@ -16,11 +16,12 @@ public class SFXManager : Singleton<SFXManager>
     [SerializeField] private AudioSource audioSource;
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo;
+
     protected override void Awake()
     {
         base.Awake();
         DontDestroyOnLoad(gameObject);
-        
+
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
 
@@ -95,6 +96,53 @@ public class SFXManager : Singleton<SFXManager>
     {
         return audioSource != null ? audioSource.volume : 0f;
     }
+
+    public void PlayLoop(SFXType type)
+    {
+        if (sfxDict.TryGetValue(type, out var clip))
+        {
+            if (clip == null)
+            {
+                Debug.LogWarning($"[SFXManager] {type}의 클립이 비어 있음");
+                return;
+            }
+
+            if (audioSource == null)
+            {
+                audioSource = gameObject.AddComponent<AudioSource>();
+                audioSource.loop = true;
+                audioSource.playOnAwake = false;
+            }
+
+            if (audioSource.isPlaying && audioSource.clip == clip)
+            {
+                return; // 이미 재생 중이면 무시
+            }
+
+            audioSource.clip = clip;
+            audioSource.Play();
+
+            if (showDebugInfo)
+                Debug.Log($"[SFXManager] 루프 사운드 재생: {type}");
+        }
+        else
+        {
+            Debug.LogWarning($"[SFXManager] 루프 요청 실패: 등록되지 않은 SFXType: {type}");
+        }
+    }
+
+    public void StopLoop()
+    {
+        if (audioSource != null && audioSource.isPlaying)
+        {
+            audioSource.Stop();
+            audioSource.clip = null;
+
+            if (showDebugInfo)
+                Debug.Log("[SFXManager] 루프 사운드 정지");
+        }
+    }
+
     //호출 예시
     //SFXEventBus.PlaySFX(SFXType.ItemPickup);
 }
