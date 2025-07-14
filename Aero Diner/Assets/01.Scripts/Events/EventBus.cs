@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public enum FadeEventType
 {
@@ -34,10 +35,10 @@ public enum SFXType
     // 요리
     DoneCooking, ThrowAway,
     Pot, Oven,
-    CuttingBoard, Mortal,
-    Grinder, Pan,
-    ChopKnife, Blender,
-    AutoGrinder, RollPan,
+    CuttingBoard, Grinding,
+    Grater, FryingPan,
+    AutoCutter, Blender,
+    AutoGrater, RollPan,
 
     // 일상
     NPCScript, BuyInShop,
@@ -75,6 +76,7 @@ public static class EventBus
 
     public static void PlaySFX(SFXType type)
     {
+        Debug.Log($"[SFX DEBUG] 요청된 SFXType: {type} | 호출 스택:\n{Environment.StackTrace}");
         OnSFXRequested?.Invoke(type);
     }
     public static void Raise(UIEventType eventType, object payload = null)

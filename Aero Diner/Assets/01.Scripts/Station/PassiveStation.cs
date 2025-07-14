@@ -125,7 +125,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         if (currentIngredients.Count == 0)
         {
             currentCookingTime = cookingTime;
-            UpdateCookingProgress();
             if (showDebugInfo) Debug.Log("재료가 없어 조리 타이머가 리셋되었습니다.");
             return;
         }
@@ -156,8 +155,14 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         // 실제 상호작용이 'Use'일 때만 처리
         if (interactionType == InteractionType.Use)
         {
-            if (!isCooking) return;
+            // 조리 중이 아니면 이제 시작
+            if (!isCooking)
+            {
+                StartCooking(); // 여기서 UI/SFX 1프레임 뒤 실행 포함
+                return;
+            }
 
+            // 이미 조리 중이면 진행
             currentCookingTime -= Time.deltaTime;
             UpdateCookingProgress();
 
@@ -200,16 +205,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         RegisterIngredient(data);     // 재료 등록 및 선택 처리
         UpdateCandidateRecipes();     // 현재 재료 조합으로 가능한 레시피 탐색
 
-        // 모든 필요한 재료가 충족되었는지 확인 후 조리 시작
-        if (cookedIngredient != null && cookedIngredient.ingredients.All(id => currentIngredients.Contains(id)))
-        {
-            StartCooking(); // 타이머 초기화
-        }
-        else
-        {
-            isCooking = false;
-            if (showDebugInfo) Debug.Log("조건에 맞는 레시피가 부족하여 대기 중...");
-        }
+        isCooking = false;
     }
 
     /// <summary>
@@ -347,6 +343,12 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     {
         currentCookingTime = cookingTime;
         isCooking = true;
+
+        if (stationData != null && stationData.workType == WorkType.Passive)
+        {
+            EventBus.PlaySFX(StationSFXResolver.GetSFXFromStationData(stationData));
+        }
+
         UpdateCookingProgress();
     }
 
@@ -366,6 +368,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         if (showDebugInfo) Debug.Log($"조리 완료: '{cookedIngredient.foodName}' 생성");
 
         GameObject result = VisualObjectFactory.CreateIngredientVisual(transform, cookedIngredient.foodName, cookedIngredient.foodIcon);
+        EventBus.PlaySFX(SFXType.DoneCooking);
 
         if (result)
         {
