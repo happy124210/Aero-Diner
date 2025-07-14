@@ -1,30 +1,12 @@
 ﻿using UnityEngine;
 using DG.Tweening;
+using System.Threading.Tasks;
 
 public class Fader : MonoBehaviour
 {
-    [SerializeField] private CanvasGroup blackPanelGroup; // 알파 조절용
-    [SerializeField] private float holdTime = 0.5f;
-    [SerializeField] private float fadeDuration = 1f;
-
-    private void Start()
+    private async void Start()
     {
-        PlayFadeIn();
-    }
-
-    public void PlayFadeIn()
-    {
-        blackPanelGroup.alpha = 1f;
-        blackPanelGroup.blocksRaycasts = true;
-        blackPanelGroup.interactable = true;
-
-        Sequence seq = DOTween.Sequence();
-        seq.AppendInterval(holdTime); // 3초 유지
-        seq.Append(blackPanelGroup.DOFade(0f, fadeDuration)); // 1초 페이드
-        seq.OnComplete(() =>
-        {
-            blackPanelGroup.blocksRaycasts = false;
-            blackPanelGroup.interactable = false;
-        });
+        await Task.Delay(1000);
+        EventBus.RaiseFadeEvent(FadeEventType.FadeIn, new FadeEventPayload(alpha: 0f, duration: 1f));
     }
 }

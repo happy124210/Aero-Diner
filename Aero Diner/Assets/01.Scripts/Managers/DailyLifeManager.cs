@@ -9,6 +9,7 @@ public class DailyLifeManager : Singleton<DailyLifeManager>
     }
     private void Start()
     {
+        EventBus.RaiseFadeEvent(FadeEventType.FadeIn, new FadeEventPayload(0f, 1f));
         StartCoroutine(ResendEarningsAfterDelay());
     }
     
@@ -20,6 +21,6 @@ public class DailyLifeManager : Singleton<DailyLifeManager>
     public void OnOpenButtonClick()
     {
         EventBus.PlaySFX(SFXType.ButtonClick);
-        FadeManager.Instance.FadeOutAndLoadSceneWithLoading("MainScene");
+        EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(alpha: 1f, duration: 1f, scene: "MainScene"));
     }
 }

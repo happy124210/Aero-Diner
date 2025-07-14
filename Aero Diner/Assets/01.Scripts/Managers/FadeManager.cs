@@ -1,65 +1,85 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System;
 using System.Collections;
 
 public class FadeManager : Singleton<FadeManager>
 {
     public Image fadeImage;
     public float defaultFadeTime = 1f;
+
     private Coroutine currentFade;
 
-    private bool isFadePlanned = false;
+    public static event Action OnFadeCompleted;
 
     protected override void Awake()
     {
         base.Awake();
         DontDestroyOnLoad(gameObject);
+
         if (fadeImage == null)
         {
-            Debug.LogError("FadeImage가 연결되지 않았습니다.");
+            Debug.LogError("[FadeManager] fadeImage가 연결되지 않았습니다.");
             enabled = false;
             return;
         }
 
-        // 초기화: 완전 검은 화면
+        // 씬 진입 시 검은 화면으로 시작
         Color color = fadeImage.color;
         color.a = 1f;
         fadeImage.color = color;
-
-        //최초 진입일 경우 페이드 인
-        if (SceneManager.GetActiveScene().name == "StartScene" || SceneManager.GetActiveScene().buildIndex == 0)
-        {
-            FadeTo(0f, defaultFadeTime);
-        }
     }
+
     private void OnEnable()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        EventBus.OnFadeRequested += HandleFadeRequest;
     }
 
     private void OnDisable()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        EventBus.OnFadeRequested -= HandleFadeRequest;
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void HandleFadeRequest(FadeEventType type, FadeEventPayload payload)
     {
-        if (isFadePlanned && fadeImage != null)
+        float alpha = payload?.targetAlpha ?? 1f;
+        float duration = payload?.duration ?? -1f;
+        string sceneName = payload?.targetScene;
+
+        switch (type)
         {
-            FadeTo(0f, defaultFadeTime);
+            case FadeEventType.FadeIn:
+                FadeTo(0f, duration);
+                break;
+            case FadeEventType.FadeOut:
+                FadeTo(1f, duration);
+                break;
+            case FadeEventType.FadeTo:
+                FadeTo(alpha, duration);
+                break;
+            case FadeEventType.FadeOutAndLoadScene:
+                if (!string.IsNullOrEmpty(sceneName))
+                    StartCoroutine(FadeOutAndLoadScene(sceneName));
+                break;
+            case FadeEventType.FadeToSceneDirect:
+                if (!string.IsNullOrEmpty(sceneName))
+                    StartCoroutine(FadeAndLoadScene(sceneName));
+                break;
         }
-
-
-        //무조건 false로 리셋
-        isFadePlanned = false;
     }
 
     public void FadeTo(float targetAlpha, float duration = -1f)
     {
+        if (Mathf.Approximately(fadeImage.color.a, targetAlpha))
+            return;
+
         if (currentFade != null)
             StopCoroutine(currentFade);
-        if (duration < 0f) duration = defaultFadeTime;
+
+        if (duration < 0f)
+            duration = defaultFadeTime;
+
         currentFade = StartCoroutine(FadeRoutine(targetAlpha, duration));
     }
 
@@ -80,31 +100,24 @@ public class FadeManager : Singleton<FadeManager>
         color.a = targetAlpha;
         fadeImage.color = color;
         currentFade = null;
+
+        OnFadeCompleted?.Invoke();
     }
 
-    public void FadeOutAndLoadSceneWithLoading(string targetScene)
+    private IEnumerator FadeOutAndLoadScene(string targetScene)
     {
-        isFadePlanned = true; //페이드 계획 설정
-        StartCoroutine(FadeAndLoadLoadingScene(targetScene));
-    }
+        yield return StartCoroutine(FadeRoutine(1f, defaultFadeTime));
 
-    private IEnumerator FadeAndLoadLoadingScene(string targetScene)
-    {
-        yield return StartCoroutine(FadeToCoroutine(1f)); // 어두워질 때까지 대기
+        //다음에 로드할 씬 이름 설정
         LoadingTargetHolder.TargetScene = targetScene;
+
+        //로딩 씬으로 전환
         SceneManager.LoadScene("LoadingScene");
     }
 
-    public IEnumerator FadeToCoroutine(float targetAlpha, float duration = -1f)
+    private IEnumerator FadeAndLoadScene(string targetScene)
     {
-        if (currentFade != null)
-            StopCoroutine(currentFade);
-        if (duration < 0f) duration = defaultFadeTime;
-
-        yield return StartCoroutine(FadeRoutine(targetAlpha, duration));
-    }
-    public void SetFadePlanned(bool planned)
-    {
-        isFadePlanned = planned;
+        yield return StartCoroutine(FadeRoutine(1f, defaultFadeTime));
+        SceneManager.LoadScene(targetScene);
     }
 }

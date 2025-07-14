@@ -29,6 +29,7 @@ public class GameEntry : MonoBehaviour
             SaveLoadManager.SaveGame(defaultData);
             ApplySettingsFromSave(defaultData);
         }
+        EventBus.RaiseFadeEvent(FadeEventType.FadeIn, new FadeEventPayload(0f, 1f));
     }
     private void ApplySettingsFromSave(SaveData data)
     {

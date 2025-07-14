@@ -77,6 +77,6 @@ public class ResultPanel : MonoBehaviour
     public void OnNextButtonClick()
     {
         EventBus.PlaySFX(SFXType.ButtonClick);
-        FadeManager.Instance.FadeOutAndLoadSceneWithLoading("DayScene");
+        EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(scene: "DayScene"));
     }
 }

@@ -981,6 +981,22 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6784009097632759853, guid: d684d1accbf6def42a8a8e4beff2e4fe, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7415852557579463741, guid: d684d1accbf6def42a8a8e4beff2e4fe, type: 3}
+      propertyPath: sceneUIPrefabs.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7415852557579463741, guid: d684d1accbf6def42a8a8e4beff2e4fe, type: 3}
+      propertyPath: sceneUIPrefabs.Array.data[2].sceneName
+      value: DayScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 7415852557579463741, guid: d684d1accbf6def42a8a8e4beff2e4fe, type: 3}
+      propertyPath: sceneUIPrefabs.Array.data[2].uiPrefabs.Array.data[0].m_AssetGUID
+      value: 4f04806a308443a428151319d7678021
+      objectReference: {fileID: 0}
     - target: {fileID: 8051697394139384181, guid: d684d1accbf6def42a8a8e4beff2e4fe, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
