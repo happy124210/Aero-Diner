@@ -142,8 +142,9 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
     #endregion
 
+#if UNITY_EDITOR
     #region Debug Commands
-
+    
     private void OnGUI()
     {
         if (!Application.isPlaying) return;
@@ -202,4 +203,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
     }
     
     #endregion
+    
+#endif
 }
