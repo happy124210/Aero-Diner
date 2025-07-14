@@ -10,7 +10,7 @@ public class TableManager : Singleton<TableManager>
     
     [Header("줄서기 설정")]
     [SerializeField] private Transform queueStartPosition;
-    [SerializeField] private float queueSpacing = 1f;
+    [SerializeField] private float queueSpacing = -1f;
     [SerializeField] private int maxQueueLength = 6;
     
     [Header("Debug")]
@@ -187,7 +187,7 @@ public class TableManager : Singleton<TableManager>
         }
         else
         {
-            Debug.LogError($"[TableManager]: 좌석 할당 실패함 ..");
+            Debug.LogError("[TableManager]: 좌석 할당 실패함 ..");
         }
     }
 
@@ -247,7 +247,7 @@ public class TableManager : Singleton<TableManager>
         }
         
         Vector3 basePosition = queueStartPosition.position;
-        return basePosition + queueStartPosition.right * (queueIndex * queueSpacing); // Vector3.left 대신 Transform의 축을 사용
+        return basePosition + queueStartPosition.right * (queueIndex * queueSpacing);
     }
 
     public Vector3 GetCustomerQueuePosition(CustomerController customer)
