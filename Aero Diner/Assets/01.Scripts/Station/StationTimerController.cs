@@ -8,7 +8,7 @@ public class StationTimerController : MonoBehaviour
     [SerializeField] private List<Sprite> sprites;
 
     private Image TimerImg;
-    private int currentIdx = -1;
+    //private int currentIdx = -1;
 
     private void Awake()
     {

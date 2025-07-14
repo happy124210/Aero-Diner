@@ -473,6 +473,19 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         return false;
     }
 
+    public static void AttachFoodIcon(GameObject obj, FoodData foodData)
+    {
+        if (obj == null || foodData == null) return;
+
+        var renderer = obj.GetComponent<SpriteRenderer>();
+        if (renderer != null)
+        {
+            renderer.sprite = foodData.foodIcon;
+            if (foodData.foodIcon == null)
+                renderer.color = Color.gray;
+        }
+    }
+
     /// <summary>
     /// 플레이어가 결과물을 픽업할 때 호출됨
     /// </summary>
@@ -527,37 +540,40 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             FoodData food = placedIngredientList.Last(); // 마지막 재료 꺼냄
 
             GameObject result = placedIngredients.Last();
-            if (result)
-            {
-                // 플레이어의 아이템 슬롯 위치 가져오기
-                Transform itemSlot = GameObject.FindGameObjectWithTag("Player")?.transform.Find("Itemslot");
 
-                if (itemSlot != null)
-                {
-                    result.transform.SetParent(itemSlot);
-                    result.transform.localPosition = Vector3.zero;
-                    result.transform.localRotation = Quaternion.identity;
+            //if (result)
+            //{
+            //    // 플레이어의 아이템 슬롯 위치 가져오기
+            //    Transform itemSlot = GameObject.FindGameObjectWithTag("Player")?.transform.Find("Itemslot");
 
-                    // 충돌 제거 및 중력 비활성화
-                    var rb = result.GetComponent<Rigidbody2D>();
-                    if (rb) rb.simulated = false;
+            //    if (itemSlot != null)
+            //    {
+            //        result.transform.SetParent(itemSlot);
+            //        result.transform.localPosition = Vector3.zero;
+            //        result.transform.localRotation = Quaternion.identity;
 
-                    var col = result.GetComponent<Collider2D>();
-                    if (col) col.enabled = false;
+            //        // 충돌 제거 및 중력 비활성화
+            //        var rb = result.GetComponent<Rigidbody2D>();
+            //        if (rb) rb.simulated = false;
 
-                    // 식별 정보
-                    var display = result.AddComponent<FoodDisplay>();
-                    display.foodData = food;
-                    display.originPlace = this;
+            //        var col = result.GetComponent<Collider2D>();
+            //        if (col) col.enabled = false;
 
-                    if (showDebugInfo)
-                        Debug.Log($"[HandlePickup] 플레이어 손에 재료 '{food.foodName}' 생성 및 이동 완료");
-                }
-                else
-                {
-                    if (showDebugInfo) Debug.LogWarning("[HandlePickup] Player 또는 Itemslot을 찾을 수 없습니다.");
-                }
-            }
+            //        // 식별 정보
+            //        var display = result.AddComponent<FoodDisplay>();
+            //        display.foodData = food;
+            //        display.originPlace = this;
+
+            //        if (showDebugInfo)
+            //            Debug.Log($"[HandlePickup] 플레이어 손에 재료 '{food.foodName}' 생성 및 이동 완료");
+            //    }
+            //    else
+            //    {
+            //        if (showDebugInfo) Debug.LogWarning("[HandlePickup] Player 또는 Itemslot을 찾을 수 없습니다.");
+            //    }
+            //}
+
+            AttachFoodIcon(result, food);
 
             // 아이콘 복구
             iconDisplay?.ShowSlot(food.foodType);
