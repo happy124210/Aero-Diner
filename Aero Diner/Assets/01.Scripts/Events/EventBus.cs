@@ -40,6 +40,9 @@ public enum SFXType
     AutoCutter, Blender,
     AutoGrater, RollPan,
 
+    // 수동 조리
+    PlayCooking, StopCook,
+
     // 일상
     NPCScript, BuyInShop,
 }
@@ -74,6 +77,8 @@ public static class EventBus
     public static Action<UIEventType, object> OnUIEvent;
     public static event Action<FadeEventType, FadeEventPayload> OnFadeRequested;
     private static AudioSource cookingLoopSource;
+    public static event Action<SFXType> OnLoopSFXRequested;
+    public static event Action OnStopLoopSFXRequested;
 
     public static void PlaySFX(SFXType type)
     {
@@ -100,13 +105,13 @@ public static class EventBus
         OnUIEvent = null;
     }
 
-    public static void PlayCookingLoop(SFXType type)
+    public static void PlayLoopSFX(SFXType type)
     {
-        SFXManager.Instance.PlayLoop(type);
+        OnLoopSFXRequested?.Invoke(type);
     }
 
-    public static void StopCookingLoop()
+    public static void StopLoopSFX()
     {
-        SFXManager.Instance.StopLoop();
+        OnStopLoopSFXRequested?.Invoke();
     }
 }
