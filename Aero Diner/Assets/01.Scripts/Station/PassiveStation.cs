@@ -158,7 +158,13 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             // 조리 중이 아니면 이제 시작
             if (!isCooking)
             {
-                StartCooking(); // 여기서 UI/SFX 1프레임 뒤 실행 포함
+                if (stationData != null && stationData.workType == WorkType.Passive)
+                {
+                    var sfx = StationSFXResolver.GetSFXFromStationData(stationData);
+                    EventBus.PlayCookingLoop(sfx);
+                }
+
+                StartCooking();
                 return;
             }
 
@@ -175,7 +181,13 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         }
         else
         {
-            if (showDebugInfo) Debug.Log("[PassiveStation] InteractionType.Use가 아니므로 무시됩니다.");
+            // J키에서 손을 뗀 경우
+            if (isCooking)
+            {
+                isCooking = false; // 시간 정지
+                EventBus.StopCookingLoop(); // 사운드 정지
+                if (showDebugInfo) Debug.Log("[PassiveStation] 조리 중단됨");
+            }
         }
     }
 
@@ -344,11 +356,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         currentCookingTime = cookingTime;
         isCooking = true;
 
-        if (stationData != null && stationData.workType == WorkType.Passive)
-        {
-            EventBus.PlaySFX(StationSFXResolver.GetSFXFromStationData(stationData));
-        }
-
         UpdateCookingProgress();
     }
 
@@ -396,6 +403,8 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             timerController.gameObject.SetActive(false);
             timerVisible = false;
         }
+
+        EventBus.StopCookingLoop();
     }
 
     /// <summary>
@@ -422,8 +431,11 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// </summary>
     private void UpdateCookingProgress()
     {
-        if (!isCooking) return;
-
+        if (!isCooking)
+        {
+            EventBus.StopCookingLoop();
+            return;
+        }
         // 처음 조리 시작 시, 타이머 UI가 보이도록 설정
         if (!timerVisible)
         {

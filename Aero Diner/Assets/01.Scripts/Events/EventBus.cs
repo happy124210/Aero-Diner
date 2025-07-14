@@ -73,6 +73,7 @@ public static class EventBus
     public static Action<BGMEventType> OnBGMRequested;
     public static Action<UIEventType, object> OnUIEvent;
     public static event Action<FadeEventType, FadeEventPayload> OnFadeRequested;
+    private static AudioSource cookingLoopSource;
 
     public static void PlaySFX(SFXType type)
     {
@@ -97,5 +98,15 @@ public static class EventBus
     {
         OnSFXRequested = null;
         OnUIEvent = null;
+    }
+
+    public static void PlayCookingLoop(SFXType type)
+    {
+        SFXManager.Instance.PlayLoop(type);
+    }
+
+    public static void StopCookingLoop()
+    {
+        SFXManager.Instance.StopLoop();
     }
 }
