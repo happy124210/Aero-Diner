@@ -197,7 +197,7 @@ public class EatingState : CustomerState
     
     public override CustomerState Update(CustomerController customer)
     {
-        return new PayingState();
+        return this;
     }
     
     public override void Exit(CustomerController customer) { }
@@ -232,7 +232,6 @@ public class PayingState : CustomerState
 
     public override void Exit(CustomerController customer)
     {
-        customer.AdjustToStopPosition();
     }
 }
 
@@ -263,6 +262,7 @@ public class LeavingState : BaseLeavingState
 
     public override void Enter(CustomerController customer)
     {
+        customer.AdjustToStopPosition();
         customer.LeaveSeat();
     }
 }

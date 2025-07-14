@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,7 +32,6 @@ public class CustomerView : MonoBehaviour
     private static readonly int IsSitting = Animator.StringToHash("IsSitting");
     private static readonly int MoveX = Animator.StringToHash("MoveX");
     private static readonly int MoveY = Animator.StringToHash("MoveY");
-    private static readonly int DoPay = Animator.StringToHash("DoPay");
     private static readonly int DoHappy = Animator.StringToHash("DoHappy");
     private static readonly int DoAngry = Animator.StringToHash("DoAngry");
 
@@ -85,16 +85,15 @@ public class CustomerView : MonoBehaviour
         if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 서빙 이펙트");
     }
     
-    public void ShowEatingEffect()
+    public void ShowEatingEffect(Action onComplete)
     {
-        StartCoroutine(EatingEffectCoroutine());
+        StartCoroutine(EatingEffectCoroutine(onComplete));
         if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 먹는중 이펙트");
     }
 
     public void ShowPayEffect()
     {
         // TODO: 결제 이펙트 표시
-        emoteAnimator.SetTrigger(DoPay);
         if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 결제 완료 이펙트");
     }
 
@@ -129,13 +128,14 @@ public class CustomerView : MonoBehaviour
 
     #region Coroutines
 
-    private IEnumerator EatingEffectCoroutine()
+    private IEnumerator EatingEffectCoroutine(Action onComplete)
     {
         //eatingEffect.SetActive(true);
 
         yield return new WaitForSeconds(2f);
         
         //eatingEffect.SetActive(false);
+        onComplete?.Invoke();
     }
 
     #endregion
@@ -147,6 +147,32 @@ public class CustomerView : MonoBehaviour
 
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
+        ResetAnimators();
     }
+    
+    private void ResetAnimators()
+    {
+        if (animator)
+        {
+            // 몸 애니메이션 초기화
+            animator.SetBool(IsWalking, false);
+            animator.SetBool(IsSitting, false);
+        }
+
+        if (emoteAnimator)
+        {
+            // 감정표현 초기화
+            foreach (var param in emoteAnimator.parameters)
+            {
+                if (param.type == AnimatorControllerParameterType.Trigger)
+                {
+                    emoteAnimator.ResetTrigger(param.name);
+                }
+            }
+
+            emoteAnimator.Play("default", 0, 0f);
+        }
+    }
+    
     #endregion
 }

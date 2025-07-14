@@ -146,8 +146,10 @@ public class CustomerController : MonoBehaviour
 
     private void HandleEating()
     {
-        view.ShowEatingEffect();
-        SetAnimationState(CustomerAnimState.Sitting);
+        view.ShowEatingEffect(() => 
+        {
+            ChangeState(new PayingState());
+        });
     }
 
     private void HandlePayment()
