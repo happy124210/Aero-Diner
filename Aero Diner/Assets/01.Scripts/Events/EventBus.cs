@@ -21,17 +21,26 @@ public enum BGMEventType
 
 public enum SFXType
 {
-    PressAnyKey, ButtonClick,BlankClick, PlayerMove,
-    ItemPickup,Itemlaydown,
-    Costomerleave, CostomerOrder, CostomerGetMeal,CostomerPayed,
-    NPCscript, BuyinShop,
+    // UI
+    PressAnyKey, ButtonClick, BlankClick, 
+    
+    // 플레이어
+    PlayerMove, ItemPickup, ItemLaydown,
+    
+    // 손님
+    CustomerOrder, CustomerAngry,
+    CustomerServe, CustomerPay,
+    
+    // 요리
     DoneCooking, ThrowAway,
-    PotSFX, OvenSFX,
-    CuttingBoardSFX, MortalSFX,
-    GrinderSFX, PanSFX,
-    ChopKnifeSFX, BlenderSFX,
-    AutoGrinderSFX, RollPanSFX
+    Pot, Oven,
+    CuttingBoard, Mortal,
+    Grinder, Pan,
+    ChopKnife, Blender,
+    AutoGrinder, RollPan,
 
+    // 일상
+    NPCScript, BuyInShop,
 }
 public enum UIEventType
 {

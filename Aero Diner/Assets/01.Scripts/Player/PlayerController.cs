@@ -129,7 +129,7 @@ public class PlayerController : MonoBehaviour
                 animator.SetTrigger("PutDown");
 
                 playerInventory.DropItem(currentTarget);
-                EventBus.OnSFXRequested(SFXType.Itemlaydown);
+                EventBus.OnSFXRequested(SFXType.ItemLaydown);
             }
         }
         else
