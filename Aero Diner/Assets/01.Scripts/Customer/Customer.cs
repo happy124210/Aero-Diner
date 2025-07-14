@@ -11,7 +11,7 @@ public class Customer
     public event Action<FoodData> OnOrderPlaced; // 주문함
     public event Action<FoodData> OnMenuServed; // 서빙됨
     public event Action OnEating; // 먹기 시작함
-    public event Action OnPaymentEnd; // 결제 끝남
+    public event Action OnPayment; // 결제 끝남
     public event Action OnLeaving; // 자리에서 일어남
     
     // 데이터 컨테이너
@@ -59,15 +59,14 @@ public class Customer
     public void EatFood()
     {
         runtimeData.AssignedTable.GetCurrentFood().isPickupable = false;
+        OnEating?.Invoke();
         
         // TODO: 먹는 코루틴
-        
-        OnEating?.Invoke();
     }
 
     public void PayMoney()
     {
-        OnPaymentEnd?.Invoke();
+        OnPayment?.Invoke();
     }
 
     public void LeaveSeat()

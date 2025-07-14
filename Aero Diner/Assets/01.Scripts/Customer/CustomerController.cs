@@ -86,7 +86,7 @@ public class CustomerController : MonoBehaviour
         model.OnOrderPlaced += HandleOrderPlaced;
         model.OnMenuServed += HandleMenuServed;
         model.OnEating += HandleEating;
-        model.OnPaymentEnd += HandlePaymentEnd;
+        model.OnPayment += HandlePayment;
         model.OnLeaving += HandleLeaving;
     }
 
@@ -96,7 +96,7 @@ public class CustomerController : MonoBehaviour
         model.OnOrderPlaced -= HandleOrderPlaced;
         model.OnMenuServed -= HandleMenuServed;
         model.OnEating -= HandleEating;
-        model.OnPaymentEnd -= HandlePaymentEnd;
+        model.OnPayment -= HandlePayment;
         model.OnLeaving -= HandleLeaving;
     }
     
@@ -149,7 +149,7 @@ public class CustomerController : MonoBehaviour
         SetAnimationState(CustomerAnimState.Sitting);
     }
 
-    private void HandlePaymentEnd()
+    private void HandlePayment()
     {
         view.ShowPayEffect();
         
