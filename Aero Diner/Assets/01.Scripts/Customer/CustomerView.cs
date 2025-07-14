@@ -66,7 +66,6 @@ public class CustomerView : MonoBehaviour
         if (!customerUI || !patienceTimer) return;
 
         customerUI.gameObject.SetActive(isActive);
-        orderBubble.gameObject.SetActive(isActive);
         patienceTimer.gameObject.SetActive(isActive);
     }
 
@@ -76,6 +75,13 @@ public class CustomerView : MonoBehaviour
         
         orderBubble.gameObject.SetActive(true);
         orderBubble.sprite = order.foodIcon;
+    }
+    
+    public void HideOrderBubble()
+    {
+        if (!orderBubble) return;
+        
+        orderBubble.gameObject.SetActive(false);
     }
 
     public void ShowServedEffect()
@@ -144,6 +150,7 @@ public class CustomerView : MonoBehaviour
     public void Cleanup()
     {
         SetPatienceVisibility(false);
+        HideOrderBubble();
 
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
