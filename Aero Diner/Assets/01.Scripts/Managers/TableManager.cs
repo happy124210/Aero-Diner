@@ -155,7 +155,7 @@ public class TableManager : Singleton<TableManager>
         Vector3 queuePosition = CalculateQueuePosition(waitingQueue.Count - 1);
         customerQueuePositions[customer] = queuePosition;
         
-        customer.UpdateQueuePosition(queuePosition);
+        customer.SetDestination(queuePosition);
         
         if (showDebugInfo) 
             Debug.Log($"[TableManager]: {customer.name} 대기열 {waitingQueue.Count}번째에 추가");
@@ -231,7 +231,7 @@ public class TableManager : Singleton<TableManager>
             Vector3 newPosition = CalculateQueuePosition(i);
             customerQueuePositions[customer] = newPosition;
             
-            customer.UpdateQueuePosition(newPosition);
+            customer.SetDestination(newPosition);
         }
     }
 

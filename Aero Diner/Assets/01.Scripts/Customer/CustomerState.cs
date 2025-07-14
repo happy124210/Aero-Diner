@@ -49,7 +49,7 @@ public class MovingToEntranceState : CustomerState
             return new MovingToLineState();
         }
         // 레스토랑 꽉 참
-        return new LeavingState();
+        return new AngryLeavingState();
     }
     
     public override void Exit(CustomerController customer) { }
@@ -78,7 +78,7 @@ public class MovingToLineState : CustomerState
         
         if (!customer.HasPatience())
         {
-            return new LeavingState();
+            return new AngryLeavingState();
         }
 
         return this;
@@ -108,7 +108,7 @@ public class WaitingInLineState : CustomerState
     {
         if (!customer.HasPatience())
         {
-            return new LeavingState();
+            return new AngryLeavingState();
         }
 
         return this;
@@ -168,7 +168,7 @@ public class OrderingState : CustomerState
     {
         if (!customer.HasPatience())
         {
-            return new LeavingState();
+            return new AngryLeavingState();
         }
         
         // EatingState 이동은 Controller가 진행함
@@ -237,17 +237,10 @@ public class PayingState : CustomerState
 }
 
 /// <summary>
-/// 자리 떠나기
+/// 떠나는 상태의 공통 로직을 담당하는 기본 클래스
 /// </summary>
-public class LeavingState : CustomerState
+public abstract class BaseLeavingState : CustomerState
 {
-    public override CustomerStateName Name => CustomerStateName.Leaving;
-    
-    public override void Enter(CustomerController customer)
-    {
-        customer.LeaveSeat();
-    }
-    
     public override CustomerState Update(CustomerController customer)
     {
         if (customer.HasReachedDestination())
@@ -257,6 +250,33 @@ public class LeavingState : CustomerState
         }
         return this;
     }
-    
+
     public override void Exit(CustomerController customer) { }
+}
+
+/// <summary>
+/// 자리 떠나기 (정상적인 경우)
+/// </summary>
+public class LeavingState : BaseLeavingState
+{
+    public override CustomerStateName Name => CustomerStateName.Leaving;
+
+    public override void Enter(CustomerController customer)
+    {
+        customer.LeaveSeat();
+    }
+}
+
+/// <summary>
+/// 화나서 자리 떠나기
+/// </summary>
+public class AngryLeavingState : BaseLeavingState
+{
+    public override CustomerStateName Name => CustomerStateName.Leaving;
+
+    public override void Enter(CustomerController customer)
+    {
+        customer.ShowAngryEffect();
+        customer.LeaveSeat();
+    }
 }

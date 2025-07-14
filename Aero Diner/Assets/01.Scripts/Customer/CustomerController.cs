@@ -174,16 +174,21 @@ public class CustomerController : MonoBehaviour
     #endregion
 
     #region 외부 연결 함수
-
-    public void SetPatienceVisibility(bool isActive) => view.SetPatienceVisibility(isActive);
+    
+    // model
     public void PlaceOrder() => model.PlaceOrder();
     public void ReceiveFood(FoodData servedMenu) =>  model.ReceiveFood(servedMenu);
     public void EatFood() => model.EatFood();
-    public void UpdateQueuePosition(Vector3 newPosition) =>  SetDestination(newPosition);
-    public void MoveToAssignedSeat() => ChangeState(new MovingToSeatState());
     public void SetAssignedTable(Table table) => model.SetAssignedTable(table);
     public void ProcessPayment() => model.PayMoney();
     public void LeaveSeat() => model.LeaveSeat();
+    
+    // view
+    public void SetPatienceVisibility(bool isActive) => view.SetPatienceVisibility(isActive);
+    public void ShowAngryEffect() => view.ShowAngryEffect();
+    
+    // state 전환
+    public void MoveToAssignedSeat() => ChangeState(new MovingToSeatState());
     public void ForceLeave() => ChangeState(new LeavingState());
     
     #endregion
