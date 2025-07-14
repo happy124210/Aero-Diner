@@ -45,7 +45,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b2cc641af7ecf745bfc8458171eb00b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneBGMs: []
+  bgmClips:
+  - type: 2
+    bgmClip: {fileID: 8300000, guid: 99ef6a7bb1cdc6c4098671040f1b8deb, type: 3}
+  - type: 4
+    bgmClip: {fileID: 8300000, guid: 3044c8afc424b514ca348ed535cc182d, type: 3}
+  - type: 0
+    bgmClip: {fileID: 8300000, guid: 396e6a06b9f50a641b4dda76d128778a, type: 3}
+  - type: 3
+    bgmClip: {fileID: 8300000, guid: ef31131f89dca6048805bf9577cd44e3, type: 3}
+  - type: 1
+    bgmClip: {fileID: 8300000, guid: 70bfd6683d25b034b973d8469a3ec62c, type: 3}
 --- !u!82 &7791191475152574374
 AudioSource:
   m_ObjectHideFlags: 0

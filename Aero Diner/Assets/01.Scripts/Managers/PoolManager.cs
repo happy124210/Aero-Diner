@@ -23,6 +23,9 @@ public class PoolManager : Singleton<PoolManager>
     private Dictionary<CustomerData, Transform> customerPoolParents = new();
     private readonly List<CustomerController> activeCustomers = new();
     
+    [Header("Debug Info")]
+    [SerializeField] private bool showDebugInfo;
+    
     #region properties
     
     public CustomerData[] CustomerTypes => customerTypes;
@@ -88,7 +91,7 @@ public class PoolManager : Singleton<PoolManager>
         );
         
         customerPools[customerData] = newPool;
-        Debug.Log($"[PoolManager] {customerData.customerName} 손님 풀 생성 완료");
+        if (showDebugInfo) Debug.Log($"[PoolManager] {customerData.customerName} 손님 풀 생성 완료");
     }
 
     private CustomerController CreateNewCustomer(CustomerData customerData)
@@ -187,7 +190,7 @@ public class PoolManager : Singleton<PoolManager>
             customer.ForceLeave();
         }
         
-        Debug.Log($"[PoolManager] 모든 활성 손님({customersToReturn.Count}명) 쫓아내기");
+        if (showDebugInfo) Debug.Log($"[PoolManager] 모든 활성 손님({customersToReturn.Count}명) 쫓아내기");
     }
 
     public void MakeAllCustomerAngry()
@@ -199,7 +202,7 @@ public class PoolManager : Singleton<PoolManager>
             customer.EmptyPatience();
         }
         
-        Debug.Log($"[PoolManager] 모든 활성 손님({customersToReturn.Count}명) 화나게 하기");
+        if (showDebugInfo) Debug.Log($"[PoolManager] 모든 활성 손님({customersToReturn.Count}명) 화나게 하기");
     }
 
     #endregion

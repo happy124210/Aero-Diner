@@ -550,6 +550,7 @@ MonoBehaviour:
   maxPoolSize: 40
   customerPrefab: {fileID: 6986737310238590579, guid: abe38c57c0dcb1946ae8e552e8cb90e0, type: 3}
   customerTypes: []
+  showDebugInfo: 0
 --- !u!114 &1529134110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -564,7 +565,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   todayMenuIds: []
   startMenuId: f26
-  showDebugInfo: 1
+  showDebugInfo: 0
 --- !u!1001 &4342467002388702369
 PrefabInstance:
   m_ObjectHideFlags: 0

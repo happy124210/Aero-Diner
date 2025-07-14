@@ -296,8 +296,14 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
     {
         currentCookingTime = cookingTime;
         isCooking = true;
-        UpdateCookingProgress();
 
+        if (stationData != null && stationData.workType == WorkType.Automatic)
+        {
+            var sfx = StationSFXResolver.GetSFXFromStationData(stationData);
+            EventBus.PlayCookingLoop(sfx);
+        }
+
+        UpdateCookingProgress();
     }
 
     /// <summary>
@@ -316,6 +322,8 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         if (showDebugInfo) Debug.Log($"조리 완료: '{cookedIngredient.foodName}' 생성");
 
         GameObject result = VisualObjectFactory.CreateIngredientVisual(transform, cookedIngredient.foodName, cookedIngredient.foodIcon);
+        EventBus.PlaySFX(SFXType.DoneCooking);
+
         if (result)
         {
             var display = result.AddComponent<FoodDisplay>();
@@ -341,6 +349,8 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
             timerController.gameObject.SetActive(false);
             timerVisible = false;
         }
+
+        EventBus.StopCookingLoop();
     }
 
     /// <summary>
