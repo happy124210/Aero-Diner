@@ -300,7 +300,7 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         if (stationData != null && stationData.workType == WorkType.Automatic)
         {
             var sfx = StationSFXResolver.GetSFXFromStationData(stationData);
-            EventBus.PlayCookingLoop(sfx);
+            EventBus.PlayLoopSFX(SFXType.PlayCooking);
         }
 
         UpdateCookingProgress();
@@ -349,8 +349,7 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
             timerController.gameObject.SetActive(false);
             timerVisible = false;
         }
-
-        EventBus.StopCookingLoop();
+        EventBus.StopLoopSFX();
     }
 
     /// <summary>

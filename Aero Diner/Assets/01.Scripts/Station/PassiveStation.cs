@@ -161,7 +161,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
                 if (stationData != null && stationData.workType == WorkType.Passive)
                 {
                     var sfx = StationSFXResolver.GetSFXFromStationData(stationData);
-                    EventBus.PlayCookingLoop(sfx);
+                    EventBus.PlayLoopSFX(SFXType.PlayCooking);
                 }
 
                 StartCooking();
@@ -185,7 +185,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             if (isCooking)
             {
                 isCooking = false; // 시간 정지
-                EventBus.StopCookingLoop(); // 사운드 정지
+                EventBus.StopLoopSFX(); // 사운드 정지
                 if (showDebugInfo) Debug.Log("[PassiveStation] 조리 중단됨");
             }
         }
@@ -404,7 +404,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             timerVisible = false;
         }
 
-        EventBus.StopCookingLoop();
+        EventBus.StopLoopSFX();
     }
 
     /// <summary>
@@ -433,7 +433,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     {
         if (!isCooking)
         {
-            EventBus.StopCookingLoop();
+            EventBus.StopLoopSFX();
             return;
         }
         // 처음 조리 시작 시, 타이머 UI가 보이도록 설정
@@ -522,6 +522,10 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
     /// </summary>
     private IEnumerator HandlePickup()
     {
+        FoodData food = placedIngredientList.Last(); // 마지막 재료 꺼냄
+
+        GameObject result = placedIngredients.Last();
+
         if (cookedIngredient != null)
         {
             // 마지막으로 사용된 재료의 타입으로 아이콘 복구
@@ -542,6 +546,8 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
                 // placedIngredientList에서도 제거
                 placedIngredientList.RemoveAt(placedIngredientList.Count - 1);
 
+                AttachFoodIcon(result, food);
+
                 // 레시피 후보 다시 계산
                 UpdateCandidateRecipes();
             }
@@ -552,10 +558,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
 
         if (placedIngredientList.Count > 0)
         {
-            FoodData food = placedIngredientList.Last(); // 마지막 재료 꺼냄
-
-            GameObject result = placedIngredients.Last();
-
             //if (result)
             //{
             //    // 플레이어의 아이템 슬롯 위치 가져오기
