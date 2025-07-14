@@ -19,6 +19,7 @@ public class CustomerView : MonoBehaviour
     [SerializeField] private Canvas customerUI;
     [SerializeField] private Image orderBubble;
     [SerializeField] private Image patienceTimer;
+    [SerializeField] private ParticleSystem coinEffect;
     
     [Header("Animation Components")]
     [SerializeField] private Animator animator;
@@ -36,6 +37,18 @@ public class CustomerView : MonoBehaviour
     private static readonly int DoAngry = Animator.StringToHash("DoAngry");
 
     #region Initialization
+
+    private void Awake()
+    {
+        customerUI = transform.FindChild<Canvas>("Canvas_Customer");
+        orderBubble = transform.FindChild<Image>("Img_OrderBubble");
+        patienceTimer = transform.FindChild<Image>("Img_PatienceTimer");
+        coinEffect = transform.FindChild<ParticleSystem>("Particle");
+        
+        animator = transform.FindChild<Animator>("Visual");
+        emoteAnimator = transform.FindChild<Animator>("Emote");
+    }
+
     public void Initialize()
     {
         SetupComponents();
@@ -99,7 +112,7 @@ public class CustomerView : MonoBehaviour
 
     public void ShowPayEffect()
     {
-        // TODO: 결제 이펙트 표시
+        coinEffect.Play();
         if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 결제 완료 이펙트");
     }
 
