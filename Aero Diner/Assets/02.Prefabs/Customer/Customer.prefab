@@ -500,7 +500,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   navAgent: {fileID: 7523355939073356595}
-  showDebugInfo: 1
+  showDebugInfo: 0
 --- !u!114 &7711696206720905983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -518,7 +518,7 @@ MonoBehaviour:
   patienceTimer: {fileID: 3569666337585117268}
   animator: {fileID: 6136237864647170741}
   emoteAnimator: {fileID: 8683234359486255252}
-  showDebugInfo: 1
+  showDebugInfo: 0
 --- !u!195 &7523355939073356595
 NavMeshAgent:
   m_ObjectHideFlags: 0

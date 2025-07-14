@@ -77,7 +77,7 @@ public static class EventBus
 
     public static void PlaySFX(SFXType type)
     {
-        Debug.Log($"[SFX DEBUG] 요청된 SFXType: {type} | 호출 스택:\n{Environment.StackTrace}");
+        //Debug.Log($"[SFX DEBUG] 요청된 SFXType: {type} | 호출 스택:\n{Environment.StackTrace}");
         OnSFXRequested?.Invoke(type);
     }
     public static void Raise(UIEventType eventType, object payload = null)

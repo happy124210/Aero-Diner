@@ -236,70 +236,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: BGMManager
       objectReference: {fileID: 0}
-    - target: {fileID: 5339830336096347765, guid: 33bbc8b9f6d24974281ea71ef7508cf4, type: 3}
-      propertyPath: bgmClips.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5339830336096347765, guid: 33bbc8b9f6d24974281ea71ef7508cf4, type: 3}
-      propertyPath: sceneBGMs.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5339830336096347765, guid: 33bbc8b9f6d24974281ea71ef7508cf4, type: 3}
-      propertyPath: bgmClips.Array.data[0].type
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5339830336096347765, guid: 33bbc8b9f6d24974281ea71ef7508cf4, type: 3}
-      propertyPath: bgmClips.Array.data[1].type
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5339830336096347765, guid: 33bbc8b9f6d24974281ea71ef7508cf4, type: 3}
-      propertyPath: bgmClips.Array.data[2].type
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5339830336096347765, guid: 33bbc8b9f6d24974281ea71ef7508cf4, type: 3}
-      propertyPath: bgmClips.Array.data[3].type
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5339830336096347765, guid: 33bbc8b9f6d24974281ea71ef7508cf4, type: 3}
-      propertyPath: bgmClips.Array.data[4].type
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5339830336096347765, guid: 33bbc8b9f6d24974281ea71ef7508cf4, type: 3}
-      propertyPath: bgmClips.Array.data[0].bgmClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 99ef6a7bb1cdc6c4098671040f1b8deb, type: 3}
-    - target: {fileID: 5339830336096347765, guid: 33bbc8b9f6d24974281ea71ef7508cf4, type: 3}
-      propertyPath: bgmClips.Array.data[1].bgmClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 3044c8afc424b514ca348ed535cc182d, type: 3}
-    - target: {fileID: 5339830336096347765, guid: 33bbc8b9f6d24974281ea71ef7508cf4, type: 3}
-      propertyPath: bgmClips.Array.data[2].bgmClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 396e6a06b9f50a641b4dda76d128778a, type: 3}
-    - target: {fileID: 5339830336096347765, guid: 33bbc8b9f6d24974281ea71ef7508cf4, type: 3}
-      propertyPath: bgmClips.Array.data[3].bgmClip
-      value: 
-      objectReference: {fileID: 8300000, guid: ef31131f89dca6048805bf9577cd44e3, type: 3}
-    - target: {fileID: 5339830336096347765, guid: 33bbc8b9f6d24974281ea71ef7508cf4, type: 3}
-      propertyPath: bgmClips.Array.data[4].bgmClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 70bfd6683d25b034b973d8469a3ec62c, type: 3}
-    - target: {fileID: 5339830336096347765, guid: 33bbc8b9f6d24974281ea71ef7508cf4, type: 3}
-      propertyPath: sceneBGMs.Array.data[0].bgmClip
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5339830336096347765, guid: 33bbc8b9f6d24974281ea71ef7508cf4, type: 3}
-      propertyPath: sceneBGMs.Array.data[1].bgmClip
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5339830336096347765, guid: 33bbc8b9f6d24974281ea71ef7508cf4, type: 3}
-      propertyPath: sceneBGMs.Array.data[0].sceneName
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5339830336096347765, guid: 33bbc8b9f6d24974281ea71ef7508cf4, type: 3}
-      propertyPath: sceneBGMs.Array.data[1].sceneName
-      value: 
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -765,10 +701,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6127106076098399162, guid: e3855422d71835d4a98171c3335a085e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8981872372140789260, guid: e3855422d71835d4a98171c3335a085e, type: 3}
-      propertyPath: showDebugInfo
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
