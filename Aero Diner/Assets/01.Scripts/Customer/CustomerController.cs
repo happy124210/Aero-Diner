@@ -303,6 +303,7 @@ public class CustomerController : MonoBehaviour
     public Vector3 GetStopPosition() => GetAssignedTable().GetStopPoint();
     public Vector3 GetSeatPosition() => GetAssignedTable().GetSeatPoint();
     public bool HasPatience() => model.RuntimeData.CurrentPatience > 0;
+    public void EmptyPatience() => model.UpdatePatience(0f);
     private bool ShouldPatienceDecrease() => currentState != null && (currentState.Name == CustomerStateName.Ordering || currentState.Name == CustomerStateName.WaitingInLine);
     
     #endregion
