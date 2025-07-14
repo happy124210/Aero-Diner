@@ -96,8 +96,6 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
 
     private void Start()
     {
-        UpdateCookingProgress();
-
         if (stationData != null && stationData.slotDisplays != null)
         {
             var types = stationData.slotDisplays.ConvertAll(s => s.foodType);
@@ -164,7 +162,14 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
                     EventBus.PlayLoopSFX(SFXType.PlayCooking);
                 }
 
-                StartCooking();
+                // 기존에 저장된 시간이 없으면만 초기화
+                if (Mathf.Approximately(currentCookingTime, cookingTime) || currentCookingTime <= 0f)
+                {
+                    currentCookingTime = cookingTime;
+                }
+
+                isCooking = true;
+                StartCooking(); // 이 함수 내부도 currentCookingTime 초기화하는 부분이 있다면 제거
                 return;
             }
 
@@ -182,7 +187,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
         else
         {
             // J키에서 손을 뗀 경우
-            if (isCooking)
+            if (interactionType == InteractionType.Stop)
             {
                 isCooking = false; // 시간 정지
                 EventBus.StopLoopSFX(); // 사운드 정지
@@ -353,8 +358,12 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
 
     private void StartCooking()
     {
+    if (Mathf.Approximately(currentCookingTime, cookingTime) || currentCookingTime <= 0f)
+    {
         currentCookingTime = cookingTime;
-        isCooking = true;
+    }
+
+    isCooking = true;
 
         UpdateCookingProgress();
     }
@@ -443,7 +452,7 @@ public class PassiveStation : MonoBehaviour, IInteractable, IPlaceableStation
             timerVisible = true;
         }
 
-        currentCookingTime -= Time.deltaTime;
+        //currentCookingTime -= Time.deltaTime;
 
         timerController.UpdateTimer(currentCookingTime, cookingTime);
 
