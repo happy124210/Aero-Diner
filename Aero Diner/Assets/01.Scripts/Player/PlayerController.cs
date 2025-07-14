@@ -86,21 +86,22 @@ public class PlayerController : MonoBehaviour
             currentTarget.Interact(playerInventory, interactionType);
         }
 
-        // Idle Break 감지 로직
         if (moveInput.sqrMagnitude < 0.01f)
         {
             idleTimer += Time.deltaTime;
 
-            if (!hasTriggeredIdleBreak && idleTimer >= idleBreakTime)
+            if (idleTimer >= idleBreakTime)
             {
+                int random = Random.Range(0, 2); // 0 또는 1
+                animator.SetInteger("IdleBreakIndex", random);
                 animator.SetTrigger("TriggerIdleBreak");
-                hasTriggeredIdleBreak = true;
+
+                idleTimer = 0f; // 다시 5초 후 실행 가능
             }
         }
         else
         {
             idleTimer = 0f;
-            hasTriggeredIdleBreak = false;
         }
     }
 
