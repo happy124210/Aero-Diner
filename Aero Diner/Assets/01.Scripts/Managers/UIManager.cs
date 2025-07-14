@@ -107,12 +107,14 @@ public class UIManager : Singleton<UIManager>
                 }
             }
         }
+        Debug.Log($"[UIManager] {sceneName} 씬 UI 로딩 시작, 프리팹 수: {assetRefs.Count}");
         if (sceneName == "StartScene")
         {
             foreach (var ui in currentSceneUIs)
             {
                 var blinker = ui.GetComponentInChildren<PressAnyKeyBlinker>(true);
                 if (blinker != null && !blinker.gameObject.activeSelf)
+                    Debug.Log($"[UIManager] PressAnyKeyBlinker 찾음: {blinker.name}, activeSelf: {blinker.gameObject.activeSelf}");
                 {
                     blinker.gameObject.SetActive(true);
                     if (showDebugInfo)
