@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +21,7 @@ public class CustomerView : MonoBehaviour
     
     [Header("Animation Components")]
     [SerializeField] private Animator animator;
+    [SerializeField] private Animator emoteAnimator;
 
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo;
@@ -29,7 +31,10 @@ public class CustomerView : MonoBehaviour
     private static readonly int IsSitting = Animator.StringToHash("IsSitting");
     private static readonly int MoveX = Animator.StringToHash("MoveX");
     private static readonly int MoveY = Animator.StringToHash("MoveY");
-    
+    private static readonly int DoPay = Animator.StringToHash("DoPay");
+    private static readonly int DoHappy = Animator.StringToHash("DoHappy");
+    private static readonly int DoAngry = Animator.StringToHash("DoAngry");
+
     #region Initialization
     public void Initialize()
     {
@@ -76,24 +81,27 @@ public class CustomerView : MonoBehaviour
     public void ShowServedEffect()
     {
         EventBus.OnSFXRequested(SFXType.CustomerServe);
-        if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 먹는중 이펙트");
+        emoteAnimator.SetTrigger(DoHappy);
+        if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 서빙 이펙트");
     }
     
     public void ShowEatingEffect()
     {
-        // TODO: 먹는중 이펙트 표시
+        StartCoroutine(EatingEffectCoroutine());
         if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 먹는중 이펙트");
     }
 
     public void ShowPayEffect()
     {
         // TODO: 결제 이펙트 표시
+        emoteAnimator.SetTrigger(DoPay);
         if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 결제 완료 이펙트");
     }
 
     public void ShowAngryEffect()
     {
         EventBus.OnSFXRequested(SFXType.CustomerAngry);
+        emoteAnimator.SetTrigger(DoAngry);
         if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 결제 완료 이펙트");
     }
     
@@ -121,7 +129,14 @@ public class CustomerView : MonoBehaviour
 
     #region Coroutines
 
-    
+    private IEnumerator EatingEffectCoroutine()
+    {
+        //eatingEffect.SetActive(true);
+
+        yield return new WaitForSeconds(2f);
+        
+        //eatingEffect.SetActive(false);
+    }
 
     #endregion
     

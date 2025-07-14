@@ -232,7 +232,7 @@ public class CustomerController : MonoBehaviour
     }
     #endregion
     
-    #region Movement & Animation
+    #region Movement
     public void SetDestination(Vector3 destination)
     {
         if (!navAgent) return;
