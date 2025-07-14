@@ -4,6 +4,23 @@ Unity로 개발한 Top-down 시점의 레스토랑 타이쿤 게임입니다. �
 
 (에디터를 실행할 때에는 `StartScene` 부터 시작하시면 됩니다.)
 
+## 🧑🏻‍🍳 플레이 방법
+
+함께 요리사가 되어보아요!
+게임시작 후 영업에 사용할 메뉴를 선택합니다. (유니티 에디터에서는 전체 해금 치트를 사용할 수 있습니다)
+<img width="1922" height="1080" alt="스크린샷 2025-07-14 170016" src="https://github.com/user-attachments/assets/a7ff62d4-cd6b-409a-a6d8-87725c511ba7" />
+
+<기본 설정 키>
+* 이동 : WASD
+* 설비 상호작용 : J
+* 아이템 : 들기 / 내려놓기 K
+
+기본 제공되는 토마토 파스타 레시피북을 공개합니다! 후반기에 개발될 일상 파트에서는 더 다양한 레시피를 해금할 수 있습니다!
+
+<img width="709" height="654" alt="image" src="https://github.com/user-attachments/assets/99065b8f-d119-4d08-a09a-bf180f4a2c5c" />
+
+
+
 ## ✨ 주요 기능
 
 ### 🧑‍🍳 요리 & 레시피 시스템
@@ -127,6 +144,22 @@ public class PoolManager : Singleton<PoolManager>
     public Poolable Get(string key) { /* ... */ }
     public void Release(Poolable obj) { /* ... */ }
 }
+```
+
+### Event-Driven (Pub/Sub) Pattern
+
+EventBus를 통해 시스템 간의 직접적인 참조를 없애고 결합도를 낮췄습니다. 한 시스템이 이벤트를 발생시키면, 해당 이벤트를 구독하는 다른 시스템들이 반응합니다.
+
+```csharp
+// 01.Scripts/Events/EventBus.cs
+public class EventBus
+{
+    // ... (이벤트 딕셔너리 및 구독/발행 메소드)
+}
+
+// 사용 예시
+EventBus.OnSFXRequested(SFXType.CustomeServe);
+EventBus.OnBGMRequested(BGMEventType.PlayMainTheme);
 ```
 
 ## 🎨 씬 구성
