@@ -60,8 +60,6 @@ public class Customer
     {
         runtimeData.AssignedTable.GetCurrentFood().isPickupable = false;
         OnEating?.Invoke();
-        
-        // TODO: 먹는 코루틴
     }
 
     public void PayMoney()

@@ -134,11 +134,12 @@ public class CustomerController : MonoBehaviour
     private void HandleMenuServed(FoodData servedMenu)
     {
         view.SetPatienceVisibility(false);
-        
-        ChangeState(new EatingState());
+        view.ShowServedEffect();
         
         MenuManager.Instance.OnMenuServed(servedMenu.id);
         EventBus.Raise(UIEventType.HideOrderPanel, model);
+        
+        ChangeState(new EatingState());
         
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 음식 서빙됨!");
     }

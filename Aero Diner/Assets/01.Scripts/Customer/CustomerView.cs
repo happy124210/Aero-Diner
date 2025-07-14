@@ -72,6 +72,12 @@ public class CustomerView : MonoBehaviour
         orderBubble.gameObject.SetActive(true);
         orderBubble.sprite = order.foodIcon;
     }
+
+    public void ShowServedEffect()
+    {
+        EventBus.OnSFXRequested(SFXType.CustomerServe);
+        if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 먹는중 이펙트");
+    }
     
     public void ShowEatingEffect()
     {
@@ -82,7 +88,12 @@ public class CustomerView : MonoBehaviour
     public void ShowPayEffect()
     {
         // TODO: 결제 이펙트 표시
-        
+        if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 결제 완료 이펙트");
+    }
+
+    public void ShowAngryEffect()
+    {
+        EventBus.OnSFXRequested(SFXType.CustomerAngry);
         if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 결제 완료 이펙트");
     }
     
@@ -105,6 +116,12 @@ public class CustomerView : MonoBehaviour
         animator.SetFloat(MoveX, direction.x);
         animator.SetFloat(MoveY, direction.y);
     }
+
+    #endregion
+
+    #region Coroutines
+
+    
 
     #endregion
     
