@@ -53,7 +53,7 @@ public class GameManager : Singleton<GameManager>
     {
         totalEarnings += amount;
         EventBus.Raise(UIEventType.UpdateEarnings, TotalEarnings);
-        EventBus.OnSFXRequested(SFXType.CustomerPayed);
+        EventBus.OnSFXRequested(SFXType.CustomerPay);
     }
     
     #endregion
