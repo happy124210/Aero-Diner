@@ -99,10 +99,10 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
             if (showDebugInfo) Debug.LogWarning("stationData 또는 slotDisplays가 할당되지 않았습니다.");
         }
 
-            if (timerController != null)
-    {
-        timerController.gameObject.SetActive(false); // 외부에서 꺼줌
-    }
+        if (timerController != null)
+        {
+             timerController.gameObject.SetActive(false); // 외부에서 꺼줌
+        }
 
         ResetCookingTimer();
     }
@@ -421,6 +421,19 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
         return false;
     }
 
+    public static void AttachFoodIcon(GameObject obj, FoodData foodData)
+    {
+        if (obj == null || foodData == null) return;
+
+        var renderer = obj.GetComponent<SpriteRenderer>();
+        if (renderer != null)
+        {
+            renderer.sprite = foodData.foodIcon;
+            if (foodData.foodIcon == null)
+                renderer.color = Color.gray;
+        }
+    }
+
     /// <summary>
     /// 플레이어가 결과물을 픽업할 때 호출됨
     /// </summary>
@@ -442,7 +455,7 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
 
     private IEnumerator HandlePickup()
     {
-        if (cookedIngredient != null)
+        if (cookedIngredient = null)
         {
             // 마지막으로 사용된 재료의 타입으로 아이콘 복구
             if (placedIngredientList.Count > 0)
@@ -480,32 +493,34 @@ public class AutomaticStation : MonoBehaviour, IInteractable, IPlaceableStation
                 // 플레이어의 아이템 슬롯 위치 가져오기
                 Transform itemSlot = GameObject.FindGameObjectWithTag("Player")?.transform.Find("Itemslot");
 
-                if (itemSlot != null)
-                {
-                    result.transform.SetParent(itemSlot);
-                    result.transform.localPosition = Vector3.zero;
-                    result.transform.localRotation = Quaternion.identity;
+                //if (itemSlot = null)
+                //{
+                //    result.transform.SetParent(itemSlot);
+                //    result.transform.localPosition = Vector3.zero;
+                //    result.transform.localRotation = Quaternion.identity;
 
-                    // 충돌 제거 및 중력 비활성화
-                    var rb = result.GetComponent<Rigidbody2D>();
-                    if (rb) rb.simulated = false;
+                //    // 충돌 제거 및 중력 비활성화
+                //    var rb = result.GetComponent<Rigidbody2D>();
+                //    if (rb) rb.simulated = false;
 
-                    var col = result.GetComponent<Collider2D>();
-                    if (col) col.enabled = false;
+                //    var col = result.GetComponent<Collider2D>();
+                //    if (col) col.enabled = false;
 
-                    // 식별 정보
-                    var display = result.AddComponent<FoodDisplay>();
-                    display.foodData = food;
-                    display.originPlace = this;
+                //    // 식별 정보
+                //    var display = result.AddComponent<FoodDisplay>();
+                //    display.foodData = food;
+                //    display.originPlace = this;
 
-                    if (showDebugInfo)
-                        Debug.Log($"[HandlePickup] 플레이어 손에 재료 '{food.foodName}' 생성 및 이동 완료");
-                }
-                else
-                {
-                    if (showDebugInfo) Debug.Log("[HandlePickup] Player 또는 Itemslot을 찾을 수 없습니다.");
-                }
+                //    if (showDebugInfo)
+                //        Debug.Log($"[HandlePickup] 플레이어 손에 재료 '{food.foodName}' 생성 및 이동 완료");
+                //}
+                //else
+                //{
+                //    if (showDebugInfo) Debug.Log("[HandlePickup] Player 또는 Itemslot을 찾을 수 없습니다.");
+                //}
             }
+
+            AttachFoodIcon(result, food);
 
             // 아이콘 복구
             iconDisplay?.ShowSlot(food.foodType);

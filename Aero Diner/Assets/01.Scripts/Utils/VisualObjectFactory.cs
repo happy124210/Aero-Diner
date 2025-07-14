@@ -61,7 +61,7 @@ public static class VisualObjectFactory
 
         var renderer = obj.AddComponent<SpriteRenderer>();
         renderer.sortingOrder = 110;
-        renderer.sprite = icon;
+        renderer.sprite = null;
         if (icon == null) renderer.color = Color.gray;
 
         var collider = obj.AddComponent<CircleCollider2D>();
