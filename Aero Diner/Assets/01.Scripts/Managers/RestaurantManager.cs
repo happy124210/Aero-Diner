@@ -190,6 +190,14 @@ public class RestaurantManager : Singleton<RestaurantManager>
             }
         }
         
+        if (GUILayout.Button("모든 손님 인내심 제거"))
+        {
+            if (gameRunning)
+            {
+                PoolManager.Instance.MakeAllCustomerAngry();
+            }
+        }
+        
         GUILayout.EndArea();
     }
     
