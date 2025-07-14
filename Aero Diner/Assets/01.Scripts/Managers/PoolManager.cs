@@ -177,6 +177,7 @@ public class PoolManager : Singleton<PoolManager>
         }
     }
     
+    // 디버그용
     public void ReturnAllActiveCustomers()
     {
         var customersToReturn = new List<CustomerController>(activeCustomers);
@@ -187,6 +188,18 @@ public class PoolManager : Singleton<PoolManager>
         }
         
         Debug.Log($"[PoolManager] 모든 활성 손님({customersToReturn.Count}명) 쫓아내기");
+    }
+
+    public void MakeAllCustomerAngry()
+    {
+        var customersToReturn = new List<CustomerController>(activeCustomers);
+        
+        foreach (var customer in customersToReturn)
+        {
+            customer.EmptyPatience();
+        }
+        
+        Debug.Log($"[PoolManager] 모든 활성 손님({customersToReturn.Count}명) 화나게 하기");
     }
 
     #endregion

@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +22,7 @@ public class CustomerView : MonoBehaviour
     
     [Header("Animation Components")]
     [SerializeField] private Animator animator;
+    [SerializeField] private Animator emoteAnimator;
 
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo;
@@ -29,7 +32,9 @@ public class CustomerView : MonoBehaviour
     private static readonly int IsSitting = Animator.StringToHash("IsSitting");
     private static readonly int MoveX = Animator.StringToHash("MoveX");
     private static readonly int MoveY = Animator.StringToHash("MoveY");
-    
+    private static readonly int DoHappy = Animator.StringToHash("DoHappy");
+    private static readonly int DoAngry = Animator.StringToHash("DoAngry");
+
     #region Initialization
     public void Initialize()
     {
@@ -61,7 +66,6 @@ public class CustomerView : MonoBehaviour
         if (!customerUI || !patienceTimer) return;
 
         customerUI.gameObject.SetActive(isActive);
-        orderBubble.gameObject.SetActive(isActive);
         patienceTimer.gameObject.SetActive(isActive);
     }
 
@@ -73,16 +77,36 @@ public class CustomerView : MonoBehaviour
         orderBubble.sprite = order.foodIcon;
     }
     
-    public void ShowEatingEffect()
+    public void HideOrderBubble()
     {
-        // TODO: 먹는중 이펙트 표시
+        if (!orderBubble) return;
+        
+        orderBubble.gameObject.SetActive(false);
+    }
+
+    public void ShowServedEffect()
+    {
+        EventBus.OnSFXRequested(SFXType.CustomerServe);
+        emoteAnimator.SetTrigger(DoHappy);
+        if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 서빙 이펙트");
+    }
+    
+    public void ShowEatingEffect(Action onComplete)
+    {
+        StartCoroutine(EatingEffectCoroutine(onComplete));
         if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 먹는중 이펙트");
     }
 
     public void ShowPayEffect()
     {
         // TODO: 결제 이펙트 표시
-        
+        if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 결제 완료 이펙트");
+    }
+
+    public void ShowAngryEffect()
+    {
+        EventBus.OnSFXRequested(SFXType.CustomerAngry);
+        emoteAnimator.SetTrigger(DoAngry);
         if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 결제 완료 이펙트");
     }
     
@@ -107,14 +131,55 @@ public class CustomerView : MonoBehaviour
     }
 
     #endregion
+
+    #region Coroutines
+
+    private IEnumerator EatingEffectCoroutine(Action onComplete)
+    {
+        //eatingEffect.SetActive(true);
+
+        yield return new WaitForSeconds(2f);
+        
+        //eatingEffect.SetActive(false);
+        onComplete?.Invoke();
+    }
+
+    #endregion
     
     #region Cleanup
     public void Cleanup()
     {
         SetPatienceVisibility(false);
+        HideOrderBubble();
 
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
+        ResetAnimators();
     }
+    
+    private void ResetAnimators()
+    {
+        if (animator)
+        {
+            // 몸 애니메이션 초기화
+            animator.SetBool(IsWalking, false);
+            animator.SetBool(IsSitting, false);
+        }
+
+        if (emoteAnimator)
+        {
+            // 감정표현 초기화
+            foreach (var param in emoteAnimator.parameters)
+            {
+                if (param.type == AnimatorControllerParameterType.Trigger)
+                {
+                    emoteAnimator.ResetTrigger(param.name);
+                }
+            }
+
+            emoteAnimator.Play("default", 0, 0f);
+        }
+    }
+    
     #endregion
 }
