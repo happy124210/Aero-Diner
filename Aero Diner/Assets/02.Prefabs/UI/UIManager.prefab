@@ -54,10 +54,6 @@ MonoBehaviour:
       m_EditorAssetChanged: 0
   - sceneName: MainScene
     uiPrefabs:
-    - m_AssetGUID: 4f04806a308443a428151319d7678021
-      m_SubObjectName: 
-      m_SubObjectType: 
-      m_EditorAssetChanged: 0
     - m_AssetGUID: de334962f68c61b4baa232cdd60515cf
       m_SubObjectName: 
       m_SubObjectType: 
@@ -78,9 +74,14 @@ MonoBehaviour:
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
+    - m_AssetGUID: 4f04806a308443a428151319d7678021
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
   - sceneName: DayScene
     uiPrefabs:
     - m_AssetGUID: 4f04806a308443a428151319d7678021
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
+  coinEffectPrefab: {fileID: 8738984073455820570, guid: 43685c00d625eaf4b985adcbaf28b2c1, type: 3}
