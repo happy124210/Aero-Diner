@@ -24,7 +24,7 @@ public enum SFXType
 {
     // UI
     PressAnyKey, ButtonClick, BlankClick, 
-    
+
     // 플레이어
     PlayerMove, ItemPickup, ItemLaydown,
     
@@ -67,7 +67,9 @@ public enum UIEventType
     ShowMenuPanel, UpdateMenuPanel, HideMenuPanel, 
     ShowResultPanel, HideResultPanel, 
     ShowInventory, HideInventory,
-    ShowOrderPanel, HideOrderPanel
+    ShowOrderPanel, HideOrderPanel,
+    //NPC
+    CoinPopEffect,
 }
 
 public static class EventBus
