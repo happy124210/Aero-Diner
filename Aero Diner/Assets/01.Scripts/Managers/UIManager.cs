@@ -8,13 +8,13 @@ public class UIManager : Singleton<UIManager>
 {
     //이 리스트에 있는 UI는 모두 비활성화 상태로 시작.
     private readonly System.Type[] initiallyDisabledTypes = new System.Type[]
-{
-    typeof(ResultPanel),
-    typeof(MenuPanel3),
-    typeof(MenuPanel4),
-    typeof(Inventory),
-    // 필요한 타입 추가 가능
-};
+    {
+        typeof(ResultPanel),
+        typeof(MenuPanel3),
+        typeof(MenuPanel4),
+        typeof(Inventory),
+        // 필요한 타입 추가 가능
+    };
 
     private List<IUIEventHandler> uiHandlers = new();
     [System.Serializable]
@@ -127,14 +127,15 @@ public class UIManager : Singleton<UIManager>
         // 공통 핸들러 (항상 등록)
         uiHandlers.Add(new OverSceneUIHandler());
 
-        // 씬별 핸들러
-        if (sceneName == "StartScene")
+        switch (sceneName)
         {
-            uiHandlers.Add(new StartSceneUIHandler(currentSceneUIs));
-        }
-        else if (sceneName == "MainScene")
-        {
-            uiHandlers.Add(new MainSceneUIHandler(currentSceneUIs));
+            case "StartScene":
+                uiHandlers.Add(new StartSceneUIHandler(currentSceneUIs));
+                break;
+            
+            case "MainScene":
+                uiHandlers.Add(new MainSceneUIHandler(currentSceneUIs));
+                break;
         }
 
         // 필요 시 다른 씬별 핸들러도 추가

@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1276376156344605749
 RectTransform:
   m_ObjectHideFlags: 0
@@ -235,6 +235,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f3eaf9be1a13e74fa29316f3144f712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blackPanelGroup: {fileID: 486998939802280404}
-  holdTime: 1
-  fadeDuration: 1

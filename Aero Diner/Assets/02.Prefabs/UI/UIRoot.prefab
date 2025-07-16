@@ -2889,6 +2889,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5835531376637685965}
+  - component: {fileID: 7324208261829492328}
   m_Layer: 0
   m_Name: OptionPanel
   m_TagString: Untagged
@@ -2912,6 +2913,20 @@ Transform:
   - {fileID: 3392018657350493960}
   m_Father: {fileID: 2392240619765340961}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7324208261829492328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1606965674014599418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a05064c0ea82d74ebac5c6fc743a797, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panelTransform: {fileID: 3280697939512978787}
+  canvasGroup: {fileID: 4365352820736128478}
 --- !u!1 &1664256649772952882
 GameObject:
   m_ObjectHideFlags: 0
@@ -11796,6 +11811,7 @@ GameObject:
   - component: {fileID: 3280697939512978787}
   - component: {fileID: 8777844575356178637}
   - component: {fileID: 5272332109465618349}
+  - component: {fileID: 4365352820736128478}
   m_Layer: 0
   m_Name: MainPanel
   m_TagString: Untagged
@@ -11868,6 +11884,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &4365352820736128478
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8722514602431191799}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &8757267980573033437
 GameObject:
   m_ObjectHideFlags: 0
