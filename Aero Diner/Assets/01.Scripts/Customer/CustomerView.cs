@@ -38,7 +38,14 @@ public class CustomerView : MonoBehaviour
 
     #region Initialization
 
-    private void Awake()
+    public void Initialize()
+    {
+        SetupComponents();
+        SetPatienceVisibility(false);
+        HideOrderBubble();
+    }
+
+    private void SetupComponents()
     {
         customerUI = transform.FindChild<Canvas>("Canvas_Customer");
         orderBubble = transform.FindChild<Image>("Img_OrderBubble");
@@ -47,21 +54,6 @@ public class CustomerView : MonoBehaviour
         
         animator = transform.FindChild<Animator>("Visual");
         emoteAnimator = transform.FindChild<Animator>("Emote");
-    }
-
-    public void Initialize()
-    {
-        SetupComponents();
-        SetPatienceVisibility(false);
-    }
-
-    private void SetupComponents()
-    {
-        if (!customerUI) customerUI = transform.FindChild<Canvas>("Group_Customer");
-        if (!orderBubble) orderBubble = transform.FindChild<Image>("Img_OrderBubble");
-        if (!patienceTimer) patienceTimer = transform.FindChild<Image>("Img_PatienceTimer");
-        
-        animator = GetComponentInChildren<Animator>();
     }
     
     #endregion
