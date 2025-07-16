@@ -38,9 +38,10 @@ public class CustomerView : MonoBehaviour
 
     #region Initialization
 
-    public void Initialize()
+    public void Initialize(CustomerData data)
     {
         SetupComponents();
+        ApplyAnimatorOverride(data);
         SetPatienceVisibility(false);
         HideOrderBubble();
     }
@@ -51,10 +52,17 @@ public class CustomerView : MonoBehaviour
         orderBubble = transform.FindChild<Image>("Img_OrderBubble");
         patienceTimer = transform.FindChild<Image>("Img_PatienceTimer");
         coinEffect = transform.FindChild<ParticleSystem>("Particle");
-        
-        animator = transform.FindChild<Animator>("Visual");
+
         emoteAnimator = transform.FindChild<Animator>("Emote");
     }
+    private void ApplyAnimatorOverride(CustomerData data)
+    {
+        if (animator && data.animator)
+        {
+            animator.runtimeAnimatorController = data.animator;
+        }
+    }
+    
     
     #endregion
 

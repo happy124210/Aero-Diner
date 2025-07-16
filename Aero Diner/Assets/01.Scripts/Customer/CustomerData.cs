@@ -21,4 +21,6 @@ public class CustomerData : ScriptableObject
     public float speed; // 이동 속도
     public float waitTime; // 기다리는 시간
     public float eatTime; // 먹는 시간
+    
+    public AnimatorOverrideController animator;
 }
