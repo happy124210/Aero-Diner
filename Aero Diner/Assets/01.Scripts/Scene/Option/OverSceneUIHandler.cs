@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class OptionPanelHandler : IUIEventHandler
+public class OverSceneUIHandler : IUIEventHandler
 {
     public bool Handle(UIEventType type, object payload)
     {
@@ -12,6 +12,9 @@ public class OptionPanelHandler : IUIEventHandler
             case UIEventType.OpenPause:
                 UIRoot.Instance.pausePanel?.SetActive(true);
                 GameManager.Instance.PauseGame();
+
+                var pause = UIRoot.Instance.pausePanel?.GetComponent<PausePanel>();
+                pause?.PlaySequentialIntro(); //칼 등장 애니메이션 호출
                 break;
             case UIEventType.ClosePause:
                 UIRoot.Instance.pausePanel?.SetActive(false);
