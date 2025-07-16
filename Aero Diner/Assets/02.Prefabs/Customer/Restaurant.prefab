@@ -50,7 +50,7 @@ MonoBehaviour:
   maxCustomers: 10
   spawnPoints:
   - {fileID: 1699959310969922015}
-  normalCustomerChance: 1
+  normalCustomerChance: 0.7
   autoSpawn: 1
   showDebugInfo: 0
 --- !u!1 &321241236627500330
