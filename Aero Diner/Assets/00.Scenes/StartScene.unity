@@ -369,6 +369,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3600544825131803477, guid: d465c04ca481c684ba9fb6ee62891882, type: 3}
+      propertyPath: sfxList.Array.size
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 3600544825131803477, guid: d465c04ca481c684ba9fb6ee62891882, type: 3}
+      propertyPath: sfxList.Array.data[23].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 6f040f60547aa384499af58a22a14727, type: 3}
+    - target: {fileID: 3600544825131803477, guid: d465c04ca481c684ba9fb6ee62891882, type: 3}
+      propertyPath: sfxList.Array.data[23].type
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3600544825131803477, guid: d465c04ca481c684ba9fb6ee62891882, type: 3}
+      propertyPath: sfxList.Array.data[24].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 551883e9cb9b75a4ea625402969ca54e, type: 3}
+    - target: {fileID: 3600544825131803477, guid: d465c04ca481c684ba9fb6ee62891882, type: 3}
+      propertyPath: sfxList.Array.data[24].type
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -662,6 +682,10 @@ PrefabInstance:
     - target: {fileID: 5992088766281775380, guid: e3855422d71835d4a98171c3335a085e, type: 3}
       propertyPath: m_Name
       value: UIManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 5992088766281775380, guid: e3855422d71835d4a98171c3335a085e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6127106076098399162, guid: e3855422d71835d4a98171c3335a085e, type: 3}
       propertyPath: m_LocalPosition.x
