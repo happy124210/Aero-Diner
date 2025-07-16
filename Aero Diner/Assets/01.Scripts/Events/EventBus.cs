@@ -23,7 +23,7 @@ public enum BGMEventType
 public enum SFXType
 {
     // UI
-    PressAnyKey, ButtonClick, BlankClick, OpenPause,
+    PressAnyKey, ButtonClick, BlankClick,
 
     // 플레이어
     PlayerMove, ItemPickup, ItemLaydown,
@@ -45,6 +45,7 @@ public enum SFXType
 
     // 일상
     NPCScript, BuyInShop,
+    OpenPause, ClosePause,
 }
 public enum UIEventType
 {
