@@ -21,7 +21,7 @@ public class PausePanel : MonoBehaviour
     {
         foreach (var btn in pauseButtons)
         {
-            yield return new WaitForSecondsRealtime(0.1f); // TimeScale=0에도 동작
+            yield return new WaitForSecondsRealtime(0.15f); // TimeScale=0에도 동작
             btn.SetActive(true);
             EventBus.PlaySFX(SFXType.OpenPause);
         }
