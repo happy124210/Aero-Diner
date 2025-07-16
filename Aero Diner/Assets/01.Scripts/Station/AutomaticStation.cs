@@ -1,15 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using TMPro;
-using UnityEngine.Serialization;
-using System.Collections;
-using UnityEngine.UI;
+﻿using UnityEngine;
+
 
 /// <summary>
 /// 자동 조리 스테이션: 재료를 놓으면 자동으로 조리되고, 완료 시 결과물이 생성됨
 /// </summary>
-public class AutomaticStation : BaseStation, IInteractable, IPlaceableStation
+public class AutomaticStation : BaseStation, IInteractable
 {
     private void Update()
     {

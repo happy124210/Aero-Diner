@@ -11,6 +11,8 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
     [Header("비주얼 오브젝트 생성 위치")]
     public Transform spawnPoint;
 
+    [SerializeField] protected bool showDebugInfo;
+
     // 내부 상태
     private GameObject placedIngredientObj;
 
@@ -35,7 +37,7 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
         }
         else
         {
-            Debug.LogWarning($"[IconLoader] 해당 오브젝트 '{objName}'에 대한 StationData를 '{resourcePath}' 경로에서 찾지 못했습니다.");
+            if (showDebugInfo) Debug.LogWarning($"[IconLoader] 해당 오브젝트 '{objName}'에 대한 StationData를 '{resourcePath}' 경로에서 찾지 못했습니다.");
         }
     }
 

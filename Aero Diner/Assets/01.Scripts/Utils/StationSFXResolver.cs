@@ -19,7 +19,6 @@ public static class StationSFXResolver
                 break;
         }
 
-        Debug.Log($"[SFXResolver] StationName: {data.name} | WorkType: {data.workType} | StationType: {data.stationType} => SFXType: {resolved}");
         return resolved;
     }
 

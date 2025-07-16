@@ -146,7 +146,7 @@ public class RecipeManager : Singleton<RecipeManager>
 
         if (todayMenuList == null || todayMenuList.Count == 0)
         {
-            Debug.LogWarning("[RecipeManager] MenuManager 또는 TodayMenus가 존재하지 않음");
+            if (showDebugInfo) Debug.LogWarning("[RecipeManager] MenuManager 또는 TodayMenus가 존재하지 않음");
             return new List<RecipeMatchResult>();
         }
         

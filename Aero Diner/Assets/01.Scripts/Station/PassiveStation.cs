@@ -1,11 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using TMPro;
-using UnityEditor;
-using UnityEngine.Serialization;
-using System.Collections;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 /// <summary>
 /// 플레이어가 상호작용하면 재료를 가공하여 가공된 재료를 생성하는 스테이션
@@ -15,7 +8,7 @@ using UnityEngine.UI;
 /// - Interact(): J 키를 누르는 동안 조리 타이머가 감소하며, 타이머가 다 되면 가공 처리
 /// - ProcessIngredient(): 조리가 완료되면 재료 오브젝트를 제거하고 결과 처리를 수행
 /// </summary>
-public class PassiveStation : BaseStation, IInteractable, IPlaceableStation
+public class PassiveStation : BaseStation, IInteractable
 {
     [Header("가공 허용 재료 그룹")]
     public FoodData[] neededIngredients;

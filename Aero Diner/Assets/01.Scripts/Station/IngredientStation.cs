@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UIElements;
 
 /// <summary>
 /// 플레이어가 상호작용하면 재료를 생성해주는 스테이션
