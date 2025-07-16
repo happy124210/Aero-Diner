@@ -21,6 +21,6 @@ public class DailyLifeManager : Singleton<DailyLifeManager>
     public void OnOpenButtonClick()
     {
         EventBus.PlaySFX(SFXType.ButtonClick);
-        EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(alpha: 1f, duration: 1f, scene: "MainScene"));
+        EventBus.Raise(UIEventType.LoadMainScene);
     }
 }

@@ -60,7 +60,7 @@ public enum UIEventType
     //StartScene
     ShowStartWarningPanel, ShowStartMenuWithSave,
     ShowStartMenuNoSave, LoadMainScene,
-    QuitGame, ShowPressAnyKey,
+    QuitGame, ShowPressAnyKey,LoadDayScene,
     
     //MainSceneUI
     ShowRoundTimer, HideRoundTimer,
