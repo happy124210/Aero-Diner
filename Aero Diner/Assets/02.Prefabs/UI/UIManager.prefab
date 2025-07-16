@@ -54,10 +54,6 @@ MonoBehaviour:
       m_EditorAssetChanged: 0
   - sceneName: MainScene
     uiPrefabs:
-    - m_AssetGUID: 4f04806a308443a428151319d7678021
-      m_SubObjectName: 
-      m_SubObjectType: 
-      m_EditorAssetChanged: 0
     - m_AssetGUID: de334962f68c61b4baa232cdd60515cf
       m_SubObjectName: 
       m_SubObjectType: 
@@ -75,6 +71,10 @@ MonoBehaviour:
       m_SubObjectType: 
       m_EditorAssetChanged: 0
     - m_AssetGUID: 65a5a665ac7e95049a202ab7ad8d1124
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+    - m_AssetGUID: 4f04806a308443a428151319d7678021
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0

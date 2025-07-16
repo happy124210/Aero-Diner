@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.LowLevel;
 
 public class SFXManager : Singleton<SFXManager>
 {
@@ -46,11 +47,15 @@ public class SFXManager : Singleton<SFXManager>
     private void OnEnable()
     {
         EventBus.OnSFXRequested += HandleSFXRequest;
+        EventBus.OnLoopSFXRequested += PlayLoop;
+        EventBus.OnStopLoopSFXRequested += StopLoop;
     }
 
     private void OnDisable()
     {
         EventBus.OnSFXRequested -= HandleSFXRequest;
+        EventBus.OnLoopSFXRequested -= PlayLoop;
+        EventBus.OnStopLoopSFXRequested -= StopLoop;
     }
 
     private void HandleSFXRequest(SFXType type)

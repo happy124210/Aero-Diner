@@ -8,13 +8,15 @@ public class UIManager : Singleton<UIManager>
 {
     //이 리스트에 있는 UI는 모두 비활성화 상태로 시작.
     private readonly System.Type[] initiallyDisabledTypes = new System.Type[]
-{
-    typeof(ResultPanel),
-    typeof(MenuPanel3),
-    typeof(MenuPanel4),
-    typeof(Inventory),
-    // 필요한 타입 추가 가능
-};
+    {
+        typeof(ResultPanel),
+        typeof(MenuPanel3),
+        typeof(MenuPanel4),
+        typeof(Inventory),
+        // 필요한 타입 추가 가능
+    };
+
+    private List<IUIEventHandler> uiHandlers = new();
     [System.Serializable]
     public class SceneUIEntry
     {
@@ -35,7 +37,7 @@ public class UIManager : Singleton<UIManager>
     {
         base.Awake();
         DontDestroyOnLoad(gameObject);
-        
+
         uiMap = new();
         foreach (var entry in sceneUIPrefabs)
         {
@@ -60,11 +62,12 @@ public class UIManager : Singleton<UIManager>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         LoadSceneUI(scene.name);
-        
+
     }
 
     public async void LoadSceneUI(string sceneName)
     {
+        // 기존 UI 제거
         foreach (var ui in currentSceneUIs)
         {
             if (ui != null)
@@ -72,6 +75,7 @@ public class UIManager : Singleton<UIManager>
         }
         currentSceneUIs.Clear();
 
+        // 씬 이름으로 매핑된 UI 프리팹 찾기
         if (!uiMap.TryGetValue(sceneName, out var assetRefs))
         {
             if (showDebugInfo)
@@ -79,6 +83,11 @@ public class UIManager : Singleton<UIManager>
             return;
         }
 
+        // 프리팹 비어있을 경우 경고 로그 (선택)
+        if (assetRefs.Count == 0 && showDebugInfo)
+            Debug.LogWarning($"[UIManager] {sceneName} 씬에 로드할 UI 프리팹이 없습니다.");
+
+        // Addressables 기반 UI 인스턴스 생성
         foreach (var assetRef in assetRefs)
         {
             var handle = assetRef.InstantiateAsync(transform);
@@ -86,206 +95,57 @@ public class UIManager : Singleton<UIManager>
 
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
-                var instance = handle.Result;
-                instance.SetActive(true);
-                currentSceneUIs.Add(instance);
+                currentSceneUIs.Add(handle.Result);
             }
-            else
+            else if (showDebugInfo)
             {
-                if (showDebugInfo)
-                    Debug.LogError($"[UIManager] UI 로딩 실패: {assetRef.RuntimeKey}");
+                Debug.LogError($"[UIManager] UI 로딩 실패: {assetRef.RuntimeKey}");
             }
         }
+
+        // 특정 UI는 시작 시 비활성화
         foreach (var ui in currentSceneUIs)
         {
             foreach (var type in initiallyDisabledTypes)
             {
                 var target = ui.GetComponentInChildren(type, true) as MonoBehaviour;
                 if (target != null)
-                {
                     target.gameObject.SetActive(false);
-                }
             }
         }
+
         if (showDebugInfo)
-            Debug.Log($"[UIManager] {sceneName} 씬 UI 로딩 시작, 프리팹 수: {assetRefs.Count}");
-        if (sceneName == "StartScene")
-        {
-            foreach (var ui in currentSceneUIs)
-            {
-                var blinker = ui.GetComponentInChildren<PressAnyKeyBlinker>(true);
-                if (blinker != null && !blinker.gameObject.activeSelf)
-                    if (showDebugInfo)
-                        Debug.Log($"[UIManager] PressAnyKeyBlinker 찾음: {blinker.name}, activeSelf: {blinker.gameObject.activeSelf}");
-                {
-                    blinker.gameObject.SetActive(true);
-                    if (showDebugInfo)
-                        Debug.Log("[UIManager] PressAnyKeyBlinker 강제 활성화");
-                }
-            }
-        }
+            Debug.Log($"[UIManager] {sceneName} 씬 UI 로딩 완료, 프리팹 수: {assetRefs.Count}");
+
+        RegisterHandlersForScene(sceneName); // 중복 제거
     }
 
-    private void HandleUIEvent(UIEventType eventType, object payload)
+    private void RegisterHandlersForScene(string sceneName)
     {
-        switch (eventType)
+        uiHandlers.Clear();
+
+        // 공통 핸들러 (항상 등록)
+        uiHandlers.Add(new OverSceneUIHandler());
+
+        switch (sceneName)
         {
-            // === Start Scene ===
-            case UIEventType.OpenPause:
-                UIRoot.Instance.pausePanel?.SetActive(true);
-                GameManager.Instance.PauseGame();
-                break;
-            case UIEventType.ClosePause:
-                UIRoot.Instance.pausePanel?.SetActive(false);
-                GameManager.Instance.ContinueGame();
-                break;
-            case UIEventType.OpenOption:
-                UIRoot.Instance.pausePanel.SetActive(false);
-                UIRoot.Instance.optionPanel.SetActive(true);
-                UIRoot.Instance.volumePanel.gameObject.SetActive(true);
-                break;
-            case UIEventType.CloseOption:
-                UIRoot.Instance.optionPanel.SetActive(false);
-                if (SceneManager.GetActiveScene().name != "StartScene")
-                    UIRoot.Instance.pausePanel.SetActive(true);
-                break;
-            case UIEventType.ShowSoundTab:
-                UIRoot.Instance.volumePanel.gameObject.SetActive(true);
-                UIRoot.Instance.videoPanel.gameObject.SetActive(false);
-                UIRoot.Instance.keysettingPanel.gameObject.SetActive(false);
-                break;
-            case UIEventType.ShowVideoTab:
-                UIRoot.Instance.volumePanel.gameObject.SetActive(false);
-                UIRoot.Instance.videoPanel.gameObject.SetActive(true);
-                UIRoot.Instance.keysettingPanel.gameObject.SetActive(false);
-                break;
-            case UIEventType.ShowControlTab:
-                UIRoot.Instance.volumePanel.gameObject.SetActive(false);
-                UIRoot.Instance.videoPanel.gameObject.SetActive(false);
-                UIRoot.Instance.keysettingPanel.gameObject.SetActive(true);
-                break;
-            case UIEventType.UpdateEarnings:
-                if (showDebugInfo)
-                    Debug.Log($"[UIManager] UpdateEarnings 이벤트 발생: {payload}");
-
-                if (payload is not int newEarnings)
-                {
-                    return;
-                }
-
-                foreach (var ui in currentSceneUIs)
-                {
-                    var ed = ui?.GetComponentInChildren<EarningsDisplay>(true);
-                    if (ed != null)
-                    {
-                        ed.AnimateEarnings(newEarnings);
-                    }
-                    else if (showDebugInfo)
-                    {
-                        Debug.LogWarning($"[UIManager] EarningsDisplay를 찾을 수 없음: {ui.name}");
-                    }
-                }
-                break;
-            case UIEventType.ShowStartMenuWithSave:
-                foreach (var ui in currentSceneUIs)
-                    ui?.GetComponentInChildren<MenuPanel4>(true)?.gameObject.SetActive(true);
-                break;
-            case UIEventType.ShowStartMenuNoSave:
-                foreach (var ui in currentSceneUIs)
-                    ui?.GetComponentInChildren<MenuPanel3>(true)?.gameObject.SetActive(true);
-                break;
-            case UIEventType.OnClickNewGame:
-                SaveLoadManager.DeleteSave(); // 모든 저장 삭제
-
-                // 씬 전환
-                EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(alpha:1f, duration : 1f, scene: "MainScene"));
-                break;
-            case UIEventType.LoadMainScene:
-                EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(alpha: 1f, duration: 1f, scene: "MainScene"));
-                break;
-            case UIEventType.QuitGame:
-#if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-#else
-                Application.Quit();
-#endif
+            case "StartScene":
+                uiHandlers.Add(new StartSceneUIHandler(currentSceneUIs));
                 break;
             
-            // === Main Scene ===
-            case UIEventType.ShowMenuPanel:
-                foreach (var ui in currentSceneUIs)
-                {
-                    var menuPanel = ui?.GetComponentInChildren<MenuPanel>(true);
-                    if (menuPanel != null)
-                    {
-                        menuPanel.gameObject.SetActive(true);
-                        EventBus.OnBGMRequested(BGMEventType.PlayRecipeChoice);
-                    }
-                }
+            case "MainScene":
+                uiHandlers.Add(new MainSceneUIHandler(currentSceneUIs));
                 break;
-            case UIEventType.UpdateMenuPanel:
-                foreach (var ui in currentSceneUIs)
-                    ui?.GetComponentInChildren<MenuPanel>(true)?.GenerateFoodList();
-                break;
-            case UIEventType.HideMenuPanel:
-                foreach (var ui in currentSceneUIs)
-                    ui?.GetComponentInChildren<MenuPanel>(true)?.gameObject.SetActive(false);
-                break;
-            case UIEventType.ShowResultPanel:
-                foreach (var ui in currentSceneUIs)
-                {
-                    var resultPanel = ui?.GetComponentInChildren<ResultPanel>(true);
-                    if (resultPanel != null)
-                    {
-                        resultPanel.gameObject.SetActive(true);
-                        resultPanel.Init(); // 초기화 명시적 호출
-                    }
-                }
-                break;
-            case UIEventType.HideResultPanel:
-                foreach (var ui in currentSceneUIs)
-                    ui?.GetComponentInChildren<ResultPanel>(true)?.gameObject.SetActive(false);
-                break;
-            case UIEventType.ShowInventory:
-                foreach (var ui in currentSceneUIs)
-                    ui?.GetComponentInChildren<Inventory>(true)?.gameObject.SetActive(true);
-                break;
-            case UIEventType.HideInventory:
-                foreach (var ui in currentSceneUIs)
-                    ui?.GetComponentInChildren<Inventory>(true)?.gameObject.SetActive(false);
-                break;
-            case UIEventType.ShowRoundTimer:
-            case UIEventType.HideRoundTimer:
-                foreach (var ui in currentSceneUIs)
-                {
-                    var timer = ui?.GetComponentInChildren<RoundTimerUI>(true)?.gameObject;
-                    if (timer != null)
-                        timer.SetActive(eventType == UIEventType.ShowRoundTimer);
-                }
-                break;
+        }
 
-            case UIEventType.ShowOrderPanel:
-                if (payload is Customer customerToShow)
-                {
-                    foreach (var ui in currentSceneUIs)
-                    {
-                        var panel = ui?.GetComponentInChildren<CustomerOrderPanel>(true);
-                        panel?.ShowOrderPanel(customerToShow);
-                    }
-                }
-                break;
-
-            case UIEventType.HideOrderPanel:
-                if (payload is Customer customerToHide)
-                {
-                    foreach (var ui in currentSceneUIs)
-                    {
-                        var panel = ui?.GetComponentInChildren<CustomerOrderPanel>(true);
-                        panel?.HideOrderPanel(customerToHide);
-                    }
-                }
-                break;
-
+        // 필요 시 다른 씬별 핸들러도 추가
+    }
+    private void HandleUIEvent(UIEventType type, object payload)
+    {
+        foreach (var handler in uiHandlers)
+        {
+            if (handler.Handle(type, payload))
+                break; // 이벤트 처리 완료된 핸들러 있으면 종료
         }
     }
 }

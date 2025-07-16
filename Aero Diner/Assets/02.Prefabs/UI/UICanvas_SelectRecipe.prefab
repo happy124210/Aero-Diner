@@ -262,6 +262,7 @@ MonoBehaviour:
   warningPopupCanvas: {fileID: 2659412645715692286}
   popupFadeDuration: 0.5
   popupVisibleTime: 2
+  menuPanelTransform: {fileID: 607150485725278172}
 --- !u!225 &639490359676688581
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -869,7 +870,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 56}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1536, y: 756}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3235257296169657290
@@ -1590,7 +1591,7 @@ MonoBehaviour:
   m_Content: {fileID: 2017407775838589653}
   m_Horizontal: 1
   m_Vertical: 1
-  m_MovementType: 1
+  m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135

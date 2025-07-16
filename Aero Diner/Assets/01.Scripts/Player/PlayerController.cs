@@ -52,6 +52,7 @@ public class PlayerController : MonoBehaviour
 
         interactActionRef.action.performed += OnInteract;
         pickupActionRef.action.performed += OnPickupDown;
+        interactActionRef.action.canceled += OnInteractCancel;
     }
 
     private void OnDisable()
@@ -62,6 +63,7 @@ public class PlayerController : MonoBehaviour
 
         interactActionRef.action.performed -= OnInteract;
         pickupActionRef.action.performed -= OnPickupDown;
+        interactActionRef.action.canceled += OnInteractCancel;
     }
     private void Start()
     {
@@ -287,6 +289,12 @@ public class PlayerController : MonoBehaviour
 
         animator.SetFloat("LastMoveX", lastMoveDir.x);
         animator.SetFloat("LastMoveY", lastMoveDir.y);
+    }
+
+    private void OnInteractCancel(InputAction.CallbackContext context)
+    {
+        // J 키에서 손을 뗐을 때 Stop 처리
+        currentTarget?.Interact(playerInventory, InteractionType.Stop);
     }
 
     private void OnDrawGizmosSelected()

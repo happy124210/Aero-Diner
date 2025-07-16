@@ -105,7 +105,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
         if (showDebugInfo) Debug.Log($"Game ended: {reason}");
         if (showDebugInfo) Debug.Log($"Final Stats - Served: {customersServed}, Earnings: {GameManager.Instance.TotalEarnings}");
         
-        EventBus.OnBGMRequested(BGMEventType.PlayResultTheme);
 
         // 게임 저장
         GameManager.Instance.IncreaseDay();

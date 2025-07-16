@@ -2,7 +2,8 @@
 public enum InteractionType
 {
     Use,    // J 키
-    Pickup  // K 키
+    Pickup,  // K 키
+    Stop    // J 키 뗐을 때
 }
 public interface IInteractable
 {
