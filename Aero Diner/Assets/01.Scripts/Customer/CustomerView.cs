@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public enum CustomerAnimState
 {
@@ -19,14 +20,21 @@ public class CustomerView : MonoBehaviour
     [SerializeField] private Canvas customerUI;
     [SerializeField] private Image orderBubble;
     [SerializeField] private Image patienceTimer;
-    [SerializeField] private ParticleSystem coinEffect;
     
     [Header("Animation Components")]
     [SerializeField] private Animator animator;
     [SerializeField] private Animator emoteAnimator;
+    [SerializeField] private CoinPopEffect coin;
 
+    [Header("Coin Effect Settings")]
+    [SerializeField] private float moveUpDistance = 2f;
+    [SerializeField] private float duration = 1f;
+    [SerializeField] private float spinAmount = 360f;
+    
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo;
+    
+    
     
     // animation hash
     private static readonly int IsWalking = Animator.StringToHash("IsWalking");
@@ -51,9 +59,10 @@ public class CustomerView : MonoBehaviour
         customerUI = transform.FindChild<Canvas>("Canvas_Customer");
         orderBubble = transform.FindChild<Image>("Img_OrderBubble");
         patienceTimer = transform.FindChild<Image>("Img_PatienceTimer");
-        coinEffect = transform.FindChild<ParticleSystem>("Particle");
-
+        coin = transform.FindChild<CoinPopEffect>("Coin");
         emoteAnimator = transform.FindChild<Animator>("Emote");
+
+        coin.gameObject.SetActive(false);
     }
     private void ApplyAnimatorOverride(CustomerData data)
     {
@@ -62,7 +71,6 @@ public class CustomerView : MonoBehaviour
             animator.runtimeAnimatorController = data.animator;
         }
     }
-    
     
     #endregion
 
@@ -112,7 +120,7 @@ public class CustomerView : MonoBehaviour
 
     public void ShowPayEffect()
     {
-        coinEffect.Play();
+        coin.Play();
         if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 결제 완료 이펙트");
     }
 
@@ -154,6 +162,7 @@ public class CustomerView : MonoBehaviour
         yield return new WaitForSeconds(2f);
         
         //eatingEffect.SetActive(false);
+        
         onComplete?.Invoke();
     }
 
