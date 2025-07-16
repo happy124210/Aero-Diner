@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using UnityEngine;
+using System.Collections;
 
 public class MenuPanel : MonoBehaviour
 {
@@ -12,22 +13,21 @@ public class MenuPanel : MonoBehaviour
     [SerializeField] private float popupFadeDuration = 0.5f;
     [SerializeField] private float popupVisibleTime = 2f;
 
+    [SerializeField] public RectTransform menuPanelTransform;
     private void OnEnable()
     {
         GenerateFoodList();
+        
     }
 
     public void GenerateFoodList()
     {
-        // 기존 아이템 제거
         foreach (Transform child in contentTransform)
         {
             Destroy(child.gameObject);
         }
 
-        // 메뉴 가져오기
         var menuList = MenuManager.Instance.GetUnlockedMenus();
-
         if (menuList == null)
         {
             Debug.LogWarning("TodayMenus 가 null입니다!");
@@ -36,6 +36,7 @@ public class MenuPanel : MonoBehaviour
 
         Debug.Log($" 메뉴 수: {menuList.Count}");
 
+        float delay = 1f;
         foreach (var menu in menuList)
         {
             if (menu == null)
@@ -43,21 +44,41 @@ public class MenuPanel : MonoBehaviour
                 Debug.LogWarning("null인 Menu 발견");
                 continue;
             }
-            
+
             var go = Instantiate(foodItemPrefab, contentTransform);
             var foodUI = go.GetComponent<MenuPanelContent>();
             foodUI.SetData(menu);
+
+            // 등장 애니메이션
+            var cg = go.GetComponent<CanvasGroup>();
+            if (cg == null)
+            {
+                cg = go.AddComponent<CanvasGroup>();
+            }
+
+            RectTransform rt = go.GetComponent<RectTransform>();
+            rt.anchoredPosition += new Vector2(0, 100f); // 약간 위에서 떨어짐
+            cg.alpha = 0f;
+            rt.localScale = Vector3.one * 0.8f;
+
+            DOTween.Sequence()
+                .AppendInterval(delay)
+                .Append(cg.DOFade(1f, 0.3f))
+                .Join(rt.DOAnchorPosY(rt.anchoredPosition.y - 100f, 0.3f).SetRelative().SetEase(Ease.OutQuad))
+                .Join(rt.DOScale(1f, 0.3f).SetEase(Ease.OutBack));
+
+            delay += 0.05f; // 순차적으로 나옴
         }
-        
+
         EventBus.Raise(UIEventType.ShowMenuPanel);
         EventBus.PlayBGM(BGMEventType.PlayRecipeChoice);
     }
+
     public void OnClickDayStartBtn()
     {
         EventBus.PlaySFX(SFXType.ButtonClick);
-        // 체크된 토글이 하나라도 있는지 확인
-        bool anyToggled = false;
 
+        bool anyToggled = false;
         foreach (Transform child in contentTransform)
         {
             var content = child.GetComponent<MenuPanelContent>();
@@ -70,20 +91,29 @@ public class MenuPanel : MonoBehaviour
 
         if (!anyToggled)
         {
-            // 아무것도 선택되지 않았을 경우 → 경고 팝업 출력
             Debug.LogWarning("[MenuPanel] 선택된 메뉴가 없습니다!");
-            ShowNoMenuSelectedPopup(); // 팝업 메서드 추가 필요
+            ShowNoMenuSelectedPopup();
             return;
         }
-        // 두트윈으로 페이드 아웃 → 종료 후 비활성화
-        canvasGroup.DOFade(0f, 0.5f)
-            .SetEase(Ease.InQuad)
-            .OnComplete(() =>
-            {
-                gameObject.SetActive(false); // 비활성화
-                EventBus.Raise(UIEventType.HideMenuPanel);
-            });
-        
+
+        if (menuPanelTransform == null)
+        {
+            Debug.LogError("[MenuPanel] menuPanelTransform이 할당되지 않았습니다.");
+            return;
+        }
+
+        Vector2 originalPos = menuPanelTransform.anchoredPosition;
+
+        Sequence exitSeq = DOTween.Sequence();
+        exitSeq.Append(menuPanelTransform.DOAnchorPosY(originalPos.y - 50f, 0.3f).SetEase(Ease.InQuad))
+               .Append(menuPanelTransform.DOAnchorPosY(originalPos.y + 1200f, 1f).SetEase(Ease.InBack))
+               .OnComplete(() =>
+               {
+                   gameObject.SetActive(false);
+                   menuPanelTransform.anchoredPosition = originalPos;
+                   EventBus.Raise(UIEventType.HideMenuPanel);
+               });
+
         RestaurantManager.Instance.StartRestaurant();
         EventBus.PlayBGM(BGMEventType.PlayMainTheme);
     }
