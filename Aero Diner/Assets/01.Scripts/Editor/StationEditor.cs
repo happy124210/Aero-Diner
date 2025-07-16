@@ -29,7 +29,7 @@ public class StationEditor : Editor
         if (matchedField != null && matchedField.GetValue(mono) is HashSet<string> idSet)
         {
             GUILayout.Space(10);
-            GUILayout.Label("📋 유효 재료 ID 목록", EditorStyles.boldLabel);
+            GUILayout.Label("유효 재료 ID 목록", EditorStyles.boldLabel);
 
             if (idSet.Count == 0)
             {
@@ -39,7 +39,7 @@ public class StationEditor : Editor
             {
                 foreach (var id in idSet)
                 {
-                    GUILayout.Label($"🧂 {id}");
+                    GUILayout.Label($"{id}");
                 }
             }
         }
