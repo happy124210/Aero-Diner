@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class OverSceneUIHandler : IUIEventHandler
+public class OptionPanelHandler : IUIEventHandler
 {
     public bool Handle(UIEventType type, object payload)
     {

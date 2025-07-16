@@ -67,6 +67,7 @@ public class UIManager : Singleton<UIManager>
 
     public async void LoadSceneUI(string sceneName)
     {
+        // 기존 UI 제거
         foreach (var ui in currentSceneUIs)
         {
             if (ui != null)
@@ -74,6 +75,7 @@ public class UIManager : Singleton<UIManager>
         }
         currentSceneUIs.Clear();
 
+        // 씬 이름으로 매핑된 UI 프리팹 찾기
         if (!uiMap.TryGetValue(sceneName, out var assetRefs))
         {
             if (showDebugInfo)
@@ -81,6 +83,11 @@ public class UIManager : Singleton<UIManager>
             return;
         }
 
+        // 프리팹 비어있을 경우 경고 로그 (선택)
+        if (assetRefs.Count == 0 && showDebugInfo)
+            Debug.LogWarning($"[UIManager] {sceneName} 씬에 로드할 UI 프리팹이 없습니다.");
+
+        // Addressables 기반 UI 인스턴스 생성
         foreach (var assetRef in assetRefs)
         {
             var handle = assetRef.InstantiateAsync(transform);
@@ -88,52 +95,37 @@ public class UIManager : Singleton<UIManager>
 
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
-                var instance = handle.Result;
-                instance.SetActive(true);
-                currentSceneUIs.Add(instance);
+                currentSceneUIs.Add(handle.Result);
             }
-            else
+            else if (showDebugInfo)
             {
-                if (showDebugInfo)
-                    Debug.LogError($"[UIManager] UI 로딩 실패: {assetRef.RuntimeKey}");
+                Debug.LogError($"[UIManager] UI 로딩 실패: {assetRef.RuntimeKey}");
             }
         }
+
+        // 특정 UI는 시작 시 비활성화
         foreach (var ui in currentSceneUIs)
         {
             foreach (var type in initiallyDisabledTypes)
             {
                 var target = ui.GetComponentInChildren(type, true) as MonoBehaviour;
                 if (target != null)
-                {
                     target.gameObject.SetActive(false);
-                }
             }
         }
+
         if (showDebugInfo)
-            Debug.Log($"[UIManager] {sceneName} 씬 UI 로딩 시작, 프리팹 수: {assetRefs.Count}");
-        if (sceneName == "StartScene")
-        {
-            foreach (var ui in currentSceneUIs)
-            {
-                var blinker = ui.GetComponentInChildren<PressAnyKeyBlinker>(true);
-                if (blinker != null && !blinker.gameObject.activeSelf)
-                    if (showDebugInfo)
-                        Debug.Log($"[UIManager] PressAnyKeyBlinker 찾음: {blinker.name}, activeSelf: {blinker.gameObject.activeSelf}");
-                {
-                    blinker.gameObject.SetActive(true);
-                    if (showDebugInfo)
-                        Debug.Log("[UIManager] PressAnyKeyBlinker 강제 활성화");
-                }
-            }
-        }
-        RegisterHandlersForScene(SceneManager.GetActiveScene().name);
+            Debug.Log($"[UIManager] {sceneName} 씬 UI 로딩 완료, 프리팹 수: {assetRefs.Count}");
+
+        RegisterHandlersForScene(sceneName); // 중복 제거
     }
+
     private void RegisterHandlersForScene(string sceneName)
     {
         uiHandlers.Clear();
 
         // 공통 핸들러 (항상 등록)
-        uiHandlers.Add(new OptionPanelHandler());
+        uiHandlers.Add(new OverSceneUIHandler());
 
         // 씬별 핸들러
         if (sceneName == "StartScene")

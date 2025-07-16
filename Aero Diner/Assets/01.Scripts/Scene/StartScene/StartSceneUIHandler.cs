@@ -27,16 +27,7 @@ public class StartSceneUIHandler : IUIEventHandler
                 // 씬 전환
                 EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(alpha: 1f, duration: 1f, scene: "MainScene"));
                 break;
-            case UIEventType.LoadMainScene:
-                EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(alpha: 1f, duration: 1f, scene: "MainScene"));
-                break;
-            case UIEventType.QuitGame:
-#if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-#else
-                Application.Quit();
-#endif
-                break;
+
 
         }
         return false;
