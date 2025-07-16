@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 547070781365604177}
   - component: {fileID: 7426992711149203698}
-  - component: {fileID: 7094794916801658171}
   m_Layer: 0
   m_Name: CoinFlip
   m_TagString: Untagged
@@ -85,18 +84,3 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7094794916801658171
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8738984073455820570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fea65299204202e44ac2c7a20b5af24d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveUpDistance: 2
-  duration: 1
-  spinAmount: 360
