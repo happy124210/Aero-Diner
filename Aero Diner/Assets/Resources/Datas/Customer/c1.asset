@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 32044823781c38f4189df4d14d5e15bb, type: 3}
-  m_Name: TestData
+  m_Name: c1
   m_EditorClassIdentifier: 
   id: c1
-  customerName: test
-  displayName: "\uD14C\uC2A4\uD2B8 \uC190\uB2D8"
+  rarity: 0
+  customerName: businessman
+  displayName: "\uC9C1\uC7A5\uC778"
   speed: 5
   waitTime: 30
   eatTime: 5
+  animator: {fileID: 22100000, guid: e015267c039527b4d97b1b15c4396e84, type: 2}

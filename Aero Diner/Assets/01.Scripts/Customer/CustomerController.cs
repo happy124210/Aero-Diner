@@ -74,9 +74,9 @@ public class CustomerController : MonoBehaviour
     }
     
     #region 초기화 & 이벤트 구독
-    private void InitializeMVC()
+    private void InitializeMVC(CustomerData data)
     {
-        view.Initialize();
+        view.Initialize(data);
         SubscribeToModelEvents();
     }
 
@@ -205,7 +205,7 @@ public class CustomerController : MonoBehaviour
         }
         
         model.Initialize(customerData);
-        InitializeMVC();
+        InitializeMVC(customerData);
         SetupNavMeshAgent(model.Data.speed);
         
         ChangeState(new MovingToEntranceState());
