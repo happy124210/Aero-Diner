@@ -7,26 +7,27 @@ public class OverSceneUIHandler : IUIEventHandler
 {
     public bool Handle(UIEventType type, object payload)
     {
+        var pausePanel = UIRoot.Instance.pausePanel?.GetComponent<PausePanelEffecter>();
         switch (type)
         {
             case UIEventType.OpenPause:
                 UIRoot.Instance.pausePanel?.SetActive(true);
                 GameManager.Instance.PauseGame();
-
-                var pause = UIRoot.Instance.pausePanel?.GetComponent<PausePanel>();
-                pause?.PlaySequentialIntro(); //칼 등장 애니메이션 호출
+                pausePanel?.PlaySequentialIntro(); // 칼 등장 애니메이션
                 break;
+
             case UIEventType.ClosePause:
-                UIRoot.Instance.pausePanel?.SetActive(false);
                 GameManager.Instance.ContinueGame();
+                pausePanel?.HideWithPushEffect();  // 위로 밀려서 사라지는 연출
                 break;
             case UIEventType.OpenOption:
                 UIRoot.Instance.pausePanel.SetActive(false);
                 UIRoot.Instance.optionPanel.SetActive(true);
+                UIRoot.Instance.optionPanel.GetComponent<OptionPanelEffecter>()?.PlayFadeIn();
                 UIRoot.Instance.volumePanel.gameObject.SetActive(true);
                 break;
             case UIEventType.CloseOption:
-                UIRoot.Instance.optionPanel.SetActive(false);
+                UIRoot.Instance.optionPanel.GetComponent<OptionPanelEffecter>()?.PlayFadeOut();
                 if (SceneManager.GetActiveScene().name != "StartScene")
                     UIRoot.Instance.pausePanel.SetActive(true);
                 break;
