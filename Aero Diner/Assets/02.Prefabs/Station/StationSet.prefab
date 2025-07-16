@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1919398600338115124}
   - component: {fileID: 5471803048198080011}
   m_Layer: 6
-  m_Name: Shelf (2)
+  m_Name: Shelf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -338,7 +338,7 @@ GameObject:
   - component: {fileID: 8000612812399439157}
   - component: {fileID: 8264228991223261293}
   m_Layer: 6
-  m_Name: Shelf (1)
+  m_Name: Shelf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -628,7 +628,7 @@ GameObject:
   - component: {fileID: 2902192336700120493}
   - component: {fileID: 6234353811755212054}
   m_Layer: 6
-  m_Name: Shelf (3)
+  m_Name: Shelf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1637,11 +1637,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4074157204258302109, guid: b9d3cf75c3cf84642acfe7a8338584ea, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.5
+      value: 5.68
       objectReference: {fileID: 0}
     - target: {fileID: 4074157204258302109, guid: b9d3cf75c3cf84642acfe7a8338584ea, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.5
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4074157204258302109, guid: b9d3cf75c3cf84642acfe7a8338584ea, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2319,7 +2319,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4112029345504901363, guid: dbf830ed9aff47a47b40799f1fbcb257, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.66
+      value: 3.65
       objectReference: {fileID: 0}
     - target: {fileID: 4112029345504901363, guid: dbf830ed9aff47a47b40799f1fbcb257, type: 3}
       propertyPath: m_LocalPosition.y
