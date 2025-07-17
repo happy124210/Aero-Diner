@@ -429,38 +429,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1529134108}
-  - component: {fileID: 1529134107}
   - component: {fileID: 1529134110}
-  - component: {fileID: 1529134109}
   m_Layer: 0
-  m_Name: RestaurantManger
+  m_Name: MenuManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1529134107
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1529134106}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57f19b05d0bc5e34488f3821311ef775, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  customerSpawner: {fileID: 7245931879355692587}
-  entrancePoint: {fileID: 7245931879355692585}
-  exitPoint: {fileID: 7245931879355692584}
-  gameRunning: 0
-  targetCustomersServed: 50
-  customersServed: 0
-  customersVisited: 0
-  gameTime: 0
-  showDebugInfo: 0
-  gameTimeLimit: 300
 --- !u!4 &1529134108
 Transform:
   m_ObjectHideFlags: 0
@@ -476,24 +452,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1529134109
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1529134106}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d55a6e3b0cb53740a58acf2ca5a1346, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  poolContainer: {fileID: 0}
-  poolCapacity: 20
-  maxPoolSize: 40
-  customerPrefab: {fileID: 6986737310238590579, guid: abe38c57c0dcb1946ae8e552e8cb90e0, type: 3}
-  customerTypes: []
-  showDebugInfo: 0
 --- !u!114 &1529134110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -737,27 +695,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
---- !u!4 &7245931879355692584 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5825409973683639667, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
-  m_PrefabInstance: {fileID: 7245931879355692583}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &7245931879355692585 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 324621470884776571, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
-  m_PrefabInstance: {fileID: 7245931879355692583}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7245931879355692587 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8892305027162139297, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
-  m_PrefabInstance: {fileID: 7245931879355692583}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31dc2934ff3253e49b9a8b945c1ddfa0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &8522460691070153209
 PrefabInstance:
   m_ObjectHideFlags: 0

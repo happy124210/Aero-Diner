@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static System.Collections.Specialized.BitVector32;
 
 /// <summary>
 /// 모든 FoodData와 레시피를 관리.
@@ -18,6 +17,8 @@ public class RecipeManager : Singleton<RecipeManager>
     {
         base.Awake();
         LoadFoodDatabase();
+        
+        DontDestroyOnLoad(this);
     }
 
     /// <summary>
