@@ -643,7 +643,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 1
-  m_BaseOffset: 1
+  m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 0
 --- !u!50 &312218948826482530
@@ -705,9 +705,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.5844005}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.4770823
 --- !u!1 &7847161955649975561
 GameObject:
   m_ObjectHideFlags: 0

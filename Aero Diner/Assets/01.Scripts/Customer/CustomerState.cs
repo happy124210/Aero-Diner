@@ -170,6 +170,7 @@ public class OrderingState : CustomerState
     
     public override void Enter(CustomerController customer) 
     {
+        customer.ResetPatience();
         customer.AdjustToSeatPosition();
         customer.PlaceOrder();
     }
@@ -254,7 +255,7 @@ public abstract class BaseLeavingState : CustomerState
     {
         if (customer.HasReachedDestination())
         {
-            customer.Despawn();
+            customer.RequestDespawn();
             return null;
         }
         return this;

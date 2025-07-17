@@ -42,6 +42,11 @@ public class Customer
         runtimeData.CurrentOrder = MenuManager.Instance.GetRandomMenu();
         OnOrderPlaced?.Invoke(runtimeData.CurrentOrder);
     }
+    
+    public void ResetPatience()
+    {
+        UpdatePatience(_data.waitTime);
+    }
 
     // 앉는 테이블 번호 받기
     public void SetAssignedTable(Table assignedTable)
