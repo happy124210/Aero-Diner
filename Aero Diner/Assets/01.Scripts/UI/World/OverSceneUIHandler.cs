@@ -49,6 +49,9 @@ public class OverSceneUIHandler : IUIEventHandler
             case UIEventType.LoadMainScene:
                 EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(alpha: 1f, duration: 1f, scene: "MainScene"));
                 break;
+            case UIEventType.LoadDayScene:
+                EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(1f, 1f, scene: "DayScene"));
+                break;
             case UIEventType.QuitGame:
 #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;

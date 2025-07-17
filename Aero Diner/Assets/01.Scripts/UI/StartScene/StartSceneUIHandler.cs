@@ -23,9 +23,7 @@ public class StartSceneUIHandler : IUIEventHandler
                 break;
             case UIEventType.OnClickNewGame:
                 SaveLoadManager.DeleteSave(); // 모든 저장 삭제
-
-                // 씬 전환
-                EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(alpha: 1f, duration: 1f, scene: "MainScene"));
+                EventBus.Raise(UIEventType.LoadDayScene);
                 break;
 
 

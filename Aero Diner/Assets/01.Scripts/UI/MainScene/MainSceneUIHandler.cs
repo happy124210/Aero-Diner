@@ -23,22 +23,6 @@ public class MainSceneUIHandler : IUIEventHandler
                 }
                 return true;
 
-            case UIEventType.ShowMenuPanel:
-                foreach (var ui in sceneUIs)
-                    ui?.GetComponentInChildren<MenuPanel>(true)?.gameObject.SetActive(true);
-
-                EventBus.OnBGMRequested?.Invoke(BGMEventType.PlayRecipeChoice);
-                return true;
-
-            case UIEventType.UpdateMenuPanel:
-                foreach (var ui in sceneUIs)
-                    ui?.GetComponentInChildren<MenuPanel>(true)?.GenerateFoodList();
-                return true;
-
-            case UIEventType.HideMenuPanel:
-                foreach (var ui in sceneUIs)
-                    ui?.GetComponentInChildren<MenuPanel>(true)?.gameObject.SetActive(false);
-                return true;
 
             case UIEventType.ShowResultPanel:
                 foreach (var ui in sceneUIs)
