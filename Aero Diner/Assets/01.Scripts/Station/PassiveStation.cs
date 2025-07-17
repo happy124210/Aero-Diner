@@ -27,7 +27,15 @@ public class PassiveStation : BaseStation, IInteractable
             if (!CanStartCooking())
             {
                 if (showDebugInfo) Debug.Log("[PassiveStation] 조리 조건 불충분");
-                ResetCookingTimer();  // 조건이 부족하면 타이머 리셋
+
+                // 인스턴스 없으면 생성, 있으면 리셋
+                if (timer == null)
+                    timer = new CookingTimer(cookingTime);
+                else
+                    timer.Reset(); // 기존 타이머 유지하면서 리셋
+
+                timerController?.UpdateTimer(timer.Remaining, timer.Duration);
+                timerController?.gameObject.SetActive(false);
                 return;
             }
 
@@ -35,27 +43,38 @@ public class PassiveStation : BaseStation, IInteractable
             if (!isCooking)
             {
                 isCooking = true;
-                StartCooking(); // BaseStation의 사운드 및 UI 활성화 포함
+
+                // 타이머가 멈춰 있다면 이어서 시작
+                if (!timer.IsRunning)
+                {
+                    timer.Start(timer.Remaining); // 남은 시간 기준
+                    if (showDebugInfo) Debug.Log($"[PassiveStation] 조리 이어서 시작 / 남은 시간: {timer.Remaining:F2}s");
+                }
+
+                StartCooking(); // 사운드 및 UI 처리
             }
 
             // 조리 진행 처리
             timer.Update(Time.deltaTime);
             timerController?.UpdateTimer(timer.Remaining, timer.Duration);
 
-            // 조리 완료 시 결과 생성 및 초기화
+            // 조리 완료 시 결과 처리
             if (timer.Remaining <= 0f)
             {
                 ProcessCookingResult();
-                ResetStation();
+                ResetStation(); // 결과 생성 후 초기화 처리
             }
         }
         else if (interactionType == InteractionType.Stop)
         {
-            // 플레이어가 J 키에서 손을 뗀 경우: 조리 중단
+            // 조리 중단 처리
             isCooking = false;
+            timer?.Stop(); // 타이머 멈춤
+
             var sfx = StationSFXResolver.GetSFXFromStationData(stationData);
             EventBus.StopLoopSFX(sfx);
-            if (showDebugInfo) Debug.Log("[PassiveStation] 조리 중단됨");
+
+            if (showDebugInfo) Debug.Log($"[PassiveStation] 조리 중단됨 / 저장된 시간: {timer?.Remaining:F2}s");
         }
     }
 
@@ -70,11 +89,15 @@ public class PassiveStation : BaseStation, IInteractable
     }
 
     /// <summary>
-    /// 조리 타이머를 초기화하고 UI를 갱신
+    /// 필요 시 타이머를 완전히 초기화하는 함수 (조리 조건 미충족 시 등)
     /// </summary>
     private void ResetCookingTimer()
     {
-        timer = new CookingTimer(cookingTime);
+        if (timer == null)
+            timer = new CookingTimer(cookingTime);
+        else
+            timer.Reset(); // 인스턴스 유지하며 초기화
+
         timerController?.UpdateTimer(timer.Remaining, timer.Duration);
         timerController?.gameObject.SetActive(false);
     }
