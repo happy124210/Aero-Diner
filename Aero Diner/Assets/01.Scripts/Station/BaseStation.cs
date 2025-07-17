@@ -260,7 +260,7 @@ public class BaseStation : MonoBehaviour, IPlaceableStation
 
         GameObject result = VisualObjectFactory.CreateIngredientVisual(transform, cookedIngredient.foodName, cookedIngredient.foodIcon);
        
-        EventBus.StopLoopSFX();
+       // EventBus.StopLoopSFX();
         Invoke(nameof(PlayCookingFinishSound), 0.2f);
 
         if (result)
@@ -284,7 +284,7 @@ public class BaseStation : MonoBehaviour, IPlaceableStation
         timer = new CookingTimer(cookingTime);
         iconDisplay?.ResetAll();                // 아이콘 리셋
         ClearPlacedObjects();                   // 오브젝트 제거
-        EventBus.StopLoopSFX();                 // 사운드 중지
+       // EventBus.StopLoopSFX();                 // 사운드 중지
 
         // 두 컬렉션 모두 초기화
         currentIngredients.Clear();

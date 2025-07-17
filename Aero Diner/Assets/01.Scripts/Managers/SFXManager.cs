@@ -21,7 +21,8 @@ public class SFXManager : Singleton<SFXManager>
     private Dictionary<SFXType, AudioClip> sfxDict;
     private Queue<AudioSource> audioPool;
     private AudioSource baseAudioSource; // 볼륨 설정용 기준
-
+    private Dictionary<SFXType, AudioSource> loopSources = new();
+    private SFXType? currentLoopType = null;
     protected override void Awake()
     {
         base.Awake();
@@ -59,11 +60,15 @@ public class SFXManager : Singleton<SFXManager>
     private void OnEnable()
     {
         EventBus.OnSFXRequested += HandleSFXRequest;
+        EventBus.OnLoopSFXRequested += PlayLoop;
+        EventBus.OnStopLoopSFXRequested += StopLoop;
     }
 
     private void OnDisable()
     {
         EventBus.OnSFXRequested -= HandleSFXRequest;
+        EventBus.OnLoopSFXRequested -= PlayLoop;
+        EventBus.OnStopLoopSFXRequested -= StopLoop;
     }
 
     private void HandleSFXRequest(SFXType type)
@@ -111,4 +116,50 @@ public class SFXManager : Singleton<SFXManager>
         if (showDebugInfo)
             Debug.Log($"[SFXManager] 볼륨 설정: {volume}");
     }
+    private void PlayLoop(SFXType type)
+    {
+        if (!sfxDict.TryGetValue(type, out var clip) || clip == null)
+            return;
+
+        if (!loopSources.TryGetValue(type, out var source))
+        {
+            source = gameObject.AddComponent<AudioSource>();
+            source.loop = true;
+            source.playOnAwake = false;
+            loopSources[type] = source;
+        }
+
+        if (!source.isPlaying)
+        {
+            source.clip = clip;
+            source.volume = baseAudioSource.volume;
+            source.Play();
+
+            if (showDebugInfo)
+                Debug.Log($"[SFXManager] 루프 SFX 시작: {type}");
+        }
+    }
+
+    public void StopLoop(SFXType type)
+    {
+        if (loopSources.TryGetValue(type, out var source) && source.isPlaying)
+        {
+            source.Stop();
+
+            if (showDebugInfo)
+                Debug.Log($"[SFXManager] 루프 SFX 정지: {type}");
+        }
+    }
+    public void StopAllLoops()
+    {
+        foreach (var source in loopSources.Values)
+        {
+            if (source.isPlaying)
+                source.Stop();
+        }
+
+        if (showDebugInfo)
+            Debug.Log("[SFXManager] 모든 루프 SFX 정지");
+    }
+
 }

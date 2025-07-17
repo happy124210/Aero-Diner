@@ -126,7 +126,7 @@ public class UIManager : Singleton<UIManager>
         uiHandlers.Clear();
 
         // 공통 핸들러 (항상 등록)
-        uiHandlers.Add(new OverSceneUIHandler());
+        uiHandlers.Add(new OverSceneUIHandler(currentSceneUIs));
 
         switch (sceneName)
         {

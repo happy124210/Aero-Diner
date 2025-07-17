@@ -5,6 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class OverSceneUIHandler : IUIEventHandler
 {
+    private readonly List<GameObject> sceneUIs;
+    public OverSceneUIHandler(List<GameObject> sceneUIs)
+    {
+        this.sceneUIs = sceneUIs;
+    }
     public bool Handle(UIEventType type, object payload)
     {
         var pausePanel = UIRoot.Instance.pausePanel?.GetComponent<PausePanelEffecter>();
@@ -59,6 +64,52 @@ public class OverSceneUIHandler : IUIEventHandler
                 Application.Quit();
 #endif
                 break;
+            case UIEventType.ShowInventory:
+                foreach (var ui in sceneUIs)
+                {
+                    ui?.GetComponentInChildren<Inventory>(true)?.gameObject.SetActive(true);
+                    ui?.GetComponentInChildren<IngredientPanel>(true)?.gameObject.SetActive(true);
+                    ui?.GetComponentInChildren<RecipePanel>(true)?.gameObject.SetActive(false);
+                    ui?.GetComponentInChildren<StationPanel>(true)?.gameObject.SetActive(false);
+                    ui?.GetComponentInChildren<QuestPanel>(true)?.gameObject.SetActive(false);
+                }
+                    return true;
+            case UIEventType.ShowRecipeBook:
+                foreach (var ui in sceneUIs)
+                {
+                    ui?.GetComponentInChildren<Inventory>(true)?.gameObject.SetActive(true);
+                    ui?.GetComponentInChildren<RecipePanel>(true)?.gameObject.SetActive(true);
+                    ui?.GetComponentInChildren<StationPanel>(true)?.gameObject.SetActive(false);
+                    ui?.GetComponentInChildren<IngredientPanel>(true)?.gameObject.SetActive(false);
+                    ui?.GetComponentInChildren<QuestPanel>(true)?.gameObject.SetActive(false);
+                }
+                return true;
+            case UIEventType.ShowStationPanel:
+                foreach (var ui in sceneUIs)
+                {
+                    ui?.GetComponentInChildren<Inventory>(true)?.gameObject.SetActive(true);
+                    ui?.GetComponentInChildren<StationPanel>(true)?.gameObject.SetActive(true);
+                    ui?.GetComponentInChildren<IngredientPanel>(true)?.gameObject.SetActive(false);
+                    ui?.GetComponentInChildren<RecipePanel>(true)?.gameObject.SetActive(false);
+                    ui?.GetComponentInChildren<QuestPanel>(true)?.gameObject.SetActive(false);
+                }
+                return true;
+            case UIEventType.ShowQuestPanel:
+                foreach (var ui in sceneUIs)
+                {
+                    ui?.GetComponentInChildren<Inventory>(true)?.gameObject.SetActive(true);
+                    ui?.GetComponentInChildren<StationPanel>(true)?.gameObject.SetActive(false);
+                    ui?.GetComponentInChildren<IngredientPanel>(true)?.gameObject.SetActive(false);
+                    ui?.GetComponentInChildren<RecipePanel>(true)?.gameObject.SetActive(false);
+                    ui?.GetComponentInChildren<QuestPanel>(true)?.gameObject.SetActive(true);
+                }
+                return true;
+            case UIEventType.HideInventory:
+                foreach (var ui in sceneUIs)
+                {
+                    ui?.GetComponentInChildren<Inventory>(true)?.gameObject.SetActive(false);
+                }
+                return true;
         }
         return false;
     }

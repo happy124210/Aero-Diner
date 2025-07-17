@@ -67,10 +67,14 @@ public enum UIEventType
     UpdateEarnings,
     ShowMenuPanel, UpdateMenuPanel, HideMenuPanel, 
     ShowResultPanel, HideResultPanel, 
-    ShowInventory, HideInventory,
     ShowOrderPanel, HideOrderPanel,
     //NPC
     CoinPopEffect,
+    //Inventory
+    ShowInventory, HideInventory,
+    ShowRecipeBook, ShowStationPanel,
+    ShowQuestPanel,
+
 }
 
 public static class EventBus
@@ -81,7 +85,7 @@ public static class EventBus
     public static event Action<FadeEventType, FadeEventPayload> OnFadeRequested;
     private static AudioSource cookingLoopSource;
     public static event Action<SFXType> OnLoopSFXRequested;
-    public static event Action OnStopLoopSFXRequested;
+    public static event Action<SFXType> OnStopLoopSFXRequested;
 
     public static void PlaySFX(SFXType type)
     {
@@ -113,8 +117,8 @@ public static class EventBus
         OnLoopSFXRequested?.Invoke(type);
     }
 
-    public static void StopLoopSFX()
+    public static void StopLoopSFX(SFXType type)
     {
-        OnStopLoopSFXRequested?.Invoke();
+        OnStopLoopSFXRequested?.Invoke(type);
     }
 }

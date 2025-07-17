@@ -6,7 +6,7 @@ using TMPro;
 public class SavePopupFader : MonoBehaviour
 {
     [SerializeField] private CanvasGroup popupGroup; // 페이드 제어용
-    [SerializeField] private float showDuration = 2f;
+    [SerializeField] private float showDuration = 1.5f;
     [SerializeField] private float fadeDuration = 1f;
 
     private Coroutine currentRoutine;

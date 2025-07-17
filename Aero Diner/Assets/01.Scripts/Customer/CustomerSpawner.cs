@@ -21,14 +21,13 @@ public class CustomerSpawner : MonoBehaviour
     
     private Dictionary<CustomerRarity, List<CustomerData>> raritySortedCustomers;
     private Coroutine spawnCoroutine;
-    private CustomerData[] availableCustomers;
 
     #region Unity events
     
     private void Start()
     {
-        availableCustomers = PoolManager.Instance.CustomerTypes;
-        SortCustomersByRarity();
+        var availableCustomers = CustomerManager.Instance.AvailableCustomerTypes;
+        SortCustomersByRarity(availableCustomers);
     }
     
     private void OnDestroy()
@@ -48,12 +47,11 @@ public class CustomerSpawner : MonoBehaviour
 
     private IEnumerator SpawnCustomerCoroutine()
     {
-        // 시작 전 딜레이
         yield return new WaitForSeconds(initialSpawnDelay);
 
         while (true)
         {
-            if (PoolManager.Instance.ActiveCustomerCount < maxCustomers && 
+            if (CustomerManager.Instance.ActiveCustomerCount < maxCustomers && 
                 TableManager.Instance.CanAcceptNewCustomer())
             {
                 SpawnRandomCustomer();
@@ -82,26 +80,25 @@ public class CustomerSpawner : MonoBehaviour
             return;
         }
 
-        // 스폰 포인트 중 랜덤으로 선택
         Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
-        
         CustomerData customerData = SelectRandomCustomerByRarity();
         if (!customerData)
         {
-             if (showDebugInfo) Debug.LogWarning("[CustomerSpawner]: 스폰할 손님 데이터를 찾지 못했습니다. 스폰을 건너뜁니다.");
+             if (showDebugInfo) Debug.LogWarning("[CustomerSpawner]: 스폰할 손님 데이터를 찾지 못했습니다.");
              return;
         }
-
-        PoolManager.Instance.SpawnCustomer(customerData, spawnPoint.position, spawnPoint.rotation);
+        
+        CustomerManager.Instance.SpawnCustomer(customerData, spawnPoint.position, spawnPoint.rotation);
+        
         if (showDebugInfo) 
-            Debug.Log($"[CustomerSpawner]: {customerData.customerName} (등급: {customerData.rarity}) 스폰 완료!"); 
+            Debug.Log($"[CustomerSpawner]: {customerData.customerName} (등급: {customerData.rarity}) 스폰 요청 완료!"); 
     }
     
-    private void SortCustomersByRarity()
+    private void SortCustomersByRarity(IReadOnlyList<CustomerData> customers)
     {
         raritySortedCustomers = new Dictionary<CustomerRarity, List<CustomerData>>();
 
-        foreach (var customer in availableCustomers)
+        foreach (var customer in customers)
         {
             if (customer == null) continue;
         
@@ -123,7 +120,6 @@ public class CustomerSpawner : MonoBehaviour
             return candidates[Random.Range(0, candidates.Count)];
         }
 
-        // 선택된 등급의 손님이 없을 경우 반대 등급으로 시도
         CustomerRarity fallbackRarity = (selectedRarity == CustomerRarity.Normal) ? CustomerRarity.Rare : CustomerRarity.Normal;
         if (raritySortedCustomers.TryGetValue(fallbackRarity, out List<CustomerData> fallbackCandidates) && fallbackCandidates.Count > 0)
         {
@@ -135,13 +131,10 @@ public class CustomerSpawner : MonoBehaviour
 
     #endregion
     
+    [ContextMenu("Debug/수동으로 손님 1명 스폰")]
     public void SpawnSingleCustomer()
     {
-        if (!Application.isPlaying)
-        {
-            Debug.LogWarning("게임 실행 중에만 손님을 스폰할 수 있습니다.");
-            return;
-        }
+        if (!Application.isPlaying) return;
         SpawnRandomCustomer();
     }
 }

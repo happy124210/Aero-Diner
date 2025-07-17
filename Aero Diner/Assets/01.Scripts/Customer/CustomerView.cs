@@ -25,16 +25,9 @@ public class CustomerView : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private Animator emoteAnimator;
     [SerializeField] private CoinPopEffect coin;
-
-    [Header("Coin Effect Settings")]
-    [SerializeField] private float moveUpDistance = 2f;
-    [SerializeField] private float duration = 1f;
-    [SerializeField] private float spinAmount = 360f;
     
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo;
-    
-    
     
     // animation hash
     private static readonly int IsWalking = Animator.StringToHash("IsWalking");
