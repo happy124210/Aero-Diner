@@ -31,6 +31,8 @@ public class RestaurantManager : Singleton<RestaurantManager>
     [Tooltip("하루 제한 시간 (초 단위)")]
     [SerializeField] private float gameTimeLimit = 300f;
 
+    private int todayEarnings = 0;
+    
     protected override void Awake()
     {
         base.Awake();
@@ -56,6 +58,8 @@ public class RestaurantManager : Singleton<RestaurantManager>
             }
         }
     }
+    
+    #region 레스토랑 운영
 
     public void InitializeRestaurant()
     {
@@ -100,19 +104,22 @@ public class RestaurantManager : Singleton<RestaurantManager>
         TableManager.Instance.ReleaseAllQueues();
         
         // 모든 손님이 떠날 때까지 대기
-        yield return new WaitUntil(() => PoolManager.Instance.ActiveCustomerCount == 0);
+        yield return new WaitUntil(() => CustomerManager.Instance.ActiveCustomerCount == 0);
         
         if (showDebugInfo) Debug.Log($"Game ended: {reason}");
         if (showDebugInfo) Debug.Log($"Final Stats - Served: {customersServed}, Earnings: {GameManager.Instance.TotalEarnings}");
         
 
         // 게임 저장
+        GameManager.Instance.AddMoney(todayEarnings);
         GameManager.Instance.IncreaseDay();
         GameManager.Instance.SaveData();
         
         EventBus.Raise(UIEventType.HideRoundTimer);
         EventBus.Raise(UIEventType.ShowResultPanel);
     }
+    
+    #endregion
 
     public void OnCustomerEntered()
     {
@@ -123,6 +130,13 @@ public class RestaurantManager : Singleton<RestaurantManager>
     public void IncreaseCustomerStat()
     {
         customersServed++;
+    }
+    
+    public void AddDailyEarnings(int amount)
+    {
+        todayEarnings += amount;
+        int currentTotalEarnings = GameManager.Instance.TotalEarnings + todayEarnings;
+        EventBus.Raise(UIEventType.UpdateEarnings, currentTotalEarnings);
     }
     
     #region public getters
@@ -153,7 +167,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
         // 게임 상태 정보
         GUILayout.Label("=== Restaurant Status ===");
         GUILayout.Label($"Game Running: {gameRunning}");
-        GUILayout.Label($"Active Customers: {PoolManager.Instance.ActiveCustomerCount}");
+        GUILayout.Label($"Active Customers: {CustomerManager.Instance.ActiveCustomerCount}");
         GUILayout.Label($"Customers Served: {customersServed}/{targetCustomersServed}");
         GUILayout.Label($"Total Earnings: {GameManager.Instance.TotalEarnings}");
         GUILayout.Label($"Game Time: {gameTime:F1}s / {gameTimeLimit}s");
@@ -185,7 +199,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
         {
             if (gameRunning)
             {
-                PoolManager.Instance.ReturnAllActiveCustomers();
+                CustomerManager.Instance.DespawnAllCustomers();
                 EndRestaurant("수동 정지");
             }
         }
@@ -194,7 +208,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
         {
             if (gameRunning)
             {
-                PoolManager.Instance.MakeAllCustomerAngry();
+                CustomerManager.Instance.EmptyAllPatience();
             }
         }
         
