@@ -33,4 +33,8 @@ public class MainSceneUI : MonoBehaviour
         EventBus.Raise(UIEventType.ShowInventory);
     }
 
+    public void OnClickRecipeBook()
+    {
+        EventBus.Raise(UIEventType.ShowRecipeBook);
+    }
 }
