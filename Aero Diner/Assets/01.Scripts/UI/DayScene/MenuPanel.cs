@@ -2,10 +2,11 @@
 using UnityEngine;
 using System.Collections;
 using System.Threading.Tasks;
+using UnityEngine.Serialization;
 
 public class MenuPanel : MonoBehaviour
 {
-    [SerializeField] private GameObject foodItemPrefab;      // 프리팹 연결
+    [SerializeField] private GameObject menuPanelContent;      // Content 프리팹
     [SerializeField] private Transform contentTransform;      // ScrollView의 Content
     [SerializeField] private CanvasGroup canvasGroup;
 
@@ -16,6 +17,16 @@ public class MenuPanel : MonoBehaviour
 
     [SerializeField] public RectTransform menuPanelTransform;
     private Vector2 originalPos;
+    
+    private void Awake()
+    {
+        menuPanelContent = Resources.Load<GameObject>("Prefabs/UI/ScrollViewContent/MenuPanelContent");
+        contentTransform = transform.FindChild<RectTransform>("Content");
+        canvasGroup = GetComponent<CanvasGroup>();
+        warningPopup = transform.FindChild<CanvasGroup>("WarningPopup").gameObject;
+        warningPopupCanvas = warningPopup.GetComponent<CanvasGroup>();
+    }
+    
     private void OnEnable()
     {
         GenerateFoodList();
@@ -60,7 +71,7 @@ public class MenuPanel : MonoBehaviour
                 continue;
             }
 
-            var go = Instantiate(foodItemPrefab, contentTransform);
+            var go = Instantiate(menuPanelContent, contentTransform);
             var foodUI = go.GetComponent<MenuPanelContent>();
             foodUI.SetData(menu);
             #region 메뉴등장 애니메이션

@@ -62,6 +62,7 @@ public class MenuManager : Singleton<MenuManager>
     protected override void Awake()
     {
         base.Awake();
+        DontDestroyOnLoad(this);
         
         InitializeMenuDatabase();
         LoadMenuDatabase();
