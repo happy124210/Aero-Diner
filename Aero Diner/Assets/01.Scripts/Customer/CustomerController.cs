@@ -161,7 +161,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     {
         view.ShowPayEffect();
         
-        GameManager.Instance.AddMoney(GetCurrentOrder().foodCost);
+        RestaurantManager.Instance.AddDailyEarnings(GetCurrentOrder().foodCost);
         RestaurantManager.Instance.IncreaseCustomerStat();
     }
 
