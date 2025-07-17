@@ -104,6 +104,12 @@ public class OverSceneUIHandler : IUIEventHandler
                     ui?.GetComponentInChildren<QuestPanel>(true)?.gameObject.SetActive(true);
                 }
                 return true;
+            case UIEventType.HideInventory:
+                foreach (var ui in sceneUIs)
+                {
+                    ui?.GetComponentInChildren<Inventory>(true)?.gameObject.SetActive(false);
+                }
+                return true;
         }
         return false;
     }

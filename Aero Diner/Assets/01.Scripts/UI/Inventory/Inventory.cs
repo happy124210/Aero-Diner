@@ -44,5 +44,9 @@ public class Inventory : MonoBehaviour
         EventBus.Raise(UIEventType.ShowQuestPanel);
         tabController.ApplyTabSelectionVisuals();
     }
+    public void OnCloseButtonClick()
+    {
+        EventBus.Raise(UIEventType.HideInventory);
+    }
 }
 #endregion

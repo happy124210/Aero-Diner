@@ -9372,7 +9372,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   popupGroup: {fileID: 3606868464229686387}
-  showDuration: 2
+  showDuration: 1.5
   fadeDuration: 1
 --- !u!1 &6909325247753479000
 GameObject:
