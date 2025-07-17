@@ -65,10 +65,7 @@ public class PlayerController : MonoBehaviour
         pickupActionRef.action.performed -= OnPickupDown;
         interactActionRef.action.canceled += OnInteractCancel;
     }
-    private void Start()
-    {
-        SFXManager.Instance.RegisterAdditionalSource(moveSFXSource);
-    }
+
     private void Update()
     {
         moveInput = moveActionRef.action.ReadValue<Vector2>();
