@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 
 /// <summary>
@@ -10,10 +11,19 @@ public class AutomaticStation : BaseStation, IInteractable
     {
         if (!timer.IsRunning) return;
 
-        timer.Update(Time.deltaTime);  // 실제 타이머 값 감소
+        // 재료가 부족해졌다면 요리 중단
+        if (cookedIngredient == null ||
+            !cookedIngredient.ingredients.All(id => currentIngredients.Contains(id)))
+        {
+            if (showDebugInfo) Debug.Log("[AutomaticStation] 조리 도중 재료 부족 → 요리 취소");
+            timer.Stop();
+            timerController?.gameObject.SetActive(false);
+            return;
+        }
 
-        // UI 갱신
-        timerController?.UpdateTimer(timer.Remaining, timer.Duration);
+        timer.Update(Time.deltaTime);                                          // 시간 감소
+
+        timerController?.UpdateTimer(timer.Remaining, timer.Duration);         // UI 갱신
 
         if (timer.Remaining <= 0f)
         {
