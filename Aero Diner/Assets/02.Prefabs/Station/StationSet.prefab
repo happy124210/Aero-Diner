@@ -175,6 +175,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentData: {fileID: 0}
   spawnPoint: {fileID: 5080483188418614199}
+  showDebugInfo: 0
 --- !u!114 &1919398600338115124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -497,6 +498,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentData: {fileID: 0}
   spawnPoint: {fileID: 1162143434027793351}
+  showDebugInfo: 0
 --- !u!114 &8000612812399439157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -787,6 +789,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentData: {fileID: 0}
   spawnPoint: {fileID: 6896455401494739717}
+  showDebugInfo: 0
 --- !u!114 &2902192336700120493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1192,7 +1195,7 @@ Transform:
   m_GameObject: {fileID: 6075754685485170127}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5.49, y: -4.237, z: 0.049384885}
+  m_LocalPosition: {x: -5.49, y: -3.73, z: 0.049384885}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1286,7 +1289,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1.6041666}
+    oldSize: {x: 1, y: 2}
     newSize: {x: 1, y: 1.6041666}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -1537,6 +1540,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentData: {fileID: 0}
   spawnPoint: {fileID: 7961134975753158317}
+  showDebugInfo: 0
 --- !u!114 &3544051855210482656
 MonoBehaviour:
   m_ObjectHideFlags: 0

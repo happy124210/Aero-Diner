@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public static class StationSFXResolver
+﻿public static class StationSFXResolver
 {
     public static SFXType GetSFXFromStationData(StationData data)
     {
