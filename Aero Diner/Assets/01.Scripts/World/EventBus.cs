@@ -67,10 +67,14 @@ public enum UIEventType
     UpdateEarnings,
     ShowMenuPanel, UpdateMenuPanel, HideMenuPanel, 
     ShowResultPanel, HideResultPanel, 
-    ShowInventory, HideInventory,
     ShowOrderPanel, HideOrderPanel,
     //NPC
     CoinPopEffect,
+    //Inventory
+    ShowInventory, HideInventory,
+    ShowRecipeBook, ShowStationPanel,
+    ShowQuestPanel,
+
 }
 
 public static class EventBus
