@@ -31,6 +31,8 @@ public class RestaurantManager : Singleton<RestaurantManager>
     [Tooltip("하루 제한 시간 (초 단위)")]
     [SerializeField] private float gameTimeLimit = 300f;
 
+    private int todayEarnings = 0;
+    
     protected override void Awake()
     {
         base.Awake();
@@ -56,6 +58,8 @@ public class RestaurantManager : Singleton<RestaurantManager>
             }
         }
     }
+    
+    #region 레스토랑 운영
 
     public void InitializeRestaurant()
     {
@@ -107,12 +111,15 @@ public class RestaurantManager : Singleton<RestaurantManager>
         
 
         // 게임 저장
+        GameManager.Instance.AddMoney(todayEarnings);
         GameManager.Instance.IncreaseDay();
         GameManager.Instance.SaveData();
         
         EventBus.Raise(UIEventType.HideRoundTimer);
         EventBus.Raise(UIEventType.ShowResultPanel);
     }
+    
+    #endregion
 
     public void OnCustomerEntered()
     {
@@ -123,6 +130,13 @@ public class RestaurantManager : Singleton<RestaurantManager>
     public void IncreaseCustomerStat()
     {
         customersServed++;
+    }
+    
+    public void AddDailyEarnings(int amount)
+    {
+        todayEarnings += amount;
+        int currentTotalEarnings = GameManager.Instance.TotalEarnings + todayEarnings;
+        EventBus.Raise(UIEventType.UpdateEarnings, currentTotalEarnings);
     }
     
     #region public getters
