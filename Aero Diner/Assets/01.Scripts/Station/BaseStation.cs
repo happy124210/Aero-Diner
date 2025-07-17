@@ -23,6 +23,7 @@ public class BaseStation : MonoBehaviour, IPlaceableStation
     protected OutlineShaderController outline;                         // 외곽선 효과를 제어하는 컴포넌트
     protected bool hasInitialized = false;                             // 아이콘 초기화 플래그
     protected CookingTimer timer;
+    protected bool isCooking = false;
 
 
     private void Awake()
@@ -259,8 +260,9 @@ public class BaseStation : MonoBehaviour, IPlaceableStation
         if (showDebugInfo) Debug.Log($"조리 완료: '{cookedIngredient.foodName}' 생성");
 
         GameObject result = VisualObjectFactory.CreateIngredientVisual(transform, cookedIngredient.foodName, cookedIngredient.foodIcon);
-       
-       // EventBus.StopLoopSFX();
+
+        var sfx = StationSFXResolver.GetSFXFromStationData(stationData);
+        EventBus.StopLoopSFX(sfx);
         Invoke(nameof(PlayCookingFinishSound), 0.2f);
 
         if (result)
@@ -282,9 +284,10 @@ public class BaseStation : MonoBehaviour, IPlaceableStation
     public void ResetStation()
     {
         timer = new CookingTimer(cookingTime);
-        iconDisplay?.ResetAll();                // 아이콘 리셋
-        ClearPlacedObjects();                   // 오브젝트 제거
-       // EventBus.StopLoopSFX();                 // 사운드 중지
+        iconDisplay?.ResetAll();                   // 아이콘 리셋
+        ClearPlacedObjects();                      // 오브젝트 제거
+        var sfx = StationSFXResolver.GetSFXFromStationData(stationData);
+        EventBus.StopLoopSFX(sfx);                 // 사운드 중지
 
         // 두 컬렉션 모두 초기화
         currentIngredients.Clear();
