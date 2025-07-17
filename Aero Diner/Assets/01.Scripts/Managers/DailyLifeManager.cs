@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Threading.Tasks;
 
 public class DailyLifeManager : Singleton<DailyLifeManager>
 {
@@ -7,8 +8,9 @@ public class DailyLifeManager : Singleton<DailyLifeManager>
     {
         EventBus.OnBGMRequested(BGMEventType.PlayLifeTheme);
     }
-    private void Start()
+    private async void Start()
     {
+        await Task.Delay(300);
         EventBus.RaiseFadeEvent(FadeEventType.FadeIn, new FadeEventPayload(0f, 1f));
         StartCoroutine(ResendEarningsAfterDelay());
     }
@@ -21,6 +23,8 @@ public class DailyLifeManager : Singleton<DailyLifeManager>
     public void OnOpenButtonClick()
     {
         EventBus.PlaySFX(SFXType.ButtonClick);
-        EventBus.Raise(UIEventType.LoadMainScene);
+        EventBus.Raise(UIEventType.ShowMenuPanel);
+        EventBus.PlayBGM(BGMEventType.PlayRecipeChoice);
+
     }
 }

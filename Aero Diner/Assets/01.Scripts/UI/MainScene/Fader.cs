@@ -8,5 +8,7 @@ public class Fader : MonoBehaviour
     {
         await Task.Delay(1000);
         EventBus.RaiseFadeEvent(FadeEventType.FadeIn, new FadeEventPayload(alpha: 0f, duration: 1f));
+        RestaurantManager.Instance.StartRestaurant();
+        EventBus.PlayBGM(BGMEventType.PlayMainTheme);
     }
 }

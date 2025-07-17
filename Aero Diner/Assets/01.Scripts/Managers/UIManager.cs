@@ -13,6 +13,7 @@ public class UIManager : Singleton<UIManager>
         typeof(MenuPanel3),
         typeof(MenuPanel4),
         typeof(Inventory),
+        typeof(MenuPanel)
         // 필요한 타입 추가 가능
     };
 
@@ -135,6 +136,9 @@ public class UIManager : Singleton<UIManager>
             
             case "MainScene":
                 uiHandlers.Add(new MainSceneUIHandler(currentSceneUIs));
+                break;
+            case "DayScene":
+                uiHandlers.Add(new DaySceneUIHandler(currentSceneUIs));
                 break;
         }
 
