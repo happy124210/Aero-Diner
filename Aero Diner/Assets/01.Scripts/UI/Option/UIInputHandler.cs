@@ -10,7 +10,7 @@ public class UIInputHandler : MonoBehaviour
         if (tracker == null) return;
 
         string currentScene = SceneManager.GetActiveScene().name;
-        bool isStartScene = currentScene == "StartScene";
+        bool isRestrictedScene = currentScene == "StartScene" || currentScene == "LoadingScene";
 
         if (tracker.IsOptionOpen)
         {
@@ -37,13 +37,13 @@ public class UIInputHandler : MonoBehaviour
         }
         else
         {
-            if (!isStartScene) // StartScene이 아닐 때만 Pause 열기
+            if (!isRestrictedScene)
             {
                 EventBus.Raise(UIEventType.OpenPause);
             }
             else
             {
-                Debug.Log("StartScene에서는 PausePanel을 열지 않습니다.");
+                Debug.Log($"{currentScene}에서는 PausePanel을 열지 않습니다.");
             }
         }
     }

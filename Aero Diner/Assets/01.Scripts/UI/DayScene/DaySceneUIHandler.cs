@@ -18,7 +18,6 @@ public class DaySceneUIHandler : IUIEventHandler
                 foreach (var ui in sceneUIs)
                     ui?.GetComponentInChildren<MenuPanel>(true)?.gameObject.SetActive(true);
 
-                //EventBus.OnBGMRequested?.Invoke(BGMEventType.PlayRecipeChoice);
                 return true;
 
             case UIEventType.UpdateMenuPanel:
