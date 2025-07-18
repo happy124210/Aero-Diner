@@ -10,9 +10,6 @@ public class CustomerManager : Singleton<CustomerManager>
     [Header("Debug Info")]
     [SerializeField] private bool showDebugInfo;
     
-    private const string CUSTOMER_PREFAB_PATH = "Prefabs/Characters/Customer";
-    private const string CUSTOMER_DATA_PATH = "Datas/Customer";
-    
     private CustomerData[] availableCustomerTypes;
     private readonly List<CustomerController> activeCustomers = new();
 
@@ -27,8 +24,8 @@ public class CustomerManager : Singleton<CustomerManager>
 
     private void LoadResourceData()
     {
-        customerPrefab = Resources.Load<GameObject>(CUSTOMER_PREFAB_PATH);
-        availableCustomerTypes = Resources.LoadAll<CustomerData>(CUSTOMER_DATA_PATH);
+        customerPrefab = Resources.Load<GameObject>(StringPath.CUSTOMER_PREFAB_PATH);
+        availableCustomerTypes = Resources.LoadAll<CustomerData>(StringPath.CUSTOMER_DATA_PATH);
     }
     
     public CustomerController SpawnCustomer(CustomerData data, Vector3 position, Quaternion rotation)
