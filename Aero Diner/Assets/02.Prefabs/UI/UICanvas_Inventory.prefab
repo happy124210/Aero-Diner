@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 5460363810610753173}
   - component: {fileID: 925180125356115874}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Img_Saperator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1469,7 +1469,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &8395020081521739629
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2819,7 +2819,7 @@ GameObject:
   - component: {fileID: 3990985062703657278}
   - component: {fileID: 8077438105164303041}
   m_Layer: 5
-  m_Name: Txt_StockCount
+  m_Name: Tmp_Stock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4221,7 +4221,7 @@ GameObject:
   - component: {fileID: 161475725411369287}
   - component: {fileID: 7281226063048336547}
   m_Layer: 5
-  m_Name: Txt_Ingerdient Name
+  m_Name: Tmp_Ingerdient Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4623,7 +4623,7 @@ GameObject:
   - component: {fileID: 8743386478509003631}
   - component: {fileID: 1307546306990986758}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Img_Saperator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4950,7 +4950,7 @@ GameObject:
   - component: {fileID: 759003554531324443}
   - component: {fileID: 329285329467043967}
   m_Layer: 5
-  m_Name: Txt_IngerdientCount
+  m_Name: Tmp_Price
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5772,7 +5772,7 @@ GameObject:
   - component: {fileID: 3406287445126161559}
   - component: {fileID: 6752937769725764758}
   m_Layer: 5
-  m_Name: IngredientDetail
+  m_Name: Img_IngredientDetail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8626,7 +8626,7 @@ GameObject:
   - component: {fileID: 4107592075174921683}
   - component: {fileID: 8152714499732155929}
   m_Layer: 5
-  m_Name: Description
+  m_Name: Img_Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9277,7 +9277,7 @@ GameObject:
   - component: {fileID: 6405427406774004396}
   - component: {fileID: 7619193061682038916}
   m_Layer: 5
-  m_Name: IngredientStock
+  m_Name: Img_StockPrice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9298,8 +9298,8 @@ RectTransform:
   - {fileID: 6456420524212383153}
   - {fileID: 1902788802598250991}
   - {fileID: 4898942751063180037}
-  - {fileID: 279422363201221528}
   - {fileID: 4752850960043410649}
+  - {fileID: 279422363201221528}
   m_Father: {fileID: 8395020081521739629}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -9582,9 +9582,9 @@ RectTransform:
   m_Father: {fileID: 6211336795801446856}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -17, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &5944982603565552009
 CanvasRenderer:
@@ -10046,7 +10046,7 @@ GameObject:
   - component: {fileID: 2209398391347649199}
   - component: {fileID: 7360848528755444077}
   m_Layer: 5
-  m_Name: Txt_Stock
+  m_Name: Tmp_StockTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10587,7 +10587,7 @@ GameObject:
   - component: {fileID: 585998531752494801}
   - component: {fileID: 1022984229161575492}
   m_Layer: 5
-  m_Name: Txt_IngerdientName
+  m_Name: Tmp_PriceTItle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10721,7 +10721,7 @@ GameObject:
   - component: {fileID: 6670103714140715890}
   - component: {fileID: 9051714739261895679}
   m_Layer: 5
-  m_Name: Txt_Description
+  m_Name: Tmp_Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11339,7 +11339,7 @@ RectTransform:
   m_Father: {fileID: 5793378272230754640}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
