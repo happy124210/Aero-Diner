@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public static class StationSFXResolver
+﻿public static class StationSFXResolver
 {
     public static SFXType GetSFXFromStationData(StationData data)
     {
@@ -19,7 +17,6 @@ public static class StationSFXResolver
                 break;
         }
 
-        Debug.Log($"[SFXResolver] StationName: {data.name} | WorkType: {data.workType} | StationType: {data.stationType} => SFXType: {resolved}");
         return resolved;
     }
 

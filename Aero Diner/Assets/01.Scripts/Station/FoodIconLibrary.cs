@@ -18,7 +18,6 @@ public static class FoodIconLibrary
         if (iconDict != null && iconDict.TryGetValue(type, out var sprite))
             return sprite;
 
-        Debug.LogWarning($"아이콘이 등록되지 않은 FoodType: {type}");
         return null;
     }
 }

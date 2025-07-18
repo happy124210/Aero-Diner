@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BaseStation : MonoBehaviour, IPlaceableStation
@@ -23,6 +24,7 @@ public class BaseStation : MonoBehaviour, IPlaceableStation
     protected OutlineShaderController outline;                         // 외곽선 효과를 제어하는 컴포넌트
     protected bool hasInitialized = false;                             // 아이콘 초기화 플래그
     protected CookingTimer timer;
+    protected bool isCooking = false;
 
 
     private void Awake()
@@ -223,7 +225,19 @@ public class BaseStation : MonoBehaviour, IPlaceableStation
     /// </summary>
     public void StartCooking()
     {
-        timer.Start();
+        // 만약 타이머가 없거나 0이면 새로 시작
+        if (timer == null || timer.Remaining <= 0f)
+        {
+            timer = new CookingTimer(cookingTime);
+            timer.Start(); // Duration으로 리셋 시작
+            if (showDebugInfo) Debug.Log("[StartCooking] 새 타이머 시작");
+        }
+        else if (!timer.IsRunning)
+        {
+            timer.Start(timer.Remaining); // 중단 시점에서 이어서 시작
+            if (showDebugInfo) Debug.Log($"[StartCooking] 이어서 시작 / 남은 시간: {timer.Remaining:F2}");
+        }
+
         if (timerController != null)
             timerController.gameObject.SetActive(true);     // UI 활성화
 
@@ -259,8 +273,9 @@ public class BaseStation : MonoBehaviour, IPlaceableStation
         if (showDebugInfo) Debug.Log($"조리 완료: '{cookedIngredient.foodName}' 생성");
 
         GameObject result = VisualObjectFactory.CreateIngredientVisual(transform, cookedIngredient.foodName, cookedIngredient.foodIcon);
-       
-        EventBus.StopLoopSFX();
+
+        var sfx = StationSFXResolver.GetSFXFromStationData(stationData);
+        EventBus.StopLoopSFX(sfx);
         Invoke(nameof(PlayCookingFinishSound), 0.2f);
 
         if (result)
@@ -282,9 +297,10 @@ public class BaseStation : MonoBehaviour, IPlaceableStation
     public void ResetStation()
     {
         timer = new CookingTimer(cookingTime);
-        iconDisplay?.ResetAll();                // 아이콘 리셋
-        ClearPlacedObjects();                   // 오브젝트 제거
-        EventBus.StopLoopSFX();                 // 사운드 중지
+        iconDisplay?.ResetAll();                   // 아이콘 리셋
+        ClearPlacedObjects();                      // 오브젝트 제거
+        var sfx = StationSFXResolver.GetSFXFromStationData(stationData);
+        EventBus.StopLoopSFX(sfx);                 // 사운드 중지
 
         // 두 컬렉션 모두 초기화
         currentIngredients.Clear();
@@ -328,25 +344,37 @@ public class BaseStation : MonoBehaviour, IPlaceableStation
 
     private IEnumerator HandlePickup()
     {
-        // 가장 최근에 배치된 오브젝트를 기준으로 처리
-        GameObject lastPlaced = placedIngredients.LastOrDefault();
-
-        if (lastPlaced == null)
+        if (placedIngredients.Count == 0)
         {
             if (showDebugInfo) Debug.LogWarning("[Pickup] 처리할 오브젝트가 없습니다.");
             yield break;
         }
 
-        var display = lastPlaced.GetComponent<FoodDisplay>();
-        if (display == null || display.foodData == null)
+        // placedIngredients 역순 탐색하며 유효한 재료 찾기
+        GameObject targetObject = null;
+        FoodDisplay display = null;
+
+        for (int i = placedIngredients.Count - 1; i >= 0; i--)
         {
-            if (showDebugInfo) Debug.LogWarning("[Pickup] FoodDisplay 또는 FoodData가 없습니다.");
+            var obj = placedIngredients[i];
+            var fd = obj?.GetComponent<FoodDisplay>();
+            if (fd != null && fd.foodData != null)
+            {
+                targetObject = obj;
+                display = fd;
+                break;
+            }
+        }
+
+        if (targetObject == null || display == null)
+        {
+            if (showDebugInfo) Debug.LogWarning("[Pickup] 유효한 FoodDisplay를 찾지 못했습니다.");
             yield break;
         }
 
         var pickedData = display.foodData;
 
-        // 결과물 픽업이라면
+        // 결과물 픽업이면 전체 초기화
         if (cookedIngredient != null && pickedData == cookedIngredient)
         {
             if (showDebugInfo) Debug.Log($"[Pickup] 요리 결과물 픽업: {pickedData.foodName}");
@@ -354,7 +382,7 @@ public class BaseStation : MonoBehaviour, IPlaceableStation
             iconDisplay?.ResetAll();
             ClearPlacedObjects();
 
-            currentIngredients.Clear();
+            currentIngredients.Clear();            // 결과물 픽업 시에는 전체 클리어
             placedIngredientList.Clear();
             cookedIngredient = null;
 
@@ -362,22 +390,51 @@ public class BaseStation : MonoBehaviour, IPlaceableStation
             yield break;
         }
 
-        // 재료 픽업 처리
-        if (placedIngredientList.Any(fd => fd.id == pickedData.id))
+        // 재료 픽업: 해당 오브젝트 기준으로 제거
+        if (placedIngredients.Contains(targetObject))
         {
             if (showDebugInfo) Debug.Log($"[Pickup] 재료 픽업: {pickedData.foodName}");
 
             iconDisplay?.ShowSlot(pickedData.foodType);
 
-            placedIngredients.Remove(lastPlaced);
+            // 아이콘 로딩 보장
+            if (pickedData.foodIcon == null && !string.IsNullOrEmpty(pickedData.id))
+            {
+                var loadedIcon = Resources.Load<Sprite>($"Icons/Food/{pickedData.id}");
+                if (loadedIcon != null)
+                {
+                    pickedData.foodIcon = loadedIcon;
+                }
+            }
+
+            AttachFoodIcon(targetObject, pickedData);
+
+            // 오브젝트 및 데이터 제거
+            placedIngredients.Remove(targetObject);
             currentIngredients.Remove(pickedData.id);
-            placedIngredientList.RemoveAll(fd => fd.id == pickedData.id); // 참조 대신 id로 제거
 
-            yield return null; // 프레임 충돌 방지
+            // 딱 하나만 제거
+            var targetIndex = placedIngredientList.FindIndex(fd => fd.id == pickedData.id);
+            if (targetIndex >= 0)
+            {
+                placedIngredientList.RemoveAt(targetIndex);
+            }
 
-            AttachFoodIcon(lastPlaced, pickedData);
-            UpdateCandidateRecipes();
-            cookedIngredient = null;
+            yield return null;
+
+            // 아이콘 다시 부착
+            AttachFoodIcon(targetObject, pickedData);
+
+            if (currentIngredients.Count > 0)
+            {
+                UpdateCandidateRecipes();
+            }
+            else
+            {
+                cookedIngredient = null;
+                bestMatchedRecipe = "조건에 맞는 레시피 없음";
+                iconDisplay?.ShowSlot(pickedData.foodType);
+            }
         }
         else
         {
