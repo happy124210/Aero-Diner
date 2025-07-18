@@ -67,21 +67,33 @@ public class OverSceneUIHandler : IUIEventHandler
             case UIEventType.ShowInventory:
                 foreach (var ui in sceneUIs)
                 {
-                    ui?.GetComponentInChildren<Inventory>(true)?.gameObject.SetActive(true);
+                    var inventory = ui?.GetComponentInChildren<Inventory>(true);
+                    var tab = inventory?.GetComponentInChildren<TabButtonController>(true);
+
+                    inventory?.gameObject.SetActive(true);
                     ui?.GetComponentInChildren<IngredientPanel>(true)?.gameObject.SetActive(true);
                     ui?.GetComponentInChildren<RecipePanel>(true)?.gameObject.SetActive(false);
                     ui?.GetComponentInChildren<StationPanel>(true)?.gameObject.SetActive(false);
                     ui?.GetComponentInChildren<QuestPanel>(true)?.gameObject.SetActive(false);
+
+                    tab?.RequestSelectTab(0);
+                    tab?.ApplyTabSelectionVisuals();
                 }
-                    return true;
+                return true;
             case UIEventType.ShowRecipeBook:
                 foreach (var ui in sceneUIs)
                 {
-                    ui?.GetComponentInChildren<Inventory>(true)?.gameObject.SetActive(true);
+                    var inventory = ui?.GetComponentInChildren<Inventory>(true);
+                    var tab = inventory?.GetComponentInChildren<TabButtonController>(true);
+
+                    inventory?.gameObject.SetActive(true);
                     ui?.GetComponentInChildren<RecipePanel>(true)?.gameObject.SetActive(true);
                     ui?.GetComponentInChildren<StationPanel>(true)?.gameObject.SetActive(false);
                     ui?.GetComponentInChildren<IngredientPanel>(true)?.gameObject.SetActive(false);
                     ui?.GetComponentInChildren<QuestPanel>(true)?.gameObject.SetActive(false);
+
+                    tab?.RequestSelectTab(2);
+                    tab?.ApplyTabSelectionVisuals();
                 }
                 return true;
             case UIEventType.ShowStationPanel:
