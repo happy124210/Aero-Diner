@@ -192,7 +192,7 @@ RectTransform:
   m_Father: {fileID: 4717079569965807384}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -246,7 +246,7 @@ GameObject:
   - component: {fileID: 7801811428567368382}
   - component: {fileID: 1261505061127671180}
   m_Layer: 5
-  m_Name: PlacedTab
+  m_Name: Img_PlacedTab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -322,7 +322,7 @@ GameObject:
   - component: {fileID: 1015011546671702657}
   - component: {fileID: 901838069653344136}
   m_Layer: 5
-  m_Name: Txt_IngredientList
+  m_Name: Tmp_IngredientListTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -582,7 +582,7 @@ GameObject:
   - component: {fileID: 9010977510227877795}
   - component: {fileID: 6332504151480019396}
   m_Layer: 5
-  m_Name: Txt_Icon
+  m_Name: Tmp_IconListTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -716,7 +716,7 @@ GameObject:
   - component: {fileID: 4442263185825801332}
   - component: {fileID: 3622599932966303128}
   m_Layer: 5
-  m_Name: Txt_Stock
+  m_Name: Tmp_StockTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -850,7 +850,7 @@ GameObject:
   - component: {fileID: 4916865403993760195}
   - component: {fileID: 6042990286889179550}
   m_Layer: 5
-  m_Name: Txt_IngredientList
+  m_Name: Tmp_IngredientListTItle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -903,7 +903,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC7AC\uB8CC \uBAA9\uB85D"
+  m_text: "\uC124\uBE44 \uBAA9\uB85D"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1650638a1681ace47a68284a89248b89, type: 2}
   m_sharedMaterial: {fileID: -4773585019012486157, guid: 1650638a1681ace47a68284a89248b89, type: 2}
@@ -1464,7 +1464,7 @@ GameObject:
   - component: {fileID: 8196852603540920313}
   - component: {fileID: 7186729003604062309}
   m_Layer: 5
-  m_Name: IngredientPanel
+  m_Name: Group_IngredientPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1664,7 +1664,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 5549121110941276411}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99997425
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1756,7 +1756,7 @@ GameObject:
   - component: {fileID: 6849080327678151522}
   - component: {fileID: 1361462112437289571}
   m_Layer: 5
-  m_Name: Txt_Introduction
+  m_Name: Tmp_Introduction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1890,7 +1890,7 @@ GameObject:
   - component: {fileID: 9150306962526269238}
   - component: {fileID: 2223880985185496985}
   m_Layer: 5
-  m_Name: IngredientDetail
+  m_Name: Img_StationDetail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1968,7 +1968,7 @@ GameObject:
   - component: {fileID: 9158305685525169012}
   - component: {fileID: 5017623232749352278}
   m_Layer: 5
-  m_Name: MainScrollView
+  m_Name: ScrollView_RecipeList
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2087,7 +2087,7 @@ GameObject:
   - component: {fileID: 637037039656847614}
   - component: {fileID: 7005678374007745702}
   m_Layer: 5
-  m_Name: IngredientScrollView
+  m_Name: Img_IngredientPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2184,7 +2184,7 @@ RectTransform:
   m_Father: {fileID: 4901490922765400437}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.99997425}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2383,7 +2383,7 @@ GameObject:
   - component: {fileID: 5279100525482356494}
   - component: {fileID: 3443895107236246712}
   m_Layer: 5
-  m_Name: Tmp_Placed
+  m_Name: Tmp_PlacedTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2592,7 +2592,7 @@ GameObject:
   - component: {fileID: 4980572566934801357}
   - component: {fileID: 8487222170202062972}
   m_Layer: 5
-  m_Name: StationListTab
+  m_Name: Img_StationListTab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2689,7 +2689,7 @@ RectTransform:
   m_Father: {fileID: 6047261476651489733}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.9999628}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2743,7 +2743,7 @@ GameObject:
   - component: {fileID: 2514754278864692714}
   - component: {fileID: 593485276425301806}
   m_Layer: 5
-  m_Name: Description
+  m_Name: Img_Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3010,7 +3010,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0.00090357766, y: 0}
+  m_AnchoredPosition: {x: 0.00090357766, y: 0.000030890966}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &7835028762300044712
@@ -3051,7 +3051,7 @@ GameObject:
   - component: {fileID: 3898689331994537378}
   - component: {fileID: 796340891842910116}
   m_Layer: 5
-  m_Name: IngredientListTab
+  m_Name: Img_IngredientList
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3128,7 +3128,7 @@ GameObject:
   - component: {fileID: 1114187909839028284}
   - component: {fileID: 7590214837122533758}
   m_Layer: 5
-  m_Name: MainScrollView
+  m_Name: ScrollView_StationList
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3441,7 +3441,7 @@ RectTransform:
   m_Father: {fileID: 2715220257867802659}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3495,7 +3495,7 @@ GameObject:
   - component: {fileID: 1799703708764828135}
   - component: {fileID: 8570723373794041157}
   m_Layer: 5
-  m_Name: TMP_CompletedQuest
+  m_Name: Tmp_CompletedQuestTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3691,7 +3691,7 @@ GameObject:
   - component: {fileID: 779072700904232532}
   - component: {fileID: 4465872191938634701}
   m_Layer: 5
-  m_Name: Txt_Btn_Station
+  m_Name: Tmp_Btn_Station
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3825,7 +3825,7 @@ GameObject:
   - component: {fileID: 6056705066659913506}
   - component: {fileID: 4793355985943980998}
   m_Layer: 5
-  m_Name: Icon
+  m_Name: Img_MenuIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3900,7 +3900,7 @@ GameObject:
   - component: {fileID: 6201634615853077599}
   - component: {fileID: 8329682571406172510}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Img_Saperator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4011,7 +4011,7 @@ GameObject:
   - component: {fileID: 4858698897403180464}
   - component: {fileID: 2863303950501696390}
   m_Layer: 5
-  m_Name: StockTab
+  m_Name: Img_StockTab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4087,7 +4087,7 @@ GameObject:
   - component: {fileID: 8183509000964327931}
   - component: {fileID: 3064258819093068367}
   m_Layer: 5
-  m_Name: Txt_Btn_Quest
+  m_Name: Tmp_Btn_Quest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4355,7 +4355,7 @@ GameObject:
   - component: {fileID: 2052891362866347837}
   - component: {fileID: 5529862419918198598}
   m_Layer: 5
-  m_Name: Txt_Station Name
+  m_Name: Tmp_Recipe Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4489,7 +4489,7 @@ GameObject:
   - component: {fileID: 5874436392985124015}
   - component: {fileID: 5993064543804786033}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Tmp_QuestName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4699,7 +4699,7 @@ GameObject:
   - component: {fileID: 3329036523469138168}
   - component: {fileID: 4474946841323136877}
   m_Layer: 5
-  m_Name: CompletedScrollView
+  m_Name: ScrollView_Completed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5229,7 +5229,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2382142009371116347}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99993575
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5246,7 +5246,7 @@ GameObject:
   - component: {fileID: 3525586693596206434}
   - component: {fileID: 276614010297324849}
   m_Layer: 5
-  m_Name: Txt_Stock
+  m_Name: Tmp_StockTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5336,7 +5336,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 1
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -5367,7 +5367,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &4831253133656457066
@@ -5382,7 +5382,7 @@ GameObject:
   - component: {fileID: 8186811043006102194}
   - component: {fileID: 5609672166777905537}
   m_Layer: 5
-  m_Name: Txt_StationList
+  m_Name: Tmp_RecipeListTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5404,7 +5404,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 225, y: -5}
+  m_AnchoredPosition: {x: 225, y: -7}
   m_SizeDelta: {x: 400, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8186811043006102194
@@ -5435,7 +5435,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Recipe List
+  m_text: " \uB808\uC2DC\uD53C \uBAA9\uB85D"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1650638a1681ace47a68284a89248b89, type: 2}
   m_sharedMaterial: {fileID: -4773585019012486157, guid: 1650638a1681ace47a68284a89248b89, type: 2}
@@ -5462,15 +5462,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
+  m_fontSize: 30
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 30
   m_fontStyle: 1
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -5629,9 +5629,9 @@ RectTransform:
   m_Father: {fileID: 7775937494913902728}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -17, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &7048478226568821028
 CanvasRenderer:
@@ -5696,7 +5696,7 @@ GameObject:
   - component: {fileID: 3735972534885293666}
   - component: {fileID: 1587683165020292354}
   m_Layer: 5
-  m_Name: Reward
+  m_Name: Img_Reward
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6033,7 +6033,7 @@ GameObject:
   - component: {fileID: 484261125080545450}
   - component: {fileID: 5160240638495090643}
   m_Layer: 5
-  m_Name: StationPanel
+  m_Name: Group_StationPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6125,7 +6125,7 @@ GameObject:
   - component: {fileID: 2825437755176287850}
   - component: {fileID: 4516611781780191129}
   m_Layer: 5
-  m_Name: Description
+  m_Name: Img_Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6222,7 +6222,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0.00090357766, y: 0.00006142278}
+  m_AnchoredPosition: {x: 0.00090357766, y: 0.000041211155}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &3796253820561920044
@@ -6470,7 +6470,7 @@ GameObject:
   - component: {fileID: 3675730669531637229}
   - component: {fileID: 3618063569417708767}
   m_Layer: 5
-  m_Name: Listlegend
+  m_Name: Img_RecipeLIst
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6546,7 +6546,7 @@ GameObject:
   - component: {fileID: 4020695196599796410}
   - component: {fileID: 5060050416189042687}
   m_Layer: 5
-  m_Name: StockTab
+  m_Name: Img_Stock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6622,7 +6622,7 @@ GameObject:
   - component: {fileID: 6033692242221062650}
   - component: {fileID: 992755249473051184}
   m_Layer: 5
-  m_Name: IconTab
+  m_Name: Img_IconList
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6854,9 +6854,9 @@ RectTransform:
   m_Father: {fileID: 4109031458855623147}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -17, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &8801948541425727666
 CanvasRenderer:
@@ -6922,7 +6922,7 @@ GameObject:
   - component: {fileID: 2040024045564397248}
   - component: {fileID: 2241609328475858572}
   m_Layer: 5
-  m_Name: Scroll View
+  m_Name: Scroll View_Ingerdient
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7164,7 +7164,7 @@ GameObject:
   - component: {fileID: 2245926658341259489}
   - component: {fileID: 2989217247271097154}
   m_Layer: 5
-  m_Name: MainScrollView
+  m_Name: ScrollView_Ingredient
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7322,7 +7322,7 @@ GameObject:
   - component: {fileID: 2045116699936099167}
   - component: {fileID: 1286281413491044700}
   m_Layer: 5
-  m_Name: Description
+  m_Name: Img_Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7399,7 +7399,7 @@ GameObject:
   - component: {fileID: 8771892033187432980}
   - component: {fileID: 7128380061754054871}
   m_Layer: 5
-  m_Name: Scroll View
+  m_Name: Scroll View_Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7542,7 +7542,7 @@ GameObject:
   - component: {fileID: 530853057381141324}
   - component: {fileID: 6696451851596402584}
   m_Layer: 5
-  m_Name: Txt_Station Name
+  m_Name: Tmp_Station Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7676,7 +7676,7 @@ GameObject:
   - component: {fileID: 4360796630472823429}
   - component: {fileID: 6836718155130046684}
   m_Layer: 5
-  m_Name: Txt_Btn_Recipe
+  m_Name: Tmp_Btn_Recipe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7952,7 +7952,7 @@ GameObject:
   - component: {fileID: 9029765825054261921}
   - component: {fileID: 7297062034132428269}
   m_Layer: 5
-  m_Name: Txt_btn_ingredient
+  m_Name: Tmp_btn_ingredient
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8086,7 +8086,7 @@ GameObject:
   - component: {fileID: 5303428616114611676}
   - component: {fileID: 5634018527096298903}
   m_Layer: 5
-  m_Name: StationDetail
+  m_Name: Img_StationDetail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8363,7 +8363,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 6958242923792105406}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999582
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8381,7 +8381,7 @@ GameObject:
   - component: {fileID: 9056066729479796198}
   - component: {fileID: 7875103194544738821}
   m_Layer: 5
-  m_Name: RecipePanel
+  m_Name: Group_RecipePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8814,7 +8814,7 @@ GameObject:
   - component: {fileID: 7690506029077438475}
   - component: {fileID: 3449730740392862046}
   m_Layer: 5
-  m_Name: DoingScrollView
+  m_Name: ScrollView_Doing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8933,7 +8933,7 @@ GameObject:
   - component: {fileID: 5684525285610046903}
   - component: {fileID: 4044100148569335050}
   m_Layer: 5
-  m_Name: TMP_DoingQuest
+  m_Name: Tmp_DoingQuestTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9067,7 +9067,7 @@ GameObject:
   - component: {fileID: 5939296898218806166}
   - component: {fileID: 2783724287895735408}
   m_Layer: 5
-  m_Name: Tmp_Stock
+  m_Name: Tmp_StockTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9542,7 +9542,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 7969064479634608017}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99993575
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -9649,7 +9649,7 @@ GameObject:
   - component: {fileID: 4693261954684508498}
   - component: {fileID: 8202470144187204565}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Img_Saperator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9724,7 +9724,7 @@ GameObject:
   - component: {fileID: 8515999139308312183}
   - component: {fileID: 3626875117172344563}
   m_Layer: 5
-  m_Name: Txt_StationCount
+  m_Name: Tmp_StationCount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9967,7 +9967,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 8420904961103959645}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999628
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -10182,7 +10182,7 @@ GameObject:
   - component: {fileID: 1099525813188415472}
   - component: {fileID: 8776076616638065271}
   m_Layer: 5
-  m_Name: Txt_StationName
+  m_Name: Tmp_PriceTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10270,7 +10270,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 1
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -10301,7 +10301,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &8689576617486469489
@@ -10337,7 +10337,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0.00090357766, y: 0.00006142278}
+  m_AnchoredPosition: {x: 0.00090357766, y: 0.000041211155}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &7382893678099110609
@@ -10378,7 +10378,7 @@ GameObject:
   - component: {fileID: 3157609621080133682}
   - component: {fileID: 2828779291262036001}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Img_Saperator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10453,7 +10453,7 @@ GameObject:
   - component: {fileID: 7209192413766879967}
   - component: {fileID: 7440003259814040032}
   m_Layer: 5
-  m_Name: Txt_StockCount
+  m_Name: Tmp_StockCount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10989,7 +10989,7 @@ GameObject:
   - component: {fileID: 6659862421485884130}
   - component: {fileID: 4119391978890870925}
   m_Layer: 5
-  m_Name: Txt_Description
+  m_Name: Tmp_Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11144,7 +11144,7 @@ RectTransform:
   m_Father: {fileID: 4923234442153589677}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.9999582}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -11200,12 +11200,12 @@ GameObject:
   - component: {fileID: 5213207471693284501}
   - component: {fileID: 8844108999607943064}
   m_Layer: 5
-  m_Name: QusetPanel
+  m_Name: Group_QusetPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6429915389734793213
 RectTransform:
   m_ObjectHideFlags: 0
