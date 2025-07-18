@@ -1,6 +1,7 @@
-﻿using System.IO;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
-using Newtonsoft.Json;
 
 public class SaveLoadManager : Singleton<SaveLoadManager>
 {
@@ -86,5 +87,32 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
             if (Instance?.showDebugInfo == true)
                 Debug.LogWarning("[SaveLoadManager] 삭제할 저장 파일이 없습니다.");
         }
+    }
+    public static void ResetProgressOnly()
+    {
+        var data = LoadGame();
+        if (data == null)
+        {
+            data = new SaveData();
+            Debug.LogWarning("[SaveLoadManager] 기존 세이브 없음 → 새 SaveData로 초기화함");
+        }
+
+        // 현재 바인딩 정보 저장
+        var preservedKeyBindings = data.keyBindings != null
+            ? new Dictionary<string, string>(data.keyBindings)
+            : new Dictionary<string, string>();
+
+        // 진행 정보 초기화
+        data.currentDay = 1;
+        data.totalEarnings = 0;
+        data.menuDatabase.Clear();
+
+        // 다시 보존한 키 바인딩 할당
+        data.keyBindings = preservedKeyBindings;
+
+        SaveGame(data);
+
+        if (Instance?.showDebugInfo == true)
+            Debug.Log("[SaveLoadManager] 진행 정보만 초기화됨 (옵션 및 키 바인딩 유지)");
     }
 }

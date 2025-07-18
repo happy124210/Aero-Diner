@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ingredient
+  - GridCell
   layers:
   - Default
   - TransparentFX
