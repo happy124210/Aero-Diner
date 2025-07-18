@@ -35,6 +35,7 @@ public class MainSceneUI : MonoBehaviour
 
     public void OnClickRecipeBook()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         EventBus.Raise(UIEventType.ShowRecipeBook);
     }
 }
