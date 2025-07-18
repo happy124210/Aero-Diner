@@ -22,7 +22,7 @@ public class StartSceneUIHandler : IUIEventHandler
                     ui?.GetComponentInChildren<MenuPanel3>(true)?.gameObject.SetActive(true);
                 break;
             case UIEventType.OnClickNewGame:
-                SaveLoadManager.DeleteSave(); // 모든 저장 삭제
+                SaveLoadManager.ResetProgressOnly(); // 욥션빼고 저장 삭제.
                 EventBus.Raise(UIEventType.LoadDayScene);
                 break;
 
