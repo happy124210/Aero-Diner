@@ -45,7 +45,9 @@ public enum SFXType
 
     // 일상
     NPCScript, BuyInShop,
+    //추후 추가(리스트 번호 오류 방지)
     OpenPause, ClosePause,
+    OpenBook, OpenInventory,
 }
 public enum UIEventType
 {
