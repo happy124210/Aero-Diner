@@ -96,7 +96,11 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 6f040f60547aa384499af58a22a14727, type: 3}
   - type: 27
     clip: {fileID: 8300000, guid: 68813654e502e334ab8011dc074b181e, type: 3}
-  audioSource: {fileID: 6240375366473892893}
+  - type: 28
+    clip: {fileID: 8300000, guid: 073b1a270fd1bff40ab45d7d9c4ac9db, type: 3}
+  - type: 29
+    clip: {fileID: 8300000, guid: 206c668d8b70d8a4a8325eaefec801e4, type: 3}
+  poolSize: 10
   showDebugInfo: 0
 --- !u!82 &6240375366473892893
 AudioSource:
