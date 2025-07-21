@@ -8067,7 +8067,7 @@ MonoBehaviour:
   - {fileID: 6429915389734793213}
   selectedColor: {r: 1, g: 1, b: 1, a: 1}
   unselectedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  animationDuration: 0.3
+  animationDuration: 0.5
   slideDistance: 1920
 --- !u!225 &3806607096381419849
 CanvasGroup:

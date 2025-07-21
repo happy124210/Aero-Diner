@@ -40,8 +40,7 @@ public class Inventory : MonoBehaviour
             Debug.Log("버튼 클릭 됨");
         EventBus.PlaySFX(SFXType.ButtonClick);
         tabController.RequestSelectTab(0);
-        EventBus.Raise(UIEventType.ShowInventory);
-        tabController.ApplyTabSelectionVisuals();
+       // EventBus.Raise(UIEventType.ShowInventory);
     }
     public void OnRecipeTabClick()
     {
@@ -49,8 +48,7 @@ public class Inventory : MonoBehaviour
             Debug.Log("버튼 클릭 됨");
         EventBus.PlaySFX(SFXType.ButtonClick);
         tabController.RequestSelectTab(2);
-        EventBus.Raise(UIEventType.ShowRecipeBook);
-        tabController.ApplyTabSelectionVisuals();
+       // EventBus.Raise(UIEventType.ShowRecipeBook);
     }
     public void OnStationTabClick()
     {
@@ -58,8 +56,7 @@ public class Inventory : MonoBehaviour
             Debug.Log("버튼 클릭 됨");
         EventBus.PlaySFX(SFXType.ButtonClick);
         tabController.RequestSelectTab(1);
-        EventBus.Raise(UIEventType.ShowStationPanel);
-        tabController.ApplyTabSelectionVisuals();
+       // EventBus.Raise(UIEventType.ShowStationPanel);
     }
     public void OnQuestTabClick()
     {
@@ -67,8 +64,7 @@ public class Inventory : MonoBehaviour
             Debug.Log("버튼 클릭 됨");
         EventBus.PlaySFX(SFXType.ButtonClick);
         tabController.RequestSelectTab(3);
-        EventBus.Raise(UIEventType.ShowQuestPanel);
-        tabController.ApplyTabSelectionVisuals();
+      //  EventBus.Raise(UIEventType.ShowQuestPanel);
     }
     public void OnCloseButtonClick()
     {
