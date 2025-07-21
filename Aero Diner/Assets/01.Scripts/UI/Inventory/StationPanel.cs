@@ -1,18 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class StationPanel : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private Image stationIconImage;
+    [SerializeField] private TMP_Text stationNameText;
+    [SerializeField] private TMP_Text descriptionText;
+    [SerializeField] private TMP_Text costText;
 
-    // Update is called once per frame
-    void Update()
+    public void SetData(StationData data)
     {
-        
+        stationIconImage.sprite = data.stationIcon;
+        stationNameText.text = data.displayName;
+        descriptionText.text = data.description;
+        costText.text = $"{data.stationCost} G";
     }
 }

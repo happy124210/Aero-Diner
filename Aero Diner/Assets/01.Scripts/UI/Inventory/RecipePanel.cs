@@ -1,18 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class RecipePanel : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private Image menuIcon;
+    [SerializeField] private TMP_Text menuNameText;
+    [SerializeField] private TMP_Text menuDescriptionText;
 
-    // Update is called once per frame
-    void Update()
+    public void SetData(FoodData data)
     {
-        
+        if (data == null) return;
+
+        menuIcon.sprite = data.foodIcon;
+        menuNameText.text = data.displayName;
+        menuDescriptionText.text = data.description;
     }
 }
