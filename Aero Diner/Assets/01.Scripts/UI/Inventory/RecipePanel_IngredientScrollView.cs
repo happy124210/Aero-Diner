@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class RecipePanel_IngredientScrollView : MonoBehaviour
@@ -15,13 +17,12 @@ public class RecipePanel_IngredientScrollView : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        List<FoodData> ingredients = RecipeManager.Instance.GetRawIngredientsForMenu(menu);
-
+        string[] ingredients = menu.ingredients;
         foreach (var ingredient in ingredients)
         {
             var go = Instantiate(ingredientSlotPrefab, contentTransform);
             var slot = go.GetComponent<RecipePanel_IngredientScrollView_Content>();
-            slot.SetData(ingredient);
+            slot.SetData(RecipeManager.Instance.FindFoodDataById(ingredient));
         }
     }
 }
