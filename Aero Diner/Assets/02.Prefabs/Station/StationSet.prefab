@@ -2721,6 +2721,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4464678144063088277}
     m_Modifications:
+    - target: {fileID: 1956589299032610927, guid: 8e002e7750655a14794368725d1c1c0a, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 689216aef18cd9b4e83b10f48db86969, type: 3}
+    - target: {fileID: 1956589299032610927, guid: 8e002e7750655a14794368725d1c1c0a, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4423133038575233841, guid: 8e002e7750655a14794368725d1c1c0a, type: 3}
       propertyPath: m_Name
       value: Grinding
