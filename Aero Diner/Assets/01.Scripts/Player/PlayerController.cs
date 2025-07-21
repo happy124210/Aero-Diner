@@ -140,15 +140,7 @@ public class PlayerController : MonoBehaviour
                 SetDirectionParams();
                 animator.SetTrigger("PickUp");
 
-                if (pickupTarget is IngredientStation)
-                {
-                    pickupTarget.Interact(playerInventory, InteractionType.Pickup);
-                }
-                else
-                {
-                    playerInventory.TryPickup(pickupTarget);
-                }
-
+                playerInventory.TryPickup(pickupTarget);
                 EventBus.OnSFXRequested(SFXType.ItemPickup);
             }
         }
@@ -177,53 +169,57 @@ public class PlayerController : MonoBehaviour
 
     private IInteractable FindBestInteractable(InteractionType interactionType)
     {
-        Vector2 origin = rb.position;
-        Vector2 direction = lastMoveDir == Vector2.zero ? Vector2.down : lastMoveDir;
+        Vector2 origin = transform.position;
+        Vector2 direction = lastMoveDir;
         float distance = interactionRadius;
-        int rayCount = 5;
-        float spread = 0.3f; // 좌우로 퍼지는 폭
+
+        RaycastHit2D[] hits = Physics2D.RaycastAll(origin, direction, distance, interactableLayer);
 
         IInteractable best = null;
         float closestDist = Mathf.Infinity;
 
-        // 직각 방향을 기준으로 좌우 퍼지게 offset 계산
-        Vector2 perpendicular = new Vector2(-direction.y, direction.x); // 직각 벡터
-
-        for (int i = 0; i < rayCount; i++)
+        foreach (var hit in hits)
         {
-            float t = (i / (float)(rayCount - 1)) - 0.5f; // -0.5 ~ 0.5
-            Vector2 offset = perpendicular * t * spread;
-            Vector2 rayOrigin = origin + offset;
+            if (hit.collider == null) continue;
 
-            RaycastHit2D[] hits = Physics2D.RaycastAll(rayOrigin, direction, distance, interactableLayer);
-            Debug.DrawRay(rayOrigin, direction * distance, Color.cyan, 0.2f);
+            var interactable = hit.collider.GetComponent<IInteractable>();
+            if (interactable == null) continue;
 
-            foreach (var hit in hits)
+            float dist = Vector2.Distance(origin, hit.point);
+
+            // Pickup (EditStation phase에서는 IMovableStation 감지)
+            if (interactionType == InteractionType.Pickup)
             {
-                if (hit.collider == null) continue;
-                var interactable = hit.collider.GetComponent<IInteractable>();
-                if (interactable == null) continue;
-
-                float dist = Vector2.Distance(origin, hit.point);
-                if (dist >= closestDist) continue;
-
-                if (interactionType == InteractionType.Pickup)
+                if (GameManager.Instance.CurrentPhase == GamePhase.EditStation)
                 {
-                    if (interactable is FoodDisplay)
+                    if (interactable is IMovableStation)
                     {
-                        best = interactable;
-                        closestDist = dist;
-                        break; // 최우선
+                        if (dist < closestDist)
+                        {
+                            best = interactable;
+                            closestDist = dist;
+                        }
+                        continue;
                     }
-                    else if (interactable is IngredientStation)
+                }
+
+                // 기본 FoodDisplay 감지
+                if (interactable is FoodDisplay food && food.CanPickup())
+                {
+                    if (dist < closestDist)
                     {
                         best = interactable;
                         closestDist = dist;
                     }
                 }
-                else if (interactionType == InteractionType.Use)
+            }
+
+            // Use / Stop
+            else if (interactionType == InteractionType.Use || interactionType == InteractionType.Stop)
+            {
+                if (interactable is PassiveStation || interactable is AutomaticStation || interactable is IngredientStation)
                 {
-                    if (interactable is PassiveStation || interactable is AutomaticStation || interactable is IngredientStation)
+                    if (dist < closestDist)
                     {
                         best = interactable;
                         closestDist = dist;

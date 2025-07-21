@@ -4,8 +4,10 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class BaseStation : MonoBehaviour, IPlaceableStation
+public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
 {
+    public Transform GetTransform() => transform;
+
     public Transform spawnPoint;
     public float cookingTime = 5f;
     public StationData stationData;
@@ -102,7 +104,10 @@ public class BaseStation : MonoBehaviour, IPlaceableStation
         }
 
     }
-
+    public void Interact(PlayerInventory inventory, InteractionType interactionType)
+    {
+        
+    }
     /// <summary>
     /// 특정 재료를 등록할 수 있는지 검증
     /// </summary>
