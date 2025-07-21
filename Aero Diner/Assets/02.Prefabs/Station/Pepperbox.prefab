@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 3522511361290625545}
   m_Layer: 6
   m_Name: Pepperbox
-  m_TagString: Untagged
+  m_TagString: Station
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

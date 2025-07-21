@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 6135554117017021008}
   m_Layer: 6
   m_Name: Shelf
-  m_TagString: Untagged
+  m_TagString: Station
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -175,7 +175,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentData: {fileID: 0}
   spawnPoint: {fileID: 1153726550070249425}
-  neededIngredients: {fileID: 0}
+  showDebugInfo: 0
 --- !u!114 &-9037808772910123558
 MonoBehaviour:
   m_ObjectHideFlags: 0

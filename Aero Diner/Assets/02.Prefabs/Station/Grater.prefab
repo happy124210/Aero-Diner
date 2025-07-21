@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 2410831333006264329}
   m_Layer: 6
   m_Name: Grater
-  m_TagString: Untagged
+  m_TagString: Station
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -104,16 +104,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 549678462780691292}
-  neededIngredients: []
   cookingTime: 5
   stationData: {fileID: 11400000, guid: ac62d39755eda7744acf7b77c351a37f, type: 2}
   currentIngredients: []
-  bestMatchedRecipe: "\uB9E4\uCE6D\uB418\uB294 \uB808\uC2DC\uD53C \uC5C6\uC74C"
   availableFoodIds: []
+  bestMatchedRecipe: "\uB9E4\uCE6D\uB418\uB294 \uB808\uC2DC\uD53C \uC5C6\uC74C"
   iconDisplay: {fileID: 4682450908414317225}
   slotSpacing: 0.5
-  showDebugInfo: 0
   timerController: {fileID: 5737976973725899250}
+  showDebugInfo: 0
+  neededIngredients: []
 --- !u!50 &1992688671287835067
 Rigidbody2D:
   serializedVersion: 4
@@ -444,6 +444,10 @@ PrefabInstance:
     - target: {fileID: 6738146892103992418, guid: 5a1e8281bff4d3f4c8cb2087693432a6, type: 3}
       propertyPath: m_Name
       value: SlotIconHolder
+      objectReference: {fileID: 0}
+    - target: {fileID: 6738146892103992418, guid: 5a1e8281bff4d3f4c8cb2087693432a6, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 7974676353604054298, guid: 5a1e8281bff4d3f4c8cb2087693432a6, type: 3}
       propertyPath: m_LocalPosition.x

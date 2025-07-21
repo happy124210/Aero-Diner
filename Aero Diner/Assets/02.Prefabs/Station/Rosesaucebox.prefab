@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 8927796993832835906}
   m_Layer: 6
   m_Name: Rosesaucebox
-  m_TagString: Untagged
+  m_TagString: Station
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
