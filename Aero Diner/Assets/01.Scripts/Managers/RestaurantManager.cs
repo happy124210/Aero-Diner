@@ -20,10 +20,11 @@ public class RestaurantManager : Singleton<RestaurantManager>
     [SerializeField] private int todayEarnings;
     
     [Header("Debug Info")]
+    [SerializeField] private CustomerSpawner customerSpawner;
     [SerializeField] private bool showDebugInfo;
     
     // private fields
-    private CustomerSpawner customerSpawner;
+    
     private float currentRoundTime;
     
     #region property
@@ -41,7 +42,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
     protected override void Awake()
     {
         base.Awake();
-        if (!customerSpawner) customerSpawner = GetComponent<CustomerSpawner>();
+        if (!customerSpawner) customerSpawner = transform.GetComponent<CustomerSpawner>();
 
         EventBus.OnGameEvent += HandleGameEvent;
     }
@@ -175,7 +176,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
         {
             if (GUILayout.Button("영업 시작"))
             {
-                GameManager.Instance.ChangePhase(GamePhase.Opening);
+                GameManager.Instance.ChangePhase(GamePhase.Operation);
             }
         }
         else
