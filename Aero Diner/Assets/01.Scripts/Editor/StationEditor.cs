@@ -7,39 +7,41 @@ using System.Collections.Generic;
 /// <summary>
 /// 레시피 프리뷰 버튼 및 matchedRecipeNames 출력 에디터
 /// </summary>
-[CustomEditor(typeof(MonoBehaviour), true)]
+[CustomEditor(typeof(BaseStation), true)]
 public class StationEditor : Editor
 {
+    private RecipePreviewResult previewResult;
+
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
 
-        MonoBehaviour mono = (MonoBehaviour)target;
-        System.Type type = mono.GetType();
-
-        MethodInfo previewMethod = type.GetMethod("UpdateRecipePreview", BindingFlags.Public | BindingFlags.Instance);
-        FieldInfo matchedField = type.GetField("matchedRecipeNames", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-
         GUILayout.Space(10);
-        if (previewMethod != null && GUILayout.Button("레시피 미리보기"))
+        GUILayout.Label("🔍 레시피 미리보기", EditorStyles.boldLabel);
+
+        BaseStation station = (BaseStation)target;
+
+        if (GUILayout.Button("레시피 미리보기 갱신"))
         {
-            previewMethod.Invoke(mono, null);
+            previewResult = RecipePreviewer.GetPreview(station.currentIngredients, true);
         }
 
-        if (matchedField != null && matchedField.GetValue(mono) is HashSet<string> idSet)
+        if (previewResult != null)
         {
-            GUILayout.Space(10);
+            GUILayout.Label($"매칭된 레시피: {previewResult.BestMatchedRecipeText}");
+
+            GUILayout.Space(5);
             GUILayout.Label("유효 재료 ID 목록", EditorStyles.boldLabel);
 
-            if (idSet.Count == 0)
+            if (previewResult.AvailableFoodIds == null || previewResult.AvailableFoodIds.Count == 0)
             {
                 GUILayout.Label("없음");
             }
             else
             {
-                foreach (var id in idSet)
+                foreach (var id in previewResult.AvailableFoodIds)
                 {
-                    GUILayout.Label($"{id}");
+                    GUILayout.Label($"- {id}");
                 }
             }
         }

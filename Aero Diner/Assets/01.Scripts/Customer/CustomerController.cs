@@ -8,8 +8,6 @@ public class CustomerController : MonoBehaviour, IPoolable
 {
     [Header("Movement")]
     [SerializeField] private NavMeshAgent navAgent;
-    private const float ARRIVAL_THRESHOLD = 0.5f;
-    private const float VELOCITY_THRESHOLD = 0.1f;
     
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo;
@@ -199,7 +197,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     
     // state 전환
     public void MoveToAssignedSeat() => ChangeState(new MovingToSeatState());
-    public void ForceLeave() => ChangeState(new LeavingState());
+    public void ForceLeave() => ChangeState(new AngryLeavingState());
     
     #endregion
 
@@ -251,12 +249,10 @@ public class CustomerController : MonoBehaviour, IPoolable
 
     public bool HasReachedDestination()
     {
-        if (!navAgent || navAgent.enabled == false) return false;
+        if (!navAgent || navAgent.pathPending || navAgent.enabled == false) return false;
+        if (!(navAgent.remainingDistance <= navAgent.stoppingDistance)) return false;
         
-        bool reached = navAgent.remainingDistance <= ARRIVAL_THRESHOLD 
-                                 && navAgent.velocity.sqrMagnitude < VELOCITY_THRESHOLD * VELOCITY_THRESHOLD;
-        
-        return reached;
+        return !navAgent.hasPath || navAgent.velocity.sqrMagnitude == 0f;
     }
     
     public void AdjustToSeatPosition()

@@ -182,6 +182,29 @@ public class GameManager : Singleton<GameManager>
     }
 
     #endregion
+    
+    #region Debug Commands
+#if UNITY_EDITOR  
+    private void OnGUI()
+    {
+        if (!Application.isPlaying) return;
+        
+        GUILayout.BeginArea(new Rect(1620, 380, 300, 700));
+        
+        GUILayout.Label("=== Game Status ===");
+        GUILayout.Label($"게임 상태: {Instance.CurrentPhase}");
+        
+        GUILayout.Space(10);
+        
+        if (GUILayout.Button("모든 메뉴 해금"))
+        {
+            MenuManager.Instance.UnlockAllMenus();
+        }
+        
+        GUILayout.EndArea();
+    }
+#endif    
+    #endregion
 }
 
 public enum GamePhase

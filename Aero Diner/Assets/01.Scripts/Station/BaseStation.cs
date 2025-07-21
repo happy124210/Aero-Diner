@@ -234,17 +234,17 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
         if (timer == null || timer.Remaining <= 0f)
         {
             timer = new CookingTimer(cookingTime);
-            timer.Start(); // Duration으로 리셋 시작
+            timer.Start();                                                              // Duration으로 리셋 시작
             if (showDebugInfo) Debug.Log("[StartCooking] 새 타이머 시작");
         }
         else if (!timer.IsRunning)
         {
-            timer.Start(timer.Remaining); // 중단 시점에서 이어서 시작
+            timer.Start(timer.Remaining);                                               // 중단 시점에서 이어서 시작
             if (showDebugInfo) Debug.Log($"[StartCooking] 이어서 시작 / 남은 시간: {timer.Remaining:F2}");
         }
 
         if (timerController != null)
-            timerController.gameObject.SetActive(true);     // UI 활성화
+            timerController.gameObject.SetActive(true);                                  // UI 활성화
 
         if (stationData != null)
         {
@@ -470,6 +470,14 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
         }
     }
 
+    /// <summary>
+    /// 플레이어가 일상씬에서 k키를 사용했을때 설비를 픽업하는 매서드
+    /// </summary>
+    public void OnStationPickup()
+    {
+
+    }
+
     public void OnHoverEnter()
     {
         outline?.EnableOutline();
@@ -479,58 +487,4 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
     {
         outline?.DisableOutline();
     }
-
-    /// <summary>
-    /// 현재 재료를 기반으로 가장 적합한 레시피를 찾아서 저장
-    /// StationEditor에서만 사용
-    /// </summary>
-    public void UpdateRecipePreview()
-    {
-        if (RecipeManager.Instance == null)
-        {
-            if (showDebugInfo) Debug.LogWarning("[PassiveStation] RecipeManager 인스턴스가 없음");
-            return;
-        }
-
-        var matches = RecipeManager.Instance.FindMatchingTodayRecipes(currentIngredients);
-
-        // 매칭 목록 초기화
-        availableFoodIds.Clear();
-
-        if (matches.Count > 0)
-        {
-            // 가장 일치하는 레시피 저장
-            var best = matches
-                .OrderByDescending(m => m.MatchRatio)
-                .ThenByDescending(m => m.matchedCount)
-                .First();
-
-            bestMatchedRecipe = $"{best.recipe.displayName} ({best.matchedCount}/{best.totalRequired})";
-
-            cookedIngredient = best.recipe;
-
-            // 전체 매칭 리스트 업데이트
-            foreach (var recipe in matches.Select(m => m.recipe))
-            {
-                foreach (var id in recipe.ingredients)
-                {
-                    availableFoodIds.Add(id);
-                }
-            }
-
-            if (showDebugInfo)
-            {
-                var previewList = string.Join("\n", availableFoodIds.Select(r => "- " + r));
-                Debug.Log("[레시피 미리보기]\n" + previewList);
-            }
-        }
-        else
-        {
-            bestMatchedRecipe = "매칭되는 레시피 없음";
-            availableFoodIds.Clear();
-
-            if (showDebugInfo) Debug.Log("[PassiveStation] 일치하는 레시피 없음");
-        }
-    }
-
 }

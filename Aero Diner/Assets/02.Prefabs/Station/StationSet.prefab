@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 5471803048198080011}
   m_Layer: 6
   m_Name: Shelf
-  m_TagString: Untagged
+  m_TagString: Station
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -340,7 +340,7 @@ GameObject:
   - component: {fileID: 8264228991223261293}
   m_Layer: 6
   m_Name: Shelf
-  m_TagString: Untagged
+  m_TagString: Station
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -561,7 +561,6 @@ Transform:
   - {fileID: 8082831124523148272}
   - {fileID: 7627540289426852776}
   - {fileID: 5090356420195134477}
-  - {fileID: 1960145276223470424}
   - {fileID: 3538850181186568091}
   - {fileID: 5640755862718527638}
   m_Father: {fileID: 5009668030213215489}
@@ -631,7 +630,7 @@ GameObject:
   - component: {fileID: 6234353811755212054}
   m_Layer: 6
   m_Name: Shelf
-  m_TagString: Untagged
+  m_TagString: Station
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -835,7 +834,7 @@ GameObject:
   - component: {fileID: 7916565624757332354}
   m_Layer: 6
   m_Name: CheatBox
-  m_TagString: Untagged
+  m_TagString: Station
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1181,7 +1180,7 @@ GameObject:
   - component: {fileID: 2954832004462770987}
   m_Layer: 6
   m_Name: TrashCan
-  m_TagString: Untagged
+  m_TagString: Station
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1382,7 +1381,7 @@ GameObject:
   - component: {fileID: 2270630212263755398}
   m_Layer: 6
   m_Name: Shelf
-  m_TagString: Untagged
+  m_TagString: Station
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1683,6 +1682,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Autocutter
       objectReference: {fileID: 0}
+    - target: {fileID: 5927260267000352618, guid: b9d3cf75c3cf84642acfe7a8338584ea, type: 3}
+      propertyPath: m_TagString
+      value: Station
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1763,6 +1766,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2453258806373090152}
     m_Modifications:
+    - target: {fileID: 991323358294329739, guid: 3b5a12ee7befbb240a3fc72efe83a90a, type: 3}
+      propertyPath: stationData
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5923912289854919993, guid: 3b5a12ee7befbb240a3fc72efe83a90a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.5
@@ -1806,6 +1813,10 @@ PrefabInstance:
     - target: {fileID: 6207319595978590824, guid: 3b5a12ee7befbb240a3fc72efe83a90a, type: 3}
       propertyPath: m_Name
       value: Blender
+      objectReference: {fileID: 0}
+    - target: {fileID: 6207319595978590824, guid: 3b5a12ee7befbb240a3fc72efe83a90a, type: 3}
+      propertyPath: m_TagString
+      value: Station
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2201,6 +2212,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fryingpan
       objectReference: {fileID: 0}
+    - target: {fileID: 1580171974632153718, guid: c7d25a6d8d5b6a9458cf60383c81f9f0, type: 3}
+      propertyPath: m_TagString
+      value: Station
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058390335094083033, guid: c7d25a6d8d5b6a9458cf60383c81f9f0, type: 3}
+      propertyPath: stationData
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5977731664937511089, guid: c7d25a6d8d5b6a9458cf60383c81f9f0, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.41
@@ -2299,9 +2318,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2116757492197835236, guid: 5a92b4087279a9f42936819a45781c4d, type: 3}
+      propertyPath: stationData
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7900105229449854702, guid: 5a92b4087279a9f42936819a45781c4d, type: 3}
       propertyPath: m_Name
       value: Oven
+      objectReference: {fileID: 0}
+    - target: {fileID: 7900105229449854702, guid: 5a92b4087279a9f42936819a45781c4d, type: 3}
+      propertyPath: m_TagString
+      value: Station
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2386,6 +2413,14 @@ PrefabInstance:
     - target: {fileID: 2625043130923246362, guid: 1088a9cdf3e5aa34a8189ac6fcc0b5cb, type: 3}
       propertyPath: m_Name
       value: Rollerpan
+      objectReference: {fileID: 0}
+    - target: {fileID: 2625043130923246362, guid: 1088a9cdf3e5aa34a8189ac6fcc0b5cb, type: 3}
+      propertyPath: m_TagString
+      value: Station
+      objectReference: {fileID: 0}
+    - target: {fileID: 5200130952698386327, guid: 1088a9cdf3e5aa34a8189ac6fcc0b5cb, type: 3}
+      propertyPath: stationData
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 9050677884786426741, guid: 1088a9cdf3e5aa34a8189ac6fcc0b5cb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2511,6 +2546,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pot
       objectReference: {fileID: 0}
+    - target: {fileID: 7288475346454272569, guid: 77c065876c945484ab499ce3fcbdc968, type: 3}
+      propertyPath: m_TagString
+      value: Station
+      objectReference: {fileID: 0}
     - target: {fileID: 8149018711358205299, guid: 77c065876c945484ab499ce3fcbdc968, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.42
@@ -2573,6 +2612,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hightpoweroven
       objectReference: {fileID: 0}
+    - target: {fileID: 2451704335337916032, guid: fd47367ffe6320242998d050702e2936, type: 3}
+      propertyPath: m_TagString
+      value: Station
+      objectReference: {fileID: 0}
     - target: {fileID: 3009603736175173746, guid: fd47367ffe6320242998d050702e2936, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1
@@ -2612,6 +2655,10 @@ PrefabInstance:
     - target: {fileID: 3009603736175173746, guid: fd47367ffe6320242998d050702e2936, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3678091431822371272, guid: fd47367ffe6320242998d050702e2936, type: 3}
+      propertyPath: stationData
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2693,9 +2740,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4464678144063088277}
     m_Modifications:
+    - target: {fileID: 133093878838810757, guid: 8e002e7750655a14794368725d1c1c0a, type: 3}
+      propertyPath: stationData
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1956589299032610927, guid: 8e002e7750655a14794368725d1c1c0a, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 689216aef18cd9b4e83b10f48db86969, type: 3}
+    - target: {fileID: 1956589299032610927, guid: 8e002e7750655a14794368725d1c1c0a, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4423133038575233841, guid: 8e002e7750655a14794368725d1c1c0a, type: 3}
       propertyPath: m_Name
       value: Grinding
+      objectReference: {fileID: 0}
+    - target: {fileID: 4423133038575233841, guid: 8e002e7750655a14794368725d1c1c0a, type: 3}
+      propertyPath: m_TagString
+      value: Station
       objectReference: {fileID: 0}
     - target: {fileID: 5801100256916137940, guid: 8e002e7750655a14794368725d1c1c0a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2857,9 +2920,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 806327784499029968, guid: 6cff77705b4a6044f80e39c3533aa1ce, type: 3}
+      propertyPath: stationData
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1441698754512392021, guid: 6cff77705b4a6044f80e39c3533aa1ce, type: 3}
       propertyPath: m_Name
       value: Grater
+      objectReference: {fileID: 0}
+    - target: {fileID: 1441698754512392021, guid: 6cff77705b4a6044f80e39c3533aa1ce, type: 3}
+      propertyPath: m_TagString
+      value: Station
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3127,6 +3198,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2453258806373090152}
     m_Modifications:
+    - target: {fileID: 587988538540063779, guid: cfae6cf5d294afb4b9643b2e9c72ad22, type: 3}
+      propertyPath: stationData
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1506017653687868599, guid: cfae6cf5d294afb4b9643b2e9c72ad22, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.5
@@ -3171,6 +3246,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Thermalpot
       objectReference: {fileID: 0}
+    - target: {fileID: 7655028771983247080, guid: cfae6cf5d294afb4b9643b2e9c72ad22, type: 3}
+      propertyPath: m_TagString
+      value: Station
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3180,68 +3259,6 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 1506017653687868599, guid: cfae6cf5d294afb4b9643b2e9c72ad22, type: 3}
   m_PrefabInstance: {fileID: 7263619033929629511}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &7602858117420745596
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 2453258806373090152}
-    m_Modifications:
-    - target: {fileID: 7393339558205871436, guid: 790de032fd539c24ab43a8787e947092, type: 3}
-      propertyPath: m_Name
-      value: Autograter
-      objectReference: {fileID: 0}
-    - target: {fileID: 8264407214978676772, guid: 790de032fd539c24ab43a8787e947092, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8264407214978676772, guid: 790de032fd539c24ab43a8787e947092, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 5.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8264407214978676772, guid: 790de032fd539c24ab43a8787e947092, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.049384885
-      objectReference: {fileID: 0}
-    - target: {fileID: 8264407214978676772, guid: 790de032fd539c24ab43a8787e947092, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8264407214978676772, guid: 790de032fd539c24ab43a8787e947092, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8264407214978676772, guid: 790de032fd539c24ab43a8787e947092, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8264407214978676772, guid: 790de032fd539c24ab43a8787e947092, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8264407214978676772, guid: 790de032fd539c24ab43a8787e947092, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8264407214978676772, guid: 790de032fd539c24ab43a8787e947092, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8264407214978676772, guid: 790de032fd539c24ab43a8787e947092, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 790de032fd539c24ab43a8787e947092, type: 3}
---- !u!4 &1960145276223470424 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8264407214978676772, guid: 790de032fd539c24ab43a8787e947092, type: 3}
-  m_PrefabInstance: {fileID: 7602858117420745596}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8114018530998428651
 PrefabInstance:
@@ -3294,6 +3311,10 @@ PrefabInstance:
     - target: {fileID: 1967490182239246049, guid: 10618c0aed4aa1a418148782cf594b15, type: 3}
       propertyPath: m_Name
       value: CuttingBoard
+      objectReference: {fileID: 0}
+    - target: {fileID: 1967490182239246049, guid: 10618c0aed4aa1a418148782cf594b15, type: 3}
+      propertyPath: m_TagString
+      value: Station
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

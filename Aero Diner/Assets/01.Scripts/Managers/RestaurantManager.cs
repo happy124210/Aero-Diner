@@ -57,9 +57,9 @@ public class RestaurantManager : Singleton<RestaurantManager>
     {
         if (GameManager.Instance.CurrentPhase != GamePhase.Operation) return;
         
-        currentRoundTime -= Time.deltaTime;
+        currentRoundTime += Time.deltaTime;
 
-        if (currentRoundTime <= 0)
+        if (currentRoundTime >= roundTimeLimit)
         {
             EventBus.Raise(GameEventType.RoundTimerEnded);
             currentRoundTime = -1f; 
@@ -81,7 +81,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
             // 영업 시작 준비
             case GamePhase.Opening:
                 InitializeDay();
-                currentRoundTime = roundTimeLimit;
                 EventBus.Raise(UIEventType.ShowRoundTimer);
                 // TODO: 이벤트 체크
                 
@@ -100,7 +99,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
                 customerSpawner.StopSpawning();
                 StartCoroutine(CleanupAndShowResult());
 
-                if (showDebugInfo) Debug.Log("[RestaurantManager] Closing: 손님 스폰을 중단, 뒷정리 시작");
+                if (showDebugInfo) Debug.Log("[RestaurantManager] Closing: 손님 스폰 중단, 뒷정리 시작");
                 break;
         }
     }
@@ -117,6 +116,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
         customersServed = 0;
         customersVisited = 0;
         todayEarnings = 0;
+        currentRoundTime = 0f;
     }
 
     /// <summary>
@@ -143,6 +143,8 @@ public class RestaurantManager : Singleton<RestaurantManager>
     public void AddDailyEarnings(int amount)
     {
         todayEarnings += amount;
+        EventBus.Raise(UIEventType.UpdateEarnings, todayEarnings);
+        EventBus.OnSFXRequested(SFXType.CustomerPay);
     }
 
     #endregion
@@ -161,15 +163,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
         if (!Application.isPlaying) return;
         
         GUILayout.BeginArea(new Rect(10, 10, 300, 700));
-        
-        GUILayout.Label("=== Restaurant Status ===");
-        GUILayout.Label($"게임 상태: {GameManager.Instance.CurrentPhase}");
-        GUILayout.Label($"게임 시간: {currentRoundTime:F1}s / {roundTimeLimit}s");
-        GUILayout.Label($"활성 손님 수: {CustomerManager.Instance.ActiveCustomerCount}");
-        GUILayout.Label($"오늘 서빙한 손님: {customersServed}");
-        GUILayout.Label($"오늘 번 돈: {todayEarnings}");
-        GUILayout.Label($"총액: {GameManager.Instance.TotalEarnings}");
-        
         GUILayout.Space(10);
         
         if (GameManager.Instance.CurrentPhase != GamePhase.Operation)
@@ -183,13 +176,13 @@ public class RestaurantManager : Singleton<RestaurantManager>
         {
             if (GUILayout.Button("영업 마감"))
             {
-                currentRoundTime = 0;
+                currentRoundTime = roundTimeLimit;
             }
         }
         
         if (GUILayout.Button("영업 강제 종료"))
         {
-            currentRoundTime = 0;
+            currentRoundTime = roundTimeLimit;
             CustomerManager.Instance.EmptyAllPatience();
         }
         

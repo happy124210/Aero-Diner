@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 1838015647078964253}
   m_Layer: 6
   m_Name: Cheesebox
-  m_TagString: Untagged
+  m_TagString: Station
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
