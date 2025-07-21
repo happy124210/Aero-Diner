@@ -250,7 +250,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     public bool HasReachedDestination()
     {
         if (!navAgent || navAgent.pathPending || navAgent.enabled == false) return false;
-        if (!(navAgent.remainingDistance <= navAgent.stoppingDistance)) return false;
+        if (navAgent.remainingDistance > navAgent.stoppingDistance) return false;
         
         return !navAgent.hasPath || navAgent.velocity.sqrMagnitude == 0f;
     }
