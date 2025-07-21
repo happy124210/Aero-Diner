@@ -161,15 +161,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
         if (!Application.isPlaying) return;
         
         GUILayout.BeginArea(new Rect(10, 10, 300, 700));
-        
-        GUILayout.Label("=== Restaurant Status ===");
-        GUILayout.Label($"게임 상태: {GameManager.Instance.CurrentPhase}");
-        GUILayout.Label($"게임 시간: {currentRoundTime:F1}s / {roundTimeLimit}s");
-        GUILayout.Label($"활성 손님 수: {CustomerManager.Instance.ActiveCustomerCount}");
-        GUILayout.Label($"오늘 서빙한 손님: {customersServed}");
-        GUILayout.Label($"오늘 번 돈: {todayEarnings}");
-        GUILayout.Label($"총액: {GameManager.Instance.TotalEarnings}");
-        
         GUILayout.Space(10);
         
         if (GameManager.Instance.CurrentPhase != GamePhase.Operation)
