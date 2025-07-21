@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -33,7 +32,7 @@ public class OverSceneUIHandler : IUIEventHandler
                 break;
             case UIEventType.CloseOption:
                 UIRoot.Instance.optionPanel.GetComponent<OptionPanelEffecter>()?.PlayFadeOut();
-                if (SceneManager.GetActiveScene().name != "StartScene")
+                if (SceneManager.GetActiveScene().name != StringScene.START_SCENE)
                     UIRoot.Instance.pausePanel.SetActive(true);
                 break;
             case UIEventType.ShowSoundTab:
@@ -52,10 +51,10 @@ public class OverSceneUIHandler : IUIEventHandler
                 UIRoot.Instance.keysettingPanel.gameObject.SetActive(true);
                 break;
             case UIEventType.LoadMainScene:
-                EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(alpha: 1f, duration: 1f, scene: "MainScene"));
+                EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(alpha: 1f, duration: 1f, scene: StringScene.MAIN_SCENE));
                 break;
             case UIEventType.LoadDayScene:
-                EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(1f, 1f, scene: "DayScene"));
+                EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(1f, 1f, scene: StringScene.DAY_SCENE));
                 break;
             case UIEventType.QuitGame:
 #if UNITY_EDITOR
