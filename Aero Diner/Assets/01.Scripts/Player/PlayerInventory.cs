@@ -59,13 +59,22 @@ public class PlayerInventory : MonoBehaviour
     {
         if (GameManager.Instance.CurrentPhase == GamePhase.EditStation && heldStation != null)
         {
-            var tr = heldStation.GetTransform();
-            tr.SetParent(null);
+            Transform gridCell = PlayerController.Instance.FindGridCellInFront();
+            if (gridCell == null)
+            {
+                Debug.Log("그리드 셀 없음 → 드롭 불가");
+                return;
+            }
 
-            var rb = tr.GetComponent<Rigidbody2D>();
+            Transform stationTr = heldStation.GetTransform();
+
+            stationTr.SetParent(null);
+            stationTr.position = gridCell.position; // 격자 위치에 정렬
+
+            var rb = stationTr.GetComponent<Rigidbody2D>();
             if (rb) rb.simulated = true;
 
-            var col = tr.GetComponent<Collider2D>();
+            var col = stationTr.GetComponent<Collider2D>();
             if (col) col.enabled = true;
 
             heldStation = null;
