@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3016406984b8b94e9f7c7e996cc12e2, type: 3}
   m_Name: tut_kaya_intro_choice1
   m_EditorClassIdentifier: 
+  id: tut_kaya_intro_choice1
   lines:
   - speakerId: KAYA
     expression: Happy

@@ -29,9 +29,10 @@ public enum WorkType
 }
 
 [CreateAssetMenu(fileName = "StationData", menuName = "CookingGame/StationData")]
-public class StationData : ScriptableObject, IData
+public class StationData : ScriptableObject
 {
-    public string id { get; set; }
+    [Header("설비 정보")]
+    public string id;
     public string stationName;
     public string displayName; 
     public StationType stationType;

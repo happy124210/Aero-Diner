@@ -20,9 +20,10 @@ public enum FoodType
 }
 
 [CreateAssetMenu(fileName = "New Food Data", menuName = "Game Data/Food Data")]
-public class FoodData : ScriptableObject, IData
+public class FoodData : ScriptableObject
 {
-    public string id { get; set; } // 고유 아이디, 레시피(ingredients)에 사용
+    [Header("음식 정보")]
+    public string id; // 고유 아이디, 레시피(ingredients)에 사용
     public string foodName;
     public string displayName; // UI용 한글 이름
     public FoodType foodType;
