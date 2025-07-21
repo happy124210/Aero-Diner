@@ -1,69 +1,163 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// 게임의 전체적인 상태와 데이터를 관리
+/// </summary>
 public class GameManager : Singleton<GameManager>
 {
     [Header("게임 진행값")]
-    [SerializeField] private int totalEarnings;
-    [SerializeField] private int currentDay = 1;
+    [SerializeField, ReadOnly] private int totalEarnings;
+    [SerializeField, ReadOnly] private int currentDay = 1;
     
-    [Header("Debug Info")]
+    [Header("디버그 정보")]
+    [SerializeField, ReadOnly] private GamePhase currentPhase;
     [SerializeField] private bool showDebugInfo;
-    private static readonly int[] DaysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
     
-    #region properties
+    private static readonly int[] DaysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    private GamePhase previousPhase;
+    
+    #region Property
+    
     public int TotalEarnings => totalEarnings;
+    public int CurrentDay => currentDay;
+    public GamePhase CurrentPhase => currentPhase;
+    
     #endregion
+    
+    #region Unity Events
     
     protected override void Awake()
     {
         base.Awake();
-        DontDestroyOnLoad(this);
+        DontDestroyOnLoad(gameObject);
         
-        LoadEarnings();
-        LoadDay();
+        LoadData();
+        
+        EventBus.OnGameEvent += HandleGameEvent;
+        EventBus.OnUIEvent += HandleUIEvent;
     }
     
-    public void PauseGame()
+    private void OnDestroy()
     {
-        Time.timeScale = 0;
+        EventBus.OnGameEvent -= HandleGameEvent;
+        EventBus.OnUIEvent -= HandleUIEvent;
     }
 
-    public void ContinueGame()
+    private void Start()
     {
-        Time.timeScale = 1;
-    }
-    
-    #region 돈 관리
-    
-    public void LoadEarnings()
-    {
-        var data = SaveLoadManager.LoadGame();
-
-        int money = data?.totalEarnings ?? 0;
-        SetMoney(money);
-    }
-
-    public void SetMoney(int amount)
-    {
-        totalEarnings = amount;
-    }
-
-    // 결제 처리 메서드
-    public void AddMoney(int amount)
-    {
-        totalEarnings += amount;
-        EventBus.Raise(UIEventType.UpdateEarnings, TotalEarnings);
-        EventBus.OnSFXRequested(SFXType.CustomerPay);
+        ChangePhase(GamePhase.EditStation); 
     }
     
     #endregion
 
-    #region 날짜 관리
+    #region 페이즈 및 이벤트 관리
+
+    /// <summary>
+    /// 게임 페이즈를 변경, 알림
+    /// </summary>
+    public void ChangePhase(GamePhase newPhase)
+    {
+        if (currentPhase == newPhase) return;
+
+        currentPhase = newPhase;
+        EventBus.Raise(GameEventType.GamePhaseChanged, newPhase);
+        
+        Time.timeScale = currentPhase 
+            is GamePhase.Paused 
+            or GamePhase.Dialogue 
+            or GamePhase.GameOver 
+            or GamePhase.SelectMenu 
+            or GamePhase.Shop ? 0f : 1f;
+        
+        if (showDebugInfo) Debug.Log($"[GameManager] Game Phase 변경됨: {newPhase}");
+    }
     
-    private void LoadDay()
+    
+    private void HandleGameEvent(GameEventType eventType, object data)
+    {
+        // RestaurantManager에서 영업 시간 종료 알림 받으면
+        if (eventType == GameEventType.RoundTimerEnded)
+        {
+            ChangePhase(GamePhase.Closing);
+        }
+    }
+    
+
+    private void HandleUIEvent(UIEventType eventType, object data)
+    {
+        if (eventType == UIEventType.HideResultPanel)
+        {
+            int earningsFromDay = RestaurantManager.Instance.TodayEarnings;
+            EndDayCycle(earningsFromDay);
+        }
+    }
+
+    /// <summary>
+    /// 하루의 모든 사이클이 끝났을 때 호출
+    /// </summary>
+    private void EndDayCycle(int earningsFromDay)
+    {
+        AddMoney(earningsFromDay);
+        IncreaseDay();
+        SaveData();
+        
+        ChangePhase(GamePhase.Day);
+        
+        if (showDebugInfo) Debug.Log($"[GameManager] 저장 완료. 하루 수입: {earningsFromDay}");
+    }
+    
+    #endregion
+
+    #region 시간 관리
+    
+    public void PauseGame()
+    {
+        if (currentPhase == GamePhase.Paused) return;
+
+        // 현재 페이즈 기억
+        previousPhase = currentPhase;
+        ChangePhase(GamePhase.Paused);
+    }
+    
+    public void ContinueGame()
+    {
+        if (currentPhase != GamePhase.Paused) return;
+        ChangePhase(previousPhase);
+    }
+    
+    #endregion
+    
+    #region 데이터 관리 (돈, 날짜, 저장/불러오기)
+
+    private void AddMoney(int amount)
+    {
+        totalEarnings += amount;
+    }
+
+    private void IncreaseDay()
+    {
+        currentDay++;
+    }
+    
+    private void LoadData()
     {
         var data = SaveLoadManager.LoadGame();
-        currentDay = Mathf.Max(1, data?.currentDay ?? 1);
+        if (data == null) return;
+        
+        totalEarnings = data.totalEarnings;
+        currentDay = Mathf.Max(1, data.currentDay);
+    }
+
+    private void SaveData()
+    {
+        var data = SaveLoadManager.LoadGame() ?? new SaveData();
+        data.totalEarnings = totalEarnings;
+        data.currentDay = currentDay;
+        
+        SaveLoadManager.SaveGame(data);
+        MenuManager.Instance.SaveMenuDatabase();
+        
+        if (showDebugInfo) Debug.Log("[GameManager]: 게임 데이터 저장 완료.");
     }
 
     public void GetCurrentDate(out int month, out int day)
@@ -83,26 +177,28 @@ public class GameManager : Singleton<GameManager>
                 break;
             }
         }
-
+        
         day = totalDays;
     }
 
-    public void IncreaseDay()
-    {
-        currentDay++;
-        if (showDebugInfo) Debug.Log($"[GameManager] Incrementing day from {currentDay} → {currentDay + 1}");
-    }
-
-    public void SaveData()
-    {
-        var data = SaveLoadManager.LoadGame() ?? new SaveData();
-        data.totalEarnings = TotalEarnings;
-        data.currentDay = currentDay;
-        SaveLoadManager.SaveGame(data);
-        MenuManager.Instance.SaveMenuDatabase();
-        
-        if (showDebugInfo) Debug.Log("[GameManager] 저장 완료");
-    }
-    
     #endregion
+}
+
+public enum GamePhase
+{
+    // === DAY SCENE ===
+    EditStation, // 배치 편집 ( 배 안에 있을 때 )
+    Day,         // 일상 ( 배 밖에 있을 때 )
+    SelectMenu, // 메뉴 선택창 켰을 때
+    Shop,        // 상점
+    
+    // === MAIN SCENE ===
+    Opening,     // 손님 스폰 전
+    Operation,   // 실제 영업중
+    Closing,     // 영업 마감
+    
+    // === 특수 상태 ===
+    Dialogue,
+    Paused,
+    GameOver,
 }
