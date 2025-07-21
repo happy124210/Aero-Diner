@@ -2,220 +2,210 @@
 using UnityEngine;
 
 /// <summary>
-/// 레스토랑 게임 매니저
+/// 레스토랑 운영 총괄
+/// GameManager로부터 Operation Phase 신호를 받아 실제 운영을 담당
 /// </summary>
 public class RestaurantManager : Singleton<RestaurantManager>
 {
-    [Header("Managers")]
-    [SerializeField] private CustomerSpawner customerSpawner;
-    
-    [Header("Layouts")]
+    [Tooltip("하루 제한 시간 (초 단위)")]
+    [SerializeField] private float roundTimeLimit = 300f;
+
+    [Header("레이아웃")]
     [SerializeField] private Transform entrancePoint;
     [SerializeField] private Transform exitPoint;
     
-    [Header("Game State")]
-    [SerializeField] private bool gameRunning;
-    [SerializeField] private int targetCustomersServed = 50;
-
-    [Header("Statistics")]
+    [Header("실시간 통계")]
     [SerializeField] private int customersServed;
     [SerializeField] private int customersVisited;
-
-    [Tooltip("현재까지 경과한 시간")]
-    [SerializeField] private float gameTime;
+    [SerializeField] private int todayEarnings;
     
-    [Header("Debug")]
+    [Header("Debug Info")]
+    [SerializeField] private CustomerSpawner customerSpawner;
     [SerializeField] private bool showDebugInfo;
     
-    [Header("라운드 시간 설정")]
-    [Tooltip("하루 제한 시간 (초 단위)")]
-    [SerializeField] private float gameTimeLimit = 300f;
-
-    private int todayEarnings = 0;
+    // private fields
     
-    protected override void Awake()
-    {
-        base.Awake();
-        InitializeRestaurant();
-    }
-
-    private void Update()
-    {
-        if (gameRunning)
-        {
-            gameTime += Time.deltaTime;
-            
-            // 시간 제한 체크
-            if (gameTime >= gameTimeLimit)
-            {
-                EndRestaurant("시간 종료!");
-            }
-            
-            // 목표 달성 체크
-            if (customersServed >= targetCustomersServed)
-            {
-                EndRestaurant("목표 달성!");
-            }
-        }
-    }
+    private float currentRoundTime;
     
-    #region 레스토랑 운영
-
-    public void InitializeRestaurant()
-    {
-        gameTime = 0f;
-        customersServed = 0;
-    }
+    #region property
     
-    public void StartRestaurant()
-    {
-        gameRunning = true;
-
-        GameManager.Instance.LoadEarnings();
-        
-        if (customerSpawner)
-        {
-            customerSpawner.StartSpawning();
-        }
-
-        // UI 이벤트
-        EventBus.Raise(UIEventType.ShowRoundTimer);
-        
-        if (showDebugInfo) Debug.Log("Restaurant game started!");
-    }
-    
-    public void EndRestaurant(string reason)
-    {
-        if (gameRunning == false) return;
-        gameRunning = false;
-        
-        if (customerSpawner)
-        {
-            customerSpawner.StopSpawning();
-        }
-        
-        StartCoroutine(WaitAndCleanup(reason));
-    }
-
-    private IEnumerator WaitAndCleanup(string reason)
-    {
-        if (showDebugInfo) Debug.Log("영업 종료 - 손님들이 떠나기를 기다리는 중...");
-        
-        TableManager.Instance.ReleaseAllQueues();
-        
-        // 모든 손님이 떠날 때까지 대기
-        yield return new WaitUntil(() => CustomerManager.Instance.ActiveCustomerCount == 0);
-        
-        if (showDebugInfo) Debug.Log($"Game ended: {reason}");
-        if (showDebugInfo) Debug.Log($"Final Stats - Served: {customersServed}, Earnings: {GameManager.Instance.TotalEarnings}");
-        
-
-        // 게임 저장
-        GameManager.Instance.AddMoney(todayEarnings);
-        GameManager.Instance.IncreaseDay();
-        GameManager.Instance.SaveData();
-        
-        EventBus.Raise(UIEventType.HideRoundTimer);
-        EventBus.Raise(UIEventType.ShowResultPanel);
-    }
+    public float CurrentRoundTime => currentRoundTime;
+    public float RoundTimeLimit => roundTimeLimit;
+    public int CustomersServed => customersServed;
+    public int CustomersVisited => customersVisited;
+    public int TodayEarnings => todayEarnings;
     
     #endregion
 
-    public void OnCustomerEntered()
+    #region Unity events
+
+    protected override void Awake()
     {
-        customersVisited++;
+        base.Awake();
+        if (!customerSpawner) customerSpawner = transform.GetComponent<CustomerSpawner>();
+
+        EventBus.OnGameEvent += HandleGameEvent;
     }
+
+    private void OnDestroy()
+    {
+        EventBus.OnGameEvent -= HandleGameEvent;
+    }
+
+    // 영업 중 타이머 계산
+    private void Update()
+    {
+        if (GameManager.Instance.CurrentPhase != GamePhase.Operation) return;
+        
+        currentRoundTime -= Time.deltaTime;
+
+        if (currentRoundTime <= 0)
+        {
+            EventBus.Raise(GameEventType.RoundTimerEnded);
+            currentRoundTime = -1f; 
+        }
+    }
+
+    #endregion
+
+    #region 이벤트 핸들링
     
-    // 손님이 결제했을 때 호출되는 메서드
-    public void IncreaseCustomerStat()
+    private void HandleGameEvent(GameEventType eventType, object data)
     {
-        customersServed++;
+        if (eventType != GameEventType.GamePhaseChanged) return;
+
+        GamePhase newPhase = (GamePhase)data;
+        
+        switch (newPhase)
+        {
+            // 영업 시작 준비
+            case GamePhase.Opening:
+                InitializeDay();
+                currentRoundTime = roundTimeLimit;
+                EventBus.Raise(UIEventType.ShowRoundTimer);
+                // TODO: 이벤트 체크
+                
+                if (showDebugInfo) Debug.Log("[RestaurantManager] Opening: 영업 준비 시작");
+                break;
+
+            // 영업 시작
+            case GamePhase.Operation:
+                customerSpawner.StartSpawning();
+                
+                if (showDebugInfo) Debug.Log("[RestaurantManager] Operation: 손님 스폰 시작");
+                break;
+
+            // 마감 시작
+            case GamePhase.Closing:
+                customerSpawner.StopSpawning();
+                StartCoroutine(CleanupAndShowResult());
+
+                if (showDebugInfo) Debug.Log("[RestaurantManager] Closing: 손님 스폰을 중단, 뒷정리 시작");
+                break;
+        }
     }
+
+    #endregion
+
+    #region 레스토랑 운영 로직
+
+    /// <summary>
+    /// 하루 영업 시작 전에 데이터 초기화
+    /// </summary>
+    private void InitializeDay()
+    {
+        customersServed = 0;
+        customersVisited = 0;
+        todayEarnings = 0;
+    }
+
+    /// <summary>
+    /// 모든 손님이 퇴장할 때까지 기다린 후 결과 패널 표시
+    /// </summary>
+    private IEnumerator CleanupAndShowResult()
+    {
+        if (showDebugInfo) Debug.Log("[RestaurantManager]: 모든 손님이 떠나길 기다리는 중...");
+        
+        TableManager.Instance.ReleaseAllQueues();
+        yield return new WaitUntil(() => CustomerManager.Instance.ActiveCustomerCount == 0);
+        
+        Debug.Log("[RestaurantManager]: 손님 다 나감. 결과창 표시");
+        EventBus.Raise(UIEventType.ShowResultPanel, todayEarnings);
+    }
+
+    #endregion
+    
+    #region 데이터 변경 메서드
+
+    public void OnCustomerEntered() => customersVisited++;
+    public void OnCustomerServed() => customersServed++;
     
     public void AddDailyEarnings(int amount)
     {
         todayEarnings += amount;
-        int currentTotalEarnings = GameManager.Instance.TotalEarnings + todayEarnings;
-        EventBus.Raise(UIEventType.UpdateEarnings, currentTotalEarnings);
     }
-    
-    #region public getters
-
-    // 레스토랑 레이아웃
-    public Vector3 GetEntrancePoint() => entrancePoint.position;
-    public Vector3 GetExitPoint() => exitPoint.position;
-    
-    // 시간
-    public float GameTimeLimit => gameTimeLimit;
-    public float CurrentGameTime => gameTime;
-    
-    // 손님
-    public int CustomersServed => customersServed;
-    public int CustomersVisited => customersVisited;
 
     #endregion
 
-#if UNITY_EDITOR
-    #region Debug Commands
+    #region public getters
     
+    public Vector3 GetEntrancePoint() => entrancePoint.position;
+    public Vector3 GetExitPoint() => exitPoint.position;
+    
+    #endregion
+    
+    #region Debug Commands
+#if UNITY_EDITOR  
     private void OnGUI()
     {
         if (!Application.isPlaying) return;
         
         GUILayout.BeginArea(new Rect(10, 10, 300, 700));
         
-        // 게임 상태 정보
         GUILayout.Label("=== Restaurant Status ===");
-        GUILayout.Label($"Game Running: {gameRunning}");
-        GUILayout.Label($"Active Customers: {CustomerManager.Instance.ActiveCustomerCount}");
-        GUILayout.Label($"Customers Served: {customersServed}/{targetCustomersServed}");
-        GUILayout.Label($"Total Earnings: {GameManager.Instance.TotalEarnings}");
-        GUILayout.Label($"Game Time: {gameTime:F1}s / {gameTimeLimit}s");
+        GUILayout.Label($"게임 상태: {GameManager.Instance.CurrentPhase}");
+        GUILayout.Label($"게임 시간: {currentRoundTime:F1}s / {roundTimeLimit}s");
+        GUILayout.Label($"활성 손님 수: {CustomerManager.Instance.ActiveCustomerCount}");
+        GUILayout.Label($"오늘 서빙한 손님: {customersServed}");
+        GUILayout.Label($"오늘 번 돈: {todayEarnings}");
+        GUILayout.Label($"총액: {GameManager.Instance.TotalEarnings}");
         
         GUILayout.Space(10);
         
-        // 조작 버튼들
-        if (GUILayout.Button("손님 스폰하기"))
+        if (GameManager.Instance.CurrentPhase != GamePhase.Operation)
         {
-            if (customerSpawner)
-                customerSpawner.SpawnSingleCustomer();
+            if (GUILayout.Button("영업 시작"))
+            {
+                GameManager.Instance.ChangePhase(GamePhase.Operation);
+            }
+        }
+        else
+        {
+            if (GUILayout.Button("영업 마감"))
+            {
+                currentRoundTime = 0;
+            }
         }
         
+        if (GUILayout.Button("영업 강제 종료"))
+        {
+            currentRoundTime = 0;
+            CustomerManager.Instance.EmptyAllPatience();
+        }
+        
+        if (GUILayout.Button("손님 1명 스폰"))
+        {
+            if (customerSpawner) customerSpawner.SpawnSingleCustomer();
+        }
+        
+        // TODO: 이동 필요
         if (GUILayout.Button("모든 메뉴 해금"))
         {
             MenuManager.Instance.UnlockAllMenus();
-            EventBus.Raise(UIEventType.UpdateMenuPanel);
-        }
-        
-        if (GUILayout.Button(gameRunning ? "게임 종료" : "게임 시작"))
-        {
-            if (gameRunning)
-                EndRestaurant("수동 정지");
-            else
-                StartRestaurant();
-        }
-
-        if (GUILayout.Button("강제 종료"))
-        {
-            if (gameRunning)
-            {
-                CustomerManager.Instance.DespawnAllCustomers();
-                EndRestaurant("수동 정지");
-            }
-        }
-        
-        if (GUILayout.Button("모든 손님 인내심 제거"))
-        {
-            if (gameRunning)
-            {
-                CustomerManager.Instance.EmptyAllPatience();
-            }
         }
         
         GUILayout.EndArea();
     }
-    
+#endif    
     #endregion
-    
-#endif
 }

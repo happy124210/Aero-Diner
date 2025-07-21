@@ -124,6 +124,7 @@ public class ResultPanel : MonoBehaviour
     public void OnNextButtonClick()
     {
         EventBus.PlaySFX(SFXType.ButtonClick);
+        EventBus.Raise(UIEventType.HideResultPanel);
         EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(scene: "DayScene"));
     }
     private void AnimateEntrance()

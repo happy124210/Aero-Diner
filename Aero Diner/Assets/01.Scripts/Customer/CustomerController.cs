@@ -162,7 +162,7 @@ public class CustomerController : MonoBehaviour, IPoolable
         view.ShowPayEffect();
         
         RestaurantManager.Instance.AddDailyEarnings(GetCurrentOrder().foodCost);
-        RestaurantManager.Instance.IncreaseCustomerStat();
+        RestaurantManager.Instance.OnCustomerServed();
     }
 
     private void HandleLeaving()

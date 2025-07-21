@@ -9,8 +9,8 @@ public class RoundTimerUI : MonoBehaviour
     {
         if (!RestaurantManager.Instance || !timerImage) return;
 
-        float time = RestaurantManager.Instance.CurrentGameTime;
-        float limit = RestaurantManager.Instance.GameTimeLimit;
+        float time = RestaurantManager.Instance.CurrentRoundTime;
+        float limit = RestaurantManager.Instance.RoundTimeLimit;
 
         float percent = Mathf.Clamp01(time / limit);
         timerImage.fillAmount = 1f - percent;
