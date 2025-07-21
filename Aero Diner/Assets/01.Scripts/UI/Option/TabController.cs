@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class TabButtonController : MonoBehaviour
+public class TabController : MonoBehaviour
 {
     [SerializeField] public List<Button> tabButtons;
     [SerializeField] public List<Image> tabImages;
@@ -11,7 +11,7 @@ public class TabButtonController : MonoBehaviour
     [SerializeField] private Color unselectedColor = Color.gray;
 
     private int currentSelectedIndex = -1;
-
+    public int CurrentIndex => currentSelectedIndex;
     private void Start()
     {
         RequestSelectTab(0);               // 0번 탭을 예약하고

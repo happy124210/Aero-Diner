@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 public class QuestPanel : MonoBehaviour
 {
-    [SerializeField] private TabButtonController tabController;
+    [SerializeField] private TabController tabController;
     [SerializeField] private GameObject doingScrollView;
     [SerializeField] private GameObject completeScrollView;
     public bool IsDebug = false;
@@ -13,7 +13,7 @@ public class QuestPanel : MonoBehaviour
      private void Awake()
     {
         if (tabController == null)
-            tabController = GetComponentInChildren<TabButtonController>();
+            tabController = GetComponentInChildren<TabController>();
     }
 
     private void OnEnable()

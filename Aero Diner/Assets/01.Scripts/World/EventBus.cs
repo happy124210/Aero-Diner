@@ -76,7 +76,7 @@ public enum UIEventType
     ShowInventory, HideInventory,
     ShowRecipeBook, ShowStationPanel,
     ShowQuestPanel,
-
+    FadeInInventory, FadeInRecipeBook,
 }
 
 public static class EventBus

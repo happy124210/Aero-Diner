@@ -364,7 +364,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 58, y: -8}
-  m_SizeDelta: {x: 70, y: 70}
+  m_SizeDelta: {x: 40, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8307407079966814534
 CanvasRenderer:
@@ -413,6 +413,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3196411314726721699}
+  - component: {fileID: 4797880619277898870}
   m_Layer: 5
   m_Name: Inventory_Station_content
   m_TagString: Untagged
@@ -448,6 +449,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 700, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &4797880619277898870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5264282997647164633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eade6226544b7814f91334a0ea205fca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stationIconImage: {fileID: 7540571206139802606}
+  stationNameText: {fileID: 6537250971876683421}
+  selectButton: {fileID: 6988379266559726272}
 --- !u!1 &5545470262530270317
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,16 +1,38 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    [SerializeField] private TabButtonController tabController;
+    [SerializeField] public TabController tabController;
     public bool IsDebug = false;
+    [SerializeField] private CanvasGroup canvasGroup;
     private void Awake()
     {
         if (tabController == null)
-            tabController = GetComponentInChildren<TabButtonController>();
+            tabController = GetComponentInChildren<TabController>();
     }
+    #region 두트윈 메서드
+    public void Show()
+    {
+        gameObject.SetActive(true);
+        canvasGroup.alpha = 0f;
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
+
+        canvasGroup.DOFade(1f, 0.3f).SetEase(Ease.OutQuad);
+    }
+    public void Hide()
+    {
+        canvasGroup.DOFade(0f, 0.2f).SetEase(Ease.InQuad).OnComplete(() =>
+        {
+            canvasGroup.interactable = false;
+            canvasGroup.blocksRaycasts = false;
+            gameObject.SetActive(false);
+        });
+    }
+    #endregion
     #region 버튼 메서드
     public void OnIngredientTabClick()
     {

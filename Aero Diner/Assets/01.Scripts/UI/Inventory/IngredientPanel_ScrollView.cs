@@ -29,12 +29,12 @@ public class IngredientPanel_ScrollView : MonoBehaviour
     })
     .ToList();
 
-        FoodSlotUI firstSlotUI = null;
+        IngredientPanel_ScrollView_Content firstSlotUI = null;
 
         foreach (var food in allFoods)
         {
             GameObject slot = Instantiate(itemSlotPrefab, contentTransform);
-            var slotUI = slot.GetComponent<FoodSlotUI>();
+            var slotUI = slot.GetComponent<IngredientPanel_ScrollView_Content>();
             if (slotUI != null)
             {
                 slotUI.Init(food, iconSet, ingredientPanel);

@@ -30,12 +30,12 @@ public class MainSceneUI : MonoBehaviour
     public void OnClickInventory()
     {
         EventBus.PlaySFX(SFXType.OpenInventory);
-        EventBus.Raise(UIEventType.ShowInventory);
+        EventBus.Raise(UIEventType.FadeInInventory);
     }
 
     public void OnClickRecipeBook()
     {
         EventBus.PlaySFX(SFXType.OpenBook);
-        EventBus.Raise(UIEventType.ShowRecipeBook);
+        EventBus.Raise(UIEventType.FadeInRecipeBook);
     }
 }

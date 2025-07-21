@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,6 +11,7 @@ public class OverSceneUIHandler : IUIEventHandler
     {
         this.sceneUIs = sceneUIs;
     }
+    #region UIHandeler Switch&case
     public bool Handle(UIEventType type, object payload)
     {
         var pausePanel = UIRoot.Instance.pausePanel?.GetComponent<PausePanelEffecter>();
@@ -67,33 +69,23 @@ public class OverSceneUIHandler : IUIEventHandler
             case UIEventType.ShowInventory:
                 foreach (var ui in sceneUIs)
                 {
-                    var inventory = ui?.GetComponentInChildren<Inventory>(true);
-                    var tab = inventory?.GetComponentInChildren<TabButtonController>(true);
 
-                    inventory?.gameObject.SetActive(true);
                     ui?.GetComponentInChildren<IngredientPanel>(true)?.gameObject.SetActive(true);
                     ui?.GetComponentInChildren<RecipePanel>(true)?.gameObject.SetActive(false);
                     ui?.GetComponentInChildren<StationPanel>(true)?.gameObject.SetActive(false);
                     ui?.GetComponentInChildren<QuestPanel>(true)?.gameObject.SetActive(false);
 
-                    tab?.RequestSelectTab(0);
-                    tab?.ApplyTabSelectionVisuals();
                 }
                 return true;
             case UIEventType.ShowRecipeBook:
                 foreach (var ui in sceneUIs)
                 {
-                    var inventory = ui?.GetComponentInChildren<Inventory>(true);
-                    var tab = inventory?.GetComponentInChildren<TabButtonController>(true);
-
-                    inventory?.gameObject.SetActive(true);
+  
                     ui?.GetComponentInChildren<RecipePanel>(true)?.gameObject.SetActive(true);
                     ui?.GetComponentInChildren<StationPanel>(true)?.gameObject.SetActive(false);
                     ui?.GetComponentInChildren<IngredientPanel>(true)?.gameObject.SetActive(false);
                     ui?.GetComponentInChildren<QuestPanel>(true)?.gameObject.SetActive(false);
 
-                    tab?.RequestSelectTab(2);
-                    tab?.ApplyTabSelectionVisuals();
                 }
                 return true;
             case UIEventType.ShowStationPanel:
@@ -119,10 +111,44 @@ public class OverSceneUIHandler : IUIEventHandler
             case UIEventType.HideInventory:
                 foreach (var ui in sceneUIs)
                 {
-                    ui?.GetComponentInChildren<Inventory>(true)?.gameObject.SetActive(false);
+                    var inventory = ui?.GetComponentInChildren<Inventory>(true);
+                    inventory?.Hide();
+                }
+                return true;
+            case UIEventType.FadeInInventory:
+                foreach (var ui in sceneUIs)
+                {
+                    var inventory = ui?.GetComponentInChildren<Inventory>(true);
+                    var tab = inventory?.GetComponentInChildren<TabController>(true);
+
+                    inventory?.Show();
+                    ui?.GetComponentInChildren<IngredientPanel>(true)?.gameObject.SetActive(true);
+                    ui?.GetComponentInChildren<RecipePanel>(true)?.gameObject.SetActive(false);
+                    ui?.GetComponentInChildren<StationPanel>(true)?.gameObject.SetActive(false);
+                    ui?.GetComponentInChildren<QuestPanel>(true)?.gameObject.SetActive(false);
+
+                    tab?.RequestSelectTab(0);
+                    tab?.ApplyTabSelectionVisuals();
+                }
+                return true;
+            case UIEventType.FadeInRecipeBook:
+                foreach (var ui in sceneUIs)
+                {
+                    var inventory = ui?.GetComponentInChildren<Inventory>(true);
+                    var tab = inventory?.GetComponentInChildren<TabController>(true);
+
+                    inventory?.Show();
+                    ui?.GetComponentInChildren<RecipePanel>(true)?.gameObject.SetActive(true);
+                    ui?.GetComponentInChildren<StationPanel>(true)?.gameObject.SetActive(false);
+                    ui?.GetComponentInChildren<IngredientPanel>(true)?.gameObject.SetActive(false);
+                    ui?.GetComponentInChildren<QuestPanel>(true)?.gameObject.SetActive(false);
+
+                    tab?.RequestSelectTab(2);
+                    tab?.ApplyTabSelectionVisuals();
                 }
                 return true;
         }
         return false;
     }
+    #endregion
 }

@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FoodSlotUI : MonoBehaviour
+public class IngredientPanel_ScrollView_Content : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
     [SerializeField] private TMP_Text nameText;
@@ -22,8 +22,6 @@ public class FoodSlotUI : MonoBehaviour
         this.iconSet = iconSet;
         detailPanel = panel;
 
-        // 디버깅 출력
-        Debug.Log($"[FoodSlotUI] Init: {data.displayName}, icon = {(data.foodIcon != null ? data.foodIcon.name : "NULL")}");
 
         // UI 표시
         if (iconImage != null)
@@ -42,6 +40,7 @@ public class FoodSlotUI : MonoBehaviour
             detailButton.onClick.RemoveAllListeners();
             detailButton.onClick.AddListener(() =>
             {
+                EventBus.PlaySFX(SFXType.ButtonClick);
                 detailPanel.SetData(myData, iconSet.GetIcon(myData.foodType));
             });
         }
