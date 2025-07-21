@@ -54,6 +54,7 @@ public class TabController : MonoBehaviour
             var prevPanel = tabContents[previousIndex];
             prevPanel.DOKill(); // 충돌 방지
             prevPanel.DOAnchorPos(exitPos, animationDuration).SetEase(Ease.InOutQuad)
+                .SetUpdate(true)
                 .OnComplete(() => prevPanel.gameObject.SetActive(false));
         }
 
@@ -61,7 +62,8 @@ public class TabController : MonoBehaviour
         newPanel.DOKill(); // 충돌 방지
         newPanel.gameObject.SetActive(true);
         newPanel.anchoredPosition = enterFrom;
-        newPanel.DOAnchorPos(Vector2.zero, animationDuration).SetEase(Ease.InOutQuad);
+        newPanel.DOAnchorPos(Vector2.zero, animationDuration).SetEase(Ease.InOutQuad)
+        .SetUpdate(true);
     }
 
     // 실제 탭이 보여질 때 호출
