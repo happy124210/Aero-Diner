@@ -11,10 +11,9 @@ public enum CustomerRarity
 /// 손님 데이터
 /// </summary>
 [CreateAssetMenu(fileName = "New Customer Data", menuName = "Game Data/Customer Data")]
-public class CustomerData : ScriptableObject
+public class CustomerData : ScriptableObject, IData
 {
-    [Header("손님 정보")]
-    public string id;
+    public string id { get; set; }
     public CustomerRarity rarity;
     public string customerName;
     public string displayName; // UI용 이름

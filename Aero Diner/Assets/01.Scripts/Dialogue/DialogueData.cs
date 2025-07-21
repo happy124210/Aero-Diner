@@ -22,39 +22,12 @@ public struct DialogueChoice
 /// <summary>
 /// CSV의 dialogueData id 하나에 해당하는 전체 대화 묶음 데이터
 /// </summary>
-[CreateAssetMenu(fileName = "DialogueData", menuName = "Data/Dialogue Data")]
-public class DialogueData : ScriptableObject
+[CreateAssetMenu(fileName = "New DialogueData", menuName = "Data/Dialogue Data")]
+public class DialogueData : ScriptableObject, IData
 {
-    [Header("관리용 ID")]
-    public string id;
-
-    [Header("대화 내용")]
+    public string id { get; set; }
     public List<DialogueLine> lines;
-
-    [Header("선택지")]
     public List<DialogueChoice> choices;
-
-    [Header("후속 이벤트")]
     public EventType nextEventType; // 대화 종료 후 발생할 이벤트
     public string nextEventParameter; // 이벤트에 넘겨줄 파라미터 (기본적으로 id)
-}
-
-public enum EventType
-{
-    StartDialogue,
-    
-    StartQuest,
-    EndQuest,
-    
-    UnlockRecipe,
-    UnlockStation,
-    
-    GiveMoney,
-    GiveRecipe,
-    GiveStation,
-    
-    LostMoney,
-    GameOver,
-    
-    None,
 }
