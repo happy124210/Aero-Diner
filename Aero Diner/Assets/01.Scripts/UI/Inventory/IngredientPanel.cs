@@ -1,18 +1,25 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEngine.UI;
+using TMPro;
 using UnityEngine;
 
 public class IngredientPanel : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private Image foodIcon;
+    [SerializeField] private Image foodTypeIcon;
+    [SerializeField] private TMP_Text nameText;
+    [SerializeField] private TMP_Text priceText;
+    [SerializeField] private TMP_Text stockText;
+    [SerializeField] private TMP_Text descriptionText;
 
-    // Update is called once per frame
-    void Update()
+    public void SetData(FoodData data, Sprite typeIcon)
     {
-        
+        if (data == null) return;
+
+        foodIcon.sprite = data.foodIcon;
+        nameText.text = data.displayName;
+        priceText.text = data.foodCost.ToString();
+        stockText.text = "999"; // 재고 시스템과 연동 시 수정 가능
+        descriptionText.text = data.description;
+        foodTypeIcon.sprite = typeIcon;
     }
 }
