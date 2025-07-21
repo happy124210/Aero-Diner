@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Diagnostics;
 
 #if UNITY_EDITOR
 /// <summary>
@@ -91,6 +91,129 @@ public class CSVImporter
         return data;
     }
     
+    #endregion
+
+    #region DialogueData 생성
+
+    [MenuItem("Tools/Import Game Data/Dialogue Data")]
+    public static void ImportGroupedDialogueData()
+    {
+        string path = EditorUtility.OpenFilePanel("Select Dialogue CSV", "", "csv");
+        if (string.IsNullOrEmpty(path)) return;
+
+        string[] lines = File.ReadAllLines(path);
+        if (lines.Length <= 1)
+        {
+            Debug.LogWarning("CSV 파일에 데이터가 없습니다.");
+            return;
+        }
+
+        // csv 파일의 모든 라인을 첫 번째 열(id)을 기준으로 그룹화
+        var groupedById = new Dictionary<string, List<string[]>>();
+        for (int i = 1; i < lines.Length; i++)
+        {
+            string[] cols = lines[i].Split(',');
+            if (cols.Length < 1 || string.IsNullOrEmpty(cols[0].Trim())) continue;
+
+            string dialogueId = cols[0].Trim();
+            if (!groupedById.ContainsKey(dialogueId))
+            {
+                groupedById[dialogueId] = new List<string[]>();
+            }
+            groupedById[dialogueId].Add(cols);
+        }
+
+        string targetFolder = "Assets/Resources/Datas/Dialogue/";
+        if (!Directory.Exists(targetFolder))
+        {
+            Directory.CreateDirectory(targetFolder);
+        }
+
+        // 에셋 생성
+        foreach (var dialogueId in groupedById.Keys)
+        {
+            string assetPath = $"{targetFolder}/{dialogueId}.asset";
+            if (AssetDatabase.LoadAssetAtPath<DialogueData>(assetPath) == null)
+            {
+                DialogueData newAsset = ScriptableObject.CreateInstance<DialogueData>();
+                AssetDatabase.CreateAsset(newAsset, assetPath);
+            }
+        }
+
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+
+        // 데이터 채우기
+        int successCount = 0;
+        foreach (var pair in groupedById)
+        {
+            string dialogueId = pair.Key;
+            List<string[]> rows = pair.Value;
+
+            try
+            {
+                string assetPath = $"{targetFolder}/{dialogueId}.asset";
+                DialogueData data = AssetDatabase.LoadAssetAtPath<DialogueData>(assetPath);
+
+                // 데이터 초기화
+                data.id = dialogueId;
+                data.lines = new List<DialogueLine>();
+                data.choices = new List<DialogueChoice>();
+                data.nextEventType = EventType.None;
+                data.nextEventParameter = string.Empty;
+                
+                rows.Sort((a, b) => int.Parse(a[1]).CompareTo(int.Parse(b[1])));
+                
+                foreach (var cols in rows)
+                {
+                    data.lines.Add(new DialogueLine
+                    {
+                        speakerId = cols[2].Trim(),
+                        text = cols[4].Trim().Replace("\"", ""),
+                        expression = cols[3].Trim()
+                    });
+                }
+                
+                string[] lastRow = rows[^1];
+
+                // 이벤트 파싱
+                if (lastRow.Length > 5 && !string.IsNullOrEmpty(lastRow[5].Trim()))
+                {
+                    if (Enum.TryParse(lastRow[5].Trim(), true, out EventType parsedEvent))
+                    {
+                        data.nextEventType = parsedEvent;
+                        data.nextEventParameter = lastRow.Length > 6 ? lastRow[6].Trim() : "";
+                    }
+                }
+
+                // 선택지 파싱
+                for (int i = 0; i < 2; i++)
+                {
+                    int textIndex = 7 + i;
+                    if (lastRow.Length > textIndex && !string.IsNullOrEmpty(lastRow[textIndex].Trim()))
+                    {
+                        data.choices.Add(new DialogueChoice
+                        {
+                            text = lastRow[textIndex].Trim(),
+                            nextDialogueId = $"{dialogueId}_choice{i + 1}"
+                        });
+                    }
+                }
+
+                EditorUtility.SetDirty(data);
+                successCount++;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Dialogue ID '{dialogueId}' 처리 중 오류 발생: {e.Message}");
+            }
+        }
+
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Debug.Log($"총 {successCount}개 DialogueData CSV 임포트 완료");
+    }
+
     #endregion
     
     #region 공통 Import 메서드
