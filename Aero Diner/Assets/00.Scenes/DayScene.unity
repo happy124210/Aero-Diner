@@ -247,6 +247,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6886026345025765021, guid: 588f76ba87115be44a6e771295cd5a69, type: 3}
   m_PrefabInstance: {fileID: 85013615}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &102323046 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1601274475389118955, guid: 588f76ba87115be44a6e771295cd5a69, type: 3}
+  m_PrefabInstance: {fileID: 2004020512}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &155107265
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1934,6 +1939,53 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6886026345025765021, guid: 588f76ba87115be44a6e771295cd5a69, type: 3}
   m_PrefabInstance: {fileID: 1093647421}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1124418513
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1124418515}
+  - component: {fileID: 1124418514}
+  m_Layer: 0
+  m_Name: PlacementManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1124418514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1124418513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30d51631e096d3347a7c5593812fd3f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tilemapController: {fileID: 1792442266}
+  testInventory: {fileID: 1979900139}
+  testTargetGridCell: {fileID: 102323046}
+--- !u!4 &1124418515
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1124418513}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.7969847, y: 10.0514555, z: 0.08619143}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1179215292
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2788,6 +2840,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridCells: []
   showDebugInfo: 0
+  baseMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  placeableMaterial: {fileID: 2100000, guid: 836d3e22f35cd4947bf00142f294e949, type: 2}
+  notPlaceableMaterial: {fileID: 2100000, guid: 5cbc533cbefaff34f99db575766f7852, type: 2}
 --- !u!4 &1792442267
 Transform:
   m_ObjectHideFlags: 0
@@ -3115,6 +3170,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1875548671}
   m_CullTransparentMesh: 1
+--- !u!1 &1979900138
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1979900140}
+  - component: {fileID: 1979900139}
+  m_Layer: 0
+  m_Name: 'TestInventory '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1979900139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1979900138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8c0e5cbf99cfc144a4e98fedc23152f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  testHeldItem: {fileID: 7393339558205871436, guid: 790de032fd539c24ab43a8787e947092, type: 3}
+--- !u!4 &1979900140
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1979900138}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.7969847, y: 10.0514555, z: 0.08619143}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2004020512
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3244,6 +3344,8 @@ SceneRoots:
   - {fileID: 958337408}
   - {fileID: 1755755316}
   - {fileID: 1371117417}
+  - {fileID: 1124418515}
   - {fileID: 1756286616}
   - {fileID: 1815268112}
   - {fileID: 1792442267}
+  - {fileID: 1979900140}

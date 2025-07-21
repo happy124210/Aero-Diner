@@ -12,6 +12,10 @@ public class TilemapController : MonoBehaviour
 
     [SerializeField] protected bool showDebugInfo;
 
+    [SerializeField] private Material baseMaterial;
+    [SerializeField] private Material placeableMaterial;
+    [SerializeField] private Material notPlaceableMaterial;
+
     private void Awake()
     {
         FindGridCells();
@@ -43,9 +47,16 @@ public class TilemapController : MonoBehaviour
     {
         foreach (var cell in gridCells)
         {
+            // SpriteRenderer 비활성화
             var sr = cell.GetComponent<SpriteRenderer>();
             if (sr != null)
+            {
                 sr.enabled = false;
+
+                // baseMaterial로 원복
+                if (baseMaterial != null)
+                    sr.material = baseMaterial;
+            }
         }
     }
 
@@ -58,7 +69,12 @@ public class TilemapController : MonoBehaviour
         {
             var sr = cell.GetComponent<SpriteRenderer>();
             if (sr != null)
+            {
                 sr.enabled = true;
+
+                if (baseMaterial != null)
+                    sr.material = baseMaterial;
+            }
         }
     }
 
@@ -80,6 +96,19 @@ public class TilemapController : MonoBehaviour
                         Debug.Log($"Shelf 위치 정렬됨: {child.name} @ {cell.name}");
                     }
                 }
+            }
+        }
+    }
+
+    public void UpdateGridCellStates()
+    {
+        foreach (var cell in gridCells)
+        {
+            var status = cell.GetComponent<GridCellStatus>();
+            if (status != null)
+            {
+                status.SetMaterials(placeableMaterial, notPlaceableMaterial);
+                status.UpdateStatus();
             }
         }
     }
