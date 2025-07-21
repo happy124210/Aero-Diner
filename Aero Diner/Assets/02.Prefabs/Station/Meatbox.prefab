@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 3240283822041401185}
   m_Layer: 6
   m_Name: Meatbox
-  m_TagString: Untagged
+  m_TagString: Station
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

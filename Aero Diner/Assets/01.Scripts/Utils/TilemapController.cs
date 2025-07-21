@@ -61,4 +61,26 @@ public class TilemapController : MonoBehaviour
                 sr.enabled = true;
         }
     }
+
+    /// <summary>
+    /// 모든 GridCell의 자식 중에 Shelf가 있으면 하단 중심이 겹치도록 정렬
+    /// </summary>
+    public void AlignShelvesToGridCells()
+    {
+        foreach (var cell in gridCells)
+        {
+            foreach (Transform child in cell.transform)
+            {
+                if (child.CompareTag("Station")) 
+                {
+                    child.localPosition = Vector3.zero;
+
+                    if (showDebugInfo)
+                    {
+                        Debug.Log($"Shelf 위치 정렬됨: {child.name} @ {cell.name}");
+                    }
+                }
+            }
+        }
+    }
 }

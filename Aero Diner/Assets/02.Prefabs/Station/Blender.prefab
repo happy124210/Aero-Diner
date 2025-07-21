@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 380755971486371207}
   m_Layer: 6
   m_Name: Blender
-  m_TagString: Untagged
+  m_TagString: Station
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -107,12 +107,12 @@ MonoBehaviour:
   cookingTime: 5
   stationData: {fileID: 11400000, guid: 09edbc6e8bb2a3c4e89406a23ef6df9d, type: 2}
   currentIngredients: []
-  bestMatchedRecipe: 
   availableFoodIds: []
+  bestMatchedRecipe: 
   iconDisplay: {fileID: 7462309042458428041}
   slotSpacing: 0.5
-  showDebugInfo: 0
   timerController: {fileID: 1545761035470760226}
+  showDebugInfo: 0
 --- !u!50 &5549793375520328618
 Rigidbody2D:
   serializedVersion: 4
@@ -443,6 +443,10 @@ PrefabInstance:
     - target: {fileID: 6738146892103992418, guid: 5a1e8281bff4d3f4c8cb2087693432a6, type: 3}
       propertyPath: m_Name
       value: SlotIconHolder
+      objectReference: {fileID: 0}
+    - target: {fileID: 6738146892103992418, guid: 5a1e8281bff4d3f4c8cb2087693432a6, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 7974676353604054298, guid: 5a1e8281bff4d3f4c8cb2087693432a6, type: 3}
       propertyPath: m_LocalPosition.x
