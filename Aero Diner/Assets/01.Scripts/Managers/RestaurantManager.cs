@@ -100,7 +100,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
                 customerSpawner.StopSpawning();
                 StartCoroutine(CleanupAndShowResult());
 
-                if (showDebugInfo) Debug.Log("[RestaurantManager] Closing: 손님 스폰을 중단, 뒷정리 시작");
+                if (showDebugInfo) Debug.Log("[RestaurantManager] Closing: 손님 스폰 중단, 뒷정리 시작");
                 break;
         }
     }

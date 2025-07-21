@@ -199,7 +199,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     
     // state 전환
     public void MoveToAssignedSeat() => ChangeState(new MovingToSeatState());
-    public void ForceLeave() => ChangeState(new LeavingState());
+    public void ForceLeave() => ChangeState(new AngryLeavingState());
     
     #endregion
 
