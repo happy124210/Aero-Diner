@@ -3,7 +3,7 @@
 /// <summary>
 /// GridCell의 상태를 판단하고 Sprite 및 Outline을 제어
 /// </summary>
-public class GridCellStatus : MonoBehaviour
+public class GridCellStatus : MonoBehaviour, IInteractable
 {
     private SpriteRenderer sr;
     private OutlineShaderController outline;
@@ -56,5 +56,15 @@ public class GridCellStatus : MonoBehaviour
     {
         placeableMaterial = placeable;
         notPlaceableMaterial = notPlaceable;
+    }
+
+    public void Interact(PlayerInventory inventory, InteractionType interactionType) { }
+    public void OnHoverEnter()
+    {
+        outline?.EnableOutline();
+    }
+    public void OnHoverExit()
+    {
+        outline?.DisableOutline();
     }
 }

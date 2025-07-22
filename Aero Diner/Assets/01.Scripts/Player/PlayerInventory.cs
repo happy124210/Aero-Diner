@@ -9,18 +9,30 @@ public class PlayerInventory : MonoBehaviour
     
     [Header("아이템 슬롯 위치")]
     [SerializeField] private Transform itemSlotTransform;
+    [SerializeField] private TilemapController tilemapController;
 
     public bool ShowDebugInfo;
+
+
     
     ///현재 들고 있는 재료
     public FoodDisplay holdingItem;
     public IMovableStation heldStation;
     public bool IsHoldingItem => holdingItem != null || heldStation != null;
 
+    private void Start()
+    {
+        if (tilemapController == null)
+        {
+            tilemapController = FindObjectOfType<TilemapController>();
+        }
+    }
+
     public void TryPickup(IInteractable target)
     {
         if (IsHoldingItem || target == null) return;
 
+        //Station 들기: 편집 모드에서만
         if (GameManager.Instance.CurrentPhase == GamePhase.EditStation && target is IMovableStation movable)
         {
             heldStation = movable;
@@ -35,23 +47,36 @@ public class PlayerInventory : MonoBehaviour
             var col = tr.GetComponent<Collider2D>();
             if (col) col.enabled = false;
 
+            tilemapController?.ShowAllCells();
             return;
         }
 
-        if (target is FoodDisplay food && food.CanPickup())
+        // Operation 페이즈 전용 처리
+        if (GameManager.Instance.CurrentPhase == GamePhase.Operation)
         {
-            holdingItem = food;
+            // IngredientStation → Interact 호출로 재료 생성
+            if (target is IngredientStation station)
+            {
+                station.Interact(this, InteractionType.Pickup);
+                return;
+            }
 
-            food.transform.SetParent(itemSlotTransform);
-            food.transform.localPosition = Vector3.zero;
+            // FoodDisplay → 직접 들기
+            if (target is FoodDisplay food && food.CanPickup())
+            {
+                holdingItem = food;
 
-            var rb = food.GetComponent<Rigidbody2D>();
-            if (rb) rb.simulated = false;
+                food.transform.SetParent(itemSlotTransform);
+                food.transform.localPosition = Vector3.zero;
 
-            var col = food.GetComponent<Collider2D>();
-            if (col) col.enabled = false;
+                var rb = food.GetComponent<Rigidbody2D>();
+                if (rb) rb.simulated = false;
 
-            food.originPlace?.OnPlayerPickup();
+                var col = food.GetComponent<Collider2D>();
+                if (col) col.enabled = false;
+
+                food.originPlace?.OnPlayerPickup();
+            }
         }
     }
 
@@ -59,41 +84,43 @@ public class PlayerInventory : MonoBehaviour
     {
         if (GameManager.Instance.CurrentPhase == GamePhase.EditStation && heldStation != null)
         {
-            Transform gridCell = PlayerController.Instance.FindGridCellInFront();
-            if (gridCell == null)
+            var targetCell = PlayerController.Instance.FindGridCellInFront();
+            if (target is GridCellStatus gridCell)
             {
-                Debug.Log("그리드 셀 없음 → 드롭 불가");
+                Transform stationTr = heldStation.GetTransform();
+                stationTr.SetParent(null);
+                stationTr.position = gridCell.transform.position;
+
+                var rb = stationTr.GetComponent<Rigidbody2D>();
+                if (rb) rb.simulated = true;
+
+                var col = stationTr.GetComponent<Collider2D>();
+                if (col) col.enabled = true;
+
+                heldStation = null;
+
+                if (tilemapController != null)
+                {
+                    tilemapController.HideAllCells(); // 여기!
+                }
+
                 return;
             }
-
-            Transform stationTr = heldStation.GetTransform();
-
-            stationTr.SetParent(null);
-            stationTr.position = gridCell.position; // 격자 위치에 정렬
-
-            var rb = stationTr.GetComponent<Rigidbody2D>();
-            if (rb) rb.simulated = true;
-
-            var col = stationTr.GetComponent<Collider2D>();
-            if (col) col.enabled = true;
-
-            heldStation = null;
+        }
+        if (GameManager.Instance.CurrentPhase != GamePhase.Operation)
+        {
+            if (ShowDebugInfo)
+                Debug.Log("[Inventory] Operation 페이즈가 아니므로 재료를 배치할 수 없습니다.");
             return;
         }
 
         if (ShowDebugInfo)
             Debug.Log($"[Inventory] target 타입: {target.GetType().Name}");
-        if (!IsHoldingItem)
-        {
-            if (ShowDebugInfo)
-                Debug.Log("[Inventory] 들고 있는 아이템이 없습니다.");
-            return;
-        }
 
-        if (target == null)
+        if (!IsHoldingItem || target == null)
         {
             if (ShowDebugInfo)
-                Debug.Log("[Inventory] 상호작용 대상이 없습니다.");
+                Debug.Log("[Inventory] 아이템이 없거나 타겟이 없습니다.");
             return;
         }
 
