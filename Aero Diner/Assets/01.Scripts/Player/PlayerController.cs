@@ -209,7 +209,7 @@ public class PlayerController : Singleton<PlayerController>
         Vector2 direction = lastMoveDir == Vector2.zero ? Vector2.down : lastMoveDir.normalized;
         float distance = 2f; // 테스트용으로 일시 증가
 
-        var hit = CastSingle(origin, direction, distance, LayerMask.GetMask("Grid"));
+        var hit = CastSingle(origin, direction, distance, LayerMask.GetMask("IInteractable"));
         Debug.DrawRay(origin, direction * distance, Color.green);
 
         if (hit.HasValue && hit.Value.collider.CompareTag("GridCell"))

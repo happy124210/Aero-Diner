@@ -9,13 +9,24 @@ public class PlayerInventory : MonoBehaviour
     
     [Header("아이템 슬롯 위치")]
     [SerializeField] private Transform itemSlotTransform;
+    [SerializeField] private TilemapController tilemapController;
 
     public bool ShowDebugInfo;
+
+
     
     ///현재 들고 있는 재료
     public FoodDisplay holdingItem;
     public IMovableStation heldStation;
     public bool IsHoldingItem => holdingItem != null || heldStation != null;
+
+    private void Start()
+    {
+        if (tilemapController == null)
+        {
+            tilemapController = FindObjectOfType<TilemapController>();
+        }
+    }
 
     public void TryPickup(IInteractable target)
     {
@@ -34,6 +45,11 @@ public class PlayerInventory : MonoBehaviour
 
             var col = tr.GetComponent<Collider2D>();
             if (col) col.enabled = false;
+
+            if (tilemapController != null)
+            {
+                tilemapController.ShowAllCells();
+            }
 
             return;
         }
@@ -59,26 +75,28 @@ public class PlayerInventory : MonoBehaviour
     {
         if (GameManager.Instance.CurrentPhase == GamePhase.EditStation && heldStation != null)
         {
-            Transform gridCell = PlayerController.Instance.FindGridCellInFront();
-            if (gridCell == null)
+            var targetCell = PlayerController.Instance.FindGridCellInFront();
+            if (target is GridCellStatus gridCell)
             {
-                Debug.Log("그리드 셀 없음 → 드롭 불가");
+                Transform stationTr = heldStation.GetTransform();
+                stationTr.SetParent(null);
+                stationTr.position = gridCell.transform.position;
+
+                var rb = stationTr.GetComponent<Rigidbody2D>();
+                if (rb) rb.simulated = true;
+
+                var col = stationTr.GetComponent<Collider2D>();
+                if (col) col.enabled = true;
+
+                heldStation = null;
+
+                if (tilemapController != null)
+                {
+                    tilemapController.HideAllCells(); // 여기!
+                }
+
                 return;
             }
-
-            Transform stationTr = heldStation.GetTransform();
-
-            stationTr.SetParent(null);
-            stationTr.position = gridCell.position; // 격자 위치에 정렬
-
-            var rb = stationTr.GetComponent<Rigidbody2D>();
-            if (rb) rb.simulated = true;
-
-            var col = stationTr.GetComponent<Collider2D>();
-            if (col) col.enabled = true;
-
-            heldStation = null;
-            return;
         }
 
         if (ShowDebugInfo)

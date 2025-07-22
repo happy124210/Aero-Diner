@@ -79,7 +79,7 @@ public class TilemapController : MonoBehaviour
     }
 
     /// <summary>
-    /// 모든 GridCell의 자식 중에 Shelf가 있으면 하단 중심이 겹치도록 정렬
+    /// 모든 GridCell의 자식 중에 스테이션이 있으면 하단 중심이 겹치도록 정렬
     /// </summary>
     public void AlignShelvesToGridCells()
     {
@@ -87,7 +87,7 @@ public class TilemapController : MonoBehaviour
         {
             foreach (Transform child in cell.transform)
             {
-                if (child.CompareTag("Station")) 
+                if (child.CompareTag("Station"))
                 {
                     child.localPosition = Vector3.zero;
 
