@@ -32,6 +32,7 @@ public class PlayerInventory : MonoBehaviour
     {
         if (IsHoldingItem || target == null) return;
 
+        // Station 들기 - EditStation 페이즈에서만
         if (GameManager.Instance.CurrentPhase == GamePhase.EditStation && target is IMovableStation movable)
         {
             heldStation = movable;
@@ -46,15 +47,13 @@ public class PlayerInventory : MonoBehaviour
             var col = tr.GetComponent<Collider2D>();
             if (col) col.enabled = false;
 
-            if (tilemapController != null)
-            {
-                tilemapController.ShowAllCells();
-            }
+            tilemapController?.ShowAllCells();
 
             return;
         }
 
-        if (target is FoodDisplay food && food.CanPickup())
+        // Food 들기 - Operation 페이즈에서만
+        if (GameManager.Instance.CurrentPhase == GamePhase.Operation && target is FoodDisplay food && food.CanPickup())
         {
             holdingItem = food;
 
@@ -98,20 +97,20 @@ public class PlayerInventory : MonoBehaviour
                 return;
             }
         }
-
-        if (ShowDebugInfo)
-            Debug.Log($"[Inventory] target 타입: {target.GetType().Name}");
-        if (!IsHoldingItem)
+        if (GameManager.Instance.CurrentPhase != GamePhase.Operation)
         {
             if (ShowDebugInfo)
-                Debug.Log("[Inventory] 들고 있는 아이템이 없습니다.");
+                Debug.Log("[Inventory] Operation 페이즈가 아니므로 재료를 배치할 수 없습니다.");
             return;
         }
 
-        if (target == null)
+        if (ShowDebugInfo)
+            Debug.Log($"[Inventory] target 타입: {target.GetType().Name}");
+
+        if (!IsHoldingItem || target == null)
         {
             if (ShowDebugInfo)
-                Debug.Log("[Inventory] 상호작용 대상이 없습니다.");
+                Debug.Log("[Inventory] 아이템이 없거나 타겟이 없습니다.");
             return;
         }
 
