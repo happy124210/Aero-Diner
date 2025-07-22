@@ -3,13 +3,17 @@
 /// <summary>
 /// 플레이어가 올바른 재료(또는 메뉴)를 선반에 놓으면 저장되는 스테이션
 /// </summary>
-public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
+public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation, IMovableStation
 {
+    public Transform GetTransform() => transform;
+
     [Header("생성할 Food/Menu SO")]
     public FoodData currentData; // 선반에 올려진 음식 데이터
 
     [Header("비주얼 오브젝트 생성 위치")]
     public Transform spawnPoint;
+
+    [SerializeField] protected bool showDebugInfo;
 
     // 내부 상태
     private GameObject placedIngredientObj;
@@ -35,7 +39,7 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
         }
         else
         {
-            Debug.LogWarning($"[IconLoader] 해당 오브젝트 '{objName}'에 대한 StationData를 '{resourcePath}' 경로에서 찾지 못했습니다.");
+            if (showDebugInfo) Debug.LogWarning($"[IconLoader] 해당 오브젝트 '{objName}'에 대한 StationData를 '{resourcePath}' 경로에서 찾지 못했습니다.");
         }
     }
 

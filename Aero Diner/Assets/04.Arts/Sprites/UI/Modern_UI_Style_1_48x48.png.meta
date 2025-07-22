@@ -1030,7 +1030,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 24
-        y: 1947
+        y: 1949
         width: 96
         height: 93
       alignment: 0
@@ -22218,13 +22218,13 @@ TextureImporter:
       name: Modern_UI_Style_1_48x48_1052
       rect:
         serializedVersion: 2
-        x: 816
-        y: 864
-        width: 48
-        height: 48
+        x: 804
+        y: 867
+        width: 75
+        height: 39
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 9, y: 12, z: 9, w: 9}
       outline: []
       physicsShape: []
       tessellationDetail: 0

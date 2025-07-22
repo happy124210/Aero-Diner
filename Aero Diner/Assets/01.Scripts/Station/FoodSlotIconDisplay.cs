@@ -15,13 +15,15 @@ public class FoodSlotIconDisplay : MonoBehaviour
     [Header("아이콘 간 간격")]
     [SerializeField] private float spacing = 0.5f;
 
+    [SerializeField] protected bool showDebugInfo;
+
     private Dictionary<FoodType, List<GameObject>> iconMap = new();
 
     public void Initialize(List<SlotDisplayData> slots)
     {
         if (!iconPrefab || !basePosition)
         {
-            Debug.LogError("iconPrefab 또는 basePosition이 설정되지 않았습니다.");
+            if (showDebugInfo) Debug.LogError("iconPrefab 또는 basePosition이 설정되지 않았습니다.");
             return;
         }
 

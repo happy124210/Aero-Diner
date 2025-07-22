@@ -1,10 +1,9 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine.LowLevel;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using DG.Tweening;
 
 public class SFXManager : Singleton<SFXManager>
 {
-    private List<AudioSource> additionalSources = new List<AudioSource>();
     [System.Serializable]
     public class SFXEntry
     {
@@ -12,38 +11,52 @@ public class SFXManager : Singleton<SFXManager>
         public AudioClip clip;
     }
 
-    public List<SFXEntry> sfxList;
-    private Dictionary<SFXType, AudioClip> sfxDict;
-    [SerializeField] private AudioSource audioSource;
-    [Header("Debug")]
-    [SerializeField] private bool showDebugInfo;
+    [Header("SFX 데이터")]
+    [SerializeField] private List<SFXEntry> sfxList;
+    [SerializeField] private int poolSize = 10;
 
+    [Header("디버그")]
+    [SerializeField] private bool showDebugInfo = false;
+
+    private Dictionary<SFXType, AudioClip> sfxDict;
+    private Queue<AudioSource> audioPool;
+    private AudioSource baseAudioSource; // 볼륨 설정용 기준
+    private Dictionary<SFXType, AudioSource> loopSources = new();
+    private SFXType? currentLoopType = null;
     protected override void Awake()
     {
         base.Awake();
         DontDestroyOnLoad(gameObject);
 
-        if (audioSource == null)
-            audioSource = GetComponent<AudioSource>();
+        InitSFXDict();
+        InitAudioPool();
+    }
 
-        if (audioSource == null)
-            audioSource = gameObject.AddComponent<AudioSource>();
-
+    private void InitSFXDict()
+    {
         sfxDict = new Dictionary<SFXType, AudioClip>();
         foreach (var entry in sfxList)
         {
-            sfxDict[entry.type] = entry.clip;
+            if (entry.clip != null && !sfxDict.ContainsKey(entry.type))
+                sfxDict.Add(entry.type, entry.clip);
         }
-        foreach (var entry in sfxDict)
-        {
+    }
 
+    private void InitAudioPool()
+    {
+        audioPool = new Queue<AudioSource>();
+
+        baseAudioSource = gameObject.AddComponent<AudioSource>();
+        baseAudioSource.playOnAwake = false;
+
+        for (int i = 0; i < poolSize; i++)
+        {
+            var source = gameObject.AddComponent<AudioSource>();
+            source.playOnAwake = false;
+            audioPool.Enqueue(source);
         }
     }
-    public void RegisterAdditionalSource(AudioSource source)
-    {
-        if (!additionalSources.Contains(source))
-            additionalSources.Add(source);
-    }
+
     private void OnEnable()
     {
         EventBus.OnSFXRequested += HandleSFXRequest;
@@ -63,91 +76,90 @@ public class SFXManager : Singleton<SFXManager>
         if (showDebugInfo)
             Debug.Log($"[SFXManager] SFX 요청 받음: {type}");
 
-        if (sfxDict == null)
+        if (!sfxDict.TryGetValue(type, out var clip) || clip == null)
         {
             if (showDebugInfo)
-                Debug.LogError("[SFXManager] sfxDict가 null입니다! Awake()가 제대로 호출되지 않았을 수 있습니다.");
+                Debug.LogWarning($"[SFXManager] {type}에 해당하는 clip이 null입니다.");
             return;
         }
 
-        if (sfxDict.TryGetValue(type, out var clip))
-        {
-            if (clip == null)
-            {
-            }
-            else
-            {
-                audioSource.PlayOneShot(clip);
-            }
-        }
-        else
-        {
-            Debug.LogWarning($"[SFXManager] 등록되지 않은 SFXType: {type}");
-        }
+        var source = GetAvailableSource();
+        source.volume = baseAudioSource.volume;
+        source.PlayOneShot(clip);
+
+        if (showDebugInfo)
+            Debug.Log($"[SFXManager] {type} 사운드 재생 시작");
     }
+
+    private AudioSource GetAvailableSource()
+    {
+        foreach (var source in audioPool)
+        {
+            if (!source.isPlaying)
+                return source;
+        }
+
+        // 전부 재생 중이면 새로운 AudioSource 추가
+        var extraSource = gameObject.AddComponent<AudioSource>();
+        extraSource.playOnAwake = false;
+        audioPool.Enqueue(extraSource);
+
+        if (showDebugInfo)
+            Debug.LogWarning("[SFXManager] AudioSource 부족 → 새로 생성");
+
+        return extraSource;
+    }
+
     public void SetVolume(float volume)
     {
-        if (audioSource != null)
-            audioSource.volume = volume;
+        baseAudioSource.volume = volume;
+        if (showDebugInfo)
+            Debug.Log($"[SFXManager] 볼륨 설정: {volume}");
+    }
+    private void PlayLoop(SFXType type)
+    {
+        if (!sfxDict.TryGetValue(type, out var clip) || clip == null)
+            return;
 
-        foreach (var source in additionalSources)
+        if (!loopSources.TryGetValue(type, out var source))
         {
-            if (source != null)
-                source.volume = volume;
+            source = gameObject.AddComponent<AudioSource>();
+            source.loop = true;
+            source.playOnAwake = false;
+            loopSources[type] = source;
         }
-    }
 
-    public float GetVolume()
-    {
-        return audioSource != null ? audioSource.volume : 0f;
-    }
-
-    public void PlayLoop(SFXType type)
-    {
-        if (sfxDict.TryGetValue(type, out var clip))
+        if (!source.isPlaying)
         {
-            if (clip == null)
-            {
-                Debug.LogWarning($"[SFXManager] {type}의 클립이 비어 있음");
-                return;
-            }
-
-            if (audioSource == null)
-            {
-                audioSource = gameObject.AddComponent<AudioSource>();
-                audioSource.loop = true;
-                audioSource.playOnAwake = false;
-            }
-
-            if (audioSource.isPlaying && audioSource.clip == clip)
-            {
-                return; // 이미 재생 중이면 무시
-            }
-
-            audioSource.clip = clip;
-            audioSource.Play();
+            source.clip = clip;
+            source.volume = baseAudioSource.volume;
+            source.Play();
 
             if (showDebugInfo)
-                Debug.Log($"[SFXManager] 루프 사운드 재생: {type}");
-        }
-        else
-        {
-            Debug.LogWarning($"[SFXManager] 루프 요청 실패: 등록되지 않은 SFXType: {type}");
+                Debug.Log($"[SFXManager] 루프 SFX 시작: {type}");
         }
     }
 
-    public void StopLoop()
+    public void StopLoop(SFXType type)
     {
-        if (audioSource != null && audioSource.isPlaying)
+        if (loopSources.TryGetValue(type, out var source) && source.isPlaying)
         {
-            audioSource.Stop();
-            audioSource.clip = null;
+            source.Stop();
 
             if (showDebugInfo)
-                Debug.Log("[SFXManager] 루프 사운드 정지");
+                Debug.Log($"[SFXManager] 루프 SFX 정지: {type}");
         }
     }
+    public void StopAllLoops()
+    {
+        foreach (var source in loopSources.Values)
+        {
+            if (source.isPlaying)
+                source.Stop();
+        }
 
-    //호출 예시
-    //SFXEventBus.PlaySFX(SFXType.ItemPickup);
+        if (showDebugInfo)
+            Debug.Log("[SFXManager] 모든 루프 SFX 정지");
+    }
+
 }

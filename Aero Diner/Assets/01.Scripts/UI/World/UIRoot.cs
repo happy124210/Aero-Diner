@@ -14,7 +14,7 @@ public class UIRoot : Singleton<UIRoot>
     public KeyRebindManager keyRebindManager;
     public VolumeHandler volumeHandler;
     public VideoSettingPanel videoSettingPanel;
-    public TabButtonController tabButtonController;
+    public TabController tabButtonController;
 
     [SerializeField]
     public GameObject pausePanel;

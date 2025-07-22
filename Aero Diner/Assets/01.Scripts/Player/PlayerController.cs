@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : Singleton<PlayerController>
 {
     [Header("입력 액션 참조")]
     public InputActionReference moveActionRef;
@@ -37,8 +37,10 @@ public class PlayerController : MonoBehaviour
     public InteractionType interactionType;
     public IInteractable currentTarget;
 
-    private void Awake()
+
+    protected override void Awake()
     {
+        base.Awake();
         rb = GetComponent<Rigidbody2D>();
         playerInventory = GetComponent<PlayerInventory>();
         animator = GetComponent<Animator>();
@@ -63,12 +65,9 @@ public class PlayerController : MonoBehaviour
 
         interactActionRef.action.performed -= OnInteract;
         pickupActionRef.action.performed -= OnPickupDown;
-        interactActionRef.action.canceled += OnInteractCancel;
+        interactActionRef.action.canceled -= OnInteractCancel;
     }
-    private void Start()
-    {
-        SFXManager.Instance.RegisterAdditionalSource(moveSFXSource);
-    }
+
     private void Update()
     {
         moveInput = moveActionRef.action.ReadValue<Vector2>();
@@ -83,7 +82,7 @@ public class PlayerController : MonoBehaviour
         bool isInteracting = currentTarget != null && interactionType == InteractionType.Use && isHolding;
         animator.SetBool("IsInteract", isInteracting);
 
-        if (currentTarget != null && interactionType == InteractionType.Use && isHolding)
+        if (isInteracting)
         {
             currentTarget.Interact(playerInventory, interactionType);
         }
@@ -91,14 +90,12 @@ public class PlayerController : MonoBehaviour
         if (moveInput.sqrMagnitude < 0.01f)
         {
             idleTimer += Time.deltaTime;
-
             if (idleTimer >= idleBreakTime)
             {
-                int random = Random.Range(0, 2); // 0 또는 1
+                int random = Random.Range(0, 2);
                 animator.SetInteger("IdleBreakIndex", random);
                 animator.SetTrigger("TriggerIdleBreak");
-
-                idleTimer = 0f; // 다시 5초 후 실행 가능
+                idleTimer = 0f;
             }
         }
         else
@@ -106,7 +103,6 @@ public class PlayerController : MonoBehaviour
             idleTimer = 0f;
         }
     }
-
 
     private void FixedUpdate()
     {
@@ -121,8 +117,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnPickupDown(InputAction.CallbackContext context)
     {
-        if (!context.performed) return;
-        if (playerInventory == null) return;
+        if (!context.performed || playerInventory == null) return;
 
         if (playerInventory.IsHoldingItem)
         {
@@ -130,7 +125,6 @@ public class PlayerController : MonoBehaviour
             {
                 SetDirectionParams();
                 animator.SetTrigger("PutDown");
-
                 playerInventory.DropItem(currentTarget);
                 EventBus.OnSFXRequested(SFXType.ItemLaydown);
             }
@@ -142,16 +136,7 @@ public class PlayerController : MonoBehaviour
             {
                 SetDirectionParams();
                 animator.SetTrigger("PickUp");
-
-                if (pickupTarget is IngredientStation)
-                {
-                    pickupTarget.Interact(playerInventory, InteractionType.Pickup);
-                }
-                else
-                {
-                    playerInventory.TryPickup(pickupTarget);
-                }
-
+                playerInventory.TryPickup(pickupTarget);
                 EventBus.OnSFXRequested(SFXType.ItemPickup);
             }
         }
@@ -159,16 +144,27 @@ public class PlayerController : MonoBehaviour
 
     private void RaycastForInteractable()
     {
-        IInteractable newTarget = null;
+        var hits = CastAll(transform.position, lastMoveDir, interactionRadius, interactableLayer);
 
-        Vector2 origin = transform.position;
-        Vector2 direction = lastMoveDir;
-        float distance = interactionRadius;
+        IInteractable stationTarget = null;
+        IInteractable gridTarget = null;
 
-        RaycastHit2D hit = Physics2D.Raycast(origin, direction, distance, interactableLayer);
+        foreach (var hit in hits)
+        {
+            var interactable = hit.collider.GetComponent<IInteractable>();
+            if (interactable == null) continue;
 
-        if (hit.collider)
-            newTarget = hit.collider.GetComponent<IInteractable>();
+            if (hit.collider.CompareTag("Station") && stationTarget == null)
+                stationTarget = interactable;
+            else if (hit.collider.CompareTag("GridCell") && gridTarget == null)
+                gridTarget = interactable;
+        }
+
+        //조건 분기: 들고 있는 Station이 있으면 GridCell 우선, 아니면 Station 우선
+        bool holdingStation = playerInventory.heldStation != null;
+
+        IInteractable newTarget = holdingStation ? gridTarget ?? stationTarget
+                                                 : stationTarget ?? gridTarget;
 
         if (newTarget != currentTarget)
         {
@@ -180,62 +176,89 @@ public class PlayerController : MonoBehaviour
 
     private IInteractable FindBestInteractable(InteractionType interactionType)
     {
-        Vector2 origin = rb.position;
-        Vector2 direction = lastMoveDir == Vector2.zero ? Vector2.down : lastMoveDir;
-        float distance = interactionRadius;
-        int rayCount = 5;
-        float spread = 0.3f; // 좌우로 퍼지는 폭
-
+        var hits = CastAll(transform.position, lastMoveDir, interactionRadius, interactableLayer);
         IInteractable best = null;
         float closestDist = Mathf.Infinity;
 
-        // 직각 방향을 기준으로 좌우 퍼지게 offset 계산
-        Vector2 perpendicular = new Vector2(-direction.y, direction.x); // 직각 벡터
-
-        for (int i = 0; i < rayCount; i++)
+        foreach (var hit in hits)
         {
-            float t = (i / (float)(rayCount - 1)) - 0.5f; // -0.5 ~ 0.5
-            Vector2 offset = perpendicular * t * spread;
-            Vector2 rayOrigin = origin + offset;
+            if (hit.collider == null) continue;
+            var interactable = hit.collider.GetComponent<IInteractable>();
+            if (interactable == null) continue;
 
-            RaycastHit2D[] hits = Physics2D.RaycastAll(rayOrigin, direction, distance, interactableLayer);
-            Debug.DrawRay(rayOrigin, direction * distance, Color.cyan, 0.2f);
+            float dist = Vector2.Distance(transform.position, hit.point);
 
-            foreach (var hit in hits)
+            if (interactionType == InteractionType.Pickup)
             {
-                if (hit.collider == null) continue;
-                var interactable = hit.collider.GetComponent<IInteractable>();
-                if (interactable == null) continue;
-
-                float dist = Vector2.Distance(origin, hit.point);
-                if (dist >= closestDist) continue;
-
-                if (interactionType == InteractionType.Pickup)
+                if (GameManager.Instance.CurrentPhase == GamePhase.EditStation && interactable is IMovableStation)
                 {
-                    if (interactable is FoodDisplay)
+                    if (dist < closestDist)
                     {
                         best = interactable;
                         closestDist = dist;
-                        break; // 최우선
                     }
-                    else if (interactable is IngredientStation)
+                    continue;
+                }
+                if (interactable is FoodDisplay food && food.CanPickup())
+                {
+                    if (dist < closestDist)
                     {
                         best = interactable;
                         closestDist = dist;
                     }
                 }
-                else if (interactionType == InteractionType.Use)
+                if (interactable is IngredientStation)
                 {
-                    if (interactable is PassiveStation || interactable is AutomaticStation || interactable is IngredientStation)
+                    if (dist < closestDist)
+                    {
+                        best = interactable;
+                        closestDist = dist;
+                    }
+                }
+
+                else if (interactionType == InteractionType.Use || interactionType == InteractionType.Stop)
+            
+                if (interactable is PassiveStation || interactable is AutomaticStation)
+                {
+                    if (dist < closestDist)
                     {
                         best = interactable;
                         closestDist = dist;
                     }
                 }
             }
+            
+            
+        }
+        return best;
+    }
+
+    public Transform FindGridCellInFront()
+    {
+        Vector2 origin = transform.position;
+        Vector2 direction = lastMoveDir == Vector2.zero ? Vector2.down : lastMoveDir.normalized;
+        float distance = 2f; // 테스트용으로 일시 증가
+
+        var hit = CastSingle(origin, direction, distance, LayerMask.GetMask("IInteractable"));
+        Debug.DrawRay(origin, direction * distance, Color.green);
+
+        if (hit.HasValue && hit.Value.collider.CompareTag("GridCell"))
+        {
+            return hit.Value.collider.transform;
         }
 
-        return best;
+        return null;
+    }
+
+    private RaycastHit2D? CastSingle(Vector2 origin, Vector2 direction, float distance, LayerMask layer)
+    {
+        var hit = Physics2D.Raycast(origin, direction, distance, layer);
+        return hit.collider != null ? hit : null;
+    }
+
+    private RaycastHit2D[] CastAll(Vector2 origin, Vector2 direction, float distance, LayerMask layer)
+    {
+        return Physics2D.RaycastAll(origin, direction, distance, layer);
     }
 
     private void Animate()
@@ -293,7 +316,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnInteractCancel(InputAction.CallbackContext context)
     {
-        // J 키에서 손을 뗐을 때 Stop 처리
         currentTarget?.Interact(playerInventory, InteractionType.Stop);
     }
 
@@ -312,7 +334,7 @@ public class PlayerController : MonoBehaviour
 
         for (int i = 0; i < rayCount; i++)
         {
-            float t = (i / (float)(rayCount - 1)) - 0.5f; // -0.5 ~ 0.5
+            float t = (i / (float)(rayCount - 1)) - 0.5f;
             Vector2 offset = perpendicular * t * spread;
             Vector2 rayOrigin = origin + offset;
 
@@ -321,4 +343,5 @@ public class PlayerController : MonoBehaviour
         }
 #endif
     }
+
 }

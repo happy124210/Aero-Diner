@@ -4,13 +4,10 @@ using UnityEngine.AI;
 /// <summary>
 /// Model과 View를 연결하고 상태 관리 및 외부 시스템과의 상호작용을 담당
 /// </summary>
-public class CustomerController : MonoBehaviour
+public class CustomerController : MonoBehaviour, IPoolable
 {
     [Header("Movement")]
     [SerializeField] private NavMeshAgent navAgent;
-    private const float AGENT_DRIFT = 0.0001f;
-    private const float ARRIVAL_THRESHOLD = 0.5f;
-    private const float VELOCITY_THRESHOLD = 0.1f;
     
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo;
@@ -74,10 +71,16 @@ public class CustomerController : MonoBehaviour
     }
     
     #region 초기화 & 이벤트 구독
-    private void InitializeMVC(CustomerData data)
+    public void Setup(CustomerData data)
     {
+        model.Initialize(data);
         view.Initialize(data);
+        
+        SetupNavMeshAgent(model.Data.speed);
         SubscribeToModelEvents();
+        ChangeState(new MovingToEntranceState());
+
+        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 초기 설정 완료 - {data.customerName}");
     }
 
     private void SubscribeToModelEvents()
@@ -156,8 +159,8 @@ public class CustomerController : MonoBehaviour
     {
         view.ShowPayEffect();
         
-        GameManager.Instance.AddMoney(GetCurrentOrder().foodCost);
-        RestaurantManager.Instance.IncreaseCustomerStat();
+        RestaurantManager.Instance.AddDailyEarnings(GetCurrentOrder().foodCost);
+        RestaurantManager.Instance.OnCustomerServed();
     }
 
     private void HandleLeaving()
@@ -173,12 +176,15 @@ public class CustomerController : MonoBehaviour
         EventBus.Raise(UIEventType.HideOrderPanel, model);
     }
     
+    public void RequestDespawn() => CustomerManager.Instance.DespawnCustomer(this);
+    
     #endregion
 
     #region 외부 연결 함수
     
     // model
     public void PlaceOrder() => model.PlaceOrder();
+    public void ResetPatience() => model.ResetPatience();
     public void ReceiveFood(FoodData servedMenu) =>  model.ReceiveFood(servedMenu);
     public void EatFood() => model.EatFood();
     public void SetAssignedTable(Table table) => model.SetAssignedTable(table);
@@ -191,26 +197,16 @@ public class CustomerController : MonoBehaviour
     
     // state 전환
     public void MoveToAssignedSeat() => ChangeState(new MovingToSeatState());
-    public void ForceLeave() => ChangeState(new LeavingState());
+    public void ForceLeave() => ChangeState(new AngryLeavingState());
     
     #endregion
 
     #region IPoolable Implementation
-    public void InitializeFromPool(CustomerData customerData)
+    public void OnGetFromPool()
     {
-        if (!customerData)
-        {
-            Debug.LogError($"[CustomerController]: {gameObject.name} customerData가 null입니다!");
-            return;
-        }
         
-        model.Initialize(customerData);
-        InitializeMVC(customerData);
-        SetupNavMeshAgent(model.Data.speed);
         
-        ChangeState(new MovingToEntranceState());
-        
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 풀에서 초기화 완료 - {customerData.customerName}");
+        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 풀에서 초기화 완료");
     }
 
     public void OnReturnToPool()
@@ -230,12 +226,6 @@ public class CustomerController : MonoBehaviour
         
         gameObject.SetActive(false);
         if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 풀로 반환");
-    }
-    
-    public void Despawn()
-    {
-        PoolManager.Instance.DespawnCustomer(this);
-        if (showDebugInfo) Debug.Log($"[CustomerController]: {gameObject.name} 퇴장 및 비활성화");
     }
     #endregion
     
@@ -259,12 +249,10 @@ public class CustomerController : MonoBehaviour
 
     public bool HasReachedDestination()
     {
-        if (!navAgent || navAgent.enabled == false) return false;
+        if (!navAgent || navAgent.pathPending || navAgent.enabled == false) return false;
+        if (navAgent.remainingDistance > navAgent.stoppingDistance) return false;
         
-        bool reached = navAgent.remainingDistance <= ARRIVAL_THRESHOLD 
-                                 && navAgent.velocity.sqrMagnitude < VELOCITY_THRESHOLD * VELOCITY_THRESHOLD;
-        
-        return reached;
+        return !navAgent.hasPath || navAgent.velocity.sqrMagnitude == 0f;
     }
     
     public void AdjustToSeatPosition()

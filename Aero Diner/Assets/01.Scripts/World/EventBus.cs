@@ -20,6 +20,12 @@ public enum BGMEventType
     StopBGM
 }
 
+public enum GameEventType
+{
+    GamePhaseChanged, // 게임 상태 변경
+    RoundTimerEnded,  // 영업 시간 종료
+}
+
 public enum SFXType
 {
     // UI
@@ -45,7 +51,10 @@ public enum SFXType
 
     // 일상
     NPCScript, BuyInShop,
+    
+    //추후 추가(리스트 번호 오류 방지)
     OpenPause, ClosePause,
+    OpenBook, OpenInventory,
 }
 public enum UIEventType
 {
@@ -60,17 +69,24 @@ public enum UIEventType
     //StartScene
     ShowStartWarningPanel, ShowStartMenuWithSave,
     ShowStartMenuNoSave, LoadMainScene,
-    QuitGame, ShowPressAnyKey,
+    QuitGame, ShowPressAnyKey,LoadDayScene,
     
     //MainSceneUI
     ShowRoundTimer, HideRoundTimer,
     UpdateEarnings,
     ShowMenuPanel, UpdateMenuPanel, HideMenuPanel, 
     ShowResultPanel, HideResultPanel, 
-    ShowInventory, HideInventory,
     ShowOrderPanel, HideOrderPanel,
-    //NPC
-    CoinPopEffect,
+    
+    //Inventory
+    ShowInventory, HideInventory,
+    ShowRecipeBook, ShowStationPanel,
+    ShowQuestPanel,
+    FadeInInventory, FadeInRecipeBook,
+
+    //Dialogue
+    ShowDialogueLine, HideDialoguePanel,
+    ShowDialoguePanel,
 }
 
 public static class EventBus
@@ -78,10 +94,11 @@ public static class EventBus
     public static Action<SFXType> OnSFXRequested;
     public static Action<BGMEventType> OnBGMRequested;
     public static Action<UIEventType, object> OnUIEvent;
+    public static Action<GameEventType, object> OnGameEvent;
     public static event Action<FadeEventType, FadeEventPayload> OnFadeRequested;
     private static AudioSource cookingLoopSource;
     public static event Action<SFXType> OnLoopSFXRequested;
-    public static event Action OnStopLoopSFXRequested;
+    public static event Action<SFXType> OnStopLoopSFXRequested;
 
     public static void PlaySFX(SFXType type)
     {
@@ -92,15 +109,22 @@ public static class EventBus
     {
         OnUIEvent?.Invoke(eventType, payload);
     }
+    
+    public static void Raise(GameEventType eventType, object payload = null)
+    {
+        OnGameEvent?.Invoke(eventType, payload);
+    }
 
     public static void PlayBGM(BGMEventType type)
     {
         OnBGMRequested?.Invoke(type);
     }
+    
     public static void RaiseFadeEvent(FadeEventType type, FadeEventPayload payload = null)
     {
         OnFadeRequested?.Invoke(type, payload);
     }
+    
     //게임 종료 시점 혹은 씬 변경 시점에 호출하여 메모리 누수 방지
     public static void ClearAll()
     {
@@ -113,8 +137,8 @@ public static class EventBus
         OnLoopSFXRequested?.Invoke(type);
     }
 
-    public static void StopLoopSFX()
+    public static void StopLoopSFX(SFXType type)
     {
-        OnStopLoopSFXRequested?.Invoke();
+        OnStopLoopSFXRequested?.Invoke(type);
     }
 }

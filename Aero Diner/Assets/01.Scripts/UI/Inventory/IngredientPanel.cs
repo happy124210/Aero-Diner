@@ -1,0 +1,25 @@
+﻿using UnityEngine.UI;
+using TMPro;
+using UnityEngine;
+
+public class IngredientPanel : MonoBehaviour
+{
+    [SerializeField] private Image foodIcon;
+    [SerializeField] private Image foodTypeIcon;
+    [SerializeField] private TMP_Text nameText;
+    [SerializeField] private TMP_Text priceText;
+    [SerializeField] private TMP_Text stockText;
+    [SerializeField] private TMP_Text descriptionText;
+
+    public void SetData(FoodData data, Sprite typeIcon)
+    {
+        if (data == null) return;
+
+        foodIcon.sprite = data.foodIcon;
+        nameText.text = data.displayName;
+        priceText.text = data.foodCost.ToString();
+        stockText.text = "999"; // 재고 시스템과 연동 시 수정 가능
+        descriptionText.text = data.description;
+        foodTypeIcon.sprite = typeIcon;
+    }
+}

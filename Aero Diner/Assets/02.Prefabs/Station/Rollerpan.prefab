@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 5392790043498998044}
   m_Layer: 6
   m_Name: Rollerpan
-  m_TagString: Untagged
+  m_TagString: Station
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30,8 +30,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2625043130923246362}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5.42, y: -1, z: 0.049384885}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -107,12 +107,12 @@ MonoBehaviour:
   cookingTime: 5
   stationData: {fileID: 11400000, guid: cae44f9c00942634c9c87c8b038577b6, type: 2}
   currentIngredients: []
-  bestMatchedRecipe: 
   availableFoodIds: []
+  bestMatchedRecipe: 
   iconDisplay: {fileID: 6348385084478325614}
   slotSpacing: 0.5
-  showDebugInfo: 0
   timerController: {fileID: 4235777579663565693}
+  showDebugInfo: 0
 --- !u!50 &8848954358955157158
 Rigidbody2D:
   serializedVersion: 4
@@ -443,6 +443,10 @@ PrefabInstance:
     - target: {fileID: 6738146892103992418, guid: 5a1e8281bff4d3f4c8cb2087693432a6, type: 3}
       propertyPath: m_Name
       value: SlotIconHolder
+      objectReference: {fileID: 0}
+    - target: {fileID: 6738146892103992418, guid: 5a1e8281bff4d3f4c8cb2087693432a6, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 7974676353604054298, guid: 5a1e8281bff4d3f4c8cb2087693432a6, type: 3}
       propertyPath: m_LocalPosition.x

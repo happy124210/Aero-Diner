@@ -6,7 +6,7 @@ using TMPro;
 public class SavePopupFader : MonoBehaviour
 {
     [SerializeField] private CanvasGroup popupGroup; // 페이드 제어용
-    [SerializeField] private float showDuration = 2f;
+    [SerializeField] private float showDuration = 1.5f;
     [SerializeField] private float fadeDuration = 1f;
 
     private Coroutine currentRoutine;
@@ -28,12 +28,13 @@ public class SavePopupFader : MonoBehaviour
 
         popupGroup.alpha = 1f;
 
-        yield return new WaitForSeconds(showDuration);
+        //타임스케일 무시하고 대기
+        yield return new WaitForSecondsRealtime(showDuration);
 
         float t = 0f;
         while (t < fadeDuration)
         {
-            t += Time.deltaTime;
+            t += Time.unscaledDeltaTime; // 타임스케일 무시
             popupGroup.alpha = Mathf.Lerp(1f, 0f, t / fadeDuration);
             yield return null;
         }

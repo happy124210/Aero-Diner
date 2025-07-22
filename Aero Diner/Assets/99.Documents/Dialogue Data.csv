@@ -1,0 +1,4 @@
+id,lineNum,speakerId,expression,text,next_eventType,next_parameter,choice1_text,choice2_text
+daily_intro_01,1,KAYA,Happy,"오늘 날씨가 정말 좋네!",,,,
+daily_intro_01,2,HERO,Default,"그러게요. 이런 날엔 왠지 장사가 잘 될 것 같아요.",,,,
+daily_outro_01,1,KAYA,Default,"벌써 시간이 이렇게 됐네. 오늘 하루도 수고했어.",None,,,,

@@ -18,22 +18,16 @@ public class OptionBtn : MonoBehaviour
         if (UIRoot.Instance.volumeHandler.HasUnsavedChanges() ||
             UIRoot.Instance.videoSettingPanel.HasUnsavedChanges())
         {
-            UIRoot.Instance.tabButtonController.RequestSelectTab(0);
-
             UIRoot.Instance.uiExitPopup.Show(() =>
             {
-                EventBus.Raise(UIEventType.ShowSoundTab);
-                UIRoot.Instance.tabButtonController.ApplyTabSelectionVisuals();
+                UIRoot.Instance.tabButtonController.RequestSelectTab(0);
             });
         }
         else
         {
             UIRoot.Instance.tabButtonController.RequestSelectTab(0);
-            EventBus.Raise(UIEventType.ShowSoundTab);
-            UIRoot.Instance.tabButtonController.ApplyTabSelectionVisuals();
         }
     }
-
 
     public void OnClickVideoTab()
     {
@@ -41,22 +35,16 @@ public class OptionBtn : MonoBehaviour
         if (UIRoot.Instance.volumeHandler.HasUnsavedChanges() ||
             UIRoot.Instance.keyRebindManager.HasUnsavedChanges())
         {
-            UIRoot.Instance.tabButtonController.RequestSelectTab(1);
-
             UIRoot.Instance.uiExitPopup.Show(() =>
             {
-                EventBus.Raise(UIEventType.ShowVideoTab);
-                UIRoot.Instance.tabButtonController.ApplyTabSelectionVisuals();
+                UIRoot.Instance.tabButtonController.RequestSelectTab(1);
             });
         }
         else
         {
             UIRoot.Instance.tabButtonController.RequestSelectTab(1);
-            EventBus.Raise(UIEventType.ShowVideoTab);
-            UIRoot.Instance.tabButtonController.ApplyTabSelectionVisuals();
         }
     }
-
 
     public void OnClickControlTab()
     {
@@ -64,19 +52,14 @@ public class OptionBtn : MonoBehaviour
         if (UIRoot.Instance.volumeHandler.HasUnsavedChanges() ||
             UIRoot.Instance.videoSettingPanel.HasUnsavedChanges())
         {
-            UIRoot.Instance.tabButtonController.RequestSelectTab(2);
-
             UIRoot.Instance.uiExitPopup.Show(() =>
             {
-                EventBus.Raise(UIEventType.ShowControlTab);
-                UIRoot.Instance.tabButtonController.ApplyTabSelectionVisuals();
+                UIRoot.Instance.tabButtonController.RequestSelectTab(2);
             });
         }
         else
         {
             UIRoot.Instance.tabButtonController.RequestSelectTab(2);
-            EventBus.Raise(UIEventType.ShowControlTab);
-            UIRoot.Instance.tabButtonController.ApplyTabSelectionVisuals();
         }
     }
 
@@ -97,7 +80,7 @@ public class OptionBtn : MonoBehaviour
     public void OnClickStartGame()
     {
         EventBus.PlaySFX(SFXType.ButtonClick);
-        EventBus.Raise(UIEventType.LoadMainScene);
+        EventBus.Raise(UIEventType.LoadDayScene);
     }
 
     public void QuitGame()

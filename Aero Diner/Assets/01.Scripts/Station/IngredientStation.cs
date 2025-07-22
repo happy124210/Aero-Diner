@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
-using UnityEngine.UIElements;
 
 /// <summary>
 /// 플레이어가 상호작용하면 재료를 생성해주는 스테이션
 /// </summary>
-public class IngredientStation : MonoBehaviour, IInteractable
+public class IngredientStation : MonoBehaviour, IInteractable, IMovableStation
 {
+    public Transform GetTransform() => transform;
+
     [Header("생성할 재료 SO")]
     public FoodData selectedIngredient;
 
