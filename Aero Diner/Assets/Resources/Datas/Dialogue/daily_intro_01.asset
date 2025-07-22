@@ -10,15 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e3016406984b8b94e9f7c7e996cc12e2, type: 3}
-  m_Name: tut_kaya_intro_choice1
+  m_Name: daily_intro_01
   m_EditorClassIdentifier: 
-  id: tut_kaya_intro_choice1
+  id: daily_intro_01
   lines:
   - speakerId: KAYA
-    expression: Happy
-    text: "\uC815\uB9D0? \uACE0\uB9C8\uC6CC! \uADF8\uB7FC \uC6B0\uC120 \uAC00\uC7A5
-      \uAE30\uBCF8\uC801\uC778 '\uD504\uB77C\uC774\uD32C'\uC744 \uAD6C\uD574\uB2E4
-      \uC904 \uC218 \uC788\uC744\uAE4C?"
+    expression: 1
+    text: "\"\uC624\uB298 \uB0A0\uC528\uAC00 \uC815\uB9D0 \uC88B\uB124!\""
+  - speakerId: HERO
+    expression: 0
+    text: "\"\uADF8\uB7EC\uAC8C\uC694. \uC774\uB7F0 \uB0A0\uC5D4 \uC660\uC9C0 \uC7A5\uC0AC\uAC00
+      \uC798 \uB420 \uAC83 \uAC19\uC544\uC694.\""
   choices: []
-  nextEventType: 1
-  nextEventParameter: quest_frying_pan
+  nextEventType: 10
+  nextEventParameter: 
