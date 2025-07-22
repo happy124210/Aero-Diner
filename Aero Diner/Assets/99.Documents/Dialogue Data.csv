@@ -1,6 +1,4 @@
 id,lineNum,speakerId,expression,text,next_eventType,next_parameter,choice1_text,choice2_text
-tut_kaya_intro,1,KAYA,Default,"안녕 이 근처는 처음 보는 얼굴인데.",,,,
-tut_kaya_intro,2,KAYA,Happy,"나는 카야라고 해. 이 섬의 레스토랑을 되살리려고 하는데 혹시 도와주지 않을래?",,,"도와드릴까요?","바빠서 이만."
-tut_kaya_intro_choice1,1,KAYA,Happy,"정말? 고마워! 그럼 우선 가장 기본적인 '프라이팬'을 구해다 줄 수 있을까?",StartQuest,quest_frying_pan,,
-tut_kaya_intro_choice2,1,KAYA,Sad,"아 아쉽네... 마음이 바뀌면 언제든지 다시 말을 걸어줘.",,,,
-tut_kaya_intro_choice2,2,HERO,Default,"(카야의 부탁을 거절했다. 나중에 다시 말을 걸어보자.)",,,,
+daily_intro_01,1,KAYA,Happy,"오늘 날씨가 정말 좋네!",,,,
+daily_intro_01,2,HERO,Default,"그러게요. 이런 날엔 왠지 장사가 잘 될 것 같아요.",,,,
+daily_outro_01,1,KAYA,Default,"벌써 시간이 이렇게 됐네. 오늘 하루도 수고했어.",None,,,,
