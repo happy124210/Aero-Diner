@@ -158,7 +158,7 @@ public class CSVImporter
                 // 데이터 초기화
                 data.id = dialogueId;
                 data.lines = new List<DialogueLine>();
-                data.choices = new List<DialogueChoice>();
+                // data.choices = new List<DialogueChoice>();
                 data.nextEventType = EventType.None;
                 data.nextEventParameter = string.Empty;
                 
@@ -166,11 +166,17 @@ public class CSVImporter
                 
                 foreach (var cols in rows)
                 {
+                    Expression parsedExpression = Expression.Default;
+                    if (Enum.TryParse<Expression>(cols[3].Trim(), true, out var tempExpression))
+                    {
+                        parsedExpression = tempExpression;
+                    }
+                
                     data.lines.Add(new DialogueLine
                     {
                         speakerId = cols[2].Trim(),
-                        text = cols[4].Trim().Replace("\"", ""),
-                        expression = cols[3].Trim()
+                        text = cols[4].Trim(),
+                        expression = parsedExpression
                     });
                 }
                 
@@ -186,19 +192,19 @@ public class CSVImporter
                     }
                 }
 
-                // 선택지 파싱
-                for (int i = 0; i < 2; i++)
-                {
-                    int textIndex = 7 + i;
-                    if (lastRow.Length > textIndex && !string.IsNullOrEmpty(lastRow[textIndex].Trim()))
-                    {
-                        data.choices.Add(new DialogueChoice
-                        {
-                            text = lastRow[textIndex].Trim(),
-                            nextDialogueId = $"{dialogueId}_choice{i + 1}"
-                        });
-                    }
-                }
+                // // 선택지 파싱
+                // for (int i = 0; i < 2; i++)
+                // {
+                //     int textIndex = 7 + i;
+                //     if (lastRow.Length > textIndex && !string.IsNullOrEmpty(lastRow[textIndex].Trim()))
+                //     {
+                //         data.choices.Add(new DialogueChoice
+                //         {
+                //             text = lastRow[textIndex].Trim(),
+                //             nextDialogueId = $"{dialogueId}_choice{i + 1}"
+                //         });
+                //     }
+                // }
 
                 EditorUtility.SetDirty(data);
                 successCount++;

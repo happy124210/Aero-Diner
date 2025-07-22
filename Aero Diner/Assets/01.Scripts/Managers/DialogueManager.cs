@@ -10,6 +10,7 @@ public class DialogueManager : Singleton<DialogueManager>
     private DialogueData currentDialogue;
     
     private Dictionary<string, DialogueData> dialogueDatabase;
+    private Dictionary<string, SpeakerData> speakerDatabase;
     
     protected override void Awake()
     {
@@ -17,6 +18,7 @@ public class DialogueManager : Singleton<DialogueManager>
         linesQueue = new Queue<DialogueLine>();
         
         LoadDialogueDatabase();
+        LoadSpeakerDatabase();
     }
 
     #region 데이터베이스 관리
@@ -42,15 +44,29 @@ public class DialogueManager : Singleton<DialogueManager>
         if (showDebugInfo) Debug.Log($"총 {dialogueDatabase.Count}개 Dialogue Database 로드 완료");
     }
     
+    private void LoadSpeakerDatabase()
+    {
+        speakerDatabase = new Dictionary<string, SpeakerData>();
+        SpeakerData[] allSpeakers = Resources.LoadAll<SpeakerData>("Datas/Speaker");
+
+        foreach (var speaker in allSpeakers)
+        {
+            if (!speakerDatabase.ContainsKey(speaker.id))
+            {
+                speakerDatabase.Add(speaker.id, speaker);
+            }
+        }
+        Debug.Log($"Speaker Database 로드 완료: {speakerDatabase.Count}명");
+    }
+    
     public DialogueData FindDialogueDataById(string id)
     {
-        if (dialogueDatabase.TryGetValue(id, out DialogueData data))
-        {
-            return data;
-        }
-        
-        Debug.LogWarning($"id: {id} 없음");
-        return null;
+        return dialogueDatabase.TryGetValue(id, out DialogueData data) ? data : null;
+    }
+    
+    public SpeakerData FindSpeakerById(string id)
+    {
+        return speakerDatabase.TryGetValue(id, out SpeakerData speaker) ? speaker : null;
     }
 
     #endregion
@@ -83,7 +99,7 @@ public class DialogueManager : Singleton<DialogueManager>
     
     /// <summary>
     /// 다음 대사 요청
-    /// 다음라인 있으면 이벤트로 string 넘겨줌, 없으면 선택지 확인
+    /// 다음라인 있으면 이벤트로 string 넘겨줌, 없으면 끝
     /// </summary>
     public void RequestNextLine()
     {
@@ -95,60 +111,60 @@ public class DialogueManager : Singleton<DialogueManager>
         }
         else
         {
-            ShowChoicesOrEnd();
+            EndDialogue();
         }
     }
     
-    /// <summary>
-    /// 선택지 확인
-    /// 보여줄 선택지 있으면 event로 choices 넘겨주고, 없으면 종료
-    /// </summary>
-    private void ShowChoicesOrEnd()
-    {
-        if (currentDialogue.choices != null && currentDialogue.choices.Count > 0)
-        {
-            // TODO: 이벤트 발생 여부 논의
-            // OnShowChoices?.Invoke(currentDialogue.choices);
-        }
-        else
-        {
-            EndDialogue();
-        }
-    }
-
-    /// <summary>
-    /// 플레이어가 선택지를 골랐을 때
-    /// 선택지에 연결된 다음 대화가 있다면 연결, 없으면 종료
-    /// </summary>
-    /// <param name="choiceIndex"> 선택한 선택지의 인덱스 </param>
-    public void SelectChoice(int choiceIndex)
-    {
-        // 유효하지 않은 선택이면 대화 종료
-        if (choiceIndex < 0 || choiceIndex >= currentDialogue.choices.Count)
-        {
-            EndDialogue();
-            return;
-        }
-        
-        DialogueChoice selectedChoice = currentDialogue.choices[choiceIndex];
-
-        // 이 선택지에 연결된 다음 대화가 있다면 연결
-        if (!string.IsNullOrEmpty(selectedChoice.nextDialogueId))
-        {
-            DialogueData nextDialogue = FindDialogueDataById(selectedChoice.nextDialogueId);
-            StartDialogue(nextDialogue);
-        }
-        // 없다면 종료
-        else
-        {
-            EndDialogue();
-        }
-    }
-
     private void EndDialogue()
     {
         // TODO: EventBus.Raise(UIEventType.HideDialogue);
         // TODO: 후속 이벤트 전달 로직
         GameManager.Instance.ContinueGame();
     }
+    
+    // /// <summary>
+    // /// 선택지 확인
+    // /// 보여줄 선택지 있으면 event로 choices 넘겨주고, 없으면 종료
+    // /// </summary>
+    // private void ShowChoicesOrEnd()
+    // {
+    //     if (currentDialogue.choices != null && currentDialogue.choices.Count > 0)
+    //     {
+    //         // TODO: 이벤트 발생 여부 논의
+    //         // OnShowChoices?.Invoke(currentDialogue.choices);
+    //     }
+    //     else
+    //     {
+    //         EndDialogue();
+    //     }
+    // }
+
+    // /// <summary>
+    // /// 플레이어가 선택지를 골랐을 때
+    // /// 선택지에 연결된 다음 대화가 있다면 연결, 없으면 종료
+    // /// </summary>
+    // /// <param name="choiceIndex"> 선택한 선택지의 인덱스 </param>
+    // public void SelectChoice(int choiceIndex)
+    // {
+    //     // 유효하지 않은 선택이면 대화 종료
+    //     if (choiceIndex < 0 || choiceIndex >= currentDialogue.choices.Count)
+    //     {
+    //         EndDialogue();
+    //         return;
+    //     }
+    //     
+    //     DialogueChoice selectedChoice = currentDialogue.choices[choiceIndex];
+    //
+    //     // 이 선택지에 연결된 다음 대화가 있다면 연결
+    //     if (!string.IsNullOrEmpty(selectedChoice.nextDialogueId))
+    //     {
+    //         DialogueData nextDialogue = FindDialogueDataById(selectedChoice.nextDialogueId);
+    //         StartDialogue(nextDialogue);
+    //     }
+    //     // 없다면 종료
+    //     else
+    //     {
+    //         EndDialogue();
+    //     }
+    // }
 }
