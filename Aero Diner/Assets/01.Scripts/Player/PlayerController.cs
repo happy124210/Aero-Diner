@@ -37,6 +37,7 @@ public class PlayerController : Singleton<PlayerController>
     public InteractionType interactionType;
     public IInteractable currentTarget;
 
+
     protected override void Awake()
     {
         base.Awake();
@@ -143,8 +144,27 @@ public class PlayerController : Singleton<PlayerController>
 
     private void RaycastForInteractable()
     {
-        var hit = CastSingle(transform.position, lastMoveDir, interactionRadius, interactableLayer);
-        IInteractable newTarget = hit.HasValue ? hit.Value.collider?.GetComponent<IInteractable>() : null;
+        var hits = CastAll(transform.position, lastMoveDir, interactionRadius, interactableLayer);
+
+        IInteractable stationTarget = null;
+        IInteractable gridTarget = null;
+
+        foreach (var hit in hits)
+        {
+            var interactable = hit.collider.GetComponent<IInteractable>();
+            if (interactable == null) continue;
+
+            if (hit.collider.CompareTag("Station") && stationTarget == null)
+                stationTarget = interactable;
+            else if (hit.collider.CompareTag("GridCell") && gridTarget == null)
+                gridTarget = interactable;
+        }
+
+        //조건 분기: 들고 있는 Station이 있으면 GridCell 우선, 아니면 Station 우선
+        bool holdingStation = playerInventory.heldStation != null;
+
+        IInteractable newTarget = holdingStation ? gridTarget ?? stationTarget
+                                                 : stationTarget ?? gridTarget;
 
         if (newTarget != currentTarget)
         {
@@ -187,10 +207,18 @@ public class PlayerController : Singleton<PlayerController>
                         closestDist = dist;
                     }
                 }
-            }
-            else if (interactionType == InteractionType.Use || interactionType == InteractionType.Stop)
-            {
-                if (interactable is PassiveStation || interactable is AutomaticStation || interactable is IngredientStation)
+                if (interactable is IngredientStation)
+                {
+                    if (dist < closestDist)
+                    {
+                        best = interactable;
+                        closestDist = dist;
+                    }
+                }
+
+                else if (interactionType == InteractionType.Use || interactionType == InteractionType.Stop)
+            
+                if (interactable is PassiveStation || interactable is AutomaticStation)
                 {
                     if (dist < closestDist)
                     {
@@ -199,6 +227,8 @@ public class PlayerController : Singleton<PlayerController>
                     }
                 }
             }
+            
+            
         }
         return best;
     }
@@ -313,4 +343,5 @@ public class PlayerController : Singleton<PlayerController>
         }
 #endif
     }
+
 }

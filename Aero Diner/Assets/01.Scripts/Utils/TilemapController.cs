@@ -76,6 +76,7 @@ public class TilemapController : MonoBehaviour
                     sr.material = baseMaterial;
             }
         }
+        UpdateGridCellStates();
     }
 
     /// <summary>

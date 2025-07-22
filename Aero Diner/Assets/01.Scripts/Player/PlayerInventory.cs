@@ -32,7 +32,7 @@ public class PlayerInventory : MonoBehaviour
     {
         if (IsHoldingItem || target == null) return;
 
-        // Station 들기 - EditStation 페이즈에서만
+        //Station 들기: 편집 모드에서만
         if (GameManager.Instance.CurrentPhase == GamePhase.EditStation && target is IMovableStation movable)
         {
             heldStation = movable;
@@ -48,25 +48,35 @@ public class PlayerInventory : MonoBehaviour
             if (col) col.enabled = false;
 
             tilemapController?.ShowAllCells();
-
             return;
         }
 
-        // Food 들기 - Operation 페이즈에서만
-        if (GameManager.Instance.CurrentPhase == GamePhase.Operation && target is FoodDisplay food && food.CanPickup())
+        // Operation 페이즈 전용 처리
+        if (GameManager.Instance.CurrentPhase == GamePhase.Operation)
         {
-            holdingItem = food;
+            // IngredientStation → Interact 호출로 재료 생성
+            if (target is IngredientStation station)
+            {
+                station.Interact(this, InteractionType.Pickup);
+                return;
+            }
 
-            food.transform.SetParent(itemSlotTransform);
-            food.transform.localPosition = Vector3.zero;
+            // FoodDisplay → 직접 들기
+            if (target is FoodDisplay food && food.CanPickup())
+            {
+                holdingItem = food;
 
-            var rb = food.GetComponent<Rigidbody2D>();
-            if (rb) rb.simulated = false;
+                food.transform.SetParent(itemSlotTransform);
+                food.transform.localPosition = Vector3.zero;
 
-            var col = food.GetComponent<Collider2D>();
-            if (col) col.enabled = false;
+                var rb = food.GetComponent<Rigidbody2D>();
+                if (rb) rb.simulated = false;
 
-            food.originPlace?.OnPlayerPickup();
+                var col = food.GetComponent<Collider2D>();
+                if (col) col.enabled = false;
+
+                food.originPlace?.OnPlayerPickup();
+            }
         }
     }
 
