@@ -59,151 +59,156 @@ public class PlayerInventory : MonoBehaviour
     {
         if (GameManager.Instance.CurrentPhase == GamePhase.EditStation && heldStation != null)
         {
-            if (target is GridCellStatus gridCell)
+            Transform gridCell = PlayerController.Instance.FindGridCellInFront();
+            if (gridCell == null)
             {
-                Transform stationTr = heldStation.GetTransform();
-                stationTr.SetParent(null);
-                stationTr.position = gridCell.transform.position;
-
-                var rb = stationTr.GetComponent<Rigidbody2D>();
-                if (rb) rb.simulated = true;
-
-                var col = stationTr.GetComponent<Collider2D>();
-                if (col) col.enabled = true;
-
-                heldStation = null;
+                Debug.Log("그리드 셀 없음 → 드롭 불가");
                 return;
             }
 
+            Transform stationTr = heldStation.GetTransform();
+
+            stationTr.SetParent(null);
+            stationTr.position = gridCell.position; // 격자 위치에 정렬
+
+            var rb = stationTr.GetComponent<Rigidbody2D>();
+            if (rb) rb.simulated = true;
+
+            var col = stationTr.GetComponent<Collider2D>();
+            if (col) col.enabled = true;
+
+            heldStation = null;
+            return;
+        }
+
+        if (ShowDebugInfo)
+            Debug.Log($"[Inventory] target 타입: {target.GetType().Name}");
+        if (!IsHoldingItem)
+        {
             if (ShowDebugInfo)
-                Debug.Log($"[Inventory] target 타입: {target.GetType().Name}");
-            if (!IsHoldingItem)
-            {
-                if (ShowDebugInfo)
-                    Debug.Log("[Inventory] 들고 있는 아이템이 없습니다.");
-                return;
-            }
+                Debug.Log("[Inventory] 들고 있는 아이템이 없습니다.");
+            return;
+        }
 
-            if (target == null)
-            {
-                if (ShowDebugInfo)
-                    Debug.Log("[Inventory] 상호작용 대상이 없습니다.");
-                return;
-            }
+        if (target == null)
+        {
+            if (ShowDebugInfo)
+                Debug.Log("[Inventory] 상호작용 대상이 없습니다.");
+            return;
+        }
 
-            bool placed = false;
+        bool placed = false;
 
-            switch (target)
-            {
-                case IngredientStation station:
-                    FoodData dataToStation = holdingItem.foodData;
-                    if (dataToStation != null && station.PlaceIngredient(dataToStation))
-                    {
-                        Destroy(holdingItem.gameObject);
-                        holdingItem = null;
-                        if (ShowDebugInfo)
-                            Debug.Log($"[Inventory] 재료 일치 - 재료 소비됨");
-                        placed = true;
-                    }
-                    else
-                    {
-                        if (ShowDebugInfo)
-                            Debug.Log("[Inventory] 재료 불일치 - 내려놓을 수 없음");
-                    }
-                    break;
-
-                case Shelf shelf:
-                    {
-                        if (shelf.CanPlaceIngredient(holdingItem.foodData))
-                        {
-                            shelf.PlaceObject(holdingItem.foodData);
-                            Destroy(holdingItem.gameObject);
-                            holdingItem = null;
-                            if (ShowDebugInfo)
-                                Debug.Log("[Inventory] 선반에 아이템 배치됨");
-                            placed = true;
-                        }
-                        else
-                        {
-                            if (ShowDebugInfo)
-                                Debug.Log("[Inventory] 선반에 재료를 배치할 수 없습니다.");
-                        }
-                        break;
-                    }
-
-                case Trashcan:
+        switch (target)
+        {
+            case IngredientStation station:
+                FoodData dataToStation = holdingItem.foodData;
+                if (dataToStation != null && station.PlaceIngredient(dataToStation))
+                {
                     Destroy(holdingItem.gameObject);
                     holdingItem = null;
                     if (ShowDebugInfo)
-                        Debug.Log("[Inventory] 아이템을 쓰레기통에 버렸습니다.");
+                        Debug.Log($"[Inventory] 재료 일치 - 재료 소비됨");
                     placed = true;
-                    break;
-
-                case PassiveStation station:
-                    if (holdingItem.foodData
-                        && station.CanPlaceIngredient(holdingItem.foodData))
+                }
+                else
+                {
+                    if (ShowDebugInfo)
+                        Debug.Log("[Inventory] 재료 불일치 - 내려놓을 수 없음");
+                }
+                break;
+            
+            case Shelf shelf:
+                {
+                    if (shelf.CanPlaceIngredient(holdingItem.foodData))
                     {
-                        // ScriptableObject 원본(rawData)으로 배치 호출
-                        station.PlaceObject(holdingItem.foodData);
-
+                        shelf.PlaceObject(holdingItem.foodData);
                         Destroy(holdingItem.gameObject);
                         holdingItem = null;
                         if (ShowDebugInfo)
-                            Debug.Log("[Inventory] PassiveStation에 아이템 배치됨");
-                        placed = true;
-                    }
-
-                    else
-                    {
-                        if (ShowDebugInfo)
-                            Debug.Log("[Inventory] PassiveStation에 재료 배치 실패");
-                    }
-                    break;
-
-                case AutomaticStation automatic:
-                    if (holdingItem.foodData
-                        && automatic.CanPlaceIngredient(holdingItem.foodData))
-                    {
-                        // 실제 배치 호출
-                        automatic.PlaceObject(holdingItem.foodData);
-
-                        Destroy(holdingItem.gameObject);
-                        holdingItem = null;
-                        if (ShowDebugInfo)
-                            Debug.Log("[Inventory] AutoStation에 아이템 배치됨");
+                            Debug.Log("[Inventory] 선반에 아이템 배치됨");
                         placed = true;
                     }
                     else
                     {
                         if (ShowDebugInfo)
-                            Debug.Log("[Inventory] AutoStation에 배치 불가");
+                            Debug.Log("[Inventory] 선반에 재료를 배치할 수 없습니다.");
                     }
                     break;
-
-                case Table table:
-                    if (table.CanPlaceFood)
-                    {
-                        table.PlaceObject(holdingItem.foodData);
-                        Destroy(holdingItem.gameObject);
-                        holdingItem = null;
-                        if (ShowDebugInfo)
-                            Debug.Log("[Inventory] 테이블에 아이템 배치됨");
-                        placed = true;
-                    }
-                    else
-                    {
-                        if (ShowDebugInfo)
-                            Debug.Log("[Inventory] 테이블에 재료를 배치할 수 없습니다.");
-                    }
-                    break;
-
-            }
-
-            if (!placed)
-            {
+                }
+            
+            case Trashcan:
+                Destroy(holdingItem.gameObject);
+                holdingItem = null;
                 if (ShowDebugInfo)
-                    Debug.Log("감지는 되었으나 배치 실패");
-            }
+                    Debug.Log("[Inventory] 아이템을 쓰레기통에 버렸습니다.");
+                placed = true;
+                break;
+            
+            case PassiveStation station:
+                if (holdingItem.foodData
+                    && station.CanPlaceIngredient(holdingItem.foodData))
+                {
+                    // ScriptableObject 원본(rawData)으로 배치 호출
+                    station.PlaceObject(holdingItem.foodData);
+
+                    Destroy(holdingItem.gameObject);
+                    holdingItem = null;
+                    if (ShowDebugInfo)
+                        Debug.Log("[Inventory] PassiveStation에 아이템 배치됨");
+                    placed = true;
+                }
+
+                else
+                {
+                    if (ShowDebugInfo)
+                        Debug.Log("[Inventory] PassiveStation에 재료 배치 실패");
+                }
+                break;
+                
+            case AutomaticStation automatic:
+                if (holdingItem.foodData
+                    && automatic.CanPlaceIngredient(holdingItem.foodData))
+                {
+                    // 실제 배치 호출
+                    automatic.PlaceObject(holdingItem.foodData);
+
+                    Destroy(holdingItem.gameObject);
+                    holdingItem = null;
+                    if (ShowDebugInfo)
+                        Debug.Log("[Inventory] AutoStation에 아이템 배치됨");
+                    placed = true;
+                }
+                else
+                {
+                    if (ShowDebugInfo)
+                        Debug.Log("[Inventory] AutoStation에 배치 불가");
+                }
+                break;
+            
+            case Table table:
+                if (table.CanPlaceFood)
+                {
+                    table.PlaceObject(holdingItem.foodData);
+                    Destroy(holdingItem.gameObject);
+                    holdingItem = null;
+                    if (ShowDebugInfo)
+                        Debug.Log("[Inventory] 테이블에 아이템 배치됨");
+                    placed = true;
+                }
+                else
+                {
+                    if (ShowDebugInfo)
+                        Debug.Log("[Inventory] 테이블에 재료를 배치할 수 없습니다.");
+                }
+                break;
+            
+        }
+
+        if (!placed)
+        {
+            if (ShowDebugInfo)
+                Debug.Log("감지는 되었으나 배치 실패");
         }
     }
 
