@@ -14,7 +14,6 @@ public class DailyLifeManager : Singleton<DailyLifeManager>
         EventBus.RaiseFadeEvent(FadeEventType.FadeIn, new FadeEventPayload(0f, 1f));
         StartCoroutine(ResendEarningsAfterDelay());
     }
-    
 
     private IEnumerator ResendEarningsAfterDelay()
     {
@@ -25,6 +24,5 @@ public class DailyLifeManager : Singleton<DailyLifeManager>
         EventBus.PlaySFX(SFXType.ButtonClick);
         EventBus.Raise(UIEventType.ShowMenuPanel);
         EventBus.PlayBGM(BGMEventType.PlayRecipeChoice);
-
     }
 }
