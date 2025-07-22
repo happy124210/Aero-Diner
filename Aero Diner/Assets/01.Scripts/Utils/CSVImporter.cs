@@ -221,8 +221,8 @@ public class CSVImporter
     }
 
     #endregion
-    
-     #region SpeakerData 생성
+
+    #region SpeakerData 생성
 
     [MenuItem("Tools/Import Game Data/Speaker Data")]
     public static void ImportSpeakerData()
@@ -271,11 +271,10 @@ public class CSVImporter
                 string id = cols[0].Trim();
                 string assetPath = $"{targetFolder}/{id}.asset";
                 SpeakerData data = AssetDatabase.LoadAssetAtPath<SpeakerData>(assetPath);
-
-                // 데이터 채우기
+                
                 data.id = id;
                 data.speakerName = cols[1].Trim();
-                data.portraits = new Dictionary<Expression, Sprite>();
+                data.portraits = new List<PortraitEntry>(); 
                 
                 // 초상화 연결
                 foreach (Expression expression in Enum.GetValues(typeof(Expression)))
@@ -283,11 +282,14 @@ public class CSVImporter
                     string portraitPath = $"Icons/Portrait/{id}_{expression}";
                     Sprite portraitSprite = Resources.Load<Sprite>(portraitPath);
 
-                    if (portraitSprite != null)
-                    {
-                        data.portraits[expression] = portraitSprite;
-                        Debug.Log($"{expression} 초상화 로드 완료");
-                    }
+                    if (portraitSprite == null) continue;
+                    
+                    data.portraits.Add(new PortraitEntry 
+                    { 
+                        expression = expression, 
+                        portrait = portraitSprite 
+                    });
+                    Debug.Log($"{data.id}의 {expression} 초상화 연결 완료");
                 }
                 
                 EditorUtility.SetDirty(data);
