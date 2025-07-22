@@ -222,6 +222,89 @@ public class CSVImporter
 
     #endregion
     
+     #region SpeakerData 생성
+
+    [MenuItem("Tools/Import Game Data/Speaker Data")]
+    public static void ImportSpeakerData()
+    {
+        string path = EditorUtility.OpenFilePanel("Select Speaker CSV", "", "csv");
+        if (string.IsNullOrEmpty(path)) return;
+
+        string[] lines = File.ReadAllLines(path);
+        if (lines.Length <= 1)
+        {
+            Debug.LogWarning("CSV 파일에 데이터 없음");
+            return;
+        }
+
+        string targetFolder = "Assets/Resources/Datas/Speakers/";
+        if (!Directory.Exists(targetFolder))
+        {
+            Directory.CreateDirectory(targetFolder);
+        }
+        
+        // 에셋 생성 패스
+        foreach (var line in lines.Skip(1))
+        {
+            string[] cols = line.Split(',');
+            if (cols.Length < 2 || string.IsNullOrEmpty(cols[0].Trim())) continue;
+            string id = cols[0].Trim();
+            string assetPath = $"{targetFolder}/{id}.asset";
+            if (AssetDatabase.LoadAssetAtPath<SpeakerData>(assetPath) == null)
+            {
+                var newAsset = ScriptableObject.CreateInstance<SpeakerData>();
+                AssetDatabase.CreateAsset(newAsset, assetPath);
+            }
+        }
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+
+        // 데이터 채우기 및 초상화 연결
+        int successCount = 0;
+        foreach (var line in lines.Skip(1))
+        {
+            try
+            {
+                string[] cols = line.Split(',');
+                if (cols.Length < 2 || string.IsNullOrEmpty(cols[0].Trim())) continue;
+
+                string id = cols[0].Trim();
+                string assetPath = $"{targetFolder}/{id}.asset";
+                SpeakerData data = AssetDatabase.LoadAssetAtPath<SpeakerData>(assetPath);
+
+                // 데이터 채우기
+                data.id = id;
+                data.speakerName = cols[1].Trim();
+                data.portraits = new Dictionary<Expression, Sprite>();
+                
+                // 초상화 연결
+                foreach (Expression expression in Enum.GetValues(typeof(Expression)))
+                {
+                    string portraitPath = $"Icons/Portrait/{id}_{expression}";
+                    Sprite portraitSprite = Resources.Load<Sprite>(portraitPath);
+
+                    if (portraitSprite != null)
+                    {
+                        data.portraits[expression] = portraitSprite;
+                    }
+                }
+                
+                EditorUtility.SetDirty(data);
+                successCount++;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Speaker ID '{lines[successCount + 1].Split(',')[0]}' 처리 중 오류 발생: {e.Message}");
+            }
+        }
+        
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Debug.Log($"총 {successCount}명의 SpeakerData CSV 임포트 완료");
+    }
+
+    #endregion
+    
     #region 공통 Import 메서드
     
     /// <summary>

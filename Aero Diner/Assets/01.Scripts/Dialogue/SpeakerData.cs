@@ -1,17 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// 화자 정보
-/// </summary>
-[System.Serializable]
+[CreateAssetMenu(fileName = "SpeakerData", menuName = "Data/Speaker Data")]
 public class SpeakerData : ScriptableObject
 {
-    public string id;          // SpeakerData의 id
-    public string speakerName; // UI용 화자 이름 
-    public Dictionary<Expression, Sprite> portraits;  // 각 표정 스프라이트 딕셔너리
+    public string id;          // 예: "KAYA"
+    public string speakerName; // 예: "카야"
+    
+    public Dictionary<Expression, Sprite> portraits = new();
 
-    public Sprite GetPortraitByExpression(Expression expression) => portraits[expression];
+    public Sprite GetPortraitByExpression(Expression expression)
+    {
+        return portraits.TryGetValue(expression, out Sprite portrait) 
+            ? portrait 
+            : portraits.GetValueOrDefault(Expression.Default);
+    }
 }
 
 public enum Expression
