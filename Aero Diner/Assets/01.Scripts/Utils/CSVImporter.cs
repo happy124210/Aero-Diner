@@ -159,8 +159,8 @@ public class CSVImporter
                 data.id = dialogueId;
                 data.lines = new List<DialogueLine>();
                 // data.choices = new List<DialogueChoice>();
-                data.nextEventType = EventType.None;
-                data.nextEventParameter = string.Empty;
+                data.nextStoryType = StoryType.None;
+                data.nextStoryParameter = string.Empty;
                 
                 rows.Sort((a, b) => int.Parse(a[1]).CompareTo(int.Parse(b[1])));
                 
@@ -182,13 +182,13 @@ public class CSVImporter
                 
                 string[] lastRow = rows[^1];
 
-                // 이벤트 파싱
+                // 스토리 타입 파싱
                 if (lastRow.Length > 5 && !string.IsNullOrEmpty(lastRow[5].Trim()))
                 {
-                    if (Enum.TryParse(lastRow[5].Trim(), true, out EventType parsedEvent))
+                    if (Enum.TryParse(lastRow[5].Trim(), true, out StoryType parsedStory))
                     {
-                        data.nextEventType = parsedEvent;
-                        data.nextEventParameter = lastRow.Length > 6 ? lastRow[6].Trim() : "";
+                        data.nextStoryType = parsedStory;
+                        data.nextStoryParameter = lastRow.Length > 6 ? lastRow[6].Trim() : "";
                     }
                 }
 
@@ -243,7 +243,7 @@ public class CSVImporter
             Directory.CreateDirectory(targetFolder);
         }
         
-        // 에셋 생성 패스
+        // 에셋 생성
         foreach (var line in lines.Skip(1))
         {
             string[] cols = line.Split(',');
@@ -286,6 +286,7 @@ public class CSVImporter
                     if (portraitSprite != null)
                     {
                         data.portraits[expression] = portraitSprite;
+                        Debug.Log($"{expression} 초상화 로드 완료");
                     }
                 }
                 

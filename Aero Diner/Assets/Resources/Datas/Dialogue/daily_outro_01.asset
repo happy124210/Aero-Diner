@@ -18,6 +18,5 @@ MonoBehaviour:
     expression: 0
     text: "\"\uBC8C\uC368 \uC2DC\uAC04\uC774 \uC774\uB807\uAC8C \uB410\uB124. \uC624\uB298
       \uD558\uB8E8\uB3C4 \uC218\uACE0\uD588\uC5B4.\""
-  choices: []
-  nextEventType: 10
+  nextStoryType: 11
   nextEventParameter: 
