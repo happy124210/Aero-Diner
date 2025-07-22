@@ -44,7 +44,7 @@ public class PlacementManagerEditor : Editor
         {
             if (manager.testTargetGridCell != null)
             {
-                manager.TryPlaceStationAt(manager.testTargetGridCell);
+                manager.TestTryPlaceStationAt(manager.testTargetGridCell);
             }
             else
             {

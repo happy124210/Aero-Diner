@@ -21,18 +21,22 @@ public class GridCellStatus : MonoBehaviour, IInteractable
     /// </summary>
     public void UpdateStatus()
     {
-        bool isPlaceable = transform.childCount == 0;
+        bool isPlaceable = !HasStation();
 
         if (sr != null)
             sr.sharedMaterial = isPlaceable ? placeableMaterial : notPlaceableMaterial;
 
-        if (outline != null)
+        outline?.EnableOutline();
+    }
+
+    private bool HasStation()
+    {
+        foreach (Transform child in transform)
         {
-            if (isPlaceable)
-                outline.DisableOutline();
-            else
-                outline.EnableOutline();
+            if (child.GetComponent<IMovableStation>() != null)
+                return true;
         }
+        return false;
     }
 
 #if UNITY_EDITOR
