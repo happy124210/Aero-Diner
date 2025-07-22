@@ -22,6 +22,11 @@ public class TilemapController : MonoBehaviour
         HideAllCells();                               // 시작 시 셀 숨김
     }
 
+    private void Update()
+    {
+        UpdateGridCellStates();
+    }
+
     /// <summary>
     /// 자식 오브젝트 중 GridCell 태그를 가진 오브젝트를 모두 수집
     /// </summary>
@@ -101,6 +106,9 @@ public class TilemapController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 모든 GridCell의 상태를 업데이트하여 배치 가능 여부에 따라 Material을 변경, GridCellStatus 컴포넌트가 있는 경우에만 적용
+    /// </summary>
     public void UpdateGridCellStates()
     {
         foreach (var cell in gridCells)

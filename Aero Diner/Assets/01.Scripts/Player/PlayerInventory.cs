@@ -84,29 +84,26 @@ public class PlayerInventory : MonoBehaviour
     {
         if (GameManager.Instance.CurrentPhase == GamePhase.EditStation && heldStation != null)
         {
-            var targetCell = PlayerController.Instance.FindGridCellInFront();
-            if (target is GridCellStatus gridCell)
+            if (GameManager.Instance.CurrentPhase == GamePhase.EditStation && heldStation != null)
             {
-                Transform stationTr = heldStation.GetTransform();
-                stationTr.SetParent(null);
-                stationTr.position = gridCell.transform.position;
-
-                var rb = stationTr.GetComponent<Rigidbody2D>();
-                if (rb) rb.simulated = true;
-
-                var col = stationTr.GetComponent<Collider2D>();
-                if (col) col.enabled = true;
-
-                heldStation = null;
-
-                if (tilemapController != null)
+                if (target is GridCellStatus gridCell)
                 {
-                    tilemapController.HideAllCells(); // 여기!
-                }
+                    // 배치 성공 여부 체크
+                    bool success = PlacementManager.Instance.TryPlaceStationAt(gridCell.gameObject, heldStation);
 
-                return;
+                    if (success)
+                    {
+                        heldStation = null; // 성공 시에만 손에서 내려놓음
+
+                        if (tilemapController != null)
+                            tilemapController.HideAllCells();
+                    }
+
+                    return;
+                }
             }
         }
+
         if (GameManager.Instance.CurrentPhase != GamePhase.Operation)
         {
             if (ShowDebugInfo)

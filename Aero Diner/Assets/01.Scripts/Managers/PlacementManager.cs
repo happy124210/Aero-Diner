@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class PlacementManager : MonoBehaviour
+public class PlacementManager : Singleton<PlacementManager>
 {
     [HideInInspector] public TilemapController tilemapController;
     [SerializeField] private PlayerInventory playerInventory;
@@ -12,47 +12,57 @@ public class PlacementManager : MonoBehaviour
 
     private void Update()
     {
-        UpdateStationPrefabFromPlayer();        // 플레이어가 들고 있는 Station 오브젝트를 프리팹으로 등록
         UpdateStationPrefabFromTestInventory(); // 매 프레임 업데이트 가능, 추후 테스트후 최적화
     }
 
     /// <summary>
-    /// 플레이어가 들고 있는 Station 오브젝트를 프리팹으로 등록
+    /// 들고 있는 station을 지정된 그리드셀에 배치 시도
     /// </summary>
-    private void UpdateStationPrefabFromPlayer()
+    public bool TryPlaceStationAt(GameObject gridCellGO, IMovableStation heldStation)
     {
-        if (playerInventory == null)
+        if (heldStation == null)
+            return false;
+
+        // 자식이 존재하는데 그게 본인이 아니면 배치 금지
+        if (gridCellGO.transform.childCount > 0)
         {
-            stationPrefab = null;
-            return;
-        }
+            bool isSameObject = false;
 
-        IMovableStation heldStation = playerInventory.heldStation;
-
-        if (heldStation != null)
-        {
-            Transform stationTransform = heldStation.GetTransform();
-            GameObject stationObj = stationTransform.gameObject;
-
-            if (stationObj.CompareTag("Station"))
+            foreach (Transform child in gridCellGO.transform)
             {
-                stationPrefab = stationObj;
+                if (child == heldStation.GetTransform())
+                {
+                    isSameObject = true;
+                    break;
+                }
             }
-            else
-            {
-                stationPrefab = null;
-            }
+
+            if (!isSameObject)
+                return false;
         }
-        else
-        {
-            stationPrefab = null;
-        }
+
+        // 배치 수행
+        Transform stationTr = heldStation.GetTransform();
+        stationTr.SetParent(gridCellGO.transform);
+        stationTr.localPosition = Vector3.zero;
+
+        var rb = stationTr.GetComponent<Rigidbody2D>();
+        if (rb) rb.simulated = true;
+
+        var col = stationTr.GetComponent<Collider2D>();
+        if (col) col.enabled = true;
+
+        tilemapController.UpdateGridCellStates();
+        tilemapController.AlignShelvesToGridCells();
+
+        return true; // 배치 성공
     }
 
+
     /// <summary>
-    /// 현재 들고 있는 stationPrefab을 지정된 그리드셀에 배치 시도
+    /// 현재 들고 있는 설비을 지정된 그리드셀에 배치 시도
     /// </summary>
-    public void TryPlaceStationAt(GameObject gridCellGO)
+    public void TestTryPlaceStationAt(GameObject gridCellGO)
     {
         if (stationPrefab == null) return;
 
