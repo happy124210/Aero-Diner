@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 
-public class StationPanel_ScrollView_Content : MonoBehaviour
+public class StationPanel_ScrollView_Content : BaseScrollViewItem
 {
     [SerializeField] private Image stationIconImage;
     [SerializeField] private TMP_Text stationNameText;

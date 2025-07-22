@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using TMPro;
 
-public class MenuPanelContent : MonoBehaviour
+public class MenuPanelContent : BaseScrollViewItem
 {
     public Image iconImage;
     public TMP_Text nameText;

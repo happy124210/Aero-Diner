@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using UnityEngine;
 using TMPro;
 
-public class ResultPanelContent : MonoBehaviour
+public class ResultPanelContent : BaseScrollViewItem
 {
     [SerializeField] private TextMeshProUGUI menuName;
     [SerializeField] private TextMeshProUGUI soldCount;

@@ -220,6 +220,7 @@ GameObject:
   - component: {fileID: 6111142866604355275}
   - component: {fileID: 8443520930247722355}
   - component: {fileID: 187693771923078463}
+  - component: {fileID: 2173536462449649031}
   m_Layer: 5
   m_Name: Img_Background
   m_TagString: Untagged
@@ -289,6 +290,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2173536462449649031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1474851324933855145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
+  m_EffectDistance: {x: 5, y: -5}
+  m_UseGraphicAlpha: 1
 --- !u!1 &1813385923714132484
 GameObject:
   m_ObjectHideFlags: 0
@@ -338,6 +354,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56b6711b2f0265c40bd60e9e603d3b29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  outline: {fileID: 2173536462449649031}
   menuName: {fileID: 6491059608201123959}
   soldCount: {fileID: 1757389368099683318}
   menuRevenue: {fileID: 4239691966720155757}
