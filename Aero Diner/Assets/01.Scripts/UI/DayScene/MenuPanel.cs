@@ -96,7 +96,11 @@ public class MenuPanel : MonoBehaviour
             #endregion
         }
     }
-
+    public void OnClickBackBtn()
+    {
+        PlayExitAnimation();
+        EventBus.PlayBGM(BGMEventType.PlayLifeTheme);
+    }
     public void OnClickDayStartBtn()
     {
         _ = HandleDayStartAsync();
@@ -131,6 +135,7 @@ public class MenuPanel : MonoBehaviour
         }
 
         PlayExitAnimation();
+        EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(1f, 1f, scene: "MainScene"));
         //이거 위치 UI/Mainscene/Fader.cs(Start)로 옮겼습니다.
         //RestaurantManager.Instance.StartRestaurant();
         //EventBus.PlayBGM(BGMEventType.PlayMainTheme);
@@ -185,7 +190,6 @@ public class MenuPanel : MonoBehaviour
                    menuPanelTransform.anchoredPosition = originalPos;
 
                    EventBus.Raise(UIEventType.HideMenuPanel);
-                   EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(1f, 1f, scene: "MainScene"));
                });
     }
 }
