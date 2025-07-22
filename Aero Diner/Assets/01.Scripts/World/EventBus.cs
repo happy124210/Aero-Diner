@@ -84,6 +84,9 @@ public enum UIEventType
     ShowQuestPanel,
     FadeInInventory, FadeInRecipeBook,
 
+    //Dialogue
+    ShowDialogueLine, HideDialoguePanel,
+    ShowDialoguePanel,
 }
 
 public static class EventBus

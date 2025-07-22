@@ -13,7 +13,8 @@ public class UIManager : Singleton<UIManager>
         typeof(MenuPanel3),
         typeof(MenuPanel4),
         typeof(Inventory),
-        typeof(MenuPanel)
+        typeof(MenuPanel),
+        typeof(DialogueUI)
         // 필요한 타입 추가 가능
     };
 
