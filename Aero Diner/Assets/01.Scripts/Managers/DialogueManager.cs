@@ -31,11 +31,7 @@ public class DialogueManager : Singleton<DialogueManager>
         
         foreach (DialogueData dialogue in allDialogues)
         {
-            if (!dialogueDatabase.ContainsKey(dialogue.id))
-            {
-                dialogueDatabase.Add(dialogue.id, dialogue);
-            }
-            else
+            if (!dialogueDatabase.TryAdd(dialogue.id, dialogue))
             {
                 Debug.LogWarning($"중복된 Dialogue ID 있음: {dialogue.id}");
             }
@@ -51,22 +47,19 @@ public class DialogueManager : Singleton<DialogueManager>
 
         foreach (var speaker in allSpeakers)
         {
-            if (!speakerDatabase.ContainsKey(speaker.id))
-            {
-                speakerDatabase.Add(speaker.id, speaker);
-            }
+            speakerDatabase.TryAdd(speaker.id, speaker);
         }
         Debug.Log($"Speaker Database 로드 완료: {speakerDatabase.Count}명");
     }
     
     public DialogueData FindDialogueDataById(string id)
     {
-        return dialogueDatabase.TryGetValue(id, out DialogueData data) ? data : null;
+        return dialogueDatabase.GetValueOrDefault(id);
     }
     
     public SpeakerData FindSpeakerById(string id)
     {
-        return speakerDatabase.TryGetValue(id, out SpeakerData speaker) ? speaker : null;
+        return speakerDatabase.GetValueOrDefault(id);
     }
 
     #endregion
@@ -77,7 +70,7 @@ public class DialogueManager : Singleton<DialogueManager>
     /// <param name="data"> 시작할 DialogueData SO </param>
     public void StartDialogue(DialogueData data)
     {
-        if (data == null)
+        if (!data)
         {
             if (showDebugInfo) Debug.LogError("시작할 DialogueData 없음");
             // 대화 시작 실패 시, 이전 페이즈 복귀
@@ -108,7 +101,6 @@ public class DialogueManager : Singleton<DialogueManager>
         if (linesQueue.Count > 0)
         {
             DialogueLine lineToShow = linesQueue.Dequeue();
-            // TODO: 이벤트 발생 여부 논의
             EventBus.Raise(UIEventType.ShowDialogueLine, lineToShow);
         }
         else
@@ -120,7 +112,6 @@ public class DialogueManager : Singleton<DialogueManager>
     private void EndDialogue()
     {
         EventBus.Raise(UIEventType.HideDialoguePanel);
-        // TODO: 후속 이벤트 전달 로직
         GameManager.Instance.ContinueGame();
     }
     
@@ -132,7 +123,7 @@ public class DialogueManager : Singleton<DialogueManager>
     // {
     //     if (currentDialogue.choices != null && currentDialogue.choices.Count > 0)
     //     {
-    //         // TODO: 이벤트 발생 여부 논의
+    //         // 이벤트 발생 여부 논의
     //         // OnShowChoices?.Invoke(currentDialogue.choices);
     //     }
     //     else

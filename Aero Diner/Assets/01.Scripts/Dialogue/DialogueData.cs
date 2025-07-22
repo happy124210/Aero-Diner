@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// 대사 한 줄에 해당하는 정보 (화자, 표정, 텍스트)
@@ -34,27 +35,7 @@ public class DialogueData : ScriptableObject
     // [Header("선택지")]
     // public List<DialogueChoice> choices;
 
-    [Header("후속 이벤트")]
-    public EventType nextEventType; // 대화 종료 후 발생할 이벤트
-    public string nextEventParameter; // 이벤트에 넘겨줄 파라미터 (기본적으로 id)
-}
-
-public enum EventType
-{
-    StartDialogue,
-    
-    StartQuest,
-    EndQuest,
-    
-    UnlockRecipe,
-    UnlockStation,
-    
-    GiveMoney,
-    GiveRecipe,
-    GiveStation,
-    
-    LostMoney,
-    GameOver,
-    
-    None,
+    [FormerlySerializedAs("nextEventType")] [Header("후속 이벤트")]
+    public StoryType nextStoryType; // 대화 종료 후 발생할 이벤트
+    [FormerlySerializedAs("nextEventParameter")] public string nextStoryParameter; // 이벤트에 넘겨줄 파라미터 (기본적으로 id)
 }
