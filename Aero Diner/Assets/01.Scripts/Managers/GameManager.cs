@@ -64,7 +64,7 @@ public class GameManager : Singleton<GameManager>
         
         Time.timeScale = currentPhase 
             is GamePhase.Paused 
-            or GamePhase.Dialogue 
+            //or GamePhase.Dialogue 
             or GamePhase.GameOver 
             or GamePhase.SelectMenu 
             or GamePhase.Shop ? 0f : 1f;

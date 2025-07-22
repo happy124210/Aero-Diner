@@ -148,6 +148,16 @@ public class OverSceneUIHandler : IUIEventHandler
                     tab?.ApplyTabSelectionVisuals();
                 }
                 return true;
+            case UIEventType.ShowDialoguePanel:
+                foreach (var ui in sceneUIs)
+                {
+                    var dialogue = ui.GetComponentInChildren<DialogueUI>(true);
+                    if (dialogue != null)
+                    {
+                        dialogue.gameObject.SetActive(true);
+                        break;
+                    }
+                } return true;
         }
         return false;
     }

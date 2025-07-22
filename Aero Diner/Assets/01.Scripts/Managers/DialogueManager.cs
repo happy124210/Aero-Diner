@@ -47,7 +47,7 @@ public class DialogueManager : Singleton<DialogueManager>
     private void LoadSpeakerDatabase()
     {
         speakerDatabase = new Dictionary<string, SpeakerData>();
-        SpeakerData[] allSpeakers = Resources.LoadAll<SpeakerData>("Datas/Speaker");
+        SpeakerData[] allSpeakers = Resources.LoadAll<SpeakerData>("Datas/Speakers");
 
         foreach (var speaker in allSpeakers)
         {
@@ -87,6 +87,7 @@ public class DialogueManager : Singleton<DialogueManager>
         
         GameManager.Instance.ChangePhase(GamePhase.Dialogue);
 
+
         linesQueue.Clear();
         foreach (var line in data.lines)
         {
@@ -94,6 +95,7 @@ public class DialogueManager : Singleton<DialogueManager>
         }
         
         currentDialogue = data;
+        EventBus.Raise(UIEventType.ShowDialoguePanel);
         RequestNextLine();
     }
     

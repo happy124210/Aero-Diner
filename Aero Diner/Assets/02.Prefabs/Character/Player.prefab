@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: -8958949799900379551}
   m_Layer: 8
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -81,6 +81,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemSlotTransform: {fileID: 655597845425705884}
+  tilemapController: {fileID: 0}
   ShowDebugInfo: 0
   holdingItem: {fileID: 0}
 --- !u!50 &1717794363425156185
