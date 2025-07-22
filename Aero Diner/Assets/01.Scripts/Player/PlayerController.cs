@@ -203,23 +203,6 @@ public class PlayerController : Singleton<PlayerController>
         return best;
     }
 
-    public Transform FindGridCellInFront()
-    {
-        Vector2 origin = transform.position;
-        Vector2 direction = lastMoveDir == Vector2.zero ? Vector2.down : lastMoveDir.normalized;
-        float distance = 2f; // 테스트용으로 일시 증가
-
-        var hit = CastSingle(origin, direction, distance, LayerMask.GetMask("Grid"));
-        Debug.DrawRay(origin, direction * distance, Color.green);
-
-        if (hit.HasValue && hit.Value.collider.CompareTag("GridCell"))
-        {
-            return hit.Value.collider.transform;
-        }
-
-        return null;
-    }
-
     private RaycastHit2D? CastSingle(Vector2 origin, Vector2 direction, float distance, LayerMask layer)
     {
         var hit = Physics2D.Raycast(origin, direction, distance, layer);
