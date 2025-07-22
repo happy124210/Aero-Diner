@@ -1,7 +1,5 @@
 ﻿using DG.Tweening;
 using System.Collections.Generic;
-using Unity.Burst.CompilerServices;
-using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.UI;
 

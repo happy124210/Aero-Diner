@@ -3,8 +3,10 @@
 /// <summary>
 /// 플레이어가 올바른 재료(또는 메뉴)를 선반에 놓으면 저장되는 스테이션
 /// </summary>
-public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation
+public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation, IMovableStation
 {
+    public Transform GetTransform() => transform;
+
     [Header("생성할 Food/Menu SO")]
     public FoodData currentData; // 선반에 올려진 음식 데이터
 
