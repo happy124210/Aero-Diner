@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class DialogueManager : Singleton<DialogueManager>
@@ -91,7 +91,7 @@ public class DialogueManager : Singleton<DialogueManager>
         {
             DialogueLine lineToShow = linesQueue.Dequeue();
             // TODO: 이벤트 발생 여부 논의
-            //OnShowLine?.Invoke(lineToShow);
+            EventBus.Raise(UIEventType.ShowDialogueLine, lineToShow);
         }
         else
         {
@@ -147,7 +147,7 @@ public class DialogueManager : Singleton<DialogueManager>
 
     private void EndDialogue()
     {
-        // TODO: EventBus.Raise(UIEventType.HideDialogue);
+        EventBus.Raise(UIEventType.HideDialoguePanel);
         // TODO: 후속 이벤트 전달 로직
         GameManager.Instance.ContinueGame();
     }
