@@ -204,16 +204,22 @@ public class GameManager : Singleton<GameManager>
             MenuManager.Instance.UnlockAllMenus();
         }
         
+        if (GUILayout.Button("일차 스킵하기"))
+        {
+            IncreaseDay();
+            // TODO: 날짜 변경 호출
+        }
+        
         if (GUILayout.Button("돈 1000원 추가"))
         {
             AddMoney(1000);
-            EventBus.Raise(UIEventType.UpdateEarnings);
+            EventBus.Raise(UIEventType.UpdateEarnings, totalEarnings);
         }
         
         if (GUILayout.Button("돈 1000원 제거"))
         {
             AddMoney(-1000);
-            EventBus.Raise(UIEventType.UpdateEarnings);
+            EventBus.Raise(UIEventType.UpdateEarnings, totalEarnings);
         }
         
         GUILayout.Space(20);
@@ -221,7 +227,6 @@ public class GameManager : Singleton<GameManager>
 
         foreach (GamePhase phase in System.Enum.GetValues(typeof(GamePhase)))
         {
-            // 현재 페이즈와 같은 버튼은 비활성화된 것처럼 보이게 처리
             GUI.enabled = (CurrentPhase != phase);
         
             if (GUILayout.Button(phase.ToString()))
