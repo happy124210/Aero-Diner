@@ -7,25 +7,23 @@ public enum ConditionType
     Day,           // N일차 이상/이하/같음
     QuestStatus,   // 특정 퀘스트의 상태
     DialogueEnded, // 특정 대화가 끝났을 때
+    Money          // 소지금 이상/이하/같음
 }
 
 // 액션의 종류
 public enum StoryType
 {
-    Tutorial,
-    StartDialogue,
-    
-    StartQuest,
-    EndQuest,
+    StartDialogue, // 대화 시작
+    StartQuest,    // 퀘스트 주기
     
     UnlockRecipe,
     UnlockStation,
     
-    GiveMoney,
+    GiveMoney,     // 골드 주기
     GiveRecipe,
     GiveStation,
     
-    LostMoney,
+    LostMoney,     // 골드 뺏기
     GameOver,
     
     None,

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce4ff5776a5c66845bd9a49d594fcc0b, type: 3}
-  m_Name: day1_morning_event
+  m_Name: day1_start_event
   m_EditorClassIdentifier: 
-  id: day1_morning_event
+  id: day1_start_event
   triggerPhase: 1
   conditions:
   - conditionType: 0
@@ -20,6 +20,6 @@ MonoBehaviour:
     operator: ==
     rValue: 1
   actions:
-  - storyType: 1
-    targetId: daily_intro_01
+  - storyType: 0
+    targetId: day1_intro_dialogue
     value: 

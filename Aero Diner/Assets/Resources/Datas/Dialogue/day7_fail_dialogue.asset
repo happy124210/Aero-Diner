@@ -10,13 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e3016406984b8b94e9f7c7e996cc12e2, type: 3}
-  m_Name: daily_outro_01
+  m_Name: day7_fail_dialogue
   m_EditorClassIdentifier: 
-  id: daily_outro_01
+  id: day7_fail_dialogue
   lines:
   - speakerId: KAYA
-    expression: 0
-    text: "\"\uBC8C\uC368 \uC2DC\uAC04\uC774 \uC774\uB807\uAC8C \uB410\uB124. \uC624\uB298
-      \uD558\uB8E8\uB3C4 \uC218\uACE0\uD588\uC5B4.\""
+    expression: 2
+    text: "\"\uC774\uB7F4 \uC218\uAC00... \uC57D\uC18D\uD55C \uB3C8\uC744 \uBAA8\uC73C\uC9C0
+      \uBABB\uD588\uAD70\uC694.\""
+  - speakerId: KAYA
+    expression: 2
+    text: "\"\uC720\uAC10\uC774\uC9C0\uB9CC... \uC774 \uB808\uC2A4\uD1A0\uB791\uC740
+      \uC774\uC81C \uB2F9\uC2E0\uC758 \uAC83\uC774 \uC544\uB2C8\uC5D0\uC694.\""
   nextStoryType: 11
-  nextEventParameter: 
+  nextStoryParameter: 

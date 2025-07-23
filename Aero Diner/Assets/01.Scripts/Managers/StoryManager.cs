@@ -10,6 +10,7 @@ public class StoryManager : Singleton<StoryManager>
     [SerializeField] bool showDebugInfo;
     
     private List<StoryData> storyDatabase;
+    private string endedDialogueId = null;
     
     protected override void Awake()
     {
@@ -35,25 +36,34 @@ public class StoryManager : Singleton<StoryManager>
     
     private void HandleGameEvent(GameEventType eventType, object data)
     {
-        if (showDebugInfo) Debug.Log("이벤트 수신됨");
-        if (eventType != GameEventType.GamePhaseChanged) return;
-        GamePhase currentPhase = (GamePhase)data;
-
-        CheckAndTriggerStories(currentPhase);
+        if (eventType == GameEventType.GamePhaseChanged)
+        {
+            GamePhase currentPhase = (GamePhase)data;
+            CheckAndTriggerStories(triggerPhase: currentPhase);
+        }
+        // 2. 대화 종료 시, 대화 기반 스토리 체크
+        else if (eventType == GameEventType.DialogueEnded)
+        {
+            endedDialogueId = data as string; // 종료된 대화 ID 저장
+            CheckAndTriggerStories(endedDialogueId: endedDialogueId);
+            endedDialogueId = null; // 체크가 끝났으니 변수 비우기
+        }
     }
     
-    private void CheckAndTriggerStories(GamePhase currentPhase)
+    private void CheckAndTriggerStories(GamePhase? triggerPhase = null, string endedDialogueId = null)
     {
-        // 현재 페이즈와 일치하는 스토리만 필터링
-        var storiesToCheck = storyDatabase.Where(story => story.triggerPhase == currentPhase);
-
-        foreach (var story in storiesToCheck)
+        foreach (var story in storyDatabase)
         {
-            if (AreConditionsMet(story.conditions))
+            // TODO: 이미 실행된 스토리 건너뛰기
+            
+            bool isCorrectTrigger = triggerPhase.HasValue && story.triggerPhase == triggerPhase.Value;
+            if (endedDialogueId != null && story.conditions.Any(c => c.conditionType == ConditionType.DialogueEnded)) isCorrectTrigger = true;
+
+            if (isCorrectTrigger && AreConditionsMet(story.conditions))
             {
-                if (showDebugInfo) Debug.Log($"[StoryManager] 스토리 트리거: {story.id} Phase: {currentPhase}");
+                if (showDebugInfo) Debug.Log($"[StoryManager] 스토리 트리거: {story.id}");
                 StartCoroutine(ExecuteActions(story.actions));
-                break; 
+                break;
             }
         }
     }
@@ -83,8 +93,14 @@ public class StoryManager : Singleton<StoryManager>
                 
                 // 대화 끝났는지
                 case ConditionType.DialogueEnded:
-                    // TODO: 대화 시스템 연동
-                    result = true;
+                    if (c.@operator == "==")
+                    {
+                        result = (c.lValue == endedDialogueId);
+                    }
+                    break;
+                
+                case ConditionType.Money:
+                    result = CheckNumericCondition(GameManager.Instance.TotalEarnings, c.@operator, c.rValue);
                     break;
             }
             
