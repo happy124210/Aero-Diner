@@ -25,6 +25,7 @@ public enum GameEventType
     GamePhaseChanged, // 게임 상태 변경
     RoundTimerEnded,  // 영업 시간 종료
     DialogueEnded,
+    QuestStatusChanged,
 }
 
 public enum SFXType

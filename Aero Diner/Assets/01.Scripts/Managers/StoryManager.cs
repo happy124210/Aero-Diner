@@ -35,6 +35,9 @@ public class StoryManager : Singleton<StoryManager>
         storyDatabase = Resources.LoadAll<StoryData>(StringPath.STORY_DATA_PATH).ToList();
     }
     
+    /// <summary>
+    /// 게임의 상태가 바뀌었을 때 트리거할 스토리가 있는지 확인
+    /// </summary>
     private void HandleGameEvent(GameEventType eventType, object data)
     {
         switch (eventType)
@@ -51,6 +54,10 @@ public class StoryManager : Singleton<StoryManager>
                 CheckAndTriggerStories(endedDialogue: endedDialogueId);
                 endedDialogueId = null;
                 break;
+            
+            case GameEventType.QuestStatusChanged:
+                CheckAndTriggerStories();
+                break;
         }
     }
     
@@ -58,20 +65,45 @@ public class StoryManager : Singleton<StoryManager>
     {
         foreach (var story in storyDatabase)
         {
-            if (executedStoryIds.Contains(story.id))
+            if (executedStoryIds.Contains(story.id)) continue;
+            bool triggerMatches = false;
+
+            // GamePhase가 바뀌어서 호출된 경우
+            if (triggerPhase.HasValue)
             {
-                continue;
+                if (story.triggerPhase == triggerPhase.Value)
+                {
+                    triggerMatches = true;
+                }
             }
             
-            bool isCorrectTrigger = triggerPhase.HasValue && story.triggerPhase == triggerPhase.Value 
-                                    || endedDialogue != null && story.conditions.Any(c => c.conditionType == ConditionType.DialogueEnded);
+            // Dialogue가 끝나서 호출된 경우
+            else if (endedDialogue != null)
+            {
+                if (story.triggerPhase == GamePhase.None && story.conditions.Any(c => c.conditionType == ConditionType.DialogueEnded))
+                {
+                    triggerMatches = true;
+                }
+            }
+            
+            // QuestStatus가 바뀌는 등, 특정 페이즈와 관련 없는 이벤트로 호출된 경우
+            else 
+            {
+                if (story.triggerPhase == GamePhase.None)
+                {
+                    triggerMatches = true;
+                }
+            }
 
-            if (isCorrectTrigger && AreConditionsMet(story.conditions))
+            // 최종 후보가 된 스토리들에 대해서만 세부 조건을 검사
+            if (triggerMatches && AreConditionsMet(story.conditions))
             {
                 if (showDebugInfo) Debug.Log($"[StoryManager] 스토리 트리거: {story.id}");
-                executedStoryIds.Add(story.id); 
+            
+                executedStoryIds.Add(story.id);
                 StartCoroutine(ExecuteActions(story.actions));
-                break;
+                
+                break; 
             }
         }
     }

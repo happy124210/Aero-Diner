@@ -154,6 +154,7 @@ public class QuestManager : Singleton<QuestManager>
         playerQuestStatus[questId] = QuestStatus.Completed;
         if (showDebugInfo) Debug.Log($"[QuestManager] 퀘스트 최종 완료 및 보상 지급: {questId}");
 
+        EventBus.Raise(GameEventType.QuestStatusChanged, new KeyValuePair<string, QuestStatus>(questId, QuestStatus.Completed));
         // TODO: UI 갱신 이벤트
         
         return true;
@@ -164,8 +165,9 @@ public class QuestManager : Singleton<QuestManager>
         if (playerQuestStatus.ContainsKey(questId) && playerQuestStatus[questId] == QuestStatus.InProgress)
         {
             playerQuestStatus[questId] = QuestStatus.Failed;
-            Debug.Log($"퀘스트 실패: {questId}");
-            // TODO: 퀘스트 실패 이벤트 발생
+            if (showDebugInfo) Debug.Log($"퀘스트 실패: {questId}");
+            EventBus.Raise(GameEventType.QuestStatusChanged, new KeyValuePair<string, QuestStatus>(questId, QuestStatus.Failed));
+            // TODO: UI 갱신 이벤트
         }
     }
 
