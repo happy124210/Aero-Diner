@@ -3,7 +3,7 @@
 /// <summary>
 /// 게임 페이즈가 Opening이 되었을 때, 해당 그리드 셀에 있는 자식 오브젝트(Station)를 삭제
 /// </summary>
-public class DeleteGridOnPhase : MonoBehaviour
+public class DeleteGridCell : MonoBehaviour
 {
     private void OnEnable()
     {
@@ -30,22 +30,15 @@ public class DeleteGridOnPhase : MonoBehaviour
     /// </summary>
     private void DeleteChildStations()
     {
-        var childrenToDestroy = new System.Collections.Generic.List<GameObject>();
-
         foreach (Transform child in transform)
         {
             if (child.CompareTag("Station"))
             {
-                childrenToDestroy.Add(child.gameObject);
-            }
-        }
-
-        foreach (var obj in childrenToDestroy)
-        {
-            Destroy(obj);
+                Destroy(child.gameObject);
 #if UNITY_EDITOR
-            Debug.Log($"[DeleteGridOnPhase] Station 삭제됨: {obj.name}");
+                Debug.Log($"[DeleteGridCell] Station 삭제됨: {child.name}");
 #endif
+            }
         }
     }
 }

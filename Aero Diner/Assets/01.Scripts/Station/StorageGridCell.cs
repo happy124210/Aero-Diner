@@ -34,15 +34,26 @@ public class StorageGridCell : MonoBehaviour
     /// </summary>
     private void UpdateVisibility(GamePhase phase)
     {
-        if (transform.childCount == 0) return;
+        Transform stored = GetStoredObject();
+        if (stored == null) return;
 
-        Transform stored = transform.GetChild(0);
         bool shouldShow = phase == GamePhase.Day || phase == GamePhase.EditStation;
-
         stored.gameObject.SetActive(shouldShow);
 
 #if UNITY_EDITOR
-        Debug.Log($"[StorageGridVisibility] 보관된 오브젝트 {(shouldShow ? "활성화" : "비활성화")}, Phase: {phase}");
+        Debug.Log($"[StorageGridCell] 보관된 오브젝트 {(shouldShow ? "활성화" : "비활성화")}, Phase: {phase}");
 #endif
+    }
+
+    private Transform GetStoredObject()
+    {
+        // Station만 대상으로 찾음
+        foreach (Transform child in transform)
+        {
+            if (child.CompareTag("Station"))
+                return child;
+        }
+
+        return null;
     }
 }

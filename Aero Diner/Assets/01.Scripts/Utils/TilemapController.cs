@@ -15,6 +15,9 @@ public class TilemapController : MonoBehaviour
     [SerializeField] private Material baseMaterial;
     [SerializeField] private Material placeableMaterial;
     [SerializeField] private Material notPlaceableMaterial;
+    [SerializeField] private Material selectMaterial;
+
+    private GameObject selectedCell;
 
     private void Awake()
     {
@@ -34,7 +37,7 @@ public class TilemapController : MonoBehaviour
     {
         gridCells.Clear();
 
-        foreach (Transform child in transform)
+        foreach (Transform child in GetComponentsInChildren<Transform>(true)) // true = 비활성화 포함
         {
             if (child.CompareTag("GridCell"))
             {
@@ -42,7 +45,7 @@ public class TilemapController : MonoBehaviour
             }
         }
 
-        if (showDebugInfo) Debug.Log($"GridCell {gridCells.Count}개를 찾았습니다.");
+        if (showDebugInfo) Debug.Log($"[TilemapController] GridCell {gridCells.Count}개를 찾았습니다.");
     }
 
     /// <summary>
@@ -121,4 +124,36 @@ public class TilemapController : MonoBehaviour
             }
         }
     }
+
+    //public void HighlightSelectedCell(GameObject newSelection)
+    //{
+    //    if (selectedCell != null && selectedCell.TryGetComponent<SpriteRenderer>(out var prevSR))
+    //    {
+    //        // 기존 선택 셀 원복
+    //        prevSR.material = baseMaterial;
+    //    }
+
+    //    selectedCell = newSelection;
+
+    //    if (selectedCell != null && selectedCell.TryGetComponent<SpriteRenderer>(out var sr))
+    //    {
+    //        sr.material = selectMaterial;
+
+    //        if (showDebugInfo) Debug.Log($"[TilemapController] 선택된 셀: {selectedCell.name}");
+
+    //    }
+    //}
+
+    ///// <summary>
+    ///// 선택된 셀의 하이라이트를 제거하고 선택 상태를 해제
+    ///// </summary>
+    //public void ClearSelection()
+    //{
+    //    if (selectedCell != null && selectedCell.TryGetComponent<SpriteRenderer>(out var sr))
+    //    {
+    //        sr.material = baseMaterial;
+    //    }
+
+    //    selectedCell = null;
+    //}
 }
