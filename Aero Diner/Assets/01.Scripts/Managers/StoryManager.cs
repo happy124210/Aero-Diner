@@ -11,6 +11,7 @@ public class StoryManager : Singleton<StoryManager>
     
     private List<StoryData> storyDatabase;
     private string endedDialogueId = null;
+    private HashSet<string> executedStoryIds = new();
     
     protected override void Awake()
     {
@@ -36,32 +37,39 @@ public class StoryManager : Singleton<StoryManager>
     
     private void HandleGameEvent(GameEventType eventType, object data)
     {
-        if (eventType == GameEventType.GamePhaseChanged)
+        switch (eventType)
         {
-            GamePhase currentPhase = (GamePhase)data;
-            CheckAndTriggerStories(triggerPhase: currentPhase);
-        }
-        // 2. 대화 종료 시, 대화 기반 스토리 체크
-        else if (eventType == GameEventType.DialogueEnded)
-        {
-            endedDialogueId = data as string; // 종료된 대화 ID 저장
-            CheckAndTriggerStories(endedDialogueId: endedDialogueId);
-            endedDialogueId = null; // 체크가 끝났으니 변수 비우기
+            case GameEventType.GamePhaseChanged:
+            {
+                GamePhase currentPhase = (GamePhase)data;
+                CheckAndTriggerStories(triggerPhase: currentPhase);
+                break;
+            }
+            
+            case GameEventType.DialogueEnded:
+                endedDialogueId = data as string;
+                CheckAndTriggerStories(endedDialogue: endedDialogueId);
+                endedDialogueId = null;
+                break;
         }
     }
     
-    private void CheckAndTriggerStories(GamePhase? triggerPhase = null, string endedDialogueId = null)
+    private void CheckAndTriggerStories(GamePhase? triggerPhase = null, string endedDialogue = null)
     {
         foreach (var story in storyDatabase)
         {
-            // TODO: 이미 실행된 스토리 건너뛰기
+            if (executedStoryIds.Contains(story.id))
+            {
+                continue;
+            }
             
-            bool isCorrectTrigger = triggerPhase.HasValue && story.triggerPhase == triggerPhase.Value;
-            if (endedDialogueId != null && story.conditions.Any(c => c.conditionType == ConditionType.DialogueEnded)) isCorrectTrigger = true;
+            bool isCorrectTrigger = triggerPhase.HasValue && story.triggerPhase == triggerPhase.Value 
+                                    || endedDialogue != null && story.conditions.Any(c => c.conditionType == ConditionType.DialogueEnded);
 
             if (isCorrectTrigger && AreConditionsMet(story.conditions))
             {
                 if (showDebugInfo) Debug.Log($"[StoryManager] 스토리 트리거: {story.id}");
+                executedStoryIds.Add(story.id); 
                 StartCoroutine(ExecuteActions(story.actions));
                 break;
             }
@@ -88,7 +96,7 @@ public class StoryManager : Singleton<StoryManager>
                 
                 // 퀘스트 상태 체크
                 case ConditionType.QuestStatus:
-                    // TODO: QuestManager.Instance.GetQuestStatus와 c.R_Value 비교
+                    result = CheckQuestStatusCondition(c.lValue, c.@operator, c.rValue);
                     break;
                 
                 // 대화 끝났는지
@@ -121,7 +129,19 @@ public class StoryManager : Singleton<StoryManager>
                     break;
                 
                 case StoryType.StartQuest:
-                    // TODO: QuestManager.Instance.StartQuest 호출
+                    QuestManager.Instance.StartQuest(action.targetId);
+                    break;
+                
+                case StoryType.LostMoney:
+                    GameManager.Instance.AddMoney(int.Parse(action.value));
+                    break;
+                
+                case StoryType.EndQuest:
+                    QuestManager.Instance.EndQuest(action.targetId);
+                    break;
+                    
+                case StoryType.GameOver:
+                    // 시작 화면으로 돌아가기
                     break;
             }
 
@@ -158,6 +178,25 @@ public class StoryManager : Singleton<StoryManager>
             case "<=": return currentValue <= requiredValue;
             default:
                 Debug.LogWarning($"[StoryManager] 알 수 없는 연산자: '{op}'");
+                return false;
+        }
+    }
+    
+    /// <summary>
+    /// 퀘스트 상태를 연산자 기반으로 비교하는 헬퍼 메서드
+    /// </summary>
+    private bool CheckQuestStatusCondition(string questId, string op, string requiredStatusStr)
+    {
+        QuestStatus currentStatus = QuestManager.Instance.GetQuestStatus(questId);
+        
+        switch (op)
+        {
+            case "==":
+                return currentStatus.ToString().Equals(requiredStatusStr, StringComparison.OrdinalIgnoreCase);
+            case "!=":
+                return !currentStatus.ToString().Equals(requiredStatusStr, StringComparison.OrdinalIgnoreCase);
+            default:
+                Debug.LogWarning($"[StoryManager] 퀘스트 상태에 사용할 수 없는 연산자: '{op}'");
                 return false;
         }
     }
