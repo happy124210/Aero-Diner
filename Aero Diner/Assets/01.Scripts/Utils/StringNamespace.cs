@@ -10,4 +10,6 @@ public static class StringPath
 {
     public const string CUSTOMER_PREFAB_PATH = "Prefabs/Characters/Customer";
     public const string CUSTOMER_DATA_PATH = "Datas/Customer";
+    
+    public const string STORY_DATA_PATH = "Datas/Story";
 }
