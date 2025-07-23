@@ -99,6 +99,7 @@ public static class EventBus
     private static AudioSource cookingLoopSource;
     public static event Action<SFXType> OnLoopSFXRequested;
     public static event Action<SFXType> OnStopLoopSFXRequested;
+    private static Dictionary<GameEventType, Action<object>> gameEventListeners = new();
 
     public static void PlaySFX(SFXType type)
     {
@@ -109,10 +110,15 @@ public static class EventBus
     {
         OnUIEvent?.Invoke(eventType, payload);
     }
-    
+
     public static void Raise(GameEventType eventType, object payload = null)
     {
         OnGameEvent?.Invoke(eventType, payload);
+
+        if (gameEventListeners.TryGetValue(eventType, out var callback))
+        {
+            callback.Invoke(payload);
+        }
     }
 
     public static void PlayBGM(BGMEventType type)
@@ -140,5 +146,22 @@ public static class EventBus
     public static void StopLoopSFX(SFXType type)
     {
         OnStopLoopSFXRequested?.Invoke(type);
+    }
+
+    public static void Register(GameEventType eventType, Action<object> listener)
+    {
+        if (!gameEventListeners.ContainsKey(eventType))
+        {
+            gameEventListeners[eventType] = delegate { };
+        }
+        gameEventListeners[eventType] += listener;
+    }
+
+    public static void Unregister(GameEventType eventType, Action<object> listener)
+    {
+        if (gameEventListeners.ContainsKey(eventType))
+        {
+            gameEventListeners[eventType] -= listener;
+        }
     }
 }
