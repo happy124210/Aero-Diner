@@ -69,7 +69,7 @@ public class DialogueManager : Singleton<DialogueManager>
     /// </summary>
     public void StartDialogue(string dataId)
     {
-        var data = dialogueDatabase.GetValueOrDefault(dataId);
+        var data = FindDialogueDataById(dataId);
         
         if (!data)
         {

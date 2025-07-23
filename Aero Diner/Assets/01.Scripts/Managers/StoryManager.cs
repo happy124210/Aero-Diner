@@ -30,7 +30,7 @@ public class StoryManager : Singleton<StoryManager>
 
     private void LoadStoryDatabase()
     {
-        storyDatabase = Resources.LoadAll<StoryData>("Datas/Stories").ToList();
+        storyDatabase = Resources.LoadAll<StoryData>(StringPath.STORY_DATA_PATH).ToList();
     }
     
     private void HandleGameEvent(GameEventType eventType, object data)
@@ -83,6 +83,8 @@ public class StoryManager : Singleton<StoryManager>
                 
                 // 대화 끝났는지
                 case ConditionType.DialogueEnded:
+                    // TODO: 대화 시스템 연동
+                    result = true;
                     break;
             }
             
