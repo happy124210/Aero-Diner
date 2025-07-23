@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class IngredientPanel_ScrollView_Content : MonoBehaviour
+public class IngredientPanel_ScrollView_Content : BaseScrollViewItem
 {
     [SerializeField] private Image iconImage;
     [SerializeField] private TMP_Text nameText;

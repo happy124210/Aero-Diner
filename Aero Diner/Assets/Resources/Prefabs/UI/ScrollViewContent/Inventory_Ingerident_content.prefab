@@ -86,6 +86,7 @@ GameObject:
   - component: {fileID: 6316687451825912327}
   - component: {fileID: 3295468370144885861}
   - component: {fileID: 9181519805337090079}
+  - component: {fileID: 8655681362254025034}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -150,6 +151,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8655681362254025034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1586975535878629130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
+  m_EffectDistance: {x: 5, y: -5}
+  m_UseGraphicAlpha: 1
 --- !u!1 &1993936570838503194
 GameObject:
   m_ObjectHideFlags: 0
@@ -536,6 +552,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba6256f21be100440b672d2bda4c39f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  outline: {fileID: 8655681362254025034}
   iconImage: {fileID: 7540571206139802606}
   nameText: {fileID: 6537250971876683421}
   typeIconImage: {fileID: 6418246373879778042}
