@@ -10,15 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e3016406984b8b94e9f7c7e996cc12e2, type: 3}
-  m_Name: day7_fail_dialogue
+  m_Name: day1_quest_dialogue
   m_EditorClassIdentifier: 
-  id: day7_fail_dialogue
+  id: day1_quest_dialogue
   lines:
   - speakerId: KAYA
-    expression: 2
-    text: "\"\uC774\uB7F4 \uC218\uAC00... \uC57D\uC18D\uD55C \uB3C8\uC744 \uBAA8\uC73C\uC9C0
-      \uBABB\uD588\uAD70\uC694.\""
-  - speakerId: KAYA
-    expression: 2
-    text: "\"\uC720\uAC10\uC774\uC9C0\uB9CC... \uC774 \uB808\uC2A4\uD1A0\uB791\uC740
-      \uC774\uC81C \uB2F9\uC2E0\uC758 \uAC83\uC774 \uC544\uB2C8\uC5D0\uC694.\""
+    expression: 1
+    text: "\"\uC218\uB9AC\uBE44\uAC00 \uD544\uC694\uD558\uB2C8 7\uC77C \uC548\uC5D0
+      10000 \uACE8\uB4DC\uB97C \uBAA8\uC544\uC8FC\uC138\uC694!\""
