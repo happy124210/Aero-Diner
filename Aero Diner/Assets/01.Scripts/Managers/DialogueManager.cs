@@ -49,7 +49,7 @@ public class DialogueManager : Singleton<DialogueManager>
         {
             speakerDatabase.TryAdd(speaker.id, speaker);
         }
-        Debug.Log($"Speaker Database 로드 완료: {speakerDatabase.Count}명");
+        if (showDebugInfo) Debug.Log($"Speaker Database 로드 완료: {speakerDatabase.Count}명");
     }
     
     public DialogueData FindDialogueDataById(string id)
@@ -65,11 +65,12 @@ public class DialogueManager : Singleton<DialogueManager>
     #endregion
 
     /// <summary>
-    /// 새로운 대화 시작
+    /// id값 받아서 새로운 대화 시작
     /// </summary>
-    /// <param name="data"> 시작할 DialogueData SO </param>
-    public void StartDialogue(DialogueData data)
+    public void StartDialogue(string dataId)
     {
+        var data = FindDialogueDataById(dataId);
+        
         if (!data)
         {
             if (showDebugInfo) Debug.LogError("시작할 DialogueData 없음");

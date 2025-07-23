@@ -308,6 +308,170 @@ public class CSVImporter
 
     #endregion
     
+    #region StoryData 생성
+
+    [MenuItem("Tools/Import Game Data/Story Data")]
+    public static void ImportStoryData()
+    {
+        string path = EditorUtility.OpenFilePanel("Select Story CSV", "", "csv");
+        if (string.IsNullOrEmpty(path)) return;
+
+        string[] lines = File.ReadAllLines(path);
+        if (lines.Length <= 1)
+        {
+            Debug.LogWarning("CSV 파일에 데이터 없음");
+            return;
+        }
+
+        string targetFolder = "Assets/Resources/Datas/Story/";
+        if (!Directory.Exists(targetFolder))
+        {
+            Directory.CreateDirectory(targetFolder);
+        }
+        
+        // 에셋 생성/업데이트
+        int successCount = 0;
+        for (int i = 1; i < lines.Length; i++)
+        {
+            try
+            {
+                string[] cols = lines[i].Split(',');
+                if (cols.Length < 2 || string.IsNullOrEmpty(cols[0].Trim())) continue;
+
+                string id = cols[0].Trim();
+                string assetPath = $"{targetFolder}/{id}.asset";
+                StoryData data = AssetDatabase.LoadAssetAtPath<StoryData>(assetPath);
+                if (data == null)
+                {
+                    data = ScriptableObject.CreateInstance<StoryData>();
+                    AssetDatabase.CreateAsset(data, assetPath);
+                }
+
+                // 데이터 채우기
+                data.id = id;
+                
+                if (Enum.TryParse<GamePhase>(cols[1].Trim(), true, out var phase))
+                {
+                    data.triggerPhase = phase;
+                }
+                else
+                {
+                    Debug.LogWarning($"Story ID '{id}'의 triggerPhase '{cols[1].Trim()}'없음");
+                    data.triggerPhase = GamePhase.Day; // 기본값 설정
+                }
+                
+                data.conditions = ParseConditions(cols[2]); // 조건 파싱
+                data.actions = ParseActions(cols[3]);     // 액션 파싱
+
+                EditorUtility.SetDirty(data);
+                successCount++;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Story ID '{lines[i].Split(',')[0]}' 처리 중 오류 발생: {e.Message}");
+            }
+        }
+        
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Debug.Log($"총 {successCount}개의 StoryData CSV 임포트 완료");
+    }
+
+    /// <summary>
+    /// 조건 문자열을 파싱하여 StoryCondition 리스트 반환
+    /// </summary>
+    private static List<StoryCondition> ParseConditions(string conditionsString)
+    {
+        var result = new List<StoryCondition>();
+        if (string.IsNullOrEmpty(conditionsString)) return result;
+
+        string[] conditionParts = conditionsString.Split('|');
+        foreach (var part in conditionParts)
+        {
+            string[] attrs = part.Split(';').Select(s => s.Trim()).ToArray();
+            if (attrs.Length < 2) continue;
+
+            if (Enum.TryParse<ConditionType>(attrs[0], true, out var type))
+            {
+                var condition = new StoryCondition();
+                condition.conditionType = type;
+
+                // ConditionType에 따라 파싱
+                switch (type)
+                {
+                    case ConditionType.Day:
+                        // 형식: Day;>=;3
+                        condition.@operator = attrs[1];
+                        condition.rValue = attrs[2];
+                        break;
+                    
+                    case ConditionType.QuestStatus:
+                        // 형식: QuestStatus;quest_id;==;Completed
+                        condition.lValue = attrs[1];
+                        condition.@operator = attrs[2];
+                        condition.rValue = attrs[3];
+                        break;
+
+                    case ConditionType.DialogueEnded:
+                        // 형식: DialogueEnded;Is;dialogue_id
+                        condition.@operator = attrs[1];
+                        condition.lValue = attrs[2];
+                        break;
+                }
+                result.Add(condition);
+            }
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// 액션 문자열을 파싱하여 StoryAction 리스트 반환
+    /// </summary>
+    private static List<StoryAction> ParseActions(string actionsString)
+    {
+        var result = new List<StoryAction>();
+        if (string.IsNullOrEmpty(actionsString)) return result;
+
+        string[] actionParts = actionsString.Split('|');
+        foreach (var part in actionParts)
+        {
+            string[] attrs = part.Split(';').Select(s => s.Trim()).ToArray();
+            if (attrs.Length < 1) continue;
+
+            if (Enum.TryParse<StoryType>(attrs[0], true, out var type))
+            {
+                var action = new StoryAction();
+                action.storyType = type;
+
+                // StoryType에 따라 파싱
+                switch (type)
+                {
+                    case StoryType.StartDialogue:
+                    case StoryType.StartQuest:
+                    case StoryType.EndQuest:
+                    case StoryType.UnlockRecipe:
+                    case StoryType.UnlockStation:
+                        // 형식: ActionType;targetId
+                        action.targetId = attrs[1];
+                        break;
+
+                    case StoryType.GiveMoney:
+                    case StoryType.LostMoney:
+                        // 형식: ActionType;;value
+                        action.targetId = "";
+                        action.value = attrs[1];
+                        break;
+                }
+
+                result.Add(action);
+            }
+        }
+
+        return result;
+    }
+
+    #endregion
+    
     #region 공통 Import 메서드
     
     /// <summary>
