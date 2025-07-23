@@ -8,6 +8,7 @@ public class StationPanel_ScrollView_Content : BaseScrollViewItem
     [SerializeField] private Image stationIconImage;
     [SerializeField] private TMP_Text stationNameText;
     [SerializeField] private Button selectButton;
+    private string stationcost;
 
     private StationData myData;
 

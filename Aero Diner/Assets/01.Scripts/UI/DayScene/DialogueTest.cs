@@ -25,7 +25,7 @@ public class DialogueTest : MonoBehaviour
     {
         if (isPlayerInRange && Input.GetKeyDown(interactKey))
         {
-            DialogueManager.Instance.StartDialogue(dialogueToPlay);
+            EventBus.Raise(UIEventType.FadeInStore);
         }
     }
 

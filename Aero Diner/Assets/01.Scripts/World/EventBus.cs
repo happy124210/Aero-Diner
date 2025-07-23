@@ -84,6 +84,9 @@ public enum UIEventType
     ShowQuestPanel,
     FadeInInventory, FadeInRecipeBook,
 
+    //store
+    FadeInStore, FadeOutStore,
+    ShowStationStore, ShowRecipeStore,
     //Dialogue
     ShowDialogueLine, HideDialoguePanel,
     ShowDialoguePanel,
