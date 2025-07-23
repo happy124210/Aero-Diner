@@ -6,8 +6,8 @@ public enum QuestStatus
 {
     Inactive,   // 비활성
     InProgress, // 진행 중
-    Completed,  // 완료 (보상 수령 가능)
-    Finished    // 종료 (보상까지 모두 수령 완료)
+    Completed,  // 완료 (보상 수령까지 끝)
+    Failed
 }
 
 // 퀘스트 목표의 종류

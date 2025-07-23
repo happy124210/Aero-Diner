@@ -474,7 +474,7 @@ public class CSVImporter
             Debug.LogWarning("CSV 파일에 데이터 없음");
             return;
         }
-
+        
         string targetFolder = "Assets/Resources/Datas/Quest/";
         if (!Directory.Exists(targetFolder))
         {
@@ -487,7 +487,7 @@ public class CSVImporter
             try
             {
                 string[] cols = lines[i].Split(',');
-                if (cols.Length < 3) continue;
+                if (cols.Length < 4) continue;
 
                 string id = cols[0].Trim();
                 string assetPath = $"{targetFolder}/{id}.asset";
@@ -497,14 +497,15 @@ public class CSVImporter
                     data = ScriptableObject.CreateInstance<QuestData>();
                     AssetDatabase.CreateAsset(data, assetPath);
                 }
-
-                // 데이터 채우기
+                
                 data.id = id;
                 data.questName = cols[1].Trim();
                 data.description = cols[2].Trim();
-                data.objectives = ParseQuestObjectives(cols[3]);
-                data.rewardMoney = int.TryParse(cols[4], out int money) ? money : 0;
-                data.rewardItemIds = ParseStringArray(cols[5]);
+                data.rewardDescription = cols[3].Trim();
+                
+                data.objectives = ParseQuestObjectives(cols.Length > 4 ? cols[4] : "");
+                data.rewardMoney = (cols.Length > 5 && int.TryParse(cols[5], out int money)) ? money : 0;
+                data.rewardItemIds = (cols.Length > 6) ? ParseStringArray(cols[6]) : Array.Empty<string>();
                 
                 EditorUtility.SetDirty(data);
                 successCount++;
@@ -531,7 +532,7 @@ public class CSVImporter
             string[] attrs = part.Split(';');
             if (attrs.Length < 3) continue;
 
-            if (System.Enum.TryParse<QuestObjectiveType>(attrs[0].Trim(), true, out var type))
+            if (Enum.TryParse<QuestObjectiveType>(attrs[0].Trim(), true, out var type))
             {
                 result.Add(new QuestObjective
                 {
@@ -543,7 +544,7 @@ public class CSVImporter
         }
         return result;
     }
-    
+
     #endregion
     
     #region 공통 Import 메서드
