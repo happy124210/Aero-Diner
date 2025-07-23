@@ -3,7 +3,7 @@
 public class DialogueTest : MonoBehaviour
 {
     [Header("트리거 대사 데이터")]
-    [SerializeField] private string dialogueIdToPlay;
+    [SerializeField] private DialogueData dialogueToPlay;
 
     [Header("플레이어 감지 범위")]
     [SerializeField] private float triggerRadius = 2f;
@@ -25,7 +25,7 @@ public class DialogueTest : MonoBehaviour
     {
         if (isPlayerInRange && Input.GetKeyDown(interactKey))
         {
-            DialogueManager.Instance.StartDialogue(dialogueIdToPlay);
+            EventBus.Raise(UIEventType.FadeInStore);
         }
     }
 
