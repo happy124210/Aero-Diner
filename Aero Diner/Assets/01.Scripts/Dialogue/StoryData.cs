@@ -35,9 +35,11 @@ public enum StoryType
 public class StoryCondition
 {
     public ConditionType conditionType;
-    public string lValue; // 조건 좌항 (quest_frying_pan)
-    public string @operator; // 연산자 (==, >=, Is)
-    public string rValue; // 조건 우항 (Completed)
+    public string lValue; // 조건 좌항 (quest_tutorial 등)
+    public string @operator; // 연산자 (==, >=, Is 등)
+    public string rValue; // 조건 우항 (Completed 등)
+    
+    // ex. quest_tutorial == Completed
 }
 
 [System.Serializable]
@@ -45,12 +47,14 @@ public class StoryAction
 {
     public StoryType storyType;
     public string targetId;     // 액션의 대상 ID (대화 id 등)
+    public string value;        // 액션에 필요한 값 (추후 사용)
 }
 
 [CreateAssetMenu(fileName = "StoryData", menuName = "Data/Story Data")]
 public class StoryData : ScriptableObject
 {
     public string id;
+    public GamePhase triggerPhase;
     public List<StoryCondition> conditions; // 발동 조건
     public List<StoryAction> actions; // 순차적으로 실행되는 액션
 }

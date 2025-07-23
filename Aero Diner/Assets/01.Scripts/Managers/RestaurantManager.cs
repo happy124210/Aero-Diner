@@ -162,7 +162,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
     {
         if (!Application.isPlaying) return;
         
-        GUILayout.BeginArea(new Rect(10, 10, 300, 700));
+        GUILayout.BeginArea(new Rect(10, 400, 300, 700));
         GUILayout.Space(10);
         
         if (GameManager.Instance.CurrentPhase != GamePhase.Operation)

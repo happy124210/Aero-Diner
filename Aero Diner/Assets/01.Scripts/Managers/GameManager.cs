@@ -112,7 +112,8 @@ public class GameManager : Singleton<GameManager>
     
     public void PauseGame()
     {
-        if (currentPhase == GamePhase.Paused) return;
+        if (currentPhase == GamePhase.Paused ||
+            currentPhase == GamePhase.Dialogue) return;
 
         // 현재 페이즈 기억
         previousPhase = currentPhase;
@@ -121,7 +122,9 @@ public class GameManager : Singleton<GameManager>
     
     public void ContinueGame()
     {
-        if (currentPhase != GamePhase.Paused) return;
+        if (currentPhase != GamePhase.Paused || 
+            currentPhase != GamePhase.Dialogue) return;
+        
         ChangePhase(previousPhase);
     }
     
@@ -199,6 +202,34 @@ public class GameManager : Singleton<GameManager>
         if (GUILayout.Button("모든 메뉴 해금"))
         {
             MenuManager.Instance.UnlockAllMenus();
+        }
+        
+        if (GUILayout.Button("돈 1000원 추가"))
+        {
+            AddMoney(1000);
+            EventBus.Raise(UIEventType.UpdateEarnings);
+        }
+        
+        if (GUILayout.Button("돈 1000원 제거"))
+        {
+            AddMoney(-1000);
+            EventBus.Raise(UIEventType.UpdateEarnings);
+        }
+        
+        GUILayout.Space(20);
+        GUILayout.Label("=== Game Phase 변경 ===");
+
+        foreach (GamePhase phase in System.Enum.GetValues(typeof(GamePhase)))
+        {
+            // 현재 페이즈와 같은 버튼은 비활성화된 것처럼 보이게 처리
+            GUI.enabled = (CurrentPhase != phase);
+        
+            if (GUILayout.Button(phase.ToString()))
+            {
+                ChangePhase(phase);
+            }
+            
+            GUI.enabled = true;
         }
         
         GUILayout.EndArea();
