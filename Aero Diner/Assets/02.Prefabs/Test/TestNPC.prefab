@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1d140e27d7d8794aa951be23f053a17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueToPlay: {fileID: 11400000, guid: f30210a6252c45846a86f6ee9140c2a5, type: 2}
+  dialogueIdToPlay: daily_intro_01
   triggerRadius: 2
   interactKey: 106
 --- !u!1 &7723025027344200777
