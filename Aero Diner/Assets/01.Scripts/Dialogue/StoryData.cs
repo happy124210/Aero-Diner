@@ -14,14 +14,17 @@ public enum ConditionType
 public enum StoryType
 {
     StartDialogue, // 대화 시작
-    StartQuest,    // 퀘스트 주기
     
-    UnlockRecipe,
-    UnlockStation,
+    StartQuest,    // 퀘스트 주기
+    EndQuest,
+    
+    UnlockRecipe, // 상점에서 해제
+    GiveRecipe,   //
+    
+    UnlockStation, // 상점에서 해제
+    GiveStation,
     
     GiveMoney,     // 골드 주기
-    GiveRecipe,
-    GiveStation,
     
     LostMoney,     // 골드 뺏기
     GameOver,

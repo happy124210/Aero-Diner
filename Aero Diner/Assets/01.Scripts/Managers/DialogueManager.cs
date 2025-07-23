@@ -79,6 +79,7 @@ public class DialogueManager : Singleton<DialogueManager>
             return;
         }
         
+        GameManager.Instance.PauseGame();
         GameManager.Instance.ChangePhase(GamePhase.Dialogue);
 
 

@@ -122,7 +122,7 @@ public class GameManager : Singleton<GameManager>
     
     public void ContinueGame()
     {
-        if (currentPhase != GamePhase.Paused || 
+        if (currentPhase != GamePhase.Paused && 
             currentPhase != GamePhase.Dialogue) return;
         
         ChangePhase(previousPhase);
@@ -132,7 +132,7 @@ public class GameManager : Singleton<GameManager>
     
     #region 데이터 관리 (돈, 날짜, 저장/불러오기)
 
-    private void AddMoney(int amount)
+    public void AddMoney(int amount)
     {
         totalEarnings += amount;
     }
@@ -260,4 +260,5 @@ public enum GamePhase
     Dialogue,
     Paused,
     GameOver,
+    None,
 }

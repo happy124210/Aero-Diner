@@ -2173,7 +2173,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7904317401106405309, guid: 4af075dc85106994e96b935014b89a23, type: 3}
       propertyPath: m_Name
-      value: DialogueManager
+      value: Managers
       objectReference: {fileID: 0}
     - target: {fileID: 8984684929114892224, guid: 4af075dc85106994e96b935014b89a23, type: 3}
       propertyPath: m_LocalPosition.x

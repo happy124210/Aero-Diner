@@ -13,10 +13,13 @@ MonoBehaviour:
   m_Name: main_quest_01
   m_EditorClassIdentifier: 
   id: main_quest_01
-  questName: "7\uC77C\uC758 \uC57D\uC18D"
-  description: "\"\uB808\uC2A4\uD1A0\uB791\uC744 \uC644\uC804\uD788 \uC778\uC218\uD558\uB824\uBA74"
-  rewardDescription: 
-  objectives: []
+  questName: "\uC170\uD504\uC758 \uCCAB\uAC78\uC74C"
+  description: "\"7\uC77C \uC548\uC5D0 10000\uACE8\uB4DC\uB97C \uBC8C\uC5B4 \uAC00\uAC8C\uC758
+    \uAE30\uBC18\uC744 \uB2E4\uC9C0\uC790.\""
+  rewardDescription: "\"\uB808\uC2A4\uD1A0\uB791 \uC218\uB9AC\""
+  objectives:
+  - objectiveType: 0
+    targetId: 
+    requiredAmount: 10000
   rewardMoney: 0
-  rewardItemIds:
-  - 0
+  rewardItemIds: []
