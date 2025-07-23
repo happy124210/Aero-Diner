@@ -113,6 +113,7 @@ public class DialogueManager : Singleton<DialogueManager>
     private void EndDialogue()
     {
         EventBus.Raise(UIEventType.HideDialoguePanel);
+        EventBus.Raise(GameEventType.DialogueEnded, currentDialogue.id);
         GameManager.Instance.ContinueGame();
     }
     

@@ -159,8 +159,6 @@ public class CSVImporter
                 data.id = dialogueId;
                 data.lines = new List<DialogueLine>();
                 // data.choices = new List<DialogueChoice>();
-                data.nextStoryType = StoryType.None;
-                data.nextStoryParameter = string.Empty;
                 
                 rows.Sort((a, b) => int.Parse(a[1]).CompareTo(int.Parse(b[1])));
                 
@@ -180,18 +178,6 @@ public class CSVImporter
                     });
                 }
                 
-                string[] lastRow = rows[^1];
-
-                // 스토리 타입 파싱
-                if (lastRow.Length > 5 && !string.IsNullOrEmpty(lastRow[5].Trim()))
-                {
-                    if (Enum.TryParse(lastRow[5].Trim(), true, out StoryType parsedStory))
-                    {
-                        data.nextStoryType = parsedStory;
-                        data.nextStoryParameter = lastRow.Length > 6 ? lastRow[6].Trim() : "";
-                    }
-                }
-
                 // // 선택지 파싱
                 // for (int i = 0; i < 2; i++)
                 // {
@@ -448,16 +434,18 @@ public class CSVImporter
                 {
                     case StoryType.StartDialogue:
                     case StoryType.StartQuest:
-                    case StoryType.EndQuest:
                     case StoryType.UnlockRecipe:
                     case StoryType.UnlockStation:
                         // 형식: ActionType;targetId
                         action.targetId = attrs[1];
                         break;
-
                     case StoryType.GiveMoney:
+                        // 형식: ActionType;value
+                        action.targetId = "";
+                        action.value = attrs[1];
+                        break;
                     case StoryType.LostMoney:
-                        // 형식: ActionType;;value
+                        // 형식: ActionType;value
                         action.targetId = "";
                         action.value = attrs[1];
                         break;
@@ -470,6 +458,92 @@ public class CSVImporter
         return result;
     }
 
+    #endregion
+    
+    #region QuestData 생성
+
+    [MenuItem("Tools/Import Game Data/Quest Data")]
+    public static void ImportQuestData()
+    {
+        string path = EditorUtility.OpenFilePanel("Select Quest CSV", "", "csv");
+        if (string.IsNullOrEmpty(path)) return;
+
+        string[] lines = File.ReadAllLines(path);
+        if (lines.Length <= 1)
+        {
+            Debug.LogWarning("CSV 파일에 데이터 없음");
+            return;
+        }
+
+        string targetFolder = "Assets/Resources/Datas/Quest/";
+        if (!Directory.Exists(targetFolder))
+        {
+            Directory.CreateDirectory(targetFolder);
+        }
+        
+        int successCount = 0;
+        for (int i = 1; i < lines.Length; i++)
+        {
+            try
+            {
+                string[] cols = lines[i].Split(',');
+                if (cols.Length < 3) continue;
+
+                string id = cols[0].Trim();
+                string assetPath = $"{targetFolder}/{id}.asset";
+                QuestData data = AssetDatabase.LoadAssetAtPath<QuestData>(assetPath);
+                if (data == null)
+                {
+                    data = ScriptableObject.CreateInstance<QuestData>();
+                    AssetDatabase.CreateAsset(data, assetPath);
+                }
+
+                // 데이터 채우기
+                data.id = id;
+                data.questName = cols[1].Trim();
+                data.description = cols[2].Trim();
+                data.objectives = ParseQuestObjectives(cols[3]);
+                data.rewardMoney = int.TryParse(cols[4], out int money) ? money : 0;
+                data.rewardItemIds = ParseStringArray(cols[5]);
+                
+                EditorUtility.SetDirty(data);
+                successCount++;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Quest ID '{lines[i].Split(',')[0]}' 처리 중 오류 발생: {e.Message}");
+            }
+        }
+        
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Debug.Log($"총 {successCount}개의 QuestData CSV 임포트 완료");
+    }
+
+    private static List<QuestObjective> ParseQuestObjectives(string objectivesString)
+    {
+        var result = new List<QuestObjective>();
+        if (string.IsNullOrEmpty(objectivesString)) return result;
+
+        string[] objectiveParts = objectivesString.Split('|');
+        foreach (var part in objectiveParts)
+        {
+            string[] attrs = part.Split(';');
+            if (attrs.Length < 3) continue;
+
+            if (System.Enum.TryParse<QuestObjectiveType>(attrs[0].Trim(), true, out var type))
+            {
+                result.Add(new QuestObjective
+                {
+                    objectiveType = type,
+                    targetId = attrs[1].Trim(),
+                    requiredAmount = int.TryParse(attrs[2].Trim(), out int amount) ? amount : 1
+                });
+            }
+        }
+        return result;
+    }
+    
     #endregion
     
     #region 공통 Import 메서드

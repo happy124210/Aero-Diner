@@ -24,6 +24,7 @@ public enum GameEventType
 {
     GamePhaseChanged, // 게임 상태 변경
     RoundTimerEnded,  // 영업 시간 종료
+    DialogueEnded,
 }
 
 public enum SFXType
@@ -87,6 +88,7 @@ public enum UIEventType
     //store
     FadeInStore, FadeOutStore,
     ShowStationStore, ShowRecipeStore,
+    
     //Dialogue
     ShowDialogueLine, HideDialoguePanel,
     ShowDialoguePanel,
