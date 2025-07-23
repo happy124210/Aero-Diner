@@ -23,7 +23,6 @@ public class SpeakerData : ScriptableObject
     public string id;
     public string speakerName;
     
-
     public List<PortraitEntry> portraits = new();
     private Dictionary<Expression, Sprite> portraitDict;
     private bool isDictInitialized;
