@@ -1,0 +1,2 @@
+id,questName,description,objectives,rewardMoney,rewardItemIds
+main_quest_01,7일의 약속,"레스토랑을 완전히 인수하려면, 7일 안에 10000원을 모아야 한다.",EarnMoney;;10000,0

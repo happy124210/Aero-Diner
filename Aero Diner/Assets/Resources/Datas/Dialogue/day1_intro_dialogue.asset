@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3016406984b8b94e9f7c7e996cc12e2, type: 3}
+  m_Name: day1_intro_dialogue
+  m_EditorClassIdentifier: 
+  id: day1_intro_dialogue
+  lines:
+  - speakerId: KAYA
+    expression: 0
+    text: "\"\uC548\uB155. \uC774 \uC12C\uC5D0 \uC0C8\uB85C \uC628 \uC170\uD504\uAC00
+      \uB2F9\uC2E0\uC774\uAD70\uC694.\""
+  - speakerId: HERO
+    expression: 0
+    text: "\"\uB124 \uB9DE\uC544\uC694. \uC624\uB298\uBD80\uD130 \uC798 \uBD80\uD0C1\uB4DC\uB9BD\uB2C8\uB2E4.\""
+  - speakerId: KAYA
+    expression: 1
+    text: "\"\uB098\uC57C\uB9D0\uB85C\uC694! \uB2F9\uC2E0 \uB355\uBD84\uC5D0 \uC774
+      \uC12C\uC758 \uB0A1\uC740 \uB808\uC2A4\uD1A0\uB791\uC774 \uB2E4\uC2DC \uC0B4\uC544\uB0A0
+      \uC218 \uC788\uACA0\uC5B4\uC694.\""
+  nextStoryType: 11
+  nextStoryParameter: 
