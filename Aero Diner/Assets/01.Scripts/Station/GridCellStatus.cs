@@ -7,8 +7,12 @@ public class GridCellStatus : MonoBehaviour, IInteractable
 {
     private SpriteRenderer sr;
     private OutlineShaderController outline;
+
     private Material placeableMaterial;
     private Material notPlaceableMaterial;
+    private Material selectMaterial;
+
+    private bool isSelected = false;
 
     private void Awake()
     {
@@ -17,15 +21,42 @@ public class GridCellStatus : MonoBehaviour, IInteractable
     }
 
     /// <summary>
+    /// 머티리얼들을 설정
+    /// </summary>
+    public void SetMaterials(Material placeable, Material notPlaceable, Material select)
+    {
+        placeableMaterial = placeable;
+        notPlaceableMaterial = notPlaceable;
+        selectMaterial = select;
+    }
+
+    /// <summary>
+    /// 선택 상태를 설정, true면 selectMaterial을 적용
+    /// </summary>
+    public void SetSelected(bool selected)
+    {
+        isSelected = selected;
+        UpdateStatus();
+    }
+
+    /// <summary>
     /// 현재 자식 유무에 따라 배치 가능 여부를 판단하고 상태 업데이트
     /// </summary>
     public void UpdateStatus()
     {
-        bool isPlaceable = !HasStation();
+        if (sr == null) return;
 
-        if (sr != null)
+        if (isSelected)
+        {
+            sr.sharedMaterial = selectMaterial;
+        }
+        else
+        {
+            bool isPlaceable = !HasStation();
             sr.sharedMaterial = isPlaceable ? placeableMaterial : notPlaceableMaterial;
+        }
 
+        // outline은 항상 허용
         outline?.EnableOutline();
     }
 
