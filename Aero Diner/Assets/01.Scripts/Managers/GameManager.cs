@@ -97,7 +97,6 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     private void EndDayCycle(int earningsFromDay)
     {
-        AddMoney(earningsFromDay);
         IncreaseDay();
         SaveData();
         
@@ -132,7 +131,7 @@ public class GameManager : Singleton<GameManager>
     
     #region 데이터 관리 (돈, 날짜, 저장/불러오기)
 
-    private void AddMoney(int amount)
+    public void AddMoney(int amount)
     {
         totalEarnings += amount;
     }
@@ -213,13 +212,13 @@ public class GameManager : Singleton<GameManager>
         if (GUILayout.Button("돈 1000원 추가"))
         {
             AddMoney(1000);
-            EventBus.Raise(UIEventType.UpdateEarnings, totalEarnings);
+            EventBus.Raise(UIEventType.UpdateTotalEarnings, totalEarnings);
         }
         
         if (GUILayout.Button("돈 1000원 제거"))
         {
             AddMoney(-1000);
-            EventBus.Raise(UIEventType.UpdateEarnings, totalEarnings);
+            EventBus.Raise(UIEventType.UpdateTotalEarnings, totalEarnings);
         }
         
         GUILayout.Space(20);

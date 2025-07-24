@@ -139,18 +139,21 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
     public void OnCustomerEntered() => customersVisited++;
     public void OnCustomerServed() => customersServed++;
-    
+
     public void AddDailyEarnings(int amount)
     {
         todayEarnings += amount;
-        EventBus.Raise(UIEventType.UpdateEarnings, todayEarnings);
+
+        GameManager.Instance.AddMoney(amount);
+        EventBus.Raise(UIEventType.UpdateTodayEarnings, todayEarnings);
+        EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
         EventBus.OnSFXRequested(SFXType.CustomerPay);
     }
 
     #endregion
 
     #region public getters
-    
+
     public Vector3 GetEntrancePoint() => entrancePoint.position;
     public Vector3 GetExitPoint() => exitPoint.position;
     

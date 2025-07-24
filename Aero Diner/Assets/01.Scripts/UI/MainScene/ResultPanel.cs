@@ -14,7 +14,7 @@ public class ResultPanel : MonoBehaviour
     [SerializeField] Transform contentTransform;
     [SerializeField] TextMeshProUGUI totalSalesVolume;
     [SerializeField] TextMeshProUGUI totalRevenue;
-    
+    public TextMeshProUGUI TotalRevenueText => totalRevenue;
     [Header("Customer Result")]
     [SerializeField] TextMeshProUGUI allCustomer;
     [SerializeField] TextMeshProUGUI servedCustomer;
