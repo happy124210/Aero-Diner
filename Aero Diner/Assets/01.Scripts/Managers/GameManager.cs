@@ -182,11 +182,23 @@ public class GameManager : Singleton<GameManager>
         
         day = totalDays;
     }
+    private int backupEarningsBeforeDay = 0;
 
+    public void BackupEarningsBeforeDayStart()
+    {
+        backupEarningsBeforeDay = totalEarnings;
+    }
+    public void RestoreEarningsToBeforeDay()
+    {
+        totalEarnings = backupEarningsBeforeDay;
+
+        // UI 갱신도 함께
+        EventBus.Raise(UIEventType.UpdateTotalEarnings, totalEarnings);
+    }
     #endregion
-    
+
     #region Debug Commands
-#if UNITY_EDITOR  
+#if UNITY_EDITOR
     private void OnGUI()
     {
         if (!Application.isPlaying) return;
