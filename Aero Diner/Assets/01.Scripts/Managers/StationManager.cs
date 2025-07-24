@@ -14,6 +14,8 @@ public class StationManager : Singleton<StationManager>
     [Header("디버깅")]
     [SerializeField] private bool showDebugInfo;
     
+    public StationData FindStationById(string id) => StationDatabase.GetValueOrDefault(id);
+    
     [System.Serializable]
     public class StationGroup
     {
@@ -157,6 +159,8 @@ public class StationManager : Singleton<StationManager>
     /// </summary>
     private void CreateStationInStorage(string id)
     {
+        StationData station = FindStationById(id);
+
         // 상점에서 구매한 스테이션의 정보(스테이션의 아이디)
         // 스테이션 프리팹을 찾아서 생성 - 스테이션 아이디로 프리팹 찾기(스테이션 프리팹은 StationData의 SO데이터를 가지고 있음)
     }

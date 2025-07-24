@@ -59,7 +59,7 @@ public class UIInputHandler : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             EventBus.PlaySFX(SFXType.ButtonClick);
-            Debug.Log("ESC 눌렸음");
+            //Debug.Log("ESC 눌렸음");
             HandleEscapeLikeAction();
         }
     }

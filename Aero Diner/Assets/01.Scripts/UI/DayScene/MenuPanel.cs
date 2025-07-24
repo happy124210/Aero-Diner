@@ -60,7 +60,7 @@ public class MenuPanel : MonoBehaviour
             return;
         }
 
-        Debug.Log($" 메뉴 수: {menuList.Count}");
+        //Debug.Log($" 메뉴 수: {menuList.Count}");
 
         float delay = 1f;
         foreach (var menu in menuList)
