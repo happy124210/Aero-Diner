@@ -1,4 +1,10 @@
-id,lineNum,speakerId,expression,text,next_eventType,next_parameter,choice1_text,choice2_text
-daily_intro_01,1,KAYA,Happy,"오늘 날씨가 정말 좋네!",,,,
-daily_intro_01,2,HERO,Default,"그러게요. 이런 날엔 왠지 장사가 잘 될 것 같아요.",,,,
-daily_outro_01,1,KAYA,Default,"벌써 시간이 이렇게 됐네. 오늘 하루도 수고했어.",None,,,,
+id,lineNum,speakerId,expression,text
+day1_intro_dialogue,1,KAYA,Default,"안녕. 이 섬에 새로 온 셰프가 당신이군요."
+day1_intro_dialogue,2,HERO,Default,"네 맞아요. 오늘부터 잘 부탁드립니다."
+day1_intro_dialogue,3,KAYA,Happy,"나야말로요! 당신 덕분에 이 섬의 낡은 레스토랑이 다시 살아날 수 있겠어요."
+day1_quest_dialogue,1,KAYA,Happy,"수리비가 필요하니 7일 안에 10000 골드를 모아주세요!"
+day7_check_dialogue,1,KAYA,Default,"벌써 7일이 지났군요. 약속한 돈은 다 모았나? 어디 한번 볼까..."
+day7_success_dialogue,1,KAYA,Happy,"세상에... 정말로 약속한 돈을 모두 모았군요! 정말 대단해요!"
+day7_success_dialogue,2,KAYA,Default,"자 약속대로 이 돈은 가져갈게요. 앞으로도 레스토랑을 잘 부탁해요!"
+day7_fail_dialogue,1,KAYA,Sad,"이럴 수가... 약속한 돈을 모으지 못했군요."
+day7_fail_dialogue,2,KAYA,Sad,"유감이지만... 이 레스토랑은 이제 당신의 것이 아니에요."

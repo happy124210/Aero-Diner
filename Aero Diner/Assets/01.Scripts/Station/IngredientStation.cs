@@ -7,6 +7,7 @@ public class IngredientStation : MonoBehaviour, IInteractable, IMovableStation
 {
     public Transform GetTransform() => transform;
 
+    public StationData stationData;
     [Header("생성할 재료 SO")]
     public FoodData selectedIngredient;
 

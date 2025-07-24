@@ -12,7 +12,7 @@ public class PlacementManager : Singleton<PlacementManager>
 
     private void Update()
     {
-        UpdateStationPrefabFromTestInventory(); // 매 프레임 업데이트 가능, 추후 테스트후 최적화
+        //UpdateStationPrefabFromTestInventory(); // 매 프레임 업데이트 가능, 추후 테스트후 최적화
     }
 
     /// <summary>
@@ -73,22 +73,22 @@ public class PlacementManager : Singleton<PlacementManager>
         }
     }
 
-    /// <summary>
-    /// 테스트 인벤토리에서 Station 태그를 가진 오브젝트를 프리팹으로 등록
-    /// </summary>
-    private void UpdateStationPrefabFromTestInventory()
-    {
-        GameObject heldItem = testInventory.GetHeldItem();
+    ///// <summary>
+    ///// 테스트 인벤토리에서 Station 태그를 가진 오브젝트를 프리팹으로 등록
+    ///// </summary>
+    //private void UpdateStationPrefabFromTestInventory()
+    //{
+    //    GameObject heldItem = testInventory.GetHeldItem();
 
-        if (heldItem != null && heldItem.CompareTag("Station"))
-        {
-            stationPrefab = heldItem;
-        }
-        else
-        {
-            stationPrefab = null;
-        }
-    }
+    //    if (heldItem != null && heldItem.CompareTag("Station"))
+    //    {
+    //        stationPrefab = heldItem;
+    //    }
+    //    else
+    //    {
+    //        stationPrefab = null;
+    //    }
+    //}
 
 #if UNITY_EDITOR
     [SerializeField] public GameObject testTargetGridCell;

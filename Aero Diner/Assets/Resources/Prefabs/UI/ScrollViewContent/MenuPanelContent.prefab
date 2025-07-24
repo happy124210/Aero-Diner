@@ -260,6 +260,7 @@ GameObject:
   - component: {fileID: 8719216320609376301}
   - component: {fileID: 9033224624877919562}
   - component: {fileID: 5791137649495482260}
+  - component: {fileID: 8614949887642797208}
   m_Layer: 5
   m_Name: MenuPanelContent
   m_TagString: Untagged
@@ -340,10 +341,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 954e9ff392dd3654ea9caeb543639454, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  outline: {fileID: 8614949887642797208}
   iconImage: {fileID: 9112661578369700165}
   nameText: {fileID: 5508937744248133320}
   priceText: {fileID: 3456780245376107212}
   toggle: {fileID: 572905180499668985}
+--- !u!114 &8614949887642797208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3415938795095629806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
+  m_EffectDistance: {x: 5, y: -5}
+  m_UseGraphicAlpha: 1
 --- !u!1 &3442158601304387917
 GameObject:
   m_ObjectHideFlags: 0

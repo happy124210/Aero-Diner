@@ -97,7 +97,6 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     private void EndDayCycle(int earningsFromDay)
     {
-        AddMoney(earningsFromDay);
         IncreaseDay();
         SaveData();
         
@@ -112,7 +111,8 @@ public class GameManager : Singleton<GameManager>
     
     public void PauseGame()
     {
-        if (currentPhase == GamePhase.Paused) return;
+        if (currentPhase == GamePhase.Paused ||
+            currentPhase == GamePhase.Dialogue) return;
 
         // 현재 페이즈 기억
         previousPhase = currentPhase;
@@ -121,7 +121,9 @@ public class GameManager : Singleton<GameManager>
     
     public void ContinueGame()
     {
-        if (currentPhase != GamePhase.Paused) return;
+        if (currentPhase != GamePhase.Paused && 
+            currentPhase != GamePhase.Dialogue) return;
+        
         ChangePhase(previousPhase);
     }
     
@@ -129,7 +131,7 @@ public class GameManager : Singleton<GameManager>
     
     #region 데이터 관리 (돈, 날짜, 저장/불러오기)
 
-    private void AddMoney(int amount)
+    public void AddMoney(int amount)
     {
         totalEarnings += amount;
     }
@@ -180,11 +182,23 @@ public class GameManager : Singleton<GameManager>
         
         day = totalDays;
     }
+    private int backupEarningsBeforeDay = 0;
 
+    public void BackupEarningsBeforeDayStart()
+    {
+        backupEarningsBeforeDay = totalEarnings;
+    }
+    public void RestoreEarningsToBeforeDay()
+    {
+        totalEarnings = backupEarningsBeforeDay;
+
+        // UI 갱신도 함께
+        EventBus.Raise(UIEventType.UpdateTotalEarnings, totalEarnings);
+    }
     #endregion
-    
+
     #region Debug Commands
-#if UNITY_EDITOR  
+#if UNITY_EDITOR
     private void OnGUI()
     {
         if (!Application.isPlaying) return;
@@ -199,6 +213,39 @@ public class GameManager : Singleton<GameManager>
         if (GUILayout.Button("모든 메뉴 해금"))
         {
             MenuManager.Instance.UnlockAllMenus();
+        }
+        
+        if (GUILayout.Button("일차 스킵하기"))
+        {
+            IncreaseDay();
+            // TODO: 날짜 변경 호출
+        }
+        
+        if (GUILayout.Button("돈 1000원 추가"))
+        {
+            AddMoney(1000);
+            EventBus.Raise(UIEventType.UpdateTotalEarnings, totalEarnings);
+        }
+        
+        if (GUILayout.Button("돈 1000원 제거"))
+        {
+            AddMoney(-1000);
+            EventBus.Raise(UIEventType.UpdateTotalEarnings, totalEarnings);
+        }
+        
+        GUILayout.Space(20);
+        GUILayout.Label("=== Game Phase 변경 ===");
+
+        foreach (GamePhase phase in System.Enum.GetValues(typeof(GamePhase)))
+        {
+            GUI.enabled = (CurrentPhase != phase);
+        
+            if (GUILayout.Button(phase.ToString()))
+            {
+                ChangePhase(phase);
+            }
+            
+            GUI.enabled = true;
         }
         
         GUILayout.EndArea();
@@ -224,4 +271,5 @@ public enum GamePhase
     Dialogue,
     Paused,
     GameOver,
+    None,
 }

@@ -36,6 +36,7 @@ public class PlayerController : Singleton<PlayerController>
 
     public InteractionType interactionType;
     public IInteractable currentTarget;
+    private TilemapController tilemapController;
 
 
     protected override void Awake()
@@ -44,6 +45,11 @@ public class PlayerController : Singleton<PlayerController>
         rb = GetComponent<Rigidbody2D>();
         playerInventory = GetComponent<PlayerInventory>();
         animator = GetComponent<Animator>();
+    }
+
+    private void Start()
+    {
+        tilemapController = FindObjectOfType<TilemapController>();
     }
 
     private void OnEnable()
@@ -70,7 +76,8 @@ public class PlayerController : Singleton<PlayerController>
 
     private void Update()
     {
-        moveInput = moveActionRef.action.ReadValue<Vector2>();
+        bool canMove = GameManager.Instance.CurrentPhase is GamePhase.EditStation or GamePhase.Day or GamePhase.Operation;
+        moveInput = canMove ? moveActionRef.action.ReadValue<Vector2>() : Vector2.zero;
 
         Animate();
         UpdateItemSlotPosition();
@@ -103,7 +110,6 @@ public class PlayerController : Singleton<PlayerController>
             idleTimer = 0f;
         }
     }
-
     private void FixedUpdate()
     {
         rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
@@ -237,14 +243,23 @@ public class PlayerController : Singleton<PlayerController>
     {
         Vector2 origin = transform.position;
         Vector2 direction = lastMoveDir == Vector2.zero ? Vector2.down : lastMoveDir.normalized;
-        float distance = 2f; // 테스트용으로 일시 증가
+        float distance = 2f;
 
         var hit = CastSingle(origin, direction, distance, LayerMask.GetMask("IInteractable"));
         Debug.DrawRay(origin, direction * distance, Color.green);
 
+        // GridCell 감지됨
         if (hit.HasValue && hit.Value.collider.CompareTag("GridCell"))
         {
-            return hit.Value.collider.transform;
+            GameObject hitCell = hit.Value.collider.gameObject;
+
+            // 현재 선택된 셀과 다를 경우에만 갱신
+            if (tilemapController != null)
+            {
+                tilemapController.HighlightSelectedCell(hitCell);
+            }
+
+            return hitCell.transform;
         }
 
         return null;

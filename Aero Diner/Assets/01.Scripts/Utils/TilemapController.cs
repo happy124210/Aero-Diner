@@ -15,6 +15,9 @@ public class TilemapController : MonoBehaviour
     [SerializeField] private Material baseMaterial;
     [SerializeField] private Material placeableMaterial;
     [SerializeField] private Material notPlaceableMaterial;
+    [SerializeField] private Material selectMaterial;
+
+    private GameObject selectedCell;
 
     private void Awake()
     {
@@ -30,11 +33,11 @@ public class TilemapController : MonoBehaviour
     /// <summary>
     /// 자식 오브젝트 중 GridCell 태그를 가진 오브젝트를 모두 수집
     /// </summary>
-    private void FindGridCells()
+    public void FindGridCells()
     {
         gridCells.Clear();
 
-        foreach (Transform child in transform)
+        foreach (Transform child in GetComponentsInChildren<Transform>(true)) // true = 비활성화 포함
         {
             if (child.CompareTag("GridCell"))
             {
@@ -42,7 +45,7 @@ public class TilemapController : MonoBehaviour
             }
         }
 
-        if (showDebugInfo) Debug.Log($"GridCell {gridCells.Count}개를 찾았습니다.");
+        if (showDebugInfo) Debug.Log($"[TilemapController] GridCell {gridCells.Count}개를 찾았습니다.");
     }
 
     /// <summary>
@@ -74,14 +77,15 @@ public class TilemapController : MonoBehaviour
         {
             var sr = cell.GetComponent<SpriteRenderer>();
             if (sr != null)
-            {
                 sr.enabled = true;
 
-                if (baseMaterial != null)
-                    sr.material = baseMaterial;
+            var status = cell.GetComponent<GridCellStatus>();
+            if (status != null)
+            {
+                status.SetMaterials(placeableMaterial, notPlaceableMaterial, selectMaterial);
+                status.UpdateStatus();
             }
         }
-        UpdateGridCellStates();
     }
 
     /// <summary>
@@ -116,9 +120,27 @@ public class TilemapController : MonoBehaviour
             var status = cell.GetComponent<GridCellStatus>();
             if (status != null)
             {
-                status.SetMaterials(placeableMaterial, notPlaceableMaterial);
-                status.UpdateStatus();
+                bool isCurrentSelection = (cell == selectedCell);
+                status.SetSelected(isCurrentSelection);
             }
         }
+    }
+
+    public void HighlightSelectedCell(GameObject newSelection)
+    {
+        selectedCell = newSelection;
+        UpdateGridCellStates(); // 모든 셀 상태 갱신 (선택된 셀은 true, 나머지는 false)
+
+        if (showDebugInfo && selectedCell != null)
+            Debug.Log($"[TilemapController] 선택된 셀: {selectedCell.name}");
+    }
+
+    /// <summary>
+    /// 선택된 셀의 하이라이트를 제거하고 선택 상태를 해제
+    /// </summary>
+    public void ClearSelection()
+    {
+        selectedCell = null;
+        UpdateGridCellStates();
     }
 }

@@ -1,19 +1,63 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// GridCell의 상태를 판단하고 Sprite 및 Outline을 제어
 /// </summary>
 public class GridCellStatus : MonoBehaviour, IInteractable
 {
+    public List<GameObject> placementstations = new List<GameObject>();
+
     private SpriteRenderer sr;
     private OutlineShaderController outline;
+
     private Material placeableMaterial;
     private Material notPlaceableMaterial;
+    private Material selectMaterial;
+
+    private bool isSelected = false;
 
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
         outline = GetComponent<OutlineShaderController>();
+
+        FindPlacementstations();
+    }
+
+    /// <summary>
+    /// 자식 오브젝트 중 IMovableStation 인터페이스를 구현한 오브젝트를 모두 수집
+    /// </summary>
+    private void FindPlacementstations()
+    {
+        placementstations.Clear();
+        // 자식 오브젝트 중 IMovableStation 인터페이스를 구현한 것만 수집
+        foreach (Transform child in transform)
+        {
+            if (child.GetComponent<IMovableStation>() != null)
+            {
+                placementstations.Add(child.gameObject);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 머티리얼들을 설정
+    /// </summary>
+    public void SetMaterials(Material placeable, Material notPlaceable, Material select)
+    {
+        placeableMaterial = placeable;
+        notPlaceableMaterial = notPlaceable;
+        selectMaterial = select;
+    }
+
+    /// <summary>
+    /// 선택 상태를 설정, true면 selectMaterial을 적용
+    /// </summary>
+    public void SetSelected(bool selected)
+    {
+        isSelected = selected;
+        UpdateStatus();
     }
 
     /// <summary>
@@ -21,11 +65,19 @@ public class GridCellStatus : MonoBehaviour, IInteractable
     /// </summary>
     public void UpdateStatus()
     {
-        bool isPlaceable = !HasStation();
+        if (sr == null) return;
 
-        if (sr != null)
+        if (isSelected)
+        {
+            sr.sharedMaterial = selectMaterial;
+        }
+        else
+        {
+            bool isPlaceable = !HasStation();
             sr.sharedMaterial = isPlaceable ? placeableMaterial : notPlaceableMaterial;
+        }
 
+        // outline은 항상 허용
         outline?.EnableOutline();
     }
 

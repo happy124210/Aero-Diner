@@ -4,6 +4,7 @@ public class Trashcan : MonoBehaviour, IInteractable, IMovableStation
 
 {
     public Transform GetTransform() => transform;
+    public StationData stationData;
 
     private OutlineShaderController outline;
 

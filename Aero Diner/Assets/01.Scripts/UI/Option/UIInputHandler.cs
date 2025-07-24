@@ -24,12 +24,19 @@ public class UIInputHandler : MonoBehaviour
             }
             else
             {
-                // 옵션창 닫기
                 EventBus.Raise(UIEventType.CloseOption);
                 EventBus.Raise(UIEventType.CloseSound);
                 EventBus.Raise(UIEventType.CloseVideo);
                 EventBus.Raise(UIEventType.CloseControl);
             }
+        }
+        else if (tracker.IsInventoryOpen)
+        {
+            EventBus.Raise(UIEventType.HideInventory);
+        }
+        else if (tracker.IsStoreOpen)
+        {
+            EventBus.Raise(UIEventType.FadeOutStore);
         }
         else if (tracker.IsPauseOpen)
         {
@@ -47,13 +54,12 @@ public class UIInputHandler : MonoBehaviour
             }
         }
     }
-
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             EventBus.PlaySFX(SFXType.ButtonClick);
-            Debug.Log("ESC 눌렸음");
+            //Debug.Log("ESC 눌렸음");
             HandleEscapeLikeAction();
         }
     }

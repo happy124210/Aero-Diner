@@ -24,6 +24,8 @@ public enum GameEventType
 {
     GamePhaseChanged, // 게임 상태 변경
     RoundTimerEnded,  // 영업 시간 종료
+    DialogueEnded,
+    QuestStatusChanged,
 }
 
 public enum SFXType
@@ -73,7 +75,7 @@ public enum UIEventType
     
     //MainSceneUI
     ShowRoundTimer, HideRoundTimer,
-    UpdateEarnings,
+    UpdateTotalEarnings, UpdateTodayEarnings,
     ShowMenuPanel, UpdateMenuPanel, HideMenuPanel, 
     ShowResultPanel, HideResultPanel, 
     ShowOrderPanel, HideOrderPanel,
@@ -84,6 +86,10 @@ public enum UIEventType
     ShowQuestPanel,
     FadeInInventory, FadeInRecipeBook,
 
+    //store
+    FadeInStore, FadeOutStore,
+    ShowStationStore, ShowRecipeStore,
+    
     //Dialogue
     ShowDialogueLine, HideDialoguePanel,
     ShowDialoguePanel,
@@ -99,6 +105,7 @@ public static class EventBus
     private static AudioSource cookingLoopSource;
     public static event Action<SFXType> OnLoopSFXRequested;
     public static event Action<SFXType> OnStopLoopSFXRequested;
+    private static Dictionary<GameEventType, Action<object>> gameEventListeners = new();
 
     public static void PlaySFX(SFXType type)
     {
@@ -109,10 +116,15 @@ public static class EventBus
     {
         OnUIEvent?.Invoke(eventType, payload);
     }
-    
+
     public static void Raise(GameEventType eventType, object payload = null)
     {
         OnGameEvent?.Invoke(eventType, payload);
+
+        if (gameEventListeners.TryGetValue(eventType, out var callback))
+        {
+            callback.Invoke(payload);
+        }
     }
 
     public static void PlayBGM(BGMEventType type)
@@ -140,5 +152,22 @@ public static class EventBus
     public static void StopLoopSFX(SFXType type)
     {
         OnStopLoopSFXRequested?.Invoke(type);
+    }
+
+    public static void Register(GameEventType eventType, Action<object> listener)
+    {
+        if (!gameEventListeners.ContainsKey(eventType))
+        {
+            gameEventListeners[eventType] = delegate { };
+        }
+        gameEventListeners[eventType] += listener;
+    }
+
+    public static void Unregister(GameEventType eventType, Action<object> listener)
+    {
+        if (gameEventListeners.ContainsKey(eventType))
+        {
+            gameEventListeners[eventType] -= listener;
+        }
     }
 }

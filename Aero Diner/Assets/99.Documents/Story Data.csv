@@ -1,0 +1,8 @@
+id,triggerPhase,conditions,actions
+day1_intro,Day,Day;==;1,StartDialogue;day1_intro_dialogue
+day1_give_quest,None,DialogueEnded;==;day1_intro_dialogue,StartDialogue;day1_quest_dialogue
+day1_start_quest,None,DialogueEnded;==;day1_quest_dialogue,StartQuest;main_quest_01
+day7_check,Day,Day;==;7|QuestStatus;main_quest_01;==;InProgress,StartDialogue;day7_check_dialogue
+day7_evaluate,None,DialogueEnded;==;day7_check_dialogue,EvaluateQuest;main_quest_01
+day7_success,None,QuestStatus;main_quest_01;==;Completed,StartDialogue;day7_success_dialogue|LostMoney;10000
+day7_fail,None,QuestStatus;main_quest_01;==;Failed,StartDialogue;day7_fail_dialogue|GameOver;

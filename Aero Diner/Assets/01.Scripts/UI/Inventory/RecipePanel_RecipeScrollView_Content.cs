@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 
-public class RecipePanel_RecipeScrollView_Content : MonoBehaviour
+public class RecipePanel_RecipeScrollView_Content : BaseScrollViewItem
 {
     [SerializeField] private TMP_Text menuNameText;
     [SerializeField] private Button selectButton;
