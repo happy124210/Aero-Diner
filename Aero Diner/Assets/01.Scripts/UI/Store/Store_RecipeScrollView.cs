@@ -37,7 +37,6 @@ public class Store_RecipeScrollView : MonoBehaviour
             if (storeDataMap.TryGetValue(menu.foodData.id, out var csvData))
             {
                 var storeItem = new StoreItem(menu.foodData, csvData);
-                // 구매했는지 체크
                 storeItem.IsPurchased = IsAlreadyPurchased(storeItem);
                 recipeStoreItems.Add(storeItem);
             }
@@ -63,6 +62,7 @@ public class Store_RecipeScrollView : MonoBehaviour
         {
             // 구매한 레시피 제외
             if (item.IsPurchased) continue;
+            
             bool conditionsMet = AreConditionsMet(item);
             GameObject prefabToUse = conditionsMet ? unlockedMenuPrefab : lockedMenuPrefab;
 
@@ -87,7 +87,7 @@ public class Store_RecipeScrollView : MonoBehaviour
     }
     
     // 아이템 해금 조건 충족 여부 체크
-    private bool AreConditionsMet(StoreItem item)
+    public bool AreConditionsMet(StoreItem item)
     {
         // 해금 조건이 없으면 항상 true
         if (item.CsvData.Type == UnlockType.None)

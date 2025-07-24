@@ -28,13 +28,7 @@ public class Store : MonoBehaviour
     
     public void TryBuyItem(StoreItem item)
     {
-        if (item == null) return;
-
-        if (item.IsUnlocked)
-        {
-            Debug.LogWarning($"[Store] 이미 해금된 아이템: {item.DisplayName}");
-            return;
-        }
+        if (item == null || item.IsPurchased) return;
         
         if (GameManager.Instance.TotalEarnings >= item.Cost)
         {
@@ -53,9 +47,11 @@ public class Store : MonoBehaviour
                     break;
             }
             
-            Debug.Log($"구매 성공: {item.DisplayName}");
+            item.IsPurchased = true;
             
-            recipeScrollView.PopulateScrollView();
+            Debug.Log($"구매 성공: {item.DisplayName}");
+            recipeScrollView.InitializeAndPopulate();
+            
             // TODO: stationScrollView.PopulateScrollView();
         }
         else
