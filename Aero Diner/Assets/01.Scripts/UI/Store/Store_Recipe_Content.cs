@@ -9,17 +9,15 @@ public class Store_Recipe_Content : BaseScrollViewItem
     [SerializeField] private Button selectButton;
     [SerializeField] private Image resultIconImage;
 
-    private FoodData menuData;
-    public void Init(FoodData data, bool isUnlocked, Action<FoodData> onClick)
+    private StoreItem currentItem;
+
+    public void Init(StoreItem item, Action<StoreItem> onClick)
     {
-        menuData = data;
+        currentItem = item;
+        menuNameText.text = item.DisplayName;
+        resultIconImage.sprite = item.Icon;
 
-        menuNameText.text = data.displayName;
-        resultIconImage.sprite = data.foodIcon;
-
-        selectButton.interactable = true;
         selectButton.onClick.RemoveAllListeners();
-        selectButton.onClick.AddListener(() => onClick?.Invoke(menuData));
-
+        selectButton.onClick.AddListener(() => onClick?.Invoke(currentItem));
     }
 }
