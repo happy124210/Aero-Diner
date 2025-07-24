@@ -7,6 +7,7 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation, IMovableSt
 {
     public Transform GetTransform() => transform;
 
+    public StationData stationData;
     [Header("생성할 Food/Menu SO")]
     public FoodData currentData; // 선반에 올려진 음식 데이터
 
