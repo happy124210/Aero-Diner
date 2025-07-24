@@ -20,5 +20,4 @@ public class Station
 
     public string StationName => stationData?.displayName ?? "Unknown";
     public int Price => stationData?.stationCost ?? 0;
-    public bool CanServeToday => isUnlocked && isSelected;
 }

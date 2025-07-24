@@ -8,7 +8,7 @@ public class StationManager : Singleton<StationManager>
     private List<StationData> stationDataList = new List<StationData>();
     private List<Station> stationDatabase = new();                              // 전체 Station타입 스테이션 데이터 담음
 
-    public List<StationGroup> stationGroups = new List<StationGroup>();      // 각 GridCell 아래에 있는 Station 리스트
+    public List<StationGroup> stationGroups = new List<StationGroup>();         // 각 GridCell 아래에 있는 Station 리스트
 
     [SerializeField] private TilemapController tilemapController;
     [SerializeField] private List<GameObject> stationPrefabs = new();
@@ -27,18 +27,6 @@ public class StationManager : Singleton<StationManager>
     public int StorageGridCellStationCount;
 
     Dictionary<string, (int gridCellCount, int storageGridCellCount)> stationTypeCounts = new();
-
-
-    // Station 조회는 전부 id로 함
-    // 스테이션 조회하기
-    public Station FindStationById(string id) => stationDatabase.FirstOrDefault(m => m.stationData.id == id);
-
-    // 플레이어 해제 스테이션만 가져오기
-    public List<Station> GetUnlockedStations() => stationDatabase.Where(menu => menu.isUnlocked).ToList();
-
-    // 스테이션 조회
-    public List<Station> GetAllStations() => stationDatabase;
-    public string[] GetPlayerStationIds() => stationDatabase.Where(m => m.isUnlocked).Select(m => m.stationData.id).ToArray(); // 해금한 스테이션만
 
     protected override void Awake()
     {
@@ -103,11 +91,14 @@ public class StationManager : Singleton<StationManager>
         if (showDebugInfo) Debug.Log($"StationManager]: 전체 {stationDatabase.Count}개  데이터베이스 생성 완료");
     }
 
+    /// <summary>
+    /// 각 GridCell 타입별로 스테이션 개수를 세고 출력
+    /// </summary>
     public void CountStationsPerCellType()
     {
         if (tilemapController == null || stationGroups == null || tilemapController.gridCells.Count != stationGroups.Count)
         {
-            Debug.LogError("[StationManager] 데이터 정합성 오류: gridCell 개수와 stationGroup 개수가 맞지 않습니다.");
+            if (showDebugInfo) Debug.LogError("[StationManager] 데이터 정합성 오류: gridCell 개수와 stationGroup 개수가 맞지 않습니다.");
             return;
         }
 
