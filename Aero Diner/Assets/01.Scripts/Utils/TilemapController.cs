@@ -33,7 +33,7 @@ public class TilemapController : MonoBehaviour
     /// <summary>
     /// 자식 오브젝트 중 GridCell 태그를 가진 오브젝트를 모두 수집
     /// </summary>
-    private void FindGridCells()
+    public void FindGridCells()
     {
         gridCells.Clear();
 

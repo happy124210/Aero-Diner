@@ -10,6 +10,7 @@ public class SaveData
 
     //  메뉴 관련 정보
     public HashSet<string> menuDatabase;         // 해금된 메뉴 ID들 (중복 방지용)
+    public HashSet<string> stationDatabase;         // 해금된 스테이션 ID들 (중복 방지용)
 
     //  설정 정보 (기존 PlayerPrefs → 통합 저장)
     public float bgmVolume = 0.5f;
@@ -25,6 +26,7 @@ public class SaveData
     public SaveData()
     {
         menuDatabase = new HashSet<string>();
+        stationDatabase = new HashSet<string>();
         keyBindings = new Dictionary<string, string>();
     }
 }
