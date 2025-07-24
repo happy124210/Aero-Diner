@@ -26,7 +26,7 @@ public class RecipeManager : Singleton<RecipeManager>
     /// </summary>
     private void LoadFoodDatabase()
     {
-        FoodData[] allFoods = Resources.LoadAll<FoodData>("Datas/Food");
+        FoodData[] allFoods = Resources.LoadAll<FoodData>(StringPath.FOOD_DATA_PATH);
     
         FoodDatabase.Clear();
         foreach (var food in allFoods)
