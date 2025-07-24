@@ -121,7 +121,7 @@ public class GameManager : Singleton<GameManager>
     
     public void ContinueGame()
     {
-        if (currentPhase != GamePhase.Paused || 
+        if (currentPhase != GamePhase.Paused && 
             currentPhase != GamePhase.Dialogue) return;
         
         ChangePhase(previousPhase);
@@ -259,4 +259,5 @@ public enum GamePhase
     Dialogue,
     Paused,
     GameOver,
+    None,
 }
