@@ -15,7 +15,7 @@ public class StoreDataManager : Singleton<StoreDataManager>
     public void LoadStoreData(string path)
     {
         StoreItemMap = new Dictionary<string, StoreItemData>();
-        TextAsset csvFile = Resources.Load<TextAsset>(path);
+        TextAsset csvFile = Resources.Load<TextAsset>("Datas/Store/StoreData");
 
         if (csvFile == null)
         {
@@ -26,8 +26,11 @@ public class StoreDataManager : Singleton<StoreDataManager>
         string[] records = csvFile.text.Split('\n');
         for (int i = 1; i < records.Length; i++)
         {
-            string[] fields = records[i].Trim().Split(',');
-            if (fields.Length < 6) continue;
+            string trimmedRecord = records[i].Trim();
+            if (string.IsNullOrEmpty(trimmedRecord)) continue;
+
+            string[] fields = trimmedRecord.Split(',');
+            if (fields.Length < 5) continue;
 
             var itemData = new StoreItemData(fields);
             StoreItemMap[itemData.TargetID] = itemData;
