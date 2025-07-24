@@ -38,8 +38,8 @@ public class DaySceneUIHandler : IUIEventHandler
 
                     store?.Show();
                     ui?.GetComponentInChildren<IngredientPanel>(true)?.gameObject.SetActive(false);
-                    ui?.GetComponentInChildren<RecipePanel>(true)?.gameObject.SetActive(false);
-                    ui?.GetComponentInChildren<StationPanel>(true)?.gameObject.SetActive(true);
+                    ui?.GetComponentInChildren<RecipePanel>(true)?.gameObject.SetActive(true);
+                    ui?.GetComponentInChildren<StationPanel>(true)?.gameObject.SetActive(false);
 
                     tab?.RequestSelectTab(0);
                     tab?.ApplyTabSelectionVisuals();
@@ -53,8 +53,8 @@ public class DaySceneUIHandler : IUIEventHandler
 
                     store?.Hide();
                     ui?.GetComponentInChildren<IngredientPanel>(true)?.gameObject.SetActive(false);
-                    ui?.GetComponentInChildren<RecipePanel>(true)?.gameObject.SetActive(false);
-                    ui?.GetComponentInChildren<StationPanel>(true)?.gameObject.SetActive(true);
+                    ui?.GetComponentInChildren<RecipePanel>(true)?.gameObject.SetActive(true);
+                    ui?.GetComponentInChildren<StationPanel>(true)?.gameObject.SetActive(false);
 
                     tab?.RequestSelectTab(0);
                     tab?.ApplyTabSelectionVisuals();

@@ -27,7 +27,12 @@ public class Store : MonoBehaviour
         currentMoney.text = $"{currentDisplayAmount:N0} G";
         originalColor = currentMoney.color;
     }
-
+    private void OnEnable()
+    {
+        currentDisplayAmount = GameManager.Instance.TotalEarnings;
+        currentMoney.text = $"{currentDisplayAmount:N0} G";
+        EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
+    }
     public void TryBuyItem(StoreItem item)
     {
         if (item == null || item.IsPurchased) return;
@@ -129,7 +134,7 @@ public class Store : MonoBehaviour
         if (IsDebug)
             Debug.Log("버튼 클릭 됨");
         EventBus.PlaySFX(SFXType.ButtonClick);
-        tabController.RequestSelectTab(0);
+        tabController.RequestSelectTab(2);
         // EventBus.Raise(UIEventType.ShowInventory);
         // TODO: 아직 해금 안 됨 경고 팝업
     }
@@ -139,7 +144,7 @@ public class Store : MonoBehaviour
         if (IsDebug)
             Debug.Log("버튼 클릭 됨");
         EventBus.PlaySFX(SFXType.ButtonClick);
-        tabController.RequestSelectTab(1);
+        tabController.RequestSelectTab(0);
         // EventBus.Raise(UIEventType.ShowRecipeBook);
     }
     
@@ -148,7 +153,7 @@ public class Store : MonoBehaviour
         if (IsDebug)
             Debug.Log("버튼 클릭 됨");
         EventBus.PlaySFX(SFXType.ButtonClick);
-        tabController.RequestSelectTab(0);
+        tabController.RequestSelectTab(1);
         // EventBus.Raise(UIEventType.ShowStationPanel);
     }
     
