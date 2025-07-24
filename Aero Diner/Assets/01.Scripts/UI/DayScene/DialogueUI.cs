@@ -34,7 +34,16 @@ public class DialogueUI : MonoBehaviour
     {
         EventBus.OnUIEvent -= HandleUIEvent;
     }
+    private void Update()
+    {
+        if (!rootPanel.activeInHierarchy) return;
 
+        // nextButton이 깜빡이는 중일 때만 허용
+        if (nextButton.activeSelf && (Input.anyKeyDown || Input.GetMouseButtonDown(0)))
+        {
+            OnClickNext();
+        }
+    }
     private void HandleUIEvent(UIEventType type, object payload)
     {
         switch (type)

@@ -76,7 +76,8 @@ public class PlayerController : Singleton<PlayerController>
 
     private void Update()
     {
-        moveInput = moveActionRef.action.ReadValue<Vector2>();
+        bool canMove = GameManager.Instance.CurrentPhase is GamePhase.EditStation or GamePhase.Day or GamePhase.Operation;
+        moveInput = canMove ? moveActionRef.action.ReadValue<Vector2>() : Vector2.zero;
 
         Animate();
         UpdateItemSlotPosition();
@@ -109,7 +110,6 @@ public class PlayerController : Singleton<PlayerController>
             idleTimer = 0f;
         }
     }
-
     private void FixedUpdate()
     {
         rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
