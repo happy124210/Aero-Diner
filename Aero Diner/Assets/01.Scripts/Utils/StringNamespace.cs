@@ -9,9 +9,12 @@ public static class StringScene
 public static class StringPath
 {
     public const string CUSTOMER_PREFAB_PATH = "Prefabs/Characters/Customer";
+    
+    // Data Path
+    public const string FOOD_DATA_PATH = "Datas/Food";
+    public const string STATION_DATA_PATH = "Datas/Station";
     public const string CUSTOMER_DATA_PATH = "Datas/Customer";
-    
     public const string STORY_DATA_PATH = "Datas/Story";
-    
     public const string QUEST_DATA_PATH = "Datas/Quest";
+    public const string STORE_DATA_PATH = "Datas/Store";
 }

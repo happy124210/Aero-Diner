@@ -25,7 +25,7 @@ public class Inventory : MonoBehaviour
     }
     public void Hide()
     {
-        canvasGroup.DOFade(0f, 0.2f).SetEase(Ease.InQuad).OnComplete(() =>
+        canvasGroup.DOFade(0f, 0.2f).SetEase(Ease.InQuad).SetUpdate(true).OnComplete(() =>
         {
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;

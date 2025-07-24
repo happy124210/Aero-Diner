@@ -4962,6 +4962,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 321241236627500330, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 1998954262630406065, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
+      propertyPath: m_TagString
+      value: Station
+      objectReference: {fileID: 0}
     - target: {fileID: 2374614055684473981, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -5001,6 +5009,14 @@ PrefabInstance:
     - target: {fileID: 2374614055684473981, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2517521457546198952, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
+      propertyPath: m_TagString
+      value: Station
+      objectReference: {fileID: 0}
+    - target: {fileID: 5899850432123046740, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
+      propertyPath: m_TagString
+      value: Station
       objectReference: {fileID: 0}
     - target: {fileID: 7413637340875454940, guid: a4668bc3254ec3648b009a6fd133065f, type: 3}
       propertyPath: m_Name

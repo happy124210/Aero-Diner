@@ -97,7 +97,6 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     private void EndDayCycle(int earningsFromDay)
     {
-        AddMoney(earningsFromDay);
         IncreaseDay();
         SaveData();
         
@@ -183,11 +182,23 @@ public class GameManager : Singleton<GameManager>
         
         day = totalDays;
     }
+    private int backupEarningsBeforeDay = 0;
 
+    public void BackupEarningsBeforeDayStart()
+    {
+        backupEarningsBeforeDay = totalEarnings;
+    }
+    public void RestoreEarningsToBeforeDay()
+    {
+        totalEarnings = backupEarningsBeforeDay;
+
+        // UI 갱신도 함께
+        EventBus.Raise(UIEventType.UpdateTotalEarnings, totalEarnings);
+    }
     #endregion
-    
+
     #region Debug Commands
-#if UNITY_EDITOR  
+#if UNITY_EDITOR
     private void OnGUI()
     {
         if (!Application.isPlaying) return;
@@ -213,13 +224,13 @@ public class GameManager : Singleton<GameManager>
         if (GUILayout.Button("돈 1000원 추가"))
         {
             AddMoney(1000);
-            EventBus.Raise(UIEventType.UpdateEarnings, totalEarnings);
+            EventBus.Raise(UIEventType.UpdateTotalEarnings, totalEarnings);
         }
         
         if (GUILayout.Button("돈 1000원 제거"))
         {
             AddMoney(-1000);
-            EventBus.Raise(UIEventType.UpdateEarnings, totalEarnings);
+            EventBus.Raise(UIEventType.UpdateTotalEarnings, totalEarnings);
         }
         
         GUILayout.Space(20);

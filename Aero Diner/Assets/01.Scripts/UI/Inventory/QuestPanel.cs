@@ -1,27 +1,38 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
+using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.UI; 
 
 public class QuestPanel : MonoBehaviour
 {
+    [Header("탭 및 패널")]
     [SerializeField] private TabController tabController;
-    [SerializeField] private GameObject doingScrollView;
-    [SerializeField] private GameObject completeScrollView;
-    public bool IsDebug = false;
 
-     private void Awake()
-    {
-        if (tabController == null)
-            tabController = GetComponentInChildren<TabController>();
-    }
+    [Header("ScrollView Content 부모")]
+    [SerializeField] private Transform doingContent;
+    [SerializeField] private Transform completeContent;
+
+    [Header("리스트 아이템 프리팹")]
+    [SerializeField] private GameObject questListItemPrefab;
+
+    [Header("퀘스트 상세정보")]
+    [SerializeField] private TMP_Text questNameText;
+    [SerializeField] private TMP_Text descriptionText;
+    [SerializeField] private TMP_Text rewardText;
+    [SerializeField] private Transform objectivesContainer;
+    [SerializeField] private GameObject objectiveTextPrefab;
+
+    public bool IsDebug = false;
 
     private void OnEnable()
     {
-        doingScrollView.SetActive(true);
-        completeScrollView.SetActive(false);
-        tabController.RequestSelectTab(0);
+        if (tabController == null)
+            tabController = GetComponentInChildren<TabController>();
+
+        tabController.RequestSelectTab(0, true); // 첫 번째 탭 선택
         tabController.ApplyTabSelectionVisuals();
+        RefreshQuestLists();
     }
     #region 버튼메서드
     public void OnClickDoningBtn()
@@ -30,9 +41,8 @@ public class QuestPanel : MonoBehaviour
             Debug.Log("버튼 클릭 됨");
         EventBus.PlaySFX(SFXType.ButtonClick);
         tabController.RequestSelectTab(0);
-        doingScrollView.SetActive(true);
-        completeScrollView.SetActive(false);
         tabController.ApplyTabSelectionVisuals();
+        RefreshQuestLists();
     }
     public void OnClickCompleteBtn()
     {
@@ -40,9 +50,76 @@ public class QuestPanel : MonoBehaviour
             Debug.Log("버튼 클릭 됨");
         EventBus.PlaySFX(SFXType.ButtonClick);
         tabController.RequestSelectTab(1);
-        doingScrollView.SetActive(false);
-        completeScrollView.SetActive(true);
         tabController.ApplyTabSelectionVisuals();
+        RefreshQuestLists();
+    }
+    #endregion
+    private void RefreshQuestLists()
+    {
+        ClearChildren(doingContent);
+        ClearChildren(completeContent);
+
+        var doingQuests = QuestManager.Instance.GetInProgressQuests();
+        var completeQuests = QuestManager.Instance.GetCompletedQuests();
+
+        foreach (var quest in doingQuests)
+        {
+            CreateQuestListItem(quest, doingContent);
+        }
+
+        foreach (var quest in completeQuests)
+        {
+            CreateQuestListItem(quest, completeContent);
+        }
+
+        ShowQuestDetail(null); // 상세 패널 초기화
+    }
+    private void CreateQuestListItem(QuestData questData, Transform parent)
+    {
+        GameObject go = Instantiate(questListItemPrefab, parent);
+        var item = go.GetComponent<Quest_ScrollView_Content>();
+        item.SetData(questData);
+        item.OnClicked = () => ShowQuestDetail(questData);
+    }
+    private void ShowQuestDetail(QuestData quest)
+    {
+        // 초기화 시 호출되는 경우
+        if (quest == null)
+        {
+            questNameText.text = "";
+            descriptionText.text = "";
+            rewardText.text = "";
+            ClearChildren(objectivesContainer);
+            return;
+        }
+
+        // 실제 데이터 바인딩
+        questNameText.text = quest.questName;
+        descriptionText.text = quest.description;
+        rewardText.text = $"보상: {quest.rewardDescription} ({quest.rewardMoney}G)";
+
+        ClearChildren(objectivesContainer);
+
+        foreach (var obj in quest.objectives)
+        {
+            var txt = Instantiate(objectiveTextPrefab, objectivesContainer).GetComponent<TMP_Text>();
+            txt.text = $"• {obj.objectiveType} {obj.targetId} x{obj.requiredAmount}";
+        }
+    }
+    private void ClearChildren(Transform container)
+    {
+        if (container == null) return;
+
+        foreach (Transform child in container)
+        {
+            if (child == null) continue;
+
+            UnityEngine.UI.Button btn = child.GetComponentInChildren<UnityEngine.UI.Button>();
+            if (btn != null)
+                btn.onClick.RemoveAllListeners();
+
+            Destroy(child.gameObject);
+        }
     }
 }
-#endregion
+
