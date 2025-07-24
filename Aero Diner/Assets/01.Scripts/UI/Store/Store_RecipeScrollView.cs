@@ -5,60 +5,114 @@ using UnityEngine;
 
 public class Store_RecipeScrollView : MonoBehaviour
 {
+    [SerializeField] private Store store;
+    
     [SerializeField] private RectTransform contentTransform;
     [SerializeField] private GameObject lockedMenuPrefab;
     [SerializeField] private GameObject unlockedMenuPrefab;
     [SerializeField] private Store_RecipePanel detailPanel;
-    [SerializeField] private Store store;
     [SerializeField] private GameObject lockedPanel;
 
+    private List<StoreItem> recipeStoreItems = new ();
+    
     private void Awake()
     {
-        if (store == null)
-            store = FindObjectOfType<Store>();
+        if (store == null) store = FindObjectOfType<Store>();
     }
+    
     void Start()
     {
-        PopulateMenuList();
+        InitializeAndPopulate();
     }
 
-    public void PopulateMenuList()
+    public void InitializeAndPopulate()
     {
-        var allMenus = MenuManager.Instance.GetAllMenus()
-            .OrderBy(menu => {
-                string numPart = new string(menu.foodData.id.Where(char.IsDigit).ToArray());
-                return int.TryParse(numPart, out int n) ? n : int.MaxValue;
-            }).ToList();
+        recipeStoreItems.Clear();
+        var allMenus = MenuManager.Instance.GetAllMenus();
+        var storeDataMap = StoreDataManager.Instance.StoreItemMap;
 
+        // SO 데이터와 CSV 데이터를 조합해서 StoreItem 리스트 생성
         foreach (var menu in allMenus)
         {
-            var prefab = menu.isUnlocked ? unlockedMenuPrefab : lockedMenuPrefab;
-            var go = Instantiate(prefab, contentTransform);
-            var slot = go.GetComponent<Store_Recipe_Content>();
-
-            slot.Init(menu.foodData, menu.isUnlocked, OnMenuSelected);
+            if (storeDataMap.TryGetValue(menu.foodData.id, out var csvData))
+            {
+                var storeItem = new StoreItem(menu.foodData, csvData);
+                storeItem.IsPurchased = IsAlreadyPurchased(storeItem);
+                recipeStoreItems.Add(storeItem);
+            }
         }
-
-        // 첫 해금 메뉴 자동 선택
-        var firstUnlocked = allMenus.FirstOrDefault(m => m.isUnlocked);
-        if (firstUnlocked != null)
-        {
-            OnMenuSelected(firstUnlocked.foodData);
-        }
+        
+        // 정렬
+        recipeStoreItems = recipeStoreItems.OrderBy(item => {
+            string numPart = new string(item.ID.Where(char.IsDigit).ToArray());
+            return int.TryParse(numPart, out int n) ? n : int.MaxValue;
+        }).ToList();
+        
+        PopulateScrollView();
     }
-
-    private void OnMenuSelected(FoodData menuData)
+    
+    public void PopulateScrollView()
     {
-        var menu = MenuManager.Instance.FindMenuById(menuData.id);
+        foreach (Transform child in contentTransform)
+        {
+            Destroy(child.gameObject);
+        }
 
-        EventBus.PlaySFX(SFXType.ButtonClick);
+        foreach (var item in recipeStoreItems)
+        {
+            // 구매한 레시피 제외
+            if (item.IsPurchased) continue;
+            
+            bool conditionsMet = AreConditionsMet(item);
+            GameObject prefabToUse = conditionsMet ? unlockedMenuPrefab : lockedMenuPrefab;
 
-        // 메뉴 정보는 항상 표시
-        detailPanel.SetData(menuData, store.TryBuyMenu);
+            var go = Instantiate(prefabToUse, contentTransform);
+            var slot = go.GetComponent<Store_Recipe_Content>();
+            slot.Init(item, OnItemSelected);
+        }
 
-        // 해금 여부에 따라 가림막 토글
-        bool isLocked = menu != null && !menu.isUnlocked;
-        detailPanel.SetLockedOverlayVisible(isLocked);
+        // 첫 번째 아이템 자동 선택
+        var firstItem = recipeStoreItems.FirstOrDefault(i => !i.IsPurchased);
+        if (firstItem != null)
+        {
+            OnItemSelected(firstItem);
+        }
+    }
+    
+    // 구매했는지 체크
+    private bool IsAlreadyPurchased(StoreItem item)
+    {
+        var menu = MenuManager.Instance.FindMenuById(item.ID);
+        return menu != null && menu.isUnlocked;
+    }
+    
+    // 아이템 해금 조건 충족 여부 체크
+    public bool AreConditionsMet(StoreItem item)
+    {
+        // 해금 조건이 없으면 항상 true
+        if (item.CsvData.Type == UnlockType.None)
+        {
+            return true;
+        }
+        
+        switch (item.CsvData.Type)
+        {
+            case UnlockType.Quest:
+                // TODO : 퀘스트 체크
+                return true;
+            case UnlockType.Recipe:
+                return item.CsvData.Conditions.All(recipeId => MenuManager.Instance.FindMenuById(recipeId).isUnlocked);
+        }
+
+        return false;
     }
 
+
+    // 아이템 선택 시 상세 정보 패널 업데이트
+    private void OnItemSelected(StoreItem item)
+    {
+        EventBus.PlaySFX(SFXType.ButtonClick);
+        bool canBePurchased = AreConditionsMet(item);
+        detailPanel.SetData(item, () => store.TryBuyItem(item), canBePurchased);
+    }
 }

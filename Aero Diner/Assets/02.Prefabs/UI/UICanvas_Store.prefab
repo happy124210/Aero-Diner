@@ -331,11 +331,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tabController: {fileID: 7775054296868383342}
-  IsDebug: 0
   canvasGroup: {fileID: 7672746444911342660}
-  curruntMoney: {fileID: 2801729263301375653}
+  currentMoney: {fileID: 2801729263301375653}
   insufficientMoneyPanel: {fileID: 236839856311816422}
   recipeScrollView: {fileID: 4259916578693060004}
+  IsDebug: 0
 --- !u!1 &236839856311816422
 GameObject:
   m_ObjectHideFlags: 0
@@ -1753,11 +1753,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6e646e18608d74428265169c365279d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  store: {fileID: 0}
   contentTransform: {fileID: 1669682689332879588}
   lockedMenuPrefab: {fileID: 5703386257619053623, guid: b8dd0bc55b111f741aeb882c47181180, type: 3}
   unlockedMenuPrefab: {fileID: 3979155822031108023, guid: f35685f990ff946468799a8b22070c9e, type: 3}
   detailPanel: {fileID: 934048817996909915}
-  store: {fileID: 0}
   lockedPanel: {fileID: 0}
 --- !u!1 &1761936053576803171
 GameObject:

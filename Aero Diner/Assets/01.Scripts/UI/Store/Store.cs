@@ -1,58 +1,67 @@
 ﻿using DG.Tweening;
-using System.Reflection;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Store : MonoBehaviour
 {
-    [SerializeField] public TabController tabController;
-    public bool IsDebug = false;
+    [SerializeField] private TabController tabController;
     [SerializeField] private CanvasGroup canvasGroup;
-    [SerializeField] private TextMeshProUGUI curruntMoney;
+    [SerializeField] private TextMeshProUGUI currentMoney;
     [SerializeField] private GameObject insufficientMoneyPanel;
     [SerializeField] private Store_RecipeScrollView recipeScrollView;
+    //TODO: StationScrollView
+    
+    [Header("Debug Info")]
+    [SerializeField] private bool IsDebug = false;
+    
     private void Awake()
     {
         if (tabController == null)
             tabController = GetComponentInChildren<TabController>();
-        curruntMoney.text = GameManager.Instance.TotalEarnings.ToString();
+        currentMoney.text = GameManager.Instance.TotalEarnings.ToString();
     }
+    
     private void Update()
     {
-        curruntMoney.text = $"{GameManager.Instance.TotalEarnings.ToString()} G";
+        currentMoney.text = $"{GameManager.Instance.TotalEarnings.ToString()} G";
     }
-    public void TryBuyMenu(FoodData data)
+    
+    public void TryBuyItem(StoreItem item)
     {
-        var menu = MenuManager.Instance.FindMenuById(data.id);
-        if (menu != null && menu.isUnlocked)
+        if (item == null || item.IsPurchased) return;
+        
+        if (GameManager.Instance.TotalEarnings >= item.Cost)
         {
-            Debug.LogWarning($"[Store] 이미 해금된 메뉴입니다: {data.displayName}");
-            return; // 🔒 중복 구매 차단
-        }
+            GameManager.Instance.AddMoney(-item.Cost);
 
-        var price = data.foodCost;
-        int currentMoney = GameManager.Instance.TotalEarnings;
-
-        if (currentMoney >= price)
-        {
-            // 돈 차감
-            typeof(GameManager).GetMethod("AddMoney", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?.Invoke(GameManager.Instance, new object[] { -price });
-
-            // 해금
-            MenuManager.Instance.UnlockMenu(data.id);
-            MenuManager.Instance.SaveMenuDatabase();
-
-            // UI 갱신
-            recipeScrollView.PopulateMenuList();
+            switch (item.BaseData)
+            {
+                // 레시피
+                case FoodData:
+                    MenuManager.Instance.UnlockMenu(item.ID);
+                    break;
+                
+                // 설비
+                case StationData:
+                    // TODO: 설비 추가 로직
+                    break;
+            }
+            
+            item.IsPurchased = true;
+            
+            Debug.Log($"구매 성공: {item.DisplayName}");
+            recipeScrollView.InitializeAndPopulate();
+            
+            // TODO: stationScrollView.PopulateScrollView();
         }
         else
         {
             ShowInsufficientMoneyPanel();
         }
     }
-
+    
+    #region 두트윈 메서드
+    
     private void ShowInsufficientMoneyPanel()
     {
         var group = insufficientMoneyPanel.GetComponent<CanvasGroup>();
@@ -64,11 +73,11 @@ public class Store : MonoBehaviour
 
         Sequence seq = DOTween.Sequence();
         seq.Append(group.DOFade(1, 0.5f))
-           .AppendInterval(1.2f)
-           .Append(group.DOFade(0, 0.5f))
-           .OnComplete(() => insufficientMoneyPanel.SetActive(false));
+            .AppendInterval(1.2f)
+            .Append(group.DOFade(0, 0.5f))
+            .OnComplete(() => insufficientMoneyPanel.SetActive(false));
     }
-    #region 두트윈 메서드
+    
     public void Show()
     {
         gameObject.SetActive(true);
@@ -78,6 +87,7 @@ public class Store : MonoBehaviour
 
         canvasGroup.DOFade(1f, 0.3f).SetEase(Ease.OutQuad);
     }
+    
     public void Hide()
     {
         canvasGroup.DOFade(0f, 0.2f).SetEase(Ease.InQuad).OnComplete(() =>
@@ -88,6 +98,7 @@ public class Store : MonoBehaviour
         });
     }
     #endregion
+    
     #region 버튼 메서드
     public void OnIngredientTabClick()
     {
@@ -96,7 +107,9 @@ public class Store : MonoBehaviour
         EventBus.PlaySFX(SFXType.ButtonClick);
         tabController.RequestSelectTab(0);
         // EventBus.Raise(UIEventType.ShowInventory);
+        // TODO: 아직 해금 안 됨 경고 팝업
     }
+    
     public void OnRecipeTabClick()
     {
         if (IsDebug)
@@ -105,6 +118,7 @@ public class Store : MonoBehaviour
         tabController.RequestSelectTab(1);
         // EventBus.Raise(UIEventType.ShowRecipeBook);
     }
+    
     public void OnStationTabClick()
     {
         if (IsDebug)
@@ -113,18 +127,12 @@ public class Store : MonoBehaviour
         tabController.RequestSelectTab(0);
         // EventBus.Raise(UIEventType.ShowStationPanel);
     }
-    public void OnQuestTabClick()
-    {
-        if (IsDebug)
-            Debug.Log("버튼 클릭 됨");
-        EventBus.PlaySFX(SFXType.ButtonClick);
-        tabController.RequestSelectTab(3);
-        //  EventBus.Raise(UIEventType.ShowQuestPanel);
-    }
+    
     public void OnCloseButtonClick()
     {
         EventBus.PlaySFX(SFXType.ButtonClick);
         EventBus.Raise(UIEventType.FadeOutStore);
     }
+    
+    #endregion
 }
-#endregion

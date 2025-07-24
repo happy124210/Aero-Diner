@@ -12,23 +12,33 @@ public class Store_RecipePanel : MonoBehaviour
     [SerializeField] private TMP_Text saleText;
     [SerializeField] private Button buyButton;
     [SerializeField] private GameObject lockedOverlayPanel;
-    private FoodData current;
+    
+    private StoreItem currentItem;
 
-    public void SetData(FoodData data, Action<FoodData> onBuyClick)
+    public void SetData(StoreItem item, Action onBuyClick, bool canBePurchased)
     {
-        if (data == null) return;
-        current = data;
+        if (item == null) return;
+        currentItem = item;
 
-        menuIcon.sprite = data.foodIcon;
-        menuNameText.text = data.displayName;
-        menuDescriptionText.text = data.description;
-        saleText.text = $"{data.foodCost} G";
+        menuIcon.sprite = item.Icon;
+        menuNameText.text = item.DisplayName;
+        saleText.text = $"{item.Cost} G";
+        
+        menuDescriptionText.text = canBePurchased 
+            ? item.Description 
+            : StoreDataManager.Instance.GenerateUnlockDescription(item.CsvData);
+
+        buyButton.interactable = canBePurchased;
+        SetLockedOverlayVisible(!canBePurchased);
 
         buyButton.onClick.RemoveAllListeners();
-        buyButton.onClick.AddListener(() => { EventBus.PlaySFX(SFXType.ButtonClick); onBuyClick?.Invoke(data); });
+        buyButton.onClick.AddListener(() => {
+            EventBus.PlaySFX(SFXType.ButtonClick);
+            onBuyClick?.Invoke();
+        });
     }
 
-        public void SetLockedOverlayVisible(bool isVisible)
+    public void SetLockedOverlayVisible(bool isVisible)
     {
         if (lockedOverlayPanel == null) return;
 
