@@ -5,9 +5,7 @@ using UnityEngine;
 
 public class StationManager : Singleton<StationManager>
 {
-    private List<StationData> stationDataList = new List<StationData>();
-    private List<Station> stationDatabase = new();                              // 전체 Station타입 스테이션 데이터 담음
-
+    public Dictionary<string, StationData> StationDatabase { get; private set; } = new (); // 전체 Station타입 스테이션 데이터 담음
     public List<StationGroup> stationGroups = new List<StationGroup>();         // 각 GridCell 아래에 있는 Station 리스트
 
     [SerializeField] private TilemapController tilemapController;
@@ -15,7 +13,7 @@ public class StationManager : Singleton<StationManager>
 
     [Header("디버깅")]
     [SerializeField] private bool showDebugInfo;
-
+    
     [System.Serializable]
     public class StationGroup
     {
@@ -81,14 +79,18 @@ public class StationManager : Singleton<StationManager>
     /// </summary>
     private void InitializeStationDatabase()
     {
-        stationDatabase.Clear();
-
-        foreach (var data in stationDataList)
+        StationData[] allStations = Resources.LoadAll<StationData>(StringPath.STATION_DATA_PATH);
+    
+        StationDatabase.Clear();
+        foreach (var station in allStations)
         {
-            stationDatabase.Add(new Station(data));
+            if (!string.IsNullOrEmpty(station.id))
+            {
+                StationDatabase[station.id] = station;
+            }
         }
 
-        if (showDebugInfo) Debug.Log($"StationManager]: 전체 {stationDatabase.Count}개  데이터베이스 생성 완료");
+        if (showDebugInfo) Debug.Log($"StationManager]: 전체 {StationDatabase.Count}개  데이터베이스 생성 완료");
     }
 
     /// <summary>
@@ -117,7 +119,7 @@ public class StationManager : Singleton<StationManager>
 
             foreach (var station in group.stations)
             {
-                string stationType = station.name; // 또는 station.GetComponent<Station>().stationData.id 같은 방식
+                string stationType = station.name;
 
                 // 스테이션 개수 카운트
                 TotalStationCount++;
@@ -153,7 +155,7 @@ public class StationManager : Singleton<StationManager>
     /// <summary>
     /// 보관장소에 스테이션 생성
     /// </summary>
-    private void CreateStationInStorage(Station station)
+    private void CreateStationInStorage(string id)
     {
         // 상점에서 구매한 스테이션의 정보(스테이션의 아이디)
         // 스테이션 프리팹을 찾아서 생성 - 스테이션 아이디로 프리팹 찾기(스테이션 프리팹은 StationData의 SO데이터를 가지고 있음)

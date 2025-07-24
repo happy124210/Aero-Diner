@@ -87,14 +87,14 @@ GameObject:
   - component: {fileID: 1832410205714814464}
   - component: {fileID: 3581597612377861997}
   - component: {fileID: 1087276300384502140}
-  - component: {fileID: 5447106356198067271}
+  - component: {fileID: 2405204455144757038}
   m_Layer: 5
   m_Name: Group_StationPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1832410205714814464
 RectTransform:
   m_ObjectHideFlags: 0
@@ -158,7 +158,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5447106356198067271
+--- !u!114 &2405204455144757038
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -167,13 +167,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 104241879211592963}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63d0249f524678b449c1374c0b935509, type: 3}
+  m_Script: {fileID: 11500000, guid: 67e4498517eba1d409ca7b1eeae399dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   stationIconImage: {fileID: 7154375326598485497}
   stationNameText: {fileID: 8775048455424439957}
   descriptionText: {fileID: 4851453532430892543}
   costText: {fileID: 8787776400735708249}
+  buyButton: {fileID: 4019217897929127176}
+  lockedOverlayPanel: {fileID: 7083783968728111583}
 --- !u!1 &113634497301480598
 GameObject:
   m_ObjectHideFlags: 0
@@ -331,10 +333,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tabController: {fileID: 7775054296868383342}
+  recipeScrollView: {fileID: 4259916578693060004}
+  stationScrollView: {fileID: 8518808921357610731}
   canvasGroup: {fileID: 7672746444911342660}
   currentMoney: {fileID: 2801729263301375653}
   insufficientMoneyPanel: {fileID: 236839856311816422}
-  recipeScrollView: {fileID: 4259916578693060004}
   animateDuration: 0.5
   flashColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   IsDebug: 0
@@ -1755,7 +1758,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6e646e18608d74428265169c365279d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  store: {fileID: 0}
+  store: {fileID: 2316680015733774010}
   contentTransform: {fileID: 1669682689332879588}
   lockedMenuPrefab: {fileID: 5703386257619053623, guid: b8dd0bc55b111f741aeb882c47181180, type: 3}
   unlockedMenuPrefab: {fileID: 3979155822031108023, guid: f35685f990ff946468799a8b22070c9e, type: 3}
@@ -3002,9 +3005,9 @@ RectTransform:
   m_Father: {fileID: 7152782033277776604}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -17, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &8013523039289365071
 CanvasRenderer:
@@ -3363,7 +3366,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3161494588396160658
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4709,7 +4712,7 @@ RectTransform:
   m_Father: {fileID: 3641312271349891936}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5288,9 +5291,9 @@ RectTransform:
   m_Father: {fileID: 7612074095553309448}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -17, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &2873280920104234525
 CanvasRenderer:
@@ -6199,7 +6202,7 @@ GameObject:
   - component: {fileID: 3353303725850567175}
   - component: {fileID: 3363994994626609513}
   - component: {fileID: 4331300792729895809}
-  - component: {fileID: 4183820311927395913}
+  - component: {fileID: 8518808921357610731}
   m_Layer: 5
   m_Name: ScrollView_StationList
   m_TagString: Untagged
@@ -6309,7 +6312,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &4183820311927395913
+--- !u!114 &8518808921357610731
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6318,12 +6321,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 5700022319039312359}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0d67a1b1f0a88247adf9a076dec4c24, type: 3}
+  m_Script: {fileID: 11500000, guid: d3f743537c01395459d7bca302611724, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   contentTransform: {fileID: 2897999943207470876}
-  slotPrefab: {fileID: 8199854488552212716, guid: de2d47a7bd35919448bfb4271d752c82, type: 3}
-  detailPanel: {fileID: 5447106356198067271}
+  detailPanel: {fileID: 2405204455144757038}
+  lockedSlotPrefab: {fileID: 5703386257619053623, guid: 09cdcdcd7e0dd4a4b8ebafb2d0fad08e, type: 3}
+  unlockedSlotPrefab: {fileID: 3979155822031108023, guid: d892616fc0dc8604993b326718bbe621, type: 3}
+  store: {fileID: 2316680015733774010}
 --- !u!1 &5741081581599688286
 GameObject:
   m_ObjectHideFlags: 0
@@ -8647,7 +8652,7 @@ RectTransform:
   m_Father: {fileID: 9196531732246845628}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}

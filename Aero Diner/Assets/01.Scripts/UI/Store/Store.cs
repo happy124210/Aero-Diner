@@ -4,17 +4,22 @@ using UnityEngine;
 
 public class Store : MonoBehaviour
 {
+    [Header("")]
     [SerializeField] private TabController tabController;
+    [SerializeField] private Store_RecipeScrollView recipeScrollView;
+    [SerializeField] private Store_StationScrollView stationScrollView;
+    
+    [Header("")]
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private TextMeshProUGUI currentMoney;
     [SerializeField] private GameObject insufficientMoneyPanel;
-    [SerializeField] private Store_RecipeScrollView recipeScrollView;
-    private int currentDisplayAmount;
-    private Color originalColor;
+    
+    [Header("DOTween 설정")]
     [SerializeField] private float animateDuration = 0.5f;
     [SerializeField] private Color flashColor = Color.yellow;
-    //TODO: StationScrollView
-
+    private int currentDisplayAmount;
+    private Color originalColor;
+    
     [Header("Debug Info")]
     [SerializeField] private bool IsDebug = false;
 
@@ -27,12 +32,14 @@ public class Store : MonoBehaviour
         currentMoney.text = $"{currentDisplayAmount:N0} G";
         originalColor = currentMoney.color;
     }
+    
     private void OnEnable()
     {
         currentDisplayAmount = GameManager.Instance.TotalEarnings;
         currentMoney.text = $"{currentDisplayAmount:N0} G";
         EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
     }
+    
     public void TryBuyItem(StoreItem item)
     {
         if (item == null || item.IsPurchased) return;
@@ -40,7 +47,6 @@ public class Store : MonoBehaviour
         if (GameManager.Instance.TotalEarnings >= item.Cost)
         {
             GameManager.Instance.AddMoney(-item.Cost);
-            //재화 업데이트 애니메이션
             AnimateStoreMoney(GameManager.Instance.TotalEarnings);
             EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
             
@@ -53,7 +59,7 @@ public class Store : MonoBehaviour
                 
                 // 설비
                 case StationData:
-                    // TODO: 설비 추가 로직
+                    //StationManager.Instance.CreateStationInStorage(item.ID)
                     break;
             }
             
@@ -61,8 +67,7 @@ public class Store : MonoBehaviour
             
             Debug.Log($"구매 성공: {item.DisplayName}");
             recipeScrollView.InitializeAndPopulate();
-            
-            // TODO: stationScrollView.PopulateScrollView();
+            stationScrollView.InitializeAndPopulate();
         }
         else
         {
