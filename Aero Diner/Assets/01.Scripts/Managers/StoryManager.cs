@@ -108,6 +108,24 @@ public class StoryManager : Singleton<StoryManager>
         }
     }
     
+    // 특정 페이즈에서 스토리 있는지
+    public bool HasTriggerableStories(GamePhase triggerPhase)
+    {
+        foreach (var story in storyDatabase)
+        {
+            if (executedStoryIds.Contains(story.id)) continue;
+            
+            if (story.triggerPhase == triggerPhase && AreConditionsMet(story.conditions))
+            {
+                if (showDebugInfo) Debug.Log($"[StoryManager] '{triggerPhase}'에 스토리 있음: {story.id}");
+                return true;
+            }
+        }
+
+        // 모든 스토리를 확인했지만 실행할 스토리가 없는 경우
+        return false;
+    }
+    
     /// <summary>
     /// 조건 체크 
     /// </summary>
