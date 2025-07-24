@@ -15,13 +15,7 @@ public class MainSceneUIHandler : IUIEventHandler
     {
         switch (type)
         {
-            case UIEventType.UpdateTotalEarnings:
-                foreach (var ui in sceneUIs)
-                {
-                    var ed = ui?.GetComponentInChildren<EarningsDisplay>(true);
-                    ed?.AnimateEarnings((int)payload);
-                }
-                return true;
+
 
             case UIEventType.UpdateTodayEarnings:
                 foreach (var ui in sceneUIs)

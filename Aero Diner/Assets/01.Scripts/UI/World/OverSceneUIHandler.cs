@@ -158,6 +158,13 @@ public class OverSceneUIHandler : IUIEventHandler
                         break;
                     }
                 } return true;
+            case UIEventType.UpdateTotalEarnings:
+                foreach (var ui in sceneUIs)
+                {
+                    var ed = ui?.GetComponentInChildren<EarningsDisplay>(true);
+                    ed?.AnimateEarnings((int)payload);
+                }
+                return true;
         }
         return false;
     }
