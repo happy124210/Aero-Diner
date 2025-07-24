@@ -9,23 +9,25 @@ public class Store : MonoBehaviour
     [SerializeField] private TextMeshProUGUI currentMoney;
     [SerializeField] private GameObject insufficientMoneyPanel;
     [SerializeField] private Store_RecipeScrollView recipeScrollView;
+    private int currentDisplayAmount;
+    private Color originalColor;
+    [SerializeField] private float animateDuration = 0.5f;
+    [SerializeField] private Color flashColor = Color.yellow;
     //TODO: StationScrollView
-    
+
     [Header("Debug Info")]
     [SerializeField] private bool IsDebug = false;
-    
+
     private void Awake()
     {
         if (tabController == null)
             tabController = GetComponentInChildren<TabController>();
-        currentMoney.text = GameManager.Instance.TotalEarnings.ToString();
+
+        currentDisplayAmount = GameManager.Instance.TotalEarnings;
+        currentMoney.text = $"{currentDisplayAmount:N0} G";
+        originalColor = currentMoney.color;
     }
-    
-    private void Update()
-    {
-        currentMoney.text = $"{GameManager.Instance.TotalEarnings.ToString()} G";
-    }
-    
+
     public void TryBuyItem(StoreItem item)
     {
         if (item == null || item.IsPurchased) return;
@@ -33,7 +35,10 @@ public class Store : MonoBehaviour
         if (GameManager.Instance.TotalEarnings >= item.Cost)
         {
             GameManager.Instance.AddMoney(-item.Cost);
-
+            //재화 업데이트 애니메이션
+            AnimateStoreMoney(GameManager.Instance.TotalEarnings);
+            EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
+            
             switch (item.BaseData)
             {
                 // 레시피
@@ -77,7 +82,26 @@ public class Store : MonoBehaviour
             .Append(group.DOFade(0, 0.5f))
             .OnComplete(() => insufficientMoneyPanel.SetActive(false));
     }
-    
+    public void AnimateStoreMoney(int newAmount)
+    {
+        DOTween.Kill(currentMoney);
+        DOTween.Kill(currentMoney.transform);
+
+        int fromAmount = currentDisplayAmount;
+
+        DOVirtual.Int(fromAmount, newAmount, animateDuration, value =>
+        {
+            currentDisplayAmount = value;
+            currentMoney.text = $"{value:N0} G";
+        }).SetEase(Ease.OutCubic);
+
+        var seq = DOTween.Sequence();
+        seq.Append(currentMoney.DOColor(flashColor, 0.2f));
+        seq.Join(currentMoney.transform.DOScale(1.2f, 0.2f));
+        seq.AppendInterval(0.1f);
+        seq.Append(currentMoney.DOColor(originalColor, 0.2f));
+        seq.Join(currentMoney.transform.DOScale(1.0f, 0.2f));
+    }
     public void Show()
     {
         gameObject.SetActive(true);

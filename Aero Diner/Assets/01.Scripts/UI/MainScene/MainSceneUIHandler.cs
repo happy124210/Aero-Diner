@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class MainSceneUIHandler : IUIEventHandler
@@ -14,14 +15,19 @@ public class MainSceneUIHandler : IUIEventHandler
     {
         switch (type)
         {
-            case UIEventType.UpdateEarnings:
-                if (payload is not int newEarnings) return true;
+
+
+            case UIEventType.UpdateTodayEarnings:
                 foreach (var ui in sceneUIs)
                 {
-                    var ed = ui?.GetComponentInChildren<EarningsDisplay>(true);
-                    ed?.AnimateEarnings(newEarnings);
+                    var resultPanel = ui != null ? ui.GetComponentInChildren<ResultPanel>(true) : null;
+                    if (resultPanel != null && resultPanel.TotalRevenueText != null)
+                    {
+                        resultPanel.TotalRevenueText.text = ((int)payload).ToString("N0");
+                    }
                 }
                 return true;
+
 
 
             case UIEventType.ShowResultPanel:

@@ -29,18 +29,22 @@ public class EarningsDisplay : MonoBehaviour
 
     public void AnimateEarnings(int newAmount)
     {
-        DOTween.Kill(earningText); // 기존 애니메이션 정리
+        DOTween.Kill(earningText);
+        DOTween.Kill(earningText.transform);
 
-        // 숫자 Tween
-        DOTween.To(() => currentDisplayAmount, x =>
+        //현재 UI에 표시된 금액을 기준으로 애니메이션 시작
+        int fromAmount = currentDisplayAmount;
+
+
+
+        //애니메이션: 현재 표시값 → 새로운 수치
+        DOVirtual.Int(fromAmount, newAmount, animateDuration, value =>
         {
-            currentDisplayAmount = x;
-            earningText.text = $"{Mathf.RoundToInt(x):N0} G";
-        },
-        newAmount, animateDuration)
-        .SetEase(Ease.OutCubic);
+            currentDisplayAmount = value;
+            earningText.text = $"{value:N0} G";
+        }).SetEase(Ease.OutCubic);
 
-        // 색상 깜빡임 + 확대 효과
+        //시각 효과
         var seq = DOTween.Sequence();
         seq.Append(earningText.DOColor(flashColor, 0.2f));
         seq.Join(earningText.transform.DOScale(1.2f, 0.2f));
