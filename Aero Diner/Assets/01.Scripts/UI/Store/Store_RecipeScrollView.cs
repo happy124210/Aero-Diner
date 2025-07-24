@@ -68,14 +68,14 @@ public class Store_RecipeScrollView : MonoBehaviour
 
             var go = Instantiate(prefabToUse, contentTransform);
             var slot = go.GetComponent<Store_Recipe_Content>();
-            slot.Init(item, OnItemSelected);
+            slot.Init(item, selected => OnItemSelected(selected, true));
         }
 
         // 첫 번째 아이템 자동 선택
         var firstItem = recipeStoreItems.FirstOrDefault(i => !i.IsPurchased);
         if (firstItem != null)
         {
-            OnItemSelected(firstItem);
+            OnItemSelected(firstItem, false);
         }
     }
     
@@ -109,9 +109,11 @@ public class Store_RecipeScrollView : MonoBehaviour
 
 
     // 아이템 선택 시 상세 정보 패널 업데이트
-    private void OnItemSelected(StoreItem item)
+    private void OnItemSelected(StoreItem item, bool playSFX = true)
     {
-        EventBus.PlaySFX(SFXType.ButtonClick);
+        if (playSFX)
+            EventBus.PlaySFX(SFXType.ButtonClick);
+
         bool canBePurchased = AreConditionsMet(item);
         detailPanel.SetData(item, () => store.TryBuyItem(item), canBePurchased);
     }
