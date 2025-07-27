@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class GridCellStatus : MonoBehaviour, IInteractable
 {
-    public List<GameObject> placementstations = new List<GameObject>();
+    public GameObject placementStation;
 
     private SpriteRenderer sr;
     private OutlineShaderController outline;
@@ -22,21 +22,21 @@ public class GridCellStatus : MonoBehaviour, IInteractable
         sr = GetComponent<SpriteRenderer>();
         outline = GetComponent<OutlineShaderController>();
 
-        FindPlacementstations();
+        FindPlacementStation();
     }
 
     /// <summary>
     /// 자식 오브젝트 중 IMovableStation 인터페이스를 구현한 오브젝트를 모두 수집
     /// </summary>
-    private void FindPlacementstations()
+    private void FindPlacementStation()
     {
-        placementstations.Clear();
-        // 자식 오브젝트 중 IMovableStation 인터페이스를 구현한 것만 수집
+        placementStation = null;
         foreach (Transform child in transform)
         {
             if (child.GetComponent<IMovableStation>() != null)
             {
-                placementstations.Add(child.gameObject);
+                placementStation = child.gameObject;
+                break; // 하나만 찾으면 끝
             }
         }
     }
