@@ -10,7 +10,7 @@ public class RecipePanel_RecipeScrollView : MonoBehaviour
     [SerializeField] private GameObject menuSlotPrefab;
     [SerializeField] private RecipePanel_IngredientScrollView ingredientScroll;
     [SerializeField] private RecipePanel detailPanel;
-
+    [SerializeField] private GameObject noItemPanel;
     private FoodData currentSelected;
     private bool suppressNextSFX = false;
     void Start()
@@ -29,15 +29,30 @@ public class RecipePanel_RecipeScrollView : MonoBehaviour
             .Select(menu => menu.foodData)
             .ToList();
 
+        // 아무 레시피도 없을 경우
+        if (menus.Count == 0)
+        {
+            detailPanel.gameObject.SetActive(false);
+            if (noItemPanel != null)
+                noItemPanel.SetActive(true);
+            return;
+        }
+
+        // 레시피 있음
+        detailPanel.gameObject.SetActive(true);
+        if (noItemPanel != null)
+            noItemPanel.SetActive(false);
+
         foreach (var menu in menus)
         {
             var go = Instantiate(menuSlotPrefab, contentTransform);
             var slot = go.GetComponent<RecipePanel_RecipeScrollView_Content>();
             slot.Init(menu, OnMenuSelected);
         }
+
         if (menus.Count > 0)
         {
-            suppressNextSFX = true; // 효과음 suppress 설정
+            suppressNextSFX = true;
             OnMenuSelected(menus[0]);
         }
     }
