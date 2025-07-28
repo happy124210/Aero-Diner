@@ -66,7 +66,7 @@ public class TilemapController : MonoBehaviour
         }
 
         StationManager.Instance.SetTilemapController(this);
-        Debug.Log("[TilemapController] StationManager 연결 완료!");
+        if (showDebugInfo) Debug.Log("[TilemapController] StationManager 연결 완료!");
     }
 
     /// <summary>

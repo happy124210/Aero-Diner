@@ -45,10 +45,9 @@ public class StationManager : Singleton<StationManager>
 
     protected override void Awake()
     {
-        tilemapController = FindObjectOfType<TilemapController>();
-
+        Instance = this;
+        Debug.Log("[StationManager] Awake에서 Instance 초기화됨");
         base.Awake();
-        DontDestroyOnLoad(this);
 
         InitializeStationDatabase();
     }
@@ -76,7 +75,7 @@ public class StationManager : Singleton<StationManager>
     {
         if (tilemapController == null)
         {
-            Debug.LogError("[StationManager] tilemapController가 할당되지 않았습니다.");
+            if (showDebugInfo) Debug.LogError("[StationManager] tilemapController가 할당되지 않았습니다.");
             return;
         }
 
@@ -101,10 +100,10 @@ public class StationManager : Singleton<StationManager>
             // 디버그 로그 추가: 셀 이름과 스테이션 이름 출력
             string cellName = gridCell.name;
             string stationName = group.station != null ? group.station.name : "없음";
-            Debug.Log($"[StationManager] '{cellName}' 셀에 스테이션: {stationName}");
+            if (showDebugInfo) Debug.Log($"[StationManager] '{cellName}' 셀에 스테이션: {stationName}");
         }
 
-        Debug.Log($"[StationManager] 총 {stationGroups.Count}개의 GridCell에서 스테이션을 수집했습니다.");
+        if (showDebugInfo) Debug.Log($"[StationManager] 총 {stationGroups.Count}개의 GridCell에서 스테이션을 수집했습니다.");
     }
 
     public List<StationSaveInfo> GenerateStationSaveData()
@@ -118,7 +117,7 @@ public class StationManager : Singleton<StationManager>
 
             if (group.station == null)
             {
-                Debug.LogWarning($"[Generate] stationGroups[{i}]의 station이 null → 저장 제외됨 (cell: '{cell.name}')");
+                if (showDebugInfo) Debug.Log($"[Generate] stationGroups[{i}]의 station이 null → 저장 제외됨 (cell: '{cell.name}')");
                 continue;
             }
 
@@ -129,42 +128,60 @@ public class StationManager : Singleton<StationManager>
             };
 
             saveList.Add(info);
-            Debug.Log($"[Generate] 저장됨: id = '{info.id}', cell = '{info.gridCellName}'");
+            if (showDebugInfo) Debug.Log($"[Generate] 저장됨: id = '{info.id}', cell = '{info.gridCellName}'");
         }
 
         return saveList;
     }
 
+    /// <summary>
+    /// 저장된 Station 정보를 바탕으로 스테이션들을 복원
+    /// 각 GridCell에 맞는 Station 프리팹을 Instantiate하여 배치
+    /// StorageGridCell이 붙은 셀에 배치되는 Station은 초기에는 비활성화 상태로 시작
+    /// </summary>
+    /// <param name="infos">StationSaveInfo 리스트 (station.json에서 불러온 데이터)</param>
     public void RestoreStations(List<StationSaveInfo> infos)
     {
-        // stationGroups 초기화
+        // stationGroups 초기화 (GridCell 수만큼)
         stationGroups.Clear();
         for (int i = 0; i < tilemapController.gridCells.Count; i++)
             stationGroups.Add(new StationGroup());
 
         foreach (var info in infos)
         {
+            // 프리팹 로드
             GameObject prefab = Resources.Load<GameObject>($"Prefabs/Stations/{info.id}");
             if (prefab == null)
             {
-                Debug.LogError($"[Restore] 프리팹 못 찾음: {info.id}");
+                if (showDebugInfo) Debug.LogError($"[Restore] 프리팹 못 찾음: {info.id}");
                 continue;
             }
 
+            // 셀 찾기
             GameObject cell = tilemapController.gridCells.FirstOrDefault(c => c.name == info.gridCellName);
             if (cell == null)
             {
-                Debug.LogError($"[Restore] 셀 못 찾음: {info.gridCellName}");
+                if (showDebugInfo) Debug.LogError($"[Restore] 셀 못 찾음: {info.gridCellName}");
                 continue;
             }
 
+            // 프리팹 Instantiate 및 위치 지정
             GameObject instance = Instantiate(prefab, cell.transform);
             instance.transform.localPosition = Vector3.zero;
 
+            // Storage 셀이라면 Station을 비활성화된 상태로 시작
+            bool isStorageCell = cell.GetComponent<StorageGridCell>() != null;
+            if (isStorageCell)
+            {
+                instance.SetActive(false);
+                if (showDebugInfo) Debug.Log($"[Restore] StorageCell에서 비활성화 상태로 복원됨: {info.id}");
+            }
+
+            // StationGroup에 등록
             int index = tilemapController.gridCells.IndexOf(cell);
             stationGroups[index].station = instance;
 
-            Debug.Log($"[Restore] 복원 완료: '{info.id}' → '{info.gridCellName}'");
+            if (showDebugInfo) Debug.Log($"[Restore] 복원 완료: '{info.id}' → '{info.gridCellName}'");
         }
     }
 
@@ -239,10 +256,10 @@ public class StationManager : Singleton<StationManager>
         {
             string stationName = kvp.Key;
             var (gridCount, storageCount) = kvp.Value;
-            Debug.Log($"[StationManager] {stationName} → GridCell: {gridCount}, StorageGridCell: {storageCount}");
+            if (showDebugInfo) Debug.Log($"[StationManager] {stationName} → GridCell: {gridCount}, StorageGridCell: {storageCount}");
         }
 
-        Debug.Log($"[StationManager] 전체 스테이션 수: {TotalStationCount} (GridCell: {GridCellStationCount}, StorageGridCell: {StorageGridCellStationCount})");
+        if (showDebugInfo) Debug.Log($"[StationManager] 전체 스테이션 수: {TotalStationCount} (GridCell: {GridCellStationCount}, StorageGridCell: {StorageGridCellStationCount})");
     }
 
     /// <summary>
@@ -266,46 +283,37 @@ public class StationManager : Singleton<StationManager>
         EventBus.Unregister(GameEventType.GamePhaseChanged, OnGamePhaseChanged);
     }
 
-    private GamePhase previousPhase = GamePhase.None;
-
     private void OnGamePhaseChanged(object phaseObj)
     {
-        if (phaseObj is not GamePhase newPhase)
-        {
-            Debug.LogError("[StationManager] 잘못된 GamePhase 전달");
-            return;
-        }
+        GamePhase newPhase = (GamePhase)phaseObj;
 
         // 복원 조건
         if (newPhase == GamePhase.EditStation || newPhase == GamePhase.Day || newPhase == GamePhase.Opening)
         {
-            Debug.Log($"[StationManager] 복원 조건 진입: newPhase = {newPhase}");
+            if (showDebugInfo) Debug.Log($"[StationManager] 복원 조건 진입: newPhase = {newPhase}");
 
-            Debug.Log("[StationManager] 복원용 stationGroups 초기화 완료");
+            tilemapController.FindGridCells(); // 강제 초기화
+            if (showDebugInfo) Debug.Log("[StationManager] 복원용 stationGroups 초기화 완료");
             SaveLoadManager.RestoreStationState();  // 세이브로드매니저에서 제이슨으로 스테이션 상태를 복원
         }
 
         // 저장 & 제거 조건
-        if (previousPhase == GamePhase.EditStation || previousPhase == GamePhase.Day)
+        if (newPhase == GamePhase.EditStation || newPhase == GamePhase.Day || newPhase == GamePhase.Opening)
         {
-            Debug.Log($"[StationManager] 저장 조건 진입: previousPhase = {previousPhase}");
-
             SetStations(); // 현재 상태 갱신
 
             var stationInfos = GenerateStationSaveData();
-            Debug.Log($"[StationManager] 저장 대상 Station 수: {stationInfos.Count}");
+            if (showDebugInfo) Debug.Log($"[StationManager] 저장 대상 Station 수: {stationInfos.Count}");
 
             SaveLoadManager.SaveStationData(stationInfos); // JSON 저장
 
-            Debug.Log("[StationManager] station.json 저장 완료");
+            if (showDebugInfo) Debug.Log("[StationManager] station.json 저장 완료");
         }
 
         // 제거만 조건
-        if (previousPhase == GamePhase.Closing)
+        if (newPhase == GamePhase.Closing)
         {
             stationGroups.Clear(); // 기존 스테이션 그룹 초기화
         }
-
-        previousPhase = newPhase;
     }
 }
