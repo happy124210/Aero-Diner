@@ -18,16 +18,22 @@ public enum StoryType
     StartQuest,    // 퀘스트 주기
     EndQuest,
     
-    UnlockRecipe, // 상점에서 해제
-    GiveRecipe,   //
+    UnlockRecipe,  // 상점에서 해제
+    GiveRecipe,    // 플레이어에게 직접 주기
     
     UnlockStation, // 상점에서 해제
-    GiveStation,
+    GiveStation,   // 플레이어에게 직접 주기
     
     GiveMoney,     // 골드 주기
-    
     LostMoney,     // 골드 뺏기
+    
     GameOver,
+    
+    // == 튜토리얼 용 ==
+    SetTutorialMode, // 튜토리얼모드 세팅
+    ShowGuideUI, // 딤드처리 UI 표시
+    ForceUI,     // 특정 창 강제 열기
+    ActivateStation,
     
     None,
 }
