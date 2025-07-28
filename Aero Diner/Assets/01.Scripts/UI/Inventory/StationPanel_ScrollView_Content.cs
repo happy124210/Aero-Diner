@@ -11,11 +11,9 @@ public class StationPanel_ScrollView_Content : BaseScrollViewItem
     [SerializeField] private TMP_Text placedCountText;
     [SerializeField] private TMP_Text storedCountText;
 
-    private string stationcost;
-
     private StationData myData;
-
     public StationData GetStationData() => myData;
+    
     public void Init(StationData data, Action<StationData> onClick)
     {
         myData = data;
@@ -26,8 +24,8 @@ public class StationPanel_ScrollView_Content : BaseScrollViewItem
         int placed = StationManager.Instance.GetPlacedStationCount(data.id);
         int stored = StationManager.Instance.GetStoredStationCount(data.id);
 
-        placedCountText.text = $"배치됨: {placed}";
-        storedCountText.text = $"보관됨: {stored}";
+        placedCountText.text = placed.ToString();
+        storedCountText.text = stored.ToString();
 
         selectButton.onClick.RemoveAllListeners();
         selectButton.onClick.AddListener(() => onClick?.Invoke(myData));

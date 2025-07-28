@@ -29,35 +29,33 @@ public class RecipePanel_RecipeScrollView : MonoBehaviour
             .Select(menu => menu.foodData)
             .ToList();
 
-        // 아무 레시피도 없을 경우
-        if (menus.Count == 0)
+        // 아무 레시피도 없음
+        if (!menus.Any())
         {
             detailPanel.gameObject.SetActive(false);
-            if (noItemPanel != null)
-                noItemPanel.SetActive(true);
+            noItemPanel.SetActive(true);
             return;
         }
 
         // 레시피 있음
         detailPanel.gameObject.SetActive(true);
-        if (noItemPanel != null)
-            noItemPanel.SetActive(false);
+        noItemPanel.SetActive(false);
 
         foreach (var menu in menus)
         {
             var go = Instantiate(menuSlotPrefab, contentTransform);
             var slot = go.GetComponent<RecipePanel_RecipeScrollView_Content>();
-            slot.Init(menu, OnMenuSelected);
+            slot.Init(menu, OnSlotSelected);
         }
 
         if (menus.Count > 0)
         {
             suppressNextSFX = true;
-            OnMenuSelected(menus[0]);
+            OnSlotSelected(menus[0]);
         }
     }
 
-    private void OnMenuSelected(FoodData menuData)
+    private void OnSlotSelected(FoodData menuData)
     {
         currentSelected = menuData; // 계속 갱신해도 괜찮음
 
