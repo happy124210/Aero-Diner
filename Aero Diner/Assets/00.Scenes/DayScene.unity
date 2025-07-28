@@ -5530,7 +5530,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a25ed56363cf9f4438eea0a8d25a39f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stationGroups: []
   tilemapController: {fileID: 1792442266}
   stationPrefabs:
   - {fileID: 5927260267000352618, guid: b9d3cf75c3cf84642acfe7a8338584ea, type: 3}
@@ -5566,6 +5565,16 @@ MonoBehaviour:
   - {fileID: 5060143526324538215, guid: dbf830ed9aff47a47b40799f1fbcb257, type: 3}
   - {fileID: 5542269503853718095, guid: d94dd9a155af1194b815667c57cef7fd, type: 3}
   showDebugInfo: 0
+  startStationIds:
+  - s1
+  - s2
+  - s3
+  - s5
+  - s8
+  - s15
+  - s16
+  - s17
+  - s24
   TotalStationCount: 0
   GridCellStationCount: 0
   StorageGridCellStationCount: 0

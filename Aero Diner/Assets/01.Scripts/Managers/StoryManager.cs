@@ -128,8 +128,7 @@ public class StoryManager : Singleton<StoryManager>
                 
                 // 튜토리얼용
                 case StoryType.ShowGuideUI:
-                    //TODO: 딤드처리 UI 표시
-                    //UIManger.Instance.ShowGuideUI(acton.targetId);
+                    UIEventCaller.CallUIEvent(action.targetId);
                     break;
                 case StoryType.ForceUI:
                     //TODO: 특정 패널 강제로 열기 (상점, 퀘스트패널 등)

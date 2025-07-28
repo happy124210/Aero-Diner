@@ -178,6 +178,7 @@ public class GameManager : Singleton<GameManager>
         data.currentDay = currentDay;
         
         SaveLoadManager.SaveGame(data);
+        StationManager.Instance.SaveStationDatabase();
         MenuManager.Instance.SaveMenuDatabase();
         
         if (showDebugInfo) Debug.Log("[GameManager]: 게임 데이터 저장 완료.");
@@ -234,6 +235,11 @@ public class GameManager : Singleton<GameManager>
         if (GUILayout.Button("모든 메뉴 해금"))
         {
             MenuManager.Instance.UnlockAllMenus();
+        }
+        
+        if (GUILayout.Button("모든 설비 해금"))
+        {
+            StationManager.Instance.UnlockAllStations();
         }
         
         if (GUILayout.Button("일차 스킵하기"))

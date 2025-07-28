@@ -1,24 +1,49 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static SaveData;
 
 public class StationManager : Singleton<StationManager>
 {
-    public Dictionary<string, StationData> StationDatabase { get; private set; } = new (); // 전체 Station타입 스테이션 데이터 담음
-    public List<StationGroup> stationGroups = new List<StationGroup>();         // 각 GridCell 아래에 있는 Station 리스트
-
+    [Header("참조")]
     [SerializeField] private TilemapController tilemapController;
+    
+    [Header("설비 세트")]
     [SerializeField] private List<GameObject> stationPrefabs = new();
-
-
-
+    
     [Header("디버깅")]
     [SerializeField] private bool showDebugInfo;
+    [SerializeField] private List<string> startStationIds = new() {"s1", "s2", "s3", "s5", "s8", "s15", "s16", "s17", "s24"};
+    
+    // 원본 데이터베이스
+    private Dictionary<string, Station> stationDatabase = new (); // 전체 Station타입 스테이션 데이터 담음
+    
+    // 인벤토리에서 해금된 스테이션 ID 목록 - 인벤토리UI에서 사용
+    private HashSet<string> unlockedStationIds = new HashSet<string>();
+    
+    // 저장 시스템
+    private List<StationGroup> stationGroups = new List<StationGroup>();         // 각 GridCell 아래에 있는 Station 리스트
+    private Dictionary<string, (int gridCellCount, int storageGridCellCount)> stationTypeCounts = new();
+    private List<StationSnapshot> stationSnapshots = new List<StationSnapshot>();
+    
+    #region public getters & methods
+    
+    public Dictionary<string, Station> StationDatabase => stationDatabase;
+    
+    // id로 Station / StationData 조회
+    public Station FindStationById(string id) => stationDatabase.GetValueOrDefault(id);
+    public StationData FindStationDataById(string id) => stationDatabase.GetValueOrDefault(id).stationData;
+    
+    public bool IsUnlocked(string id) => unlockedStationIds.Contains(id);
+    
+    public List<Station> GetAllStations() => stationDatabase.Values.ToList();
+    public List<Station> GetUnlockedStations() => stationDatabase.Values.Where(station => station.isUnlocked).ToList();
+    public HashSet<string> GetUnlockedStationIds() => stationDatabase.Keys.ToHashSet();
+    
+    #endregion
 
-    public StationData FindStationById(string id) => StationDatabase.GetValueOrDefault(id);
-
+    #region class
+    
     [System.Serializable]
     public class StationGroup
     {
@@ -34,24 +59,20 @@ public class StationManager : Singleton<StationManager>
         public Quaternion localRotation;
         public Vector3 localScale;
     }
-
-    private List<StationData> stationDataList = new List<StationData>();
-    private List<Station> stationDatabase = new();                              // 전체 Station타입 스테이션 데이터 담음
-    Dictionary<string, (int gridCellCount, int storageGridCellCount)> stationTypeCounts = new();
-    private List<StationSnapshot> stationSnapshots = new List<StationSnapshot>();
-
+    
+    #endregion
+    
     public int TotalStationCount;
     public int GridCellStationCount;
     public int StorageGridCellStationCount;
-    public static new StationManager Instance;
 
     protected override void Awake()
     {
-        Instance = this;
         if (showDebugInfo) Debug.Log("[StationManager] Awake에서 Instance 초기화됨");
         base.Awake();
 
         InitializeStationDatabase();
+        LoadStationDatabase();
     }
 
     private void Start()
@@ -68,6 +89,82 @@ public class StationManager : Singleton<StationManager>
         tilemapController = controller;
         if (showDebugInfo) Debug.Log("[StationManager] 타일맵 컨트롤러 연결 완료");
     }
+
+    #region Station 해금 관리
+
+    private void InitializeStationDatabase()
+    {
+        stationDatabase.Clear();
+        
+        StationData[] allStations = Resources.LoadAll<StationData>(StringPath.STATION_DATA_PATH);
+        
+        foreach (var data in allStations)
+        {
+            if (!string.IsNullOrEmpty(data.id))
+            {
+                stationDatabase[data.id] = new Station(data);
+            }
+        }
+    }
+
+    public void SaveStationDatabase()
+    {
+        var data = SaveLoadManager.LoadGame() ?? new SaveData();
+        data.stationDatabase = new HashSet<string>(GetUnlockedStationIds());
+        SaveLoadManager.SaveGame(data);
+        
+        if (showDebugInfo) Debug.Log($"[StationManager] 해금 설비 저장됨: {data.stationDatabase.Count}개");
+    }
+    
+    /// <summary>
+    /// 스테이션 데이터베이스 로딩
+    /// </summary>
+    private void LoadStationDatabase()
+    {
+        SaveData saveData = SaveLoadManager.LoadGame();
+        if (saveData == null) return;
+
+        if (unlockedStationIds == null || unlockedStationIds.Count == 0)
+        {
+            // 해금 데이터 없을 때 시작설비 해금
+            if (startStationIds == null) Debug.LogError("startMenuId가 없음");
+            foreach (var id in startStationIds)
+            {
+                UnlockStation(id);
+            }
+
+            return;
+        }
+        
+        // 해금 데이터 Id 받아서 복원
+        foreach (var unlockedId in saveData.stationDatabase)
+        {
+            UnlockStation(unlockedId);
+        }
+
+        if (showDebugInfo) Debug.Log($"StationManager]: 전체 {stationDatabase.Count}개  데이터베이스 생성 완료");
+    }
+
+    public void UnlockStation(string stationId)
+    {
+        if (string.IsNullOrEmpty(stationId)) return;
+        
+        Station stationToUnlock = FindStationById(stationId);
+        if (stationToUnlock == null) return;
+        
+        stationToUnlock.isUnlocked = true;
+    }
+    
+    // cheater
+    public void UnlockAllStations()
+    {
+        foreach (string stationId in stationDatabase.Keys)
+        {
+            UnlockStation(stationId);
+        }
+    }
+
+    #endregion
 
 
     /// <summary>
@@ -202,25 +299,7 @@ public class StationManager : Singleton<StationManager>
             if (showDebugInfo) Debug.Log($"[Restore] 복원 완료: '{info.id}' → '{info.gridCellName}'");
         }
     }
-
-    /// <summary>
-    /// 스테이션 데이터베이스 초기화
-    /// </summary>
-    private void InitializeStationDatabase()
-    {
-        StationData[] allStations = Resources.LoadAll<StationData>(StringPath.STATION_DATA_PATH);
-
-        StationDatabase.Clear();
-        foreach (var station in allStations)
-        {
-            if (!string.IsNullOrEmpty(station.id))
-            {
-                StationDatabase[station.id] = station;
-            }
-        }
-
-        if (showDebugInfo) Debug.Log($"StationManager]: 전체 {StationDatabase.Count}개  데이터베이스 생성 완료");
-    }
+    
 
     /// <summary>
     /// 각 GridCell 타입별로 스테이션 개수를 세고 출력
@@ -330,27 +409,7 @@ public class StationManager : Singleton<StationManager>
 
         return count;
     }
-    // 해금된 스테이션 ID 목록
-    private HashSet<string> unlockedStationIds = new HashSet<string>();
-
-    public bool IsUnlocked(string id) => unlockedStationIds.Contains(id);
-
-    public void UnlockStation(string id)
-    {
-        if (!string.IsNullOrEmpty(id))
-            unlockedStationIds.Add(id);
-    }
-
-    public void LockStation(string id)
-    {
-        if (unlockedStationIds.Contains(id))
-            unlockedStationIds.Remove(id);
-    }
-
-    public List<string> GetUnlockedStations()
-    {
-        return unlockedStationIds.ToList();
-    }
+    
     /// <summary>
     /// 보관장소에 스테이션 생성
     /// 상점에서 구매했을 때 호출됨
@@ -359,7 +418,7 @@ public class StationManager : Singleton<StationManager>
     public void CreateStationInStorage(string id)
     {
         // StationData 확인
-        StationData stationData = FindStationById(id);
+        StationData stationData = FindStationDataById(id);
         if (stationData == null)
         {
             Debug.LogError($"[StationManager] StationData를 찾을 수 없음: {id}");

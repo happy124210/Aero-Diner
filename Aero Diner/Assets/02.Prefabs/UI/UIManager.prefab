@@ -104,7 +104,11 @@ MonoBehaviour:
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
-    - m_AssetGUID: 90142a11982d7b2428330ea3728ee241
+    - m_AssetGUID: 7005acc379c8d2a4ab7768cc88783035
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+    - m_AssetGUID: db44f1c37eca39e4f87a2496c8da76c1
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
