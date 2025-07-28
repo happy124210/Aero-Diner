@@ -150,7 +150,7 @@ public class StationManager : Singleton<StationManager>
     /// StorageGridCell이 붙은 셀에 배치되는 Station은 초기에는 비활성화 상태로 시작
     /// </summary>
     /// <param name="infos">StationSaveInfo 리스트 (station.json에서 불러온 데이터)</param>
-    public void RestoreStations(List<StationSaveInfo> infos)
+    public void RestoreStations(List<StationSaveInfo> infos, GamePhase currentPhase)
     {
         // stationGroups 초기화 (GridCell 수만큼)
         stationGroups.Clear();
@@ -181,10 +181,18 @@ public class StationManager : Singleton<StationManager>
 
             // Storage 셀이라면 Station을 비활성화된 상태로 시작
             bool isStorageCell = cell.GetComponent<StorageGridCell>() != null;
-            if (isStorageCell)
+            bool shouldActivate = currentPhase == GamePhase.EditStation || currentPhase == GamePhase.Day;
+
+            if (isStorageCell && !shouldActivate)
             {
                 instance.SetActive(false);
                 if (showDebugInfo) Debug.Log($"[Restore] StorageCell에서 비활성화 상태로 복원됨: {info.id}");
+            }
+            else
+            {
+                instance.SetActive(true);
+                if (showDebugInfo && isStorageCell)
+                    Debug.Log($"[Restore] StorageCell이지만 활성화 상태로 복원됨: {info.id}");
             }
 
             // StationGroup에 등록
@@ -426,13 +434,18 @@ public class StationManager : Singleton<StationManager>
         {
             if (showDebugInfo) Debug.Log($"[StationManager] 복원 조건 진입: newPhase = {newPhase}");
 
+            // 기존 오브젝트 제거
+            DestroyCurrentStations(); // 커스텀 함수로 오브젝트 제거
+
             tilemapController.FindGridCells(); // 강제 초기화
             if (showDebugInfo) Debug.Log("[StationManager] 복원용 stationGroups 초기화 완료");
-            SaveLoadManager.RestoreStationState();  // 세이브로드매니저에서 제이슨으로 스테이션 상태를 복원
+
+            SaveLoadManager.RestoreStationState(newPhase); // 상태 복원
         }
 
+
         // 저장 & 제거 조건
-        if (newPhase == GamePhase.EditStation || newPhase == GamePhase.Day || newPhase == GamePhase.Opening)
+        if (newPhase == GamePhase.EditStation || newPhase == GamePhase.Day || newPhase == GamePhase.SelectMenu || newPhase == GamePhase.Opening)
         {
             SetStations(); // 현재 상태 갱신
 
@@ -449,5 +462,34 @@ public class StationManager : Singleton<StationManager>
         {
             stationGroups.Clear(); // 기존 스테이션 그룹 초기화
         }
+    }
+
+    /// <summary>
+    /// 모든 GridCell 아래의 IMovableStation 오브젝트를 제거
+    /// </summary>
+    private void DestroyCurrentStations()
+    {
+        if (tilemapController == null)
+        {
+            if (showDebugInfo) Debug.LogError("[StationManager] tilemapController가 없습니다.");
+            return;
+        }
+
+        foreach (GameObject gridCell in tilemapController.gridCells)
+        {
+            var stations = gridCell.GetComponentsInChildren<IMovableStation>(includeInactive: true);
+
+            foreach (var station in stations)
+            {
+                var transform = station.GetTransform();
+                if (transform != null)
+                {
+                    if (showDebugInfo) Debug.Log($"[StationManager] 제거됨: {transform.gameObject.name}");
+                    Destroy(transform.gameObject);
+                }
+            }
+        }
+
+        if (showDebugInfo) Debug.Log("[StationManager] 기존 스테이션 제거 완료");
     }
 }
