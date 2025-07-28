@@ -13,6 +13,10 @@ public class StationManager : Singleton<StationManager>
     [SerializeField] private List<GameObject> stationPrefabs = new();
 
 
+    // 해금된 스테이션 ID 목록
+    private HashSet<string> unlockedStationIds = new HashSet<string>();
+
+    public bool IsUnlocked(string id) => unlockedStationIds.Contains(id);
 
     [Header("디버깅")]
     [SerializeField] private bool showDebugInfo;
@@ -322,15 +326,15 @@ public class StationManager : Singleton<StationManager>
 
         return count;
     }
-    // 해금된 스테이션 ID 목록
-    private HashSet<string> unlockedStationIds = new HashSet<string>();
 
-    public bool IsUnlocked(string id) => unlockedStationIds.Contains(id);
 
     public void UnlockStation(string id)
     {
-        if (!string.IsNullOrEmpty(id))
+        if (!string.IsNullOrEmpty(id) && !unlockedStationIds.Contains(id))
+        {
             unlockedStationIds.Add(id);
+            Debug.Log($"[StationManager] 설비 해금됨: {id}");
+        }
     }
 
     public void LockStation(string id)
@@ -339,14 +343,18 @@ public class StationManager : Singleton<StationManager>
             unlockedStationIds.Remove(id);
     }
 
-    public List<string> GetUnlockedStations()
+    public List<string> GetUnlockedStationIds()
+        => unlockedStationIds.ToList();
+
+    public void SetUnlockedStationIds(List<string> idList)
     {
-        return unlockedStationIds.ToList();
+        unlockedStationIds = new HashSet<string>(idList ?? new List<string>());
     }
-    /// <summary>
-    /// 보관장소에 스테이션 생성
-    /// </summary>
-    private void CreateStationInStorage(string id)
+
+/// <summary>
+/// 보관장소에 스테이션 생성
+/// </summary>
+private void CreateStationInStorage(string id)
     {
         StationData station = FindStationById(id);
 

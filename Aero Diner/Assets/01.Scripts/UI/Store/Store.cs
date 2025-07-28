@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class Store : MonoBehaviour
 {
@@ -60,6 +61,7 @@ public class Store : MonoBehaviour
                 // 설비
                 case StationData:
                     //StationManager.Instance.CreateStationInStorage(item.ID)
+                    StationManager.Instance.UnlockStation(item.ID);
                     break;
             }
             

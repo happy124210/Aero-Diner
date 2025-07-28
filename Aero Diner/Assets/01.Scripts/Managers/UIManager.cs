@@ -16,6 +16,7 @@ public class UIManager : Singleton<UIManager>
         typeof(MenuPanel),
         typeof(DialogueUI),
         typeof(Store),
+        typeof(Tu1),
         
         // 필요한 타입 추가 가능
     };
@@ -130,6 +131,7 @@ public class UIManager : Singleton<UIManager>
 
         // 공통 핸들러 (항상 등록)
         uiHandlers.Add(new OverSceneUIHandler(currentSceneUIs));
+        uiHandlers.Add(new TutorialUIHandler(currentSceneUIs));
 
         switch (sceneName)
         {
