@@ -12,6 +12,8 @@ public class StationManager : Singleton<StationManager>
     [SerializeField] private TilemapController tilemapController;
     [SerializeField] private List<GameObject> stationPrefabs = new();
 
+
+
     [Header("디버깅")]
     [SerializeField] private bool showDebugInfo;
 
@@ -269,7 +271,78 @@ public class StationManager : Singleton<StationManager>
 
         if (showDebugInfo) Debug.Log($"[StationManager] 전체 스테이션 수: {TotalStationCount} (GridCell: {GridCellStationCount}, StorageGridCell: {StorageGridCellStationCount})");
     }
+    /// <summary>
+    /// 특정 ID의 Station이 현재 GridCell에 배치된 개수
+    /// </summary>
+    public int GetPlacedStationCount(string id)
+    {
+        int count = 0;
 
+        for (int i = 0; i < stationGroups.Count; i++)
+        {
+            var group = stationGroups[i];
+            var station = group.station;
+            if (station == null) continue;
+
+            // "(Clone)" 제거한 이름이 ID와 일치할 경우
+            string stationId = station.name.Replace("(Clone)", "").Trim();
+
+            // GridCell (보관소 제외)
+            var cell = tilemapController.gridCells[i];
+            bool isStorage = cell.GetComponent<StorageGridCell>() != null;
+
+            if (!isStorage && stationId == id)
+                count++;
+        }
+
+        return count;
+    }
+
+    /// <summary>
+    /// 특정 ID의 Station이 현재 StorageGridCell에 보관 중인 개수
+    /// </summary>
+    public int GetStoredStationCount(string id)
+    {
+        int count = 0;
+
+        for (int i = 0; i < stationGroups.Count; i++)
+        {
+            var group = stationGroups[i];
+            var station = group.station;
+            if (station == null) continue;
+
+            string stationId = station.name.Replace("(Clone)", "").Trim();
+
+            var cell = tilemapController.gridCells[i];
+            bool isStorage = cell.GetComponent<StorageGridCell>() != null;
+
+            if (isStorage && stationId == id)
+                count++;
+        }
+
+        return count;
+    }
+    // 해금된 스테이션 ID 목록
+    private HashSet<string> unlockedStationIds = new HashSet<string>();
+
+    public bool IsUnlocked(string id) => unlockedStationIds.Contains(id);
+
+    public void UnlockStation(string id)
+    {
+        if (!string.IsNullOrEmpty(id))
+            unlockedStationIds.Add(id);
+    }
+
+    public void LockStation(string id)
+    {
+        if (unlockedStationIds.Contains(id))
+            unlockedStationIds.Remove(id);
+    }
+
+    public List<string> GetUnlockedStations()
+    {
+        return unlockedStationIds.ToList();
+    }
     /// <summary>
     /// 보관장소에 스테이션 생성
     /// </summary>
