@@ -18,10 +18,6 @@ public class StoryManager : Singleton<StoryManager>
         base.Awake();
         DontDestroyOnLoad(this);
         LoadStoryDatabase();
-    }
-
-    private void Start()
-    {
         EventBus.OnGameEvent += HandleGameEvent;
     }
 
@@ -46,6 +42,8 @@ public class StoryManager : Singleton<StoryManager>
             {
                 GamePhase currentPhase = (GamePhase)data;
                 CheckAndTriggerStories(triggerPhase: currentPhase);
+                GameManager.Instance.CheckAndTriggerEditStation();
+                
                 break;
             }
             
@@ -197,6 +195,8 @@ public class StoryManager : Singleton<StoryManager>
 
             yield return null;
         }
+        
+        GameManager.Instance.CheckAndTriggerEditStation();
     }
     
     #region helper

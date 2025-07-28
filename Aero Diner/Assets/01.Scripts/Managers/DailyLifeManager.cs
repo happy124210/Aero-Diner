@@ -13,6 +13,8 @@ public class DailyLifeManager : Singleton<DailyLifeManager>
         await Task.Delay(1000);
         EventBus.RaiseFadeEvent(FadeEventType.FadeIn, new FadeEventPayload(0f, 1f));
         StartCoroutine(ResendEarningsAfterDelay());
+        
+        GameManager.Instance.ChangePhase(GamePhase.Day);
     }
 
     private IEnumerator ResendEarningsAfterDelay()
