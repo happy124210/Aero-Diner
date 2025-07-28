@@ -8,7 +8,6 @@ public class QuestPanel : MonoBehaviour
 {
     [Header("탭 및 패널")]
     [SerializeField] private TabController tabController;
-    [SerializeField] private GameObject noQuestPanel;
 
     [Header("ScrollView Content 부모")]
     [SerializeField] private Transform doingContent;
@@ -73,14 +72,7 @@ public class QuestPanel : MonoBehaviour
             CreateQuestListItem(quest, completeContent);
         }
 
-        // 공용 퀘스트 없음 패널 처리
-        bool hasNoQuests = doingQuests.Count == 0 && completeQuests.Count == 0;
-
-        if (noQuestPanel != null)
-            noQuestPanel.SetActive(hasNoQuests);
-
-        // 상세 패널 초기화
-        ShowQuestDetail(null);
+        ShowQuestDetail(null); // 상세 패널 초기화
     }
     private void CreateQuestListItem(QuestData questData, Transform parent)
     {
