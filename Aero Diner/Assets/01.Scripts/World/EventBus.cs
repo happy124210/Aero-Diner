@@ -79,7 +79,8 @@ public enum UIEventType
     ShowMenuPanel, UpdateMenuPanel, HideMenuPanel, 
     ShowResultPanel, HideResultPanel, 
     ShowOrderPanel, HideOrderPanel,
-    
+    ShowWallPopup, HideWallPopup,
+
     //Inventory
     ShowInventory, HideInventory,
     ShowRecipeBook, ShowStationPanel,

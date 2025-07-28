@@ -7,6 +7,7 @@ TagManager:
   - Ingredient
   - GridCell
   - Station
+  - InvisibleWall
   layers:
   - Default
   - TransparentFX
