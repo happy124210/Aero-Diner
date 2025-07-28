@@ -57,6 +57,10 @@ public class MenuManager : Singleton<MenuManager>
     }
     private int GetMenuPrice(string menuId) => FindMenuById(menuId)?.Price ?? 0;
     
+    
+    // 튜토리얼용
+    public bool IsMenuSelected(string menuId) => FindMenuById(menuId).isSelected;
+
     #endregion
     
     protected override void Awake()

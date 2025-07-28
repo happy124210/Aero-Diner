@@ -13,7 +13,7 @@ public class GameManager : Singleton<GameManager>
     
     [Header("디버그 정보")]
     [SerializeField, ReadOnly] private GamePhase currentPhase;
-    [SerializeField] private bool showDebugInfo = true;
+    [SerializeField] private bool showDebugInfo;
     
     private static readonly int[] DaysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
     private GamePhase previousPhase;
@@ -63,7 +63,7 @@ public class GameManager : Singleton<GameManager>
             is GamePhase.Paused 
             //or GamePhase.Dialogue
             or GamePhase.GameOver 
-            or GamePhase.SelectMenu 
+            //or GamePhase.SelectMenu 
             or GamePhase.Shop ? 0f : 1f;
         
         if (showDebugInfo) Debug.Log($"[GameManager] Game Phase 변경됨: {newPhase}");
