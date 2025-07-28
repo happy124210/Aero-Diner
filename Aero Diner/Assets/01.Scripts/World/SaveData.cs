@@ -22,11 +22,19 @@ public class SaveData
     // 화면 옵션
     public int screenModeIndex = 2;        // 기본값: 전체화면
     public int resolutionIndex = 0;        // 기본값: 목록 첫 번째
-    
+
     public SaveData()
     {
         menuDatabase = new HashSet<string>();
         stationDatabase = new HashSet<string>();
         keyBindings = new Dictionary<string, string>();
     }
+
+    public class StationSaveInfo
+    {
+        public string id;
+        public string gridCellName;
+    }
+
+
 }

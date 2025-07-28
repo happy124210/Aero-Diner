@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 /// <summary>
 /// 에디터에서 직접 배치한 GridCell들을 자동으로 탐색하고 관리
@@ -25,6 +26,8 @@ public class TilemapController : MonoBehaviour
         HideAllCells();                               // 시작 시 셀 숨김
     }
 
+
+
     private void Update()
     {
         UpdateGridCellStates();
@@ -46,6 +49,24 @@ public class TilemapController : MonoBehaviour
         }
 
         if (showDebugInfo) Debug.Log($"[TilemapController] GridCell {gridCells.Count}개를 찾았습니다.");
+    }
+
+    private void Start()
+    {
+        {
+            StartCoroutine(WaitAndConnect());
+        }
+    }
+
+    private IEnumerator WaitAndConnect()
+    {
+        while (StationManager.Instance == null)
+        {
+            yield return null; // 1프레임 대기
+        }
+
+        StationManager.Instance.SetTilemapController(this);
+        if (showDebugInfo) Debug.Log("[TilemapController] StationManager 연결 완료!");
     }
 
     /// <summary>

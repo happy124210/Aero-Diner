@@ -52,11 +52,6 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
                 sr.sprite = data.stationIcon;
             }
         }
-        else
-        {
-            if (showDebugInfo) Debug.LogError($"[IconLoader] StationData를 찾을 수 없습니다: 경로 = '{resourcePath}'");
-        }
-
     }
 
     private void Start()

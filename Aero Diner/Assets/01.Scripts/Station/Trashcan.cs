@@ -25,10 +25,6 @@ public class Trashcan : MonoBehaviour, IInteractable, IMovableStation
                 sr.sprite = data.stationIcon;   // StationData에 있는 아이콘 사용
             }
         }
-        else
-        {
-            Debug.LogWarning($"[IconLoader] 해당 오브젝트 '{objName}'에 대한 StationData를 '{resourcePath}' 경로에서 찾지 못했습니다.");
-        }
     }
 
 
