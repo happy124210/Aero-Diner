@@ -345,13 +345,66 @@ public class StationManager : Singleton<StationManager>
     }
     /// <summary>
     /// 보관장소에 스테이션 생성
+    /// 상점에서 구매했을 때 호출됨
     /// </summary>
-    private void CreateStationInStorage(string id)
+    /// <param name="id">StationData의 ID (프리팹 이름과 같음)</param>
+    public void CreateStationInStorage(string id)
     {
-        StationData station = FindStationById(id);
+        // StationData 확인
+        StationData stationData = FindStationById(id);
+        if (stationData == null)
+        {
+            Debug.LogError($"[StationManager] StationData를 찾을 수 없음: {id}");
+            return;
+        }
 
-        // 상점에서 구매한 스테이션의 정보(스테이션의 아이디)
-        // 스테이션 프리팹을 찾아서 생성 - 스테이션 아이디로 프리팹 찾기(스테이션 프리팹은 StationData의 SO데이터를 가지고 있음)
+        // 프리팹 찾기 (StationData의 ID를 비교하여 찾음)
+        GameObject prefab = stationPrefabs.FirstOrDefault(p =>
+        {
+            var station = p.GetComponent<IMovableStation>();
+            return station != null &&
+                   station.StationData != null &&
+                   station.StationData.id == id;
+        });
+
+        // Storage 셀 중 비어있는 셀 찾기 (IMovableStation 없는 경우)
+        GameObject targetCell = null;
+
+        foreach (var cell in tilemapController.gridCells)
+        {
+            if (cell.GetComponent<StorageGridCell>() == null)
+                continue;
+
+            bool hasStation = cell.GetComponentsInChildren<IMovableStation>(true).Length > 0;
+            if (!hasStation)
+            {
+                targetCell = cell;
+                break;
+            }
+        }
+
+        if (targetCell == null)
+        {
+            Debug.LogWarning($"[StationManager] 빈 Storage 셀을 찾을 수 없음 - 스테이션 생성 실패: {id}");
+            return;
+        }
+
+        // 스테이션 인스턴스 생성
+        GameObject instance = Instantiate(prefab, targetCell.transform);
+        instance.transform.localPosition = Vector3.zero;
+        instance.SetActive(true); 
+
+        // stationGroups 동기화
+        int index = tilemapController.gridCells.IndexOf(targetCell);
+        if (index >= 0 && index < stationGroups.Count)
+        {
+            stationGroups[index].station = instance;
+        }
+
+        if (showDebugInfo)
+        {
+            Debug.Log($"[StationManager] 스토리지에 Station 생성됨: {id} → {targetCell.name}");
+        }
     }
 
     private void OnEnable()

@@ -59,7 +59,7 @@ public class Store : MonoBehaviour
                 
                 // 설비
                 case StationData:
-                    //StationManager.Instance.CreateStationInStorage(item.ID)
+                    StationManager.Instance.CreateStationInStorage(item.ID);
                     break;
             }
             
