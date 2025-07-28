@@ -1,5 +1,3 @@
-// StoryManager.cs
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -118,7 +116,30 @@ public class StoryManager : Singleton<StoryManager>
                 case StoryType.StartQuest:
                     QuestManager.Instance.StartQuest(action.targetId);
                     break;
-                // ...
+                case StoryType.EndQuest:
+                    QuestManager.Instance.EndQuest(action.targetId);
+                    break;
+                case StoryType.GiveMoney:
+                    GameManager.Instance.AddMoney(int.Parse(action.targetId));
+                    break;
+                case StoryType.LostMoney:
+                    GameManager.Instance.AddMoney(-int.Parse(action.targetId));
+                    break;
+                
+                // 튜토리얼용
+                case StoryType.ShowGuideUI:
+                    //TODO: 딤드처리 UI 표시
+                    //UIManger.Instance.ShowGuideUI(acton.targetId);
+                    break;
+                case StoryType.ForceUI:
+                    //TODO: 특정 패널 강제로 열기 (상점, 퀘스트패널 등)
+                    //UIManager.Instance.ShowUI(action.targetId);
+                    break;
+                case StoryType.ActivateStation:
+                    //TODO: 특정 설비 활성화
+                    //StationManager.Instance.ActivateStation(action.targetId);
+                    break;
+
             }
             yield return null;
         }
@@ -137,9 +158,6 @@ public class StoryManager : Singleton<StoryManager>
                     break;
                 case ConditionType.QuestStatus:
                     result = CheckQuestStatusCondition(c.lValue, c.@operator, c.rValue);
-                    break;
-                case ConditionType.Money:
-                    result = CheckNumericCondition(GameManager.Instance.TotalEarnings, c.@operator, c.rValue);
                     break;
                 case ConditionType.DialogueEnded:
                     result = true; 
