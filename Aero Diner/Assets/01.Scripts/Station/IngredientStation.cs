@@ -5,9 +5,10 @@
 /// </summary>
 public class IngredientStation : MonoBehaviour, IInteractable, IMovableStation
 {
+    [SerializeField] private StationData stationData;
+    public StationData StationData => stationData;
     public Transform GetTransform() => transform;
 
-    public StationData stationData;
     [Header("생성할 재료 SO")]
     public FoodData selectedIngredient;
 

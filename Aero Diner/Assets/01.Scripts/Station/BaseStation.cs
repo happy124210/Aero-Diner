@@ -10,7 +10,8 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
 
     public Transform spawnPoint;
     public float cookingTime = 5f;
-    public StationData stationData;
+    [SerializeField] private StationData stationData;
+    public StationData StationData => stationData;
     public List<string> currentIngredients = new();
     [SerializeField] protected List<string> availableFoodIds = new();
     [SerializeField] protected string bestMatchedRecipe;
