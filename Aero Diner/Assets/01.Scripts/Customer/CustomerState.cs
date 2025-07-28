@@ -127,25 +127,15 @@ public class WaitingInLineState : CustomerState
 public class MovingToSeatState : CustomerState
 {
     public override CustomerStateName Name => CustomerStateName.MovingToSeat;
-    private bool hasStartedMoving;
-
     
     public override void Enter(CustomerController customer)
     {
-        hasStartedMoving = false;
         customer.SetDestination(customer.GetStopPosition());
         customer.SetAnimationState(CustomerAnimState.Walking);
     }
     
     public override CustomerState Update(CustomerController customer)
     {
-        // NavMeshAgent 경로계산 시간 확보용
-        if (!hasStartedMoving)
-        {
-            hasStartedMoving = true;
-            return this;
-        }
-        
         if (customer.HasReachedDestination())
         {
             return new OrderingState();
@@ -170,6 +160,7 @@ public class OrderingState : CustomerState
     
     public override void Enter(CustomerController customer) 
     {
+        customer.ResetPatience();
         customer.AdjustToSeatPosition();
         customer.PlaceOrder();
     }
@@ -254,7 +245,7 @@ public abstract class BaseLeavingState : CustomerState
     {
         if (customer.HasReachedDestination())
         {
-            customer.Despawn();
+            customer.RequestDespawn();
             return null;
         }
         return this;

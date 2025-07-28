@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2245992794121365720}
   m_Layer: 6
   m_Name: SlotIconHolder
-  m_TagString: Untagged
+  m_TagString: Station
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -47,3 +47,4 @@ MonoBehaviour:
   iconPrefab: {fileID: 8364092381454571471, guid: e5de86a06d0904e45b79c0369f2587cb, type: 3}
   basePosition: {fileID: 0}
   spacing: 0.4
+  showDebugInfo: 0

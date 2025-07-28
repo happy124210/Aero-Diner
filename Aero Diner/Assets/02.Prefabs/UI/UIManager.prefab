@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5992088766281775380}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -54,19 +54,11 @@ MonoBehaviour:
       m_EditorAssetChanged: 0
   - sceneName: MainScene
     uiPrefabs:
-    - m_AssetGUID: 4f04806a308443a428151319d7678021
-      m_SubObjectName: 
-      m_SubObjectType: 
-      m_EditorAssetChanged: 0
     - m_AssetGUID: de334962f68c61b4baa232cdd60515cf
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
     - m_AssetGUID: 21f3a84c692d9c74da9051ff22b60a35
-      m_SubObjectName: 
-      m_SubObjectType: 
-      m_EditorAssetChanged: 0
-    - m_AssetGUID: 04b5dcc961d8b4f4eadb0dbfdea2a8d2
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
@@ -78,9 +70,29 @@ MonoBehaviour:
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
+    - m_AssetGUID: 4f04806a308443a428151319d7678021
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
   - sceneName: DayScene
     uiPrefabs:
     - m_AssetGUID: 4f04806a308443a428151319d7678021
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+    - m_AssetGUID: 04b5dcc961d8b4f4eadb0dbfdea2a8d2
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+    - m_AssetGUID: de334962f68c61b4baa232cdd60515cf
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+    - m_AssetGUID: 9486c998c9bc5a048ae04010c6f12b31
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+    - m_AssetGUID: d3d2061f5fe5a1f46a11da4d4cc86d63
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static System.Collections.Specialized.BitVector32;
 
 /// <summary>
 /// 모든 FoodData와 레시피를 관리.
@@ -18,6 +17,8 @@ public class RecipeManager : Singleton<RecipeManager>
     {
         base.Awake();
         LoadFoodDatabase();
+        
+        DontDestroyOnLoad(this);
     }
 
     /// <summary>
@@ -25,7 +26,7 @@ public class RecipeManager : Singleton<RecipeManager>
     /// </summary>
     private void LoadFoodDatabase()
     {
-        FoodData[] allFoods = Resources.LoadAll<FoodData>("Datas/Food");
+        FoodData[] allFoods = Resources.LoadAll<FoodData>(StringPath.FOOD_DATA_PATH);
     
         FoodDatabase.Clear();
         foreach (var food in allFoods)
@@ -146,7 +147,7 @@ public class RecipeManager : Singleton<RecipeManager>
 
         if (todayMenuList == null || todayMenuList.Count == 0)
         {
-            Debug.LogWarning("[RecipeManager] MenuManager 또는 TodayMenus가 존재하지 않음");
+            if (showDebugInfo) Debug.LogWarning("[RecipeManager] MenuManager 또는 TodayMenus가 존재하지 않음");
             return new List<RecipeMatchResult>();
         }
         

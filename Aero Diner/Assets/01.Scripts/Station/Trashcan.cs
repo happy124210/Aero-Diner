@@ -1,9 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Trashcan : MonoBehaviour, IInteractable
+public class Trashcan : MonoBehaviour, IInteractable, IMovableStation
+
 {
+    public Transform GetTransform() => transform;
+    public StationData stationData;
+
     private OutlineShaderController outline;
 
     private void Awake()

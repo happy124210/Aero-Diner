@@ -17,7 +17,7 @@ MonoBehaviour:
   displayName: "\uB9C9\uC790 \uC0AC\uBC1C"
   stationType: 4
   workType: 2
-  stationIcon: {fileID: 0}
+  stationIcon: {fileID: 21300000, guid: 689216aef18cd9b4e83b10f48db86969, type: 3}
   description: "\uB9C9\uC790 \uC0AC\uBC1C \uC785\uB2C8\uB2E4"
   stationCost: 100
   availableRecipes:

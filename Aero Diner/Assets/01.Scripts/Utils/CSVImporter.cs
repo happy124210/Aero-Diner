@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Diagnostics;
 
 #if UNITY_EDITOR
 /// <summary>
@@ -91,6 +91,460 @@ public class CSVImporter
         return data;
     }
     
+    #endregion
+
+    #region DialogueData 생성
+
+    [MenuItem("Tools/Import Game Data/Dialogue Data")]
+    public static void ImportGroupedDialogueData()
+    {
+        string path = EditorUtility.OpenFilePanel("Select Dialogue CSV", "", "csv");
+        if (string.IsNullOrEmpty(path)) return;
+
+        string[] lines = File.ReadAllLines(path);
+        if (lines.Length <= 1)
+        {
+            Debug.LogWarning("CSV 파일에 데이터가 없습니다.");
+            return;
+        }
+
+        // csv 파일의 모든 라인을 첫 번째 열(id)을 기준으로 그룹화
+        var groupedById = new Dictionary<string, List<string[]>>();
+        for (int i = 1; i < lines.Length; i++)
+        {
+            string[] cols = lines[i].Split(',');
+            if (cols.Length < 1 || string.IsNullOrEmpty(cols[0].Trim())) continue;
+
+            string dialogueId = cols[0].Trim();
+            if (!groupedById.ContainsKey(dialogueId))
+            {
+                groupedById[dialogueId] = new List<string[]>();
+            }
+            groupedById[dialogueId].Add(cols);
+        }
+
+        string targetFolder = "Assets/Resources/Datas/Dialogue/";
+        if (!Directory.Exists(targetFolder))
+        {
+            Directory.CreateDirectory(targetFolder);
+        }
+
+        // 에셋 생성
+        foreach (var dialogueId in groupedById.Keys)
+        {
+            string assetPath = $"{targetFolder}/{dialogueId}.asset";
+            if (AssetDatabase.LoadAssetAtPath<DialogueData>(assetPath) == null)
+            {
+                DialogueData newAsset = ScriptableObject.CreateInstance<DialogueData>();
+                AssetDatabase.CreateAsset(newAsset, assetPath);
+            }
+        }
+
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+
+        // 데이터 채우기
+        int successCount = 0;
+        foreach (var pair in groupedById)
+        {
+            string dialogueId = pair.Key;
+            List<string[]> rows = pair.Value;
+
+            try
+            {
+                string assetPath = $"{targetFolder}/{dialogueId}.asset";
+                DialogueData data = AssetDatabase.LoadAssetAtPath<DialogueData>(assetPath);
+
+                // 데이터 초기화
+                data.id = dialogueId;
+                data.lines = new List<DialogueLine>();
+                // data.choices = new List<DialogueChoice>();
+                
+                rows.Sort((a, b) => int.Parse(a[1]).CompareTo(int.Parse(b[1])));
+                
+                foreach (var cols in rows)
+                {
+                    Expression parsedExpression = Expression.Default;
+                    if (Enum.TryParse<Expression>(cols[3].Trim(), true, out var tempExpression))
+                    {
+                        parsedExpression = tempExpression;
+                    }
+                
+                    data.lines.Add(new DialogueLine
+                    {
+                        speakerId = cols[2].Trim(),
+                        text = cols[4].Trim(),
+                        expression = parsedExpression
+                    });
+                }
+                
+                // // 선택지 파싱
+                // for (int i = 0; i < 2; i++)
+                // {
+                //     int textIndex = 7 + i;
+                //     if (lastRow.Length > textIndex && !string.IsNullOrEmpty(lastRow[textIndex].Trim()))
+                //     {
+                //         data.choices.Add(new DialogueChoice
+                //         {
+                //             text = lastRow[textIndex].Trim(),
+                //             nextDialogueId = $"{dialogueId}_choice{i + 1}"
+                //         });
+                //     }
+                // }
+
+                EditorUtility.SetDirty(data);
+                successCount++;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Dialogue ID '{dialogueId}' 처리 중 오류 발생: {e.Message}");
+            }
+        }
+
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Debug.Log($"총 {successCount}개 DialogueData CSV 임포트 완료");
+    }
+
+    #endregion
+
+    #region SpeakerData 생성
+
+    [MenuItem("Tools/Import Game Data/Speaker Data")]
+    public static void ImportSpeakerData()
+    {
+        string path = EditorUtility.OpenFilePanel("Select Speaker CSV", "", "csv");
+        if (string.IsNullOrEmpty(path)) return;
+
+        string[] lines = File.ReadAllLines(path);
+        if (lines.Length <= 1)
+        {
+            Debug.LogWarning("CSV 파일에 데이터 없음");
+            return;
+        }
+
+        string targetFolder = "Assets/Resources/Datas/Speakers/";
+        if (!Directory.Exists(targetFolder))
+        {
+            Directory.CreateDirectory(targetFolder);
+        }
+        
+        // 에셋 생성
+        foreach (var line in lines.Skip(1))
+        {
+            string[] cols = line.Split(',');
+            if (cols.Length < 2 || string.IsNullOrEmpty(cols[0].Trim())) continue;
+            string id = cols[0].Trim();
+            string assetPath = $"{targetFolder}/{id}.asset";
+            if (AssetDatabase.LoadAssetAtPath<SpeakerData>(assetPath) == null)
+            {
+                var newAsset = ScriptableObject.CreateInstance<SpeakerData>();
+                AssetDatabase.CreateAsset(newAsset, assetPath);
+            }
+        }
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+
+        // 데이터 채우기 및 초상화 연결
+        int successCount = 0;
+        foreach (var line in lines.Skip(1))
+        {
+            try
+            {
+                string[] cols = line.Split(',');
+                if (cols.Length < 2 || string.IsNullOrEmpty(cols[0].Trim())) continue;
+
+                string id = cols[0].Trim();
+                string assetPath = $"{targetFolder}/{id}.asset";
+                SpeakerData data = AssetDatabase.LoadAssetAtPath<SpeakerData>(assetPath);
+                
+                data.id = id;
+                data.speakerName = cols[1].Trim();
+                data.portraits = new List<PortraitEntry>(); 
+                
+                // 초상화 연결
+                foreach (Expression expression in Enum.GetValues(typeof(Expression)))
+                {
+                    string portraitPath = $"Icons/Portrait/{id}_{expression}";
+                    Sprite portraitSprite = Resources.Load<Sprite>(portraitPath);
+
+                    if (portraitSprite == null) continue;
+                    
+                    data.portraits.Add(new PortraitEntry 
+                    { 
+                        expression = expression, 
+                        portrait = portraitSprite 
+                    });
+                    Debug.Log($"{data.id}의 {expression} 초상화 연결 완료");
+                }
+                
+                EditorUtility.SetDirty(data);
+                successCount++;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Speaker ID '{lines[successCount + 1].Split(',')[0]}' 처리 중 오류 발생: {e.Message}");
+            }
+        }
+        
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Debug.Log($"총 {successCount}명의 SpeakerData CSV 임포트 완료");
+    }
+
+    #endregion
+    
+    #region StoryData 생성
+
+    [MenuItem("Tools/Import Game Data/Story Data")]
+    public static void ImportStoryData()
+    {
+        string path = EditorUtility.OpenFilePanel("Select Story CSV", "", "csv");
+        if (string.IsNullOrEmpty(path)) return;
+
+        string[] lines = File.ReadAllLines(path);
+        if (lines.Length <= 1)
+        {
+            Debug.LogWarning("CSV 파일에 데이터 없음");
+            return;
+        }
+
+        string targetFolder = "Assets/Resources/Datas/Story/";
+        if (!Directory.Exists(targetFolder))
+        {
+            Directory.CreateDirectory(targetFolder);
+        }
+        
+        // 에셋 생성/업데이트
+        int successCount = 0;
+        for (int i = 1; i < lines.Length; i++)
+        {
+            try
+            {
+                string[] cols = lines[i].Split(',');
+                if (cols.Length < 2 || string.IsNullOrEmpty(cols[0].Trim())) continue;
+
+                string id = cols[0].Trim();
+                string assetPath = $"{targetFolder}/{id}.asset";
+                StoryData data = AssetDatabase.LoadAssetAtPath<StoryData>(assetPath);
+                if (data == null)
+                {
+                    data = ScriptableObject.CreateInstance<StoryData>();
+                    AssetDatabase.CreateAsset(data, assetPath);
+                }
+
+                // 데이터 채우기
+                data.id = id;
+                
+                if (Enum.TryParse<GamePhase>(cols[1].Trim(), true, out var phase))
+                {
+                    data.triggerPhase = phase;
+                }
+                else
+                {
+                    Debug.LogWarning($"Story ID '{id}'의 triggerPhase '{cols[1].Trim()}'없음");
+                    data.triggerPhase = GamePhase.Day; // 기본값 설정
+                }
+                
+                data.conditions = ParseConditions(cols[2]); // 조건 파싱
+                data.actions = ParseActions(cols[3]);     // 액션 파싱
+
+                EditorUtility.SetDirty(data);
+                successCount++;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Story ID '{lines[i].Split(',')[0]}' 처리 중 오류 발생: {e.Message}");
+            }
+        }
+        
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Debug.Log($"총 {successCount}개의 StoryData CSV 임포트 완료");
+    }
+
+    /// <summary>
+    /// 조건 문자열을 파싱하여 StoryCondition 리스트 반환
+    /// </summary>
+    private static List<StoryCondition> ParseConditions(string conditionsString)
+    {
+        var result = new List<StoryCondition>();
+        if (string.IsNullOrEmpty(conditionsString)) return result;
+
+        string[] conditionParts = conditionsString.Split('|');
+        foreach (var part in conditionParts)
+        {
+            string[] attrs = part.Split(';').Select(s => s.Trim()).ToArray();
+            if (attrs.Length < 2) continue;
+
+            if (Enum.TryParse<ConditionType>(attrs[0], true, out var type))
+            {
+                var condition = new StoryCondition();
+                condition.conditionType = type;
+
+                // ConditionType에 따라 파싱
+                switch (type)
+                {
+                    case ConditionType.Day:
+                        // 형식: Day;>=;3
+                        condition.@operator = attrs[1];
+                        condition.rValue = attrs[2];
+                        break;
+                    
+                    case ConditionType.QuestStatus:
+                        // 형식: QuestStatus;quest_id;==;Completed
+                        condition.lValue = attrs[1];
+                        condition.@operator = attrs[2];
+                        condition.rValue = attrs[3];
+                        break;
+
+                    case ConditionType.DialogueEnded:
+                        // 형식: DialogueEnded;Is;dialogue_id
+                        condition.@operator = attrs[1];
+                        condition.lValue = attrs[2];
+                        break;
+                }
+                result.Add(condition);
+            }
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// 액션 문자열을 파싱하여 StoryAction 리스트 반환
+    /// </summary>
+    private static List<StoryAction> ParseActions(string actionsString)
+    {
+        var result = new List<StoryAction>();
+        if (string.IsNullOrEmpty(actionsString)) return result;
+
+        string[] actionParts = actionsString.Split('|');
+        foreach (var part in actionParts)
+        {
+            string[] attrs = part.Split(';').Select(s => s.Trim()).ToArray();
+            if (attrs.Length < 1) continue;
+
+            if (Enum.TryParse<StoryType>(attrs[0], true, out var type))
+            {
+                var action = new StoryAction();
+                action.storyType = type;
+
+                // StoryType에 따라 파싱
+                switch (type)
+                {
+                    case StoryType.StartDialogue:
+                    case StoryType.StartQuest:
+                    case StoryType.UnlockRecipe:
+                    case StoryType.UnlockStation:
+                        // 형식: ActionType;targetId
+                        action.targetId = attrs[1];
+                        break;
+                    case StoryType.GiveMoney:
+                        // 형식: ActionType;value
+                        action.targetId = "";
+                        action.value = attrs[1];
+                        break;
+                    case StoryType.LostMoney:
+                        // 형식: ActionType;value
+                        action.targetId = "";
+                        action.value = attrs[1];
+                        break;
+                }
+
+                result.Add(action);
+            }
+        }
+
+        return result;
+    }
+
+    #endregion
+    
+    #region QuestData 생성
+
+    [MenuItem("Tools/Import Game Data/Quest Data")]
+    public static void ImportQuestData()
+    {
+        string path = EditorUtility.OpenFilePanel("Select Quest CSV", "", "csv");
+        if (string.IsNullOrEmpty(path)) return;
+
+        string[] lines = File.ReadAllLines(path);
+        if (lines.Length <= 1)
+        {
+            Debug.LogWarning("CSV 파일에 데이터 없음");
+            return;
+        }
+        
+        string targetFolder = "Assets/Resources/Datas/Quest/";
+        if (!Directory.Exists(targetFolder))
+        {
+            Directory.CreateDirectory(targetFolder);
+        }
+        
+        int successCount = 0;
+        for (int i = 1; i < lines.Length; i++)
+        {
+            try
+            {
+                string[] cols = lines[i].Split(',');
+                if (cols.Length < 4) continue;
+
+                string id = cols[0].Trim();
+                string assetPath = $"{targetFolder}/{id}.asset";
+                QuestData data = AssetDatabase.LoadAssetAtPath<QuestData>(assetPath);
+                if (data == null)
+                {
+                    data = ScriptableObject.CreateInstance<QuestData>();
+                    AssetDatabase.CreateAsset(data, assetPath);
+                }
+                
+                data.id = id;
+                data.questName = cols[1].Trim();
+                data.description = cols[2].Trim();
+                data.rewardDescription = cols[3].Trim();
+                
+                data.objectives = ParseQuestObjectives(cols.Length > 4 ? cols[4] : "");
+                data.rewardMoney = (cols.Length > 5 && int.TryParse(cols[5], out int money)) ? money : 0;
+                data.rewardItemIds = (cols.Length > 6) ? ParseStringArray(cols[6]) : Array.Empty<string>();
+                
+                EditorUtility.SetDirty(data);
+                successCount++;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Quest ID '{lines[i].Split(',')[0]}' 처리 중 오류 발생: {e.Message}");
+            }
+        }
+        
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Debug.Log($"총 {successCount}개의 QuestData CSV 임포트 완료");
+    }
+
+    private static List<QuestObjective> ParseQuestObjectives(string objectivesString)
+    {
+        var result = new List<QuestObjective>();
+        if (string.IsNullOrEmpty(objectivesString)) return result;
+
+        string[] objectiveParts = objectivesString.Split('|');
+        foreach (var part in objectiveParts)
+        {
+            string[] attrs = part.Split(';');
+            if (attrs.Length < 3) continue;
+
+            if (Enum.TryParse<QuestObjectiveType>(attrs[0].Trim(), true, out var type))
+            {
+                result.Add(new QuestObjective
+                {
+                    objectiveType = type,
+                    targetId = attrs[1].Trim(),
+                    requiredAmount = int.TryParse(attrs[2].Trim(), out int amount) ? amount : 1
+                });
+            }
+        }
+        return result;
+    }
+
     #endregion
     
     #region 공통 Import 메서드

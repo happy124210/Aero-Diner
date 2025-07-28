@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public enum CustomerAnimState
 {
@@ -23,7 +24,8 @@ public class CustomerView : MonoBehaviour
     [Header("Animation Components")]
     [SerializeField] private Animator animator;
     [SerializeField] private Animator emoteAnimator;
-
+    [SerializeField] private CoinPopEffect coin;
+    
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo;
     
@@ -36,19 +38,31 @@ public class CustomerView : MonoBehaviour
     private static readonly int DoAngry = Animator.StringToHash("DoAngry");
 
     #region Initialization
-    public void Initialize()
+
+    public void Initialize(CustomerData data)
     {
         SetupComponents();
+        ApplyAnimatorOverride(data);
         SetPatienceVisibility(false);
+        HideOrderBubble();
     }
 
     private void SetupComponents()
     {
-        if (!customerUI) customerUI = transform.FindChild<Canvas>("Group_Customer");
-        if (!orderBubble) orderBubble = transform.FindChild<Image>("Img_OrderBubble");
-        if (!patienceTimer) patienceTimer = transform.FindChild<Image>("Img_PatienceTimer");
-        
-        animator = GetComponentInChildren<Animator>();
+        customerUI = transform.FindChild<Canvas>("Canvas_Customer");
+        orderBubble = transform.FindChild<Image>("Img_OrderBubble");
+        patienceTimer = transform.FindChild<Image>("Img_PatienceTimer");
+        coin = transform.FindChild<CoinPopEffect>("Coin");
+        emoteAnimator = transform.FindChild<Animator>("Emote");
+
+        coin.gameObject.SetActive(false);
+    }
+    private void ApplyAnimatorOverride(CustomerData data)
+    {
+        if (animator && data.animator)
+        {
+            animator.runtimeAnimatorController = data.animator;
+        }
     }
     
     #endregion
@@ -99,7 +113,7 @@ public class CustomerView : MonoBehaviour
 
     public void ShowPayEffect()
     {
-        // TODO: 결제 이펙트 표시
+        coin.Play();
         if (showDebugInfo) Debug.Log($"[CustomerView]: {gameObject.name} 결제 완료 이펙트");
     }
 
@@ -141,6 +155,7 @@ public class CustomerView : MonoBehaviour
         yield return new WaitForSeconds(2f);
         
         //eatingEffect.SetActive(false);
+        
         onComplete?.Invoke();
     }
 
