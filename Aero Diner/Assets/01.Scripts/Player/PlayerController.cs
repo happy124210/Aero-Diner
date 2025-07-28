@@ -38,6 +38,8 @@ public class PlayerController : Singleton<PlayerController>
     public IInteractable currentTarget;
     private TilemapController tilemapController;
 
+    private string lastWallMessage = null;
+    private bool isTouchingWall = false;
 
     protected override void Awake()
     {
@@ -334,6 +336,53 @@ public class PlayerController : Singleton<PlayerController>
         currentTarget?.Interact(playerInventory, InteractionType.Stop);
     }
 
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("InvisibleWall"))
+        {
+            isTouchingWall = true;
+
+            string msg = GetWallPopupMessage();
+            lastWallMessage = msg;
+
+            EventBus.Raise(UIEventType.ShowWallPopup, msg);
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.CompareTag("InvisibleWall") && !isTouchingWall)
+        {
+            isTouchingWall = true;
+
+            string msg = GetWallPopupMessage();
+            if (msg != lastWallMessage)
+            {
+                lastWallMessage = msg;
+                EventBus.Raise(UIEventType.ShowWallPopup, msg);
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("InvisibleWall"))
+        {
+            isTouchingWall = false;
+            EventBus.Raise(UIEventType.HideWallPopup); // 이 이벤트 추가
+        }
+    }
+
+    private string GetWallPopupMessage()
+    {
+        if (GameManager.Instance.CurrentPhase == GamePhase.Operation)
+            return "지금은 영업 중이니 다른 곳에 가면 안돼!";
+        else if (playerInventory.heldStation != null)
+            return "설비를 든 상태로는 무거워서 멀리까지 나갈 수 없어!";
+        else
+            return "이 지역에서는 멀리 나가봐야 아무 것도 없어! \n 비행선을 수리해서 다른 지역으로 간다면 모를까...";
+    }
     private void OnDrawGizmosSelected()
     {
 #if UNITY_EDITOR

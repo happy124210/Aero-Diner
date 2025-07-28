@@ -74,6 +74,10 @@ MonoBehaviour:
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
+    - m_AssetGUID: 90142a11982d7b2428330ea3728ee241
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
   - sceneName: DayScene
     uiPrefabs:
     - m_AssetGUID: 4f04806a308443a428151319d7678021
@@ -93,6 +97,10 @@ MonoBehaviour:
       m_SubObjectType: 
       m_EditorAssetChanged: 0
     - m_AssetGUID: d3d2061f5fe5a1f46a11da4d4cc86d63
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+    - m_AssetGUID: 90142a11982d7b2428330ea3728ee241
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
