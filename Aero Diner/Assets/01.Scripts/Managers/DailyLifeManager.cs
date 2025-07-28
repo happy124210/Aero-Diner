@@ -21,10 +21,5 @@ public class DailyLifeManager : Singleton<DailyLifeManager>
     {
         yield return new WaitForSeconds(0.5f);
     }
-    public void OnOpenButtonClick()
-    {
-        EventBus.PlaySFX(SFXType.ButtonClick);
-        EventBus.Raise(UIEventType.ShowMenuPanel);
-        EventBus.PlayBGM(BGMEventType.PlayRecipeChoice);
-    }
+
 }

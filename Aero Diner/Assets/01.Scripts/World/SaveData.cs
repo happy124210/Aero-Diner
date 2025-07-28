@@ -36,5 +36,6 @@ public class SaveData
         public string gridCellName;
     }
 
+    public List<string> unlockedStationIds = new();
 
 }
