@@ -36,7 +36,7 @@ public class StoreDataManager : Singleton<StoreDataManager>
             StoreItemMap[itemData.TargetID] = itemData;
         }
 
-        Debug.Log($"{StoreItemMap.Count}개의 상점 아이템 데이터 로드 완료");
+        //Debug.Log($"{StoreItemMap.Count}개의 상점 아이템 데이터 로드 완료");
     }
     
     public string GenerateUnlockDescription(StoreItemData itemData)

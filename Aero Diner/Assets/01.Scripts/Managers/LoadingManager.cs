@@ -40,7 +40,7 @@ public class LoadingManager : MonoBehaviour
           // 클릭 대기 전 준비
         isClicked = false;
            // 예: "화면을 클릭하세요" 텍스트 표시 등 UI 처리
-        Debug.Log("로딩 완료. 클릭을 기다립니다.");
+        //Debug.Log("로딩 완료. 클릭을 기다립니다.");
 
         yield return new WaitUntil(() => isClicked); // 클릭 기다림
         // 클릭 시점까지 대기 & 전환
@@ -50,9 +50,9 @@ public class LoadingManager : MonoBehaviour
      private void Update()
      {
          if (!isClicked && Input.GetMouseButtonDown(0))
-         {
-           isClicked = true;
-          }
+         { 
+             isClicked = true;
+         }
      }
     private IEnumerator WaitForClickThenFadeOutAndActivate(AsyncOperation asyncOp)
     {
