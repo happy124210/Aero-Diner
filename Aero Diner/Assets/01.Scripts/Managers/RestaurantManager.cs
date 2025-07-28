@@ -82,17 +82,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
             case GamePhase.Opening:
                 InitializeDay();
                 EventBus.Raise(UIEventType.ShowRoundTimer);
-                if (!StoryManager.Instance.HasTriggerableStories(GamePhase.Opening))
-                {
-                    // 실행할 스토리가 없으면 바로 Operation 페이즈로 전환
-                    if (showDebugInfo) Debug.Log("[RestaurantManager] 바로 영업 시작");
-                    GameManager.Instance.ChangePhase(GamePhase.Operation);
-                }
-                else
-                {
-                    // 실행할 스토리가 있다면 기다리기
-                    // TODO: 스토리 끝나고 Operation 전환 로직 필요
-                }
                 break;
 
             // 영업 시작

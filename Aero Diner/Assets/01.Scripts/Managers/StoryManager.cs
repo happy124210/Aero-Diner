@@ -1,3 +1,5 @@
+// StoryManager.cs
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +12,6 @@ public class StoryManager : Singleton<StoryManager>
     [SerializeField] bool showDebugInfo;
     
     private List<StoryData> storyDatabase;
-    private string endedDialogueId = null;
     private HashSet<string> executedStoryIds = new();
     
     protected override void Awake()
@@ -31,140 +32,80 @@ public class StoryManager : Singleton<StoryManager>
         storyDatabase = Resources.LoadAll<StoryData>(StringPath.STORY_DATA_PATH).ToList();
     }
     
-    /// <summary>
-    /// 게임의 상태가 바뀌었을 때 트리거할 스토리가 있는지 확인
-    /// </summary>
     private void HandleGameEvent(GameEventType eventType, object data)
     {
         switch (eventType)
         {
             case GameEventType.GamePhaseChanged:
-            {
-                GamePhase currentPhase = (GamePhase)data;
-                CheckAndTriggerStories(triggerPhase: currentPhase);
-                GameManager.Instance.CheckAndTriggerEditStation();
-                
+                if (showDebugInfo) Debug.Log($"[StoryManager] {(GamePhase)data} Phase 진입. 다음 할 일을 확인합니다.");
+                CheckAndTriggerStory();
                 break;
-            }
             
             case GameEventType.DialogueEnded:
-                endedDialogueId = data as string;
-                CheckAndTriggerStories(endedDialogue: endedDialogueId);
-                endedDialogueId = null;
-                break;
-            
-            case GameEventType.QuestStatusChanged:
-                CheckAndTriggerStories();
+                string endedDialogueId = data as string;
+                if (showDebugInfo) Debug.Log($"[StoryManager] Dialogue '{endedDialogueId}' 종료. 다음 할 일을 확인합니다.");
+                CheckAndTriggerStory(endedDialogueId);
                 break;
         }
-    }
-    
-    private void CheckAndTriggerStories(GamePhase? triggerPhase = null, string endedDialogue = null)
-    {
-        foreach (var story in storyDatabase)
-        {
-            if (executedStoryIds.Contains(story.id)) continue;
-            bool triggerMatches = false;
-
-            // GamePhase가 바뀌어서 호출된 경우
-            if (triggerPhase.HasValue)
-            {
-                if (story.triggerPhase == triggerPhase.Value)
-                {
-                    triggerMatches = true;
-                }
-            }
-            
-            // Dialogue가 끝나서 호출된 경우
-            else if (endedDialogue != null)
-            {
-                if (story.triggerPhase == GamePhase.None && story.conditions.Any(c => c.conditionType == ConditionType.DialogueEnded))
-                {
-                    triggerMatches = true;
-                }
-            }
-            
-            // QuestStatus가 바뀌는 등, 특정 페이즈와 관련 없는 이벤트로 호출된 경우
-            else 
-            {
-                if (story.triggerPhase == GamePhase.None)
-                {
-                    triggerMatches = true;
-                }
-            }
-
-            // 최종 후보가 된 스토리들에 대해서만 세부 조건을 검사
-            if (triggerMatches && AreConditionsMet(story.conditions))
-            {
-                if (showDebugInfo) Debug.Log($"[StoryManager] 스토리 트리거: {story.id}");
-            
-                executedStoryIds.Add(story.id);
-                StartCoroutine(ExecuteActions(story.actions));
-                
-                break; 
-            }
-        }
-    }
-    
-    // 특정 페이즈에서 스토리 있는지
-    public bool HasTriggerableStories(GamePhase triggerPhase)
-    {
-        foreach (var story in storyDatabase)
-        {
-            if (executedStoryIds.Contains(story.id)) continue;
-            
-            if (story.triggerPhase == triggerPhase && AreConditionsMet(story.conditions))
-            {
-                if (showDebugInfo) Debug.Log($"[StoryManager] '{triggerPhase}'에 스토리 있음: {story.id}");
-                return true;
-            }
-        }
-
-        // 모든 스토리를 확인했지만 실행할 스토리가 없는 경우
-        return false;
     }
     
     /// <summary>
-    /// 조건 체크 
+    /// 실행할 다음 스토리를 찾고, 없으면 다음 단계 결정
     /// </summary>
-    private bool AreConditionsMet(List<StoryCondition> conditions)
+    /// <param name="endedDialogueId">방금 끝난 대화의 ID (없으면 null)</param>
+    private void CheckAndTriggerStory(string endedDialogueId = null)
     {
-        if (conditions == null || conditions.Count == 0) return true;
+        var currentPhase = GameManager.Instance.CurrentPhase;
         
-        foreach (var c in conditions)
+        var nextStory = storyDatabase.FirstOrDefault(story => 
         {
-            bool result = false;
-            
-            switch (c.conditionType)
+            if (executedStoryIds.Contains(story.id)) return false;
+
+            // 대화가 방금 끝났고, 이 대화를 조건으로 하는 스토리를 찾을 때
+            if (endedDialogueId != null && story.triggerPhase == GamePhase.None)
             {
-                // 날짜 체크
-                case ConditionType.Day:
-                    result = CheckNumericCondition(GameManager.Instance.CurrentDay, c.@operator, c.rValue);
-                    break;
-                
-                // 퀘스트 상태 체크
-                case ConditionType.QuestStatus:
-                    result = CheckQuestStatusCondition(c.lValue, c.@operator, c.rValue);
-                    break;
-                
-                // 대화 끝났는지
-                case ConditionType.DialogueEnded:
-                    if (c.@operator == "==")
-                    {
-                        result = (c.lValue == endedDialogueId);
-                    }
-                    break;
-                
-                case ConditionType.Money:
-                    result = CheckNumericCondition(GameManager.Instance.TotalEarnings, c.@operator, c.rValue);
-                    break;
+                // 조건 중에 "DialogueEnded"가 있고, 그 ID가 방금 끝난 대화 ID와 일치하는지 확인
+                return story.conditions.Any(c => 
+                    c.conditionType == ConditionType.DialogueEnded && 
+                    c.lValue == endedDialogueId
+                );
             }
             
-            if (!result) return false;
-        }
-        return true;
-    }
+            // 일반적인 단계 변경 시 해당 단계에 맞는 스토리를 찾을 때
+            if (endedDialogueId == null && story.triggerPhase == currentPhase)
+            {
+                return AreConditionsMet(story.conditions);
+            }
 
+            return false;
+        });
+
+        // 만약 실행할 다음 스토리를 찾았다면
+        if (nextStory != null)
+        {
+            if (showDebugInfo) Debug.Log($"[StoryManager] 다음 스토리 트리거: {nextStory.id}");
+            executedStoryIds.Add(nextStory.id);
+            StartCoroutine(ExecuteActions(nextStory.actions));
+        }
+        
+        // 실행할 스토리가 더 이상 없다면
+        else if (endedDialogueId == null)
+        {
+            if (showDebugInfo) Debug.Log($"[StoryManager] {currentPhase} Phase에서 실행할 스토리가 더 이상 없습니다.");
+            
+            // 현재 단계에 따라 다음 목적지로 이동
+            switch (currentPhase)
+            {
+                case GamePhase.Day:
+                    GameManager.Instance.ProceedToEditStation();
+                    break;
+                case GamePhase.Opening:
+                    GameManager.Instance.ProceedToOperation();
+                    break;
+            }
+        }
+    }
+    
     private IEnumerator ExecuteActions(List<StoryAction> actions)
     {
         foreach (var action in actions)
@@ -173,30 +114,40 @@ public class StoryManager : Singleton<StoryManager>
             {
                 case StoryType.StartDialogue:
                     DialogueManager.Instance.StartDialogue(action.targetId);
-                    yield return new WaitUntil(() => GameManager.Instance.CurrentPhase != GamePhase.Dialogue);
                     break;
-                
                 case StoryType.StartQuest:
                     QuestManager.Instance.StartQuest(action.targetId);
                     break;
-                
-                case StoryType.LostMoney:
-                    GameManager.Instance.AddMoney(int.Parse(action.value));
-                    break;
-                
-                case StoryType.EndQuest:
-                    QuestManager.Instance.EndQuest(action.targetId);
-                    break;
-                    
-                case StoryType.GameOver:
-                    // 시작 화면으로 돌아가기
-                    break;
+                // ...
             }
-
             yield return null;
         }
-        
-        GameManager.Instance.CheckAndTriggerEditStation();
+    }
+
+    private bool AreConditionsMet(List<StoryCondition> conditions)
+    {
+        if (conditions == null || conditions.Count == 0) return true;
+        foreach (var c in conditions)
+        {
+            bool result = false;
+            switch (c.conditionType)
+            {
+                case ConditionType.Day:
+                    result = CheckNumericCondition(GameManager.Instance.CurrentDay, c.@operator, c.rValue);
+                    break;
+                case ConditionType.QuestStatus:
+                    result = CheckQuestStatusCondition(c.lValue, c.@operator, c.rValue);
+                    break;
+                case ConditionType.Money:
+                    result = CheckNumericCondition(GameManager.Instance.TotalEarnings, c.@operator, c.rValue);
+                    break;
+                case ConditionType.DialogueEnded:
+                    result = true; 
+                    break;
+            }
+            if (!result) return false;
+        }
+        return true;
     }
     
     #region helper
