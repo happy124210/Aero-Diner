@@ -12,6 +12,7 @@ public class Store_RecipeScrollView : MonoBehaviour
     [SerializeField] private GameObject unlockedMenuPrefab;
     [SerializeField] private Store_RecipePanel detailPanel;
     [SerializeField] private GameObject lockedPanel;
+    [SerializeField] private GameObject noRecipePanel;
 
     private List<StoreItem> recipeStoreItems = new ();
     
@@ -50,7 +51,7 @@ public class Store_RecipeScrollView : MonoBehaviour
         
         PopulateScrollView();
     }
-    
+
     public void PopulateScrollView()
     {
         foreach (Transform child in contentTransform)
@@ -58,17 +59,33 @@ public class Store_RecipeScrollView : MonoBehaviour
             Destroy(child.gameObject);
         }
 
+        bool hasAvailableItem = false;
+
         foreach (var item in recipeStoreItems)
         {
-            // 구매한 레시피 제외
             if (item.IsPurchased) continue;
-            
+
             bool conditionsMet = AreConditionsMet(item);
             GameObject prefabToUse = conditionsMet ? unlockedMenuPrefab : lockedMenuPrefab;
 
             var go = Instantiate(prefabToUse, contentTransform);
             var slot = go.GetComponent<Store_Recipe_Content>();
             slot.Init(item, selected => OnItemSelected(selected, true));
+
+            hasAvailableItem = true; // 하나라도 추가되면 true
+        }
+
+        // 조건: 판매 가능한 레시피가 없을 때
+        if (!hasAvailableItem)
+        {
+            if (detailPanel != null) detailPanel.gameObject.SetActive(false);
+            if (noRecipePanel != null) noRecipePanel.SetActive(true);
+            return;
+        }
+        else
+        {
+            if (detailPanel != null) detailPanel.gameObject.SetActive(true);
+            if (noRecipePanel != null) noRecipePanel.SetActive(false);
         }
 
         // 첫 번째 아이템 자동 선택
@@ -78,7 +95,7 @@ public class Store_RecipeScrollView : MonoBehaviour
             OnItemSelected(firstItem, false);
         }
     }
-    
+
     // 구매했는지 체크
     private bool IsAlreadyPurchased(StoreItem item)
     {
