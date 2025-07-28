@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : Singleton<PlayerController>
 {
+    #region 참조
     [Header("입력 액션 참조")]
     public InputActionReference moveActionRef;
     public InputActionReference interactActionRef;
@@ -40,7 +41,20 @@ public class PlayerController : Singleton<PlayerController>
 
     private string lastWallMessage = null;
     private bool isTouchingWall = false;
+    #endregion
+    #region 외부 접근용 Getter
 
+    public string GetHeldFoodID()
+    {
+        return playerInventory?.holdingItem?.foodData?.id;
+    }
+
+    public string GetHeldStationID()
+    {
+        return playerInventory?.heldStation?.StationData?.id;
+    }
+
+    #endregion
     protected override void Awake()
     {
         base.Awake();
@@ -116,7 +130,7 @@ public class PlayerController : Singleton<PlayerController>
     {
         rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
     }
-
+    #region 상호작용부분
     private void OnInteract(InputAction.CallbackContext context)
     {
         var target = FindBestInteractable(InteractionType.Use);
@@ -277,7 +291,8 @@ public class PlayerController : Singleton<PlayerController>
     {
         return Physics2D.RaycastAll(origin, direction, distance, layer);
     }
-
+    #endregion
+    #region 애니메이션 부분
     private void Animate()
     {
         if (moveInput.sqrMagnitude > 0.01f)
@@ -335,8 +350,9 @@ public class PlayerController : Singleton<PlayerController>
     {
         currentTarget?.Interact(playerInventory, InteractionType.Stop);
     }
+    #endregion
 
-
+    #region 투명벽 상호작용
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("InvisibleWall"))
@@ -383,6 +399,8 @@ public class PlayerController : Singleton<PlayerController>
         else
             return "이 지역에서는 멀리 나가봐야 아무 것도 없어! \n 비행선을 수리해서 다른 지역으로 간다면 모를까...";
     }
+    #endregion
+    #region Gizmo
     private void OnDrawGizmosSelected()
     {
 #if UNITY_EDITOR
@@ -407,5 +425,5 @@ public class PlayerController : Singleton<PlayerController>
         }
 #endif
     }
-
+    #endregion
 }

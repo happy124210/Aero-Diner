@@ -71,7 +71,7 @@ public class PassiveStation : BaseStation, IInteractable
             isCooking = false;
             timer?.Stop(); // 타이머 멈춤
 
-            var sfx = StationSFXResolver.GetSFXFromStationData(stationData);
+            var sfx = StationSFXResolver.GetSFXFromStationData(StationData);
             EventBus.StopLoopSFX(sfx);
 
             if (showDebugInfo) Debug.Log($"[PassiveStation] 조리 중단됨 / 저장된 시간: {timer?.Remaining:F2}s");
