@@ -53,7 +53,15 @@ public class PlayerController : Singleton<PlayerController>
     {
         return playerInventory?.heldStation?.StationData?.id;
     }
+    public bool IsHoldingFood(string id)
+    {
+        return GetHeldFoodID() == id;
+    }
 
+    public bool IsHoldingStation(string id)
+    {
+        return GetHeldStationID() == id;
+    }
     #endregion
     protected override void Awake()
     {
