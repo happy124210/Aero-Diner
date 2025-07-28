@@ -6,7 +6,7 @@ public class StationPanel_ScrollView : MonoBehaviour
     [SerializeField] private RectTransform contentTransform;
     [SerializeField] private GameObject slotPrefab;
     [SerializeField] private StationPanel detailPanel;
-
+    [SerializeField] private GameObject noItemPanel;
     private void Start()
     {
         PopulateScrollView();
@@ -22,8 +22,31 @@ public class StationPanel_ScrollView : MonoBehaviour
                 return int.TryParse(numericPart, out int number) ? number : int.MaxValue;
             })
             .ToList();
+        // 아무 설비도 없을 경우
+        if (allStations.Count == 0)
+        {
+            detailPanel.gameObject.SetActive(false);
+            if (noItemPanel != null)
+                noItemPanel.SetActive(true);
+            return;
+        }
+
+        // 설비 있음
+        detailPanel.gameObject.SetActive(true);
+        if (noItemPanel != null)
+            noItemPanel.SetActive(false);
 
         StationPanel_ScrollView_Content firstSlot = null;
+
+        foreach (var station in allStations)
+        {
+            var go = Instantiate(slotPrefab, contentTransform);
+            var slotUI = go.GetComponent<StationPanel_ScrollView_Content>();
+            slotUI.Init(station, OnSlotSelected);
+
+            if (firstSlot == null)
+                firstSlot = slotUI;
+        }
 
         foreach (var station in allStations)
         {

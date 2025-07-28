@@ -10,11 +10,12 @@ public class MenuPanel : MonoBehaviour
     [SerializeField] private Transform contentTransform;      // ScrollView의 Content
     [SerializeField] private CanvasGroup canvasGroup;
 
+    [SerializeField] private GameObject deleteWarningPopup;
     [SerializeField] private GameObject warningPopup; // 팝업 루트
     [SerializeField] private CanvasGroup warningPopupCanvas; // 팝업의 CanvasGroup
     [SerializeField] private float popupFadeDuration = 0.5f;
     [SerializeField] private float popupVisibleTime = 2f;
-
+    private bool isdebug;
     [SerializeField] public RectTransform menuPanelTransform;
     private Vector2 originalPos;
     
@@ -56,6 +57,7 @@ public class MenuPanel : MonoBehaviour
         var menuList = MenuManager.Instance.GetUnlockedMenus();
         if (menuList == null)
         {
+            if(isdebug)
             Debug.LogWarning("TodayMenus 가 null입니다!");
             return;
         }
@@ -67,7 +69,8 @@ public class MenuPanel : MonoBehaviour
         {
             if (menu == null)
             {
-                Debug.LogWarning("null인 Menu 발견");
+                if (isdebug)
+                    Debug.LogWarning("null인 Menu 발견");
                 continue;
             }
 
@@ -110,6 +113,7 @@ public class MenuPanel : MonoBehaviour
     {
         EventBus.PlaySFX(SFXType.ButtonClick);
 
+        // 메뉴 선택 여부 확인
         bool anyToggled = false;
         foreach (Transform child in contentTransform)
         {
@@ -128,23 +132,74 @@ public class MenuPanel : MonoBehaviour
             return;
         }
 
-        if (menuPanelTransform == null)
+        //  삭제 셀 확인
+        bool hasStationInDeleteGrid = false;
+        foreach (var deleteCell in FindObjectsOfType<DeleteGridCell>())
         {
-            Debug.LogError("[MenuPanel] menuPanelTransform이 할당되지 않았습니다.");
+            if (deleteCell.HasStationToBeDeleted())
+            {
+                hasStationInDeleteGrid = true;
+                break;
+            }
+        }
+
+        if (hasStationInDeleteGrid)
+        {
+            ShowDeletePopup();
             return;
         }
 
-        PlayExitAnimation();
-        EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(1f, 1f, scene: "MainScene"));
-        //이거 위치 UI/Mainscene/Fader.cs(Start)로 옮겼습니다.
-        //RestaurantManager.Instance.StartRestaurant();
-        //EventBus.PlayBGM(BGMEventType.PlayMainTheme);
+        // 정상 전환
+        ProceedToMainScene();
+    }
+    private void ShowDeletePopup()
+    {
+        if (deleteWarningPopup == null) return;
 
+        deleteWarningPopup.SetActive(true);
+
+       
+    }
+    public void HideDeleteConfirmationPopup()
+    {
+        deleteWarningPopup?.SetActive(false);
     }
 
-
+    public void OnClickConfirmProceed()
+    {
+        deleteWarningPopup?.SetActive(false);
+        ProceedToMainScene();
+    }
     #region 애니메이션
 
+    private void ProceedToMainScene()
+    {
+        PlayExitAnimation();
+        EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(1f, 1f, scene: "MainScene"));
+    }
+    private void ShowDeleteStationPopup()
+    {
+        if (deleteWarningPopup == null) return;
+
+        var cg = deleteWarningPopup.GetComponent<CanvasGroup>();
+        if (cg == null)
+            cg = deleteWarningPopup.AddComponent<CanvasGroup>();
+
+        deleteWarningPopup.SetActive(true);
+        cg.alpha = 0f;
+
+        cg.DOFade(1f, popupFadeDuration)
+            .SetEase(Ease.OutQuad)
+            .OnComplete(() =>
+            {
+                DOVirtual.DelayedCall(popupVisibleTime, () =>
+                {
+                    cg.DOFade(0f, popupFadeDuration)
+                        .SetEase(Ease.InQuad)
+                        .OnComplete(() => deleteWarningPopup.SetActive(false));
+                });
+            });
+    }
     private void ShowNoMenuSelectedPopup()
     {
         if (warningPopup == null || warningPopupCanvas == null) return;
