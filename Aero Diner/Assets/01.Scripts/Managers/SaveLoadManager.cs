@@ -24,7 +24,6 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         {
             string json = JsonConvert.SerializeObject(data, Formatting.Indented);
             File.WriteAllText(savePath, json);
-            data.unlockedStationIds = StationManager.Instance.GetUnlockedStationIds();
             if (Instance?.showDebugInfo == true)
                 Debug.Log($"[SaveLoadManager] 게임 저장 완료: {savePath}");
         }
