@@ -10,7 +10,7 @@ public class IngredientPanel_ScrollView : MonoBehaviour
     public GameObject itemSlotPrefab;
     public FoodTypeIconSet iconSet;
     public IngredientPanel ingredientPanel; // 우측 패널
-    public GameObject noItemPanel;
+
     private IEnumerator Start()
     {
         yield return new WaitUntil(() => RecipeManager.Instance != null && RecipeManager.Instance.FoodDatabase.Count > 0);
@@ -28,19 +28,6 @@ public class IngredientPanel_ScrollView : MonoBehaviour
         return int.MaxValue; // 실패하면 뒤로 보냄
     })
     .ToList();
-        // 표시할 재료가 없는 경우
-        if (allFoods.Count == 0)
-        {
-            ingredientPanel.gameObject.SetActive(false);
-            if (noItemPanel != null)
-                noItemPanel.SetActive(true);
-            return;
-        }
-
-        // 재료 있음: 패널 활성화
-        ingredientPanel.gameObject.SetActive(true);
-        if (noItemPanel != null)
-            noItemPanel.SetActive(false);
 
         IngredientPanel_ScrollView_Content firstSlotUI = null;
 
