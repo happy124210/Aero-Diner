@@ -13,9 +13,21 @@ public enum QuestStatus
 // 퀘스트 목표의 종류
 public enum QuestObjectiveType
 {
-    EarnMoney,   // 돈 벌기
+    EarnMoney,
+    
     BuyStation,
     BuyRecipe,
+    
+    // == 튜토리얼용 ==
+    SelectRecipe,
+    
+    HoldFood,
+    HoldStation,
+    UseStation,
+    DeliverFood,
+    
+    PlaceStation,
+    SelectItemInUI,
 }
 
 /// <summary>

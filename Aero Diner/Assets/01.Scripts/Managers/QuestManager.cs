@@ -80,6 +80,9 @@ public class QuestManager : Singleton<QuestManager>
         // EventBus.Raise(UIEventType.OnQuestStarted, questDatabase[questId]);
     }
     
+    /// <summary>
+    /// 퀘스트 체크하기
+    /// </summary>
     public void EndQuest(string questId)
     {
         if (GetQuestStatus(questId) != QuestStatus.InProgress)
@@ -107,10 +110,27 @@ public class QuestManager : Singleton<QuestManager>
                     }
                     break;
                 
-                // 다른 목표 타입에 대한 판정 로직
-                // case QuestObjectiveType.BuyStation:
-                //     // 
-                //     break;
+                // == 튜토리얼용 퀘스트 ==
+                case QuestObjectiveType.SelectRecipe:
+                    if (MenuManager.Instance.IsMenuSelected(objective.targetId))
+                    {
+                        isObjectiveMet = true;
+                    }
+                    break;
+                
+                case QuestObjectiveType.HoldFood:
+                    if (PlayerController.Instance.IsHoldingFood(objective.targetId))
+                    {
+                        isObjectiveMet = true;
+                    }
+                    break;
+                
+                case QuestObjectiveType.HoldStation:
+                    if (PlayerController.Instance.IsHoldingStation(objective.targetId))
+                    {
+                        isObjectiveMet = true;
+                    }
+                    break;
             }
             
             if (!isObjectiveMet)

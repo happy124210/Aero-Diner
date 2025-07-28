@@ -165,7 +165,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         }
     }
 
-    public static void RestoreStationState()
+    public static void RestoreStationState(GamePhase currentPhase)
     {
         var infos = LoadStationData(); // station.json 불러오기
         if (infos == null || infos.Count == 0)
@@ -175,6 +175,6 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
             return;
         }
 
-        StationManager.Instance.RestoreStations(infos); // StationManager에게 전달
+        StationManager.Instance.RestoreStations(infos, currentPhase); // StationManager에게 전달
     }
 }

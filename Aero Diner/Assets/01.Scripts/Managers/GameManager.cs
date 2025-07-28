@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using UnityEngine;
 
 /// <summary>
 /// 게임의 전체적인 상태와 데이터를 관리
@@ -36,16 +38,11 @@ public class GameManager : Singleton<GameManager>
         EventBus.OnGameEvent += HandleGameEvent;
         EventBus.OnUIEvent += HandleUIEvent;
     }
-    
+
     private void OnDestroy()
     {
         EventBus.OnGameEvent -= HandleGameEvent;
         EventBus.OnUIEvent -= HandleUIEvent;
-    }
-
-    private void Start()
-    {
-        ChangePhase(GamePhase.EditStation); 
     }
     
     #endregion
@@ -64,14 +61,33 @@ public class GameManager : Singleton<GameManager>
         
         Time.timeScale = currentPhase 
             is GamePhase.Paused 
-            //or GamePhase.Dialogue 
+            //or GamePhase.Dialogue
             or GamePhase.GameOver 
-            or GamePhase.SelectMenu 
+            //or GamePhase.SelectMenu 
             or GamePhase.Shop ? 0f : 1f;
         
         if (showDebugInfo) Debug.Log($"[GameManager] Game Phase 변경됨: {newPhase}");
     }
     
+    public void ProceedToEditStation()
+    {
+        // 현재 Day 단계일 때만
+        if (CurrentPhase == GamePhase.Day)
+        {
+            if (showDebugInfo) Debug.Log("[GameManager] 모든 스토리가 종료되어 EditStation으로 전환");
+            ChangePhase(GamePhase.EditStation);
+        }
+    }
+
+    public void ProceedToOperation()
+    {
+        // Opening 단계일 때만
+        if (CurrentPhase == GamePhase.Opening)
+        {
+            if (showDebugInfo) Debug.Log("[GameManager] 모든 Opening 스토리가 종료되어 Operation으로 전환");
+            ChangePhase(GamePhase.Operation);
+        }
+    }
     
     private void HandleGameEvent(GameEventType eventType, object data)
     {
@@ -81,10 +97,15 @@ public class GameManager : Singleton<GameManager>
             ChangePhase(GamePhase.Closing);
         }
     }
-    
 
     private void HandleUIEvent(UIEventType eventType, object data)
     {
+        if (eventType == UIEventType.ShowMenuPanel)
+        {
+            if (CurrentPhase == GamePhase.EditStation)
+                ChangePhase(GamePhase.SelectMenu);
+        }
+        
         if (eventType == UIEventType.HideResultPanel)
         {
             int earningsFromDay = RestaurantManager.Instance.TodayEarnings;
