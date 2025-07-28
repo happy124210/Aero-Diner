@@ -81,8 +81,7 @@ public class DialogueManager : Singleton<DialogueManager>
         
         GameManager.Instance.PauseGame();
         GameManager.Instance.ChangePhase(GamePhase.Dialogue);
-
-
+        
         linesQueue.Clear();
         foreach (var line in data.lines)
         {
