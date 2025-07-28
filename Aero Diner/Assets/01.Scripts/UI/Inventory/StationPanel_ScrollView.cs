@@ -10,62 +10,74 @@ public class StationPanel_ScrollView : MonoBehaviour
     [SerializeField] private GameObject lockedSlotPrefab;
     private void Start()
     {
-        PopulateScrollView();
+        PopulateStationList();
     }
 
-    private void PopulateScrollView()
+    private void PopulateStationList()
     {
-        var allStations = Resources.LoadAll<StationData>("Datas/Station")
-            .Where(s => !string.IsNullOrEmpty(s.id) && s.id.StartsWith("s"))
+        // 기존 UI 슬롯들 모두 삭제
+        foreach (Transform child in contentTransform)
+        {
+            Destroy(child.gameObject);
+        }
+        
+        var allStations = StationManager.Instance.GetAllStations()
             .OrderBy(s =>
             {
-                string numericPart = new string(s.id.Where(char.IsDigit).ToArray());
-                return int.TryParse(numericPart, out int number) ? number : int.MaxValue;
+                string numPart = new string(s.stationData.id.Where(char.IsDigit).ToArray());
+                return int.TryParse(numPart, out int n) ? n : int.MaxValue;
             })
             .ToList();
 
-        if (allStations.Count == 0)
+        // 아무 설비도 없는 경우
+        if (!allStations.Any())
         {
             detailPanel.gameObject.SetActive(false);
-            if (noItemPanel != null)
-                noItemPanel.SetActive(true);
+            noItemPanel?.SetActive(true);
             return;
         }
-
+        
+        // 설비 있음
         detailPanel.gameObject.SetActive(true);
-        if (noItemPanel != null)
-            noItemPanel.SetActive(false);
+        noItemPanel?.SetActive(false);
 
-        StationPanel_ScrollView_Content firstUnlocked = null;
+        StationPanel_ScrollView_Content firstUnlockedSlot = null;
 
+        // 모든 스테이션을 순회하며 해금/잠금 상태에 맞는 UI 생성
         foreach (var station in allStations)
         {
-            bool isUnlocked = StationManager.Instance.IsUnlocked(station.id);
+            GameObject prefabToUse = station.isUnlocked ? unlockedSlotPrefab : lockedSlotPrefab;
+            GameObject go = Instantiate(prefabToUse, contentTransform);
 
-            GameObject prefabToUse = isUnlocked ? unlockedSlotPrefab : lockedSlotPrefab;
-            var go = Instantiate(prefabToUse, contentTransform);
-
-            if (isUnlocked)
+            if (station.isUnlocked)
             {
+                // 해금된 슬롯 초기화
                 var slotUI = go.GetComponent<StationPanel_ScrollView_Content>();
-                slotUI.Init(station, OnSlotSelected);
-
-                if (firstUnlocked == null)
-                    firstUnlocked = slotUI;
+                slotUI.Init(station.stationData, OnSlotSelected);
+                
+                if (firstUnlockedSlot == null)
+                {
+                    firstUnlockedSlot = slotUI;
+                }
             }
             else
             {
+                // 잠긴 슬롯 초기화
                 var slotUI = go.GetComponent<StationLockedItemUI>();
-                slotUI.Init(station);
+                slotUI.Init(station.stationData);
             }
         }
-
-        if (firstUnlocked != null)
+        
+        if (firstUnlockedSlot != null)
         {
-            detailPanel.SetData(firstUnlocked.GetStationData());
+            detailPanel.SetData(firstUnlockedSlot.GetStationData());
+        }
+        else
+        {
+            detailPanel.gameObject.SetActive(false);
         }
     }
-
+    
     private void OnSlotSelected(StationData data)
     {
         detailPanel.SetData(data);

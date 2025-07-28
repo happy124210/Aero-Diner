@@ -39,7 +39,7 @@ public class Store_StationScrollView : MonoBehaviour
         {
             if (storeDataMap.TryGetValue(station.Key, out var csvData))
             {
-                var storeItem = new StoreItem(station.Value, csvData);
+                var storeItem = new StoreItem(station.Value.stationData, csvData);
                 stationStoreItems.Add(storeItem);
             }
         }
