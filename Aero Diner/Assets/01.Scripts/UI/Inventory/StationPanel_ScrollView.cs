@@ -4,9 +4,10 @@ using System.Linq;
 public class StationPanel_ScrollView : MonoBehaviour
 {
     [SerializeField] private RectTransform contentTransform;
-    [SerializeField] private GameObject slotPrefab;
     [SerializeField] private StationPanel detailPanel;
     [SerializeField] private GameObject noItemPanel;
+    [SerializeField] private GameObject unlockedSlotPrefab;
+    [SerializeField] private GameObject lockedSlotPrefab;
     private void Start()
     {
         PopulateScrollView();
@@ -22,7 +23,7 @@ public class StationPanel_ScrollView : MonoBehaviour
                 return int.TryParse(numericPart, out int number) ? number : int.MaxValue;
             })
             .ToList();
-        // 아무 설비도 없을 경우
+
         if (allStations.Count == 0)
         {
             detailPanel.gameObject.SetActive(false);
@@ -31,37 +32,37 @@ public class StationPanel_ScrollView : MonoBehaviour
             return;
         }
 
-        // 설비 있음
         detailPanel.gameObject.SetActive(true);
         if (noItemPanel != null)
             noItemPanel.SetActive(false);
 
-        StationPanel_ScrollView_Content firstSlot = null;
+        StationPanel_ScrollView_Content firstUnlocked = null;
 
         foreach (var station in allStations)
         {
-            var go = Instantiate(slotPrefab, contentTransform);
-            var slotUI = go.GetComponent<StationPanel_ScrollView_Content>();
-            slotUI.Init(station, OnSlotSelected);
+            bool isUnlocked = StationManager.Instance.IsUnlocked(station.id);
 
-            if (firstSlot == null)
-                firstSlot = slotUI;
+            GameObject prefabToUse = isUnlocked ? unlockedSlotPrefab : lockedSlotPrefab;
+            var go = Instantiate(prefabToUse, contentTransform);
+
+            if (isUnlocked)
+            {
+                var slotUI = go.GetComponent<StationPanel_ScrollView_Content>();
+                slotUI.Init(station, OnSlotSelected);
+
+                if (firstUnlocked == null)
+                    firstUnlocked = slotUI;
+            }
+            else
+            {
+                var slotUI = go.GetComponent<StationLockedItemUI>();
+                slotUI.Init(station);
+            }
         }
 
-        foreach (var station in allStations)
+        if (firstUnlocked != null)
         {
-            var go = Instantiate(slotPrefab, contentTransform);
-            var slotUI = go.GetComponent<StationPanel_ScrollView_Content>();
-            slotUI.Init(station, OnSlotSelected);
-
-            if (firstSlot == null)
-                firstSlot = slotUI;
-        }
-
-        // 기본 선택
-        if (firstSlot != null)
-        {
-            detailPanel.SetData(firstSlot.GetStationData());
+            detailPanel.SetData(firstUnlocked.GetStationData());
         }
     }
 
