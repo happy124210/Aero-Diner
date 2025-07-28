@@ -39,10 +39,6 @@ public class StorageGridCell : MonoBehaviour
 
         bool shouldShow = phase == GamePhase.Day || phase == GamePhase.EditStation;
         stored.gameObject.SetActive(shouldShow);
-
-#if UNITY_EDITOR
-        Debug.Log($"[StorageGridCell] 보관된 오브젝트 {(shouldShow ? "활성화" : "비활성화")}, Phase: {phase}");
-#endif
     }
 
     private Transform GetStoredObject()

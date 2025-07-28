@@ -95,7 +95,8 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         if (data == null)
         {
             data = new SaveData();
-            Debug.LogWarning("[SaveLoadManager] 기존 세이브 없음 → 새 SaveData로 초기화함");
+            if (Instance?.showDebugInfo == true)
+                Debug.LogWarning("[SaveLoadManager] 기존 세이브 없음 → 새 SaveData로 초기화함");
         }
 
         // 현재 바인딩 정보 저장
@@ -131,7 +132,8 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"[SaveLoadManager] 스테이션 저장 실패: {e.Message}");
+            if (Instance?.showDebugInfo == true)
+                Debug.LogError($"[SaveLoadManager] 스테이션 저장 실패: {e.Message}");
         }
     }
 
@@ -143,19 +145,22 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         {
             if (!File.Exists(path))
             {
-                Debug.LogWarning($"[SaveLoadManager] station.json 파일이 존재하지 않습니다 → {path}");
+                if (Instance?.showDebugInfo == true)
+                    Debug.LogWarning($"[SaveLoadManager] station.json 파일이 존재하지 않습니다 → {path}");
                 return null;
             }
 
             string json = File.ReadAllText(path);
             var infos = JsonConvert.DeserializeObject<List<StationSaveInfo>>(json);
-            Debug.Log($"[SaveLoadManager] station.json 로드 완료: {infos.Count}개 항목");
+            if (Instance?.showDebugInfo == true)
+                Debug.Log($"[SaveLoadManager] station.json 로드 완료: {infos.Count}개 항목");
 
             return infos;
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"[SaveLoadManager] station.json 로드 실패: {e.Message}");
+            if (Instance?.showDebugInfo == true)
+                Debug.LogError($"[SaveLoadManager] station.json 로드 실패: {e.Message}");
             return null;
         }
     }
@@ -165,7 +170,8 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         var infos = LoadStationData(); // station.json 불러오기
         if (infos == null || infos.Count == 0)
         {
-            Debug.LogWarning("[SaveLoadManager] station.json 로드 실패 또는 내용 없음");
+            if (Instance?.showDebugInfo == true)
+                Debug.LogWarning("[SaveLoadManager] station.json 로드 실패 또는 내용 없음");
             return;
         }
 

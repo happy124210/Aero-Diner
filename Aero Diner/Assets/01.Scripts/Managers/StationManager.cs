@@ -46,7 +46,7 @@ public class StationManager : Singleton<StationManager>
     protected override void Awake()
     {
         Instance = this;
-        Debug.Log("[StationManager] Awake에서 Instance 초기화됨");
+        if (showDebugInfo) Debug.Log("[StationManager] Awake에서 Instance 초기화됨");
         base.Awake();
 
         InitializeStationDatabase();
@@ -64,7 +64,7 @@ public class StationManager : Singleton<StationManager>
     public void SetTilemapController(TilemapController controller)
     {
         tilemapController = controller;
-        Debug.Log("[StationManager] 타일맵 컨트롤러 연결 완료");
+        if (showDebugInfo) Debug.Log("[StationManager] 타일맵 컨트롤러 연결 완료");
     }
 
 
@@ -106,6 +106,10 @@ public class StationManager : Singleton<StationManager>
         if (showDebugInfo) Debug.Log($"[StationManager] 총 {stationGroups.Count}개의 GridCell에서 스테이션을 수집했습니다.");
     }
 
+    /// <summary>
+    /// 현재 배치된 스테이션 정보를 기반으로 StationSaveInfo 리스트를 생성
+    /// - 스테이션 이름에서 "(Clone)" 문자열을 제거한 ID를 저장
+    /// </summary>
     public List<StationSaveInfo> GenerateStationSaveData()
     {
         var saveList = new List<StationSaveInfo>();
@@ -121,13 +125,17 @@ public class StationManager : Singleton<StationManager>
                 continue;
             }
 
+            // 프리팹 이름에서 (Clone) 제거
+            string cleanId = group.station.name.Replace("(Clone)", "").Trim();
+
             var info = new StationSaveInfo
             {
-                id = group.station.name, // 혹은 station.GetComponent<Station>().stationData.id
+                id = cleanId,
                 gridCellName = cell.name
             };
 
             saveList.Add(info);
+
             if (showDebugInfo) Debug.Log($"[Generate] 저장됨: id = '{info.id}', cell = '{info.gridCellName}'");
         }
 
