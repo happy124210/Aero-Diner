@@ -153,8 +153,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
         GameManager.Instance.AddMoney(amount);
         EventBus.Raise(UIEventType.UpdateTodayEarnings, todayEarnings);
-        EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
-        EventBus.OnSFXRequested(SFXType.CustomerPay);
     }
 
     #endregion
