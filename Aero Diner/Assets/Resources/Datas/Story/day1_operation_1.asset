@@ -23,3 +23,6 @@ MonoBehaviour:
   - storyType: 11
     targetId: tu3
     value: 
+  - storyType: 13
+    targetId: s24
+    value: 

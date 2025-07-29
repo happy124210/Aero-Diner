@@ -66,12 +66,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d55a6e3b0cb53740a58acf2ca5a1346, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolContainer: {fileID: 0}
-  poolCapacity: 20
-  maxPoolSize: 40
-  customerPrefab: {fileID: 6986737310238590579, guid: abe38c57c0dcb1946ae8e552e8cb90e0, type: 3}
-  customerTypes: []
-  showDebugInfo: 0
 --- !u!1 &321241236627500330
 GameObject:
   m_ObjectHideFlags: 0
@@ -330,16 +324,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57f19b05d0bc5e34488f3821311ef775, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customerSpawner: {fileID: 8892305027162139297}
+  roundTimeLimit: 300
   entrancePoint: {fileID: 324621470884776571}
   exitPoint: {fileID: 5825409973683639667}
-  gameRunning: 0
-  targetCustomersServed: 50
   customersServed: 0
   customersVisited: 0
-  gameTime: 0
+  todayEarnings: 0
+  customerSpawner: {fileID: 8892305027162139297}
   showDebugInfo: 0
-  gameTimeLimit: 300
 --- !u!1 &8184824362609732755
 GameObject:
   m_ObjectHideFlags: 0
@@ -387,6 +379,10 @@ PrefabInstance:
     - target: {fileID: 1819969098726933459, guid: a936fcd0cb196cb4093e0e47b9e12b37, type: 3}
       propertyPath: m_Name
       value: Table
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819969098726933459, guid: a936fcd0cb196cb4093e0e47b9e12b37, type: 3}
+      propertyPath: m_TagString
+      value: Station
       objectReference: {fileID: 0}
     - target: {fileID: 5136115962108291882, guid: a936fcd0cb196cb4093e0e47b9e12b37, type: 3}
       propertyPath: m_LocalPosition.x
@@ -458,6 +454,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Table (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1819969098726933459, guid: a936fcd0cb196cb4093e0e47b9e12b37, type: 3}
+      propertyPath: m_TagString
+      value: Station
+      objectReference: {fileID: 0}
     - target: {fileID: 5136115962108291882, guid: a936fcd0cb196cb4093e0e47b9e12b37, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3
@@ -527,6 +527,10 @@ PrefabInstance:
     - target: {fileID: 1819969098726933459, guid: a936fcd0cb196cb4093e0e47b9e12b37, type: 3}
       propertyPath: m_Name
       value: Table (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819969098726933459, guid: a936fcd0cb196cb4093e0e47b9e12b37, type: 3}
+      propertyPath: m_TagString
+      value: Station
       objectReference: {fileID: 0}
     - target: {fileID: 5136115962108291882, guid: a936fcd0cb196cb4093e0e47b9e12b37, type: 3}
       propertyPath: m_LocalPosition.x

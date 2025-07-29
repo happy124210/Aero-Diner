@@ -15,16 +15,14 @@ public class StationManager : Singleton<StationManager>
     [SerializeField] private bool showDebugInfo;
     [SerializeField] private List<string> startStationIds = new() {"s1", "s2", "s3", "s5", "s8", "s15", "s16", "s17", "s24"};
     
-    // 원본 데이터베이스
-    private Dictionary<string, Station> stationDatabase = new (); // 전체 Station타입 스테이션 데이터 담음
+    // 데이터베이스들
+    private Dictionary<string, Station> stationDatabase = new(); // 전체 Station타입 스테이션 데이터 담음
+    private Dictionary<string, GameObject> stationPrefabDatabase = new(); 
+    private HashSet<string> unlockedStationIds = new();
     
-    // 인벤토리에서 해금된 스테이션 ID 목록 - 인벤토리UI에서 사용
-    private HashSet<string> unlockedStationIds = new HashSet<string>();
-    
-    // 저장 시스템
-    private List<StationGroup> stationGroups = new List<StationGroup>();         // 각 GridCell 아래에 있는 Station 리스트
+    // 현재 상태 관리
+    private List<StationGroup> stationGroups = new();         // 각 GridCell 아래에 있는 Station 리스트
     private Dictionary<string, (int gridCellCount, int storageGridCellCount)> stationTypeCounts = new();
-    private List<StationSnapshot> stationSnapshots = new List<StationSnapshot>();
     
     #region public getters & methods
     
@@ -37,14 +35,18 @@ public class StationManager : Singleton<StationManager>
     public bool IsUnlocked(string id) => unlockedStationIds.Contains(id);
     
     // Station 개수 조회
-    // TODO
-    // public string GetStationPlacedCount(string id) => stationTypeCounts.Where(station => station.Key == id).Grid.ToString();
+    public int GetStationPlacedCount(string id) => stationTypeCounts.TryGetValue(id, out var counts) ? counts.gridCellCount : 0;
+    public int GetStationStoredCount(string id) => stationTypeCounts.TryGetValue(id, out var counts) ? counts.storageGridCellCount : 0;
     
     // public methods
     public List<Station> GetAllStations() => stationDatabase.Values.ToList();
     public List<Station> GetUnlockedStations() => stationDatabase.Values.Where(station => station.isUnlocked).ToList();
     public HashSet<string> GetUnlockedStationIds() => stationDatabase.Keys.ToHashSet();
     
+    public int TotalStationCount;
+    public int GridCellStationCount;
+    public int StorageGridCellStationCount;
+   
     #endregion
 
     #region class
@@ -66,10 +68,6 @@ public class StationManager : Singleton<StationManager>
     }
     
     #endregion
-    
-    public int TotalStationCount;
-    public int GridCellStationCount;
-    public int StorageGridCellStationCount;
 
     protected override void Awake()
     {
@@ -77,22 +75,29 @@ public class StationManager : Singleton<StationManager>
         base.Awake();
 
         InitializeStationDatabase();
+        InitializePrefabDatabase();
         LoadStationDatabase();
     }
 
     private void Start()
     {
         var phase = GameManager.Instance.CurrentPhase;
+        bool didLoad = false;
 
         if (phase == GamePhase.Day || phase == GamePhase.Opening)
         {
             StationLoad(phase);
+            didLoad = true;
         }
 
         tilemapController.FindGridCells();
         if (showDebugInfo) Debug.Log($"[StationManager] GridCell 수: {tilemapController.gridCells.Count}");
 
-        SetStations();
+        if (!didLoad)
+        {
+            SetStations();
+        }
+        
         CountStationsPerCellType();
     }
 
@@ -102,14 +107,12 @@ public class StationManager : Singleton<StationManager>
         if (showDebugInfo) Debug.Log("[StationManager] 타일맵 컨트롤러 연결 완료");
     }
 
-    #region Station 해금 관리
+    #region Station 데이터베이스 & 해금 관리
 
     private void InitializeStationDatabase()
     {
         stationDatabase.Clear();
-        
         StationData[] allStations = Resources.LoadAll<StationData>(StringPath.STATION_DATA_PATH);
-        
         foreach (var data in allStations)
         {
             if (!string.IsNullOrEmpty(data.id))
@@ -156,6 +159,26 @@ public class StationManager : Singleton<StationManager>
 
         if (showDebugInfo) Debug.Log($"StationManager]: 전체 {stationDatabase.Count}개  데이터베이스 생성 완료");
     }
+    
+    /// <summary>
+    /// 프리팹 리스트를 기반으로 ID-프리팹 딕셔너리 생성
+    /// </summary>
+    private void InitializePrefabDatabase()
+    {
+        stationPrefabDatabase.Clear();
+        foreach (var prefab in stationPrefabs)
+        {
+            var stationComponent = prefab.GetComponent<IMovableStation>();
+            if (stationComponent != null && stationComponent.StationData != null && !string.IsNullOrEmpty(stationComponent.StationData.id))
+            {
+                stationPrefabDatabase[stationComponent.StationData.id] = prefab;
+            }
+            else
+            {
+                Debug.LogWarning($"[StationManager] '{prefab.name}' 프리팹에 유효한 StationData ID가 없어 데이터베이스에 추가할 수 없습니다.");
+            }
+        }
+    }
 
     public void UnlockStation(string stationId)
     {
@@ -178,6 +201,99 @@ public class StationManager : Singleton<StationManager>
 
     #endregion
 
+    #region 저장 & 복원
+
+    /// <summary>
+    /// 현재 배치된 스테이션 정보를 StationData.id를 기준으로 생성합니다.
+    /// </summary>
+    public List<StationSaveInfo> GenerateStationSaveData()
+    {
+        var saveList = new List<StationSaveInfo>();
+        for (int i = 0; i < stationGroups.Count; i++)
+        {
+            var group = stationGroups[i];
+            if (group.station == null) continue;
+
+            var stationComponent = group.station.GetComponent<IMovableStation>();
+            if (stationComponent == null || stationComponent.StationData == null) continue;
+            
+            var info = new StationSaveInfo
+            {
+                id = stationComponent.StationData.id, // 데이터의 ID를 직접 사용
+                gridCellName = tilemapController.gridCells[i].name
+            };
+            saveList.Add(info);
+        }
+        return saveList;
+    }
+
+    /// <summary>
+    /// 프리팹 데이터베이스를 사용하여 스테이션 복원
+    /// </summary>
+    public void RestoreStations(List<StationSaveInfo> infos, GamePhase currentPhase)
+    {
+        stationGroups.Clear();
+        for (int i = 0; i < tilemapController.gridCells.Count; i++)
+            stationGroups.Add(new StationGroup());
+
+        foreach (var info in infos)
+        {
+            StationData data = FindStationDataById(info.id);
+            if (data == null || !stationPrefabDatabase.TryGetValue(info.id, out GameObject prefab))
+            {
+                if (showDebugInfo) Debug.LogError($"[Restore] StationData 또는 Prefab을 찾을 수 없음: {info.id}");
+                continue;
+            }
+
+            GameObject cell = tilemapController.gridCells.FirstOrDefault(c => c.name == info.gridCellName);
+            if (cell == null)
+            {
+                if (showDebugInfo) Debug.LogError($"[Restore] 셀을 찾을 수 없음: {info.gridCellName}");
+                continue;
+            }
+
+            GameObject instance = Instantiate(prefab, cell.transform);
+            instance.transform.localPosition = Vector3.zero;
+            instance.GetComponent<BaseStation>()?.Initialize(data);
+            
+            bool isStorageCell = cell.GetComponent<StorageGridCell>() != null;
+            bool shouldActivate = currentPhase == GamePhase.EditStation || currentPhase == GamePhase.Day;
+            instance.SetActive(isStorageCell ? shouldActivate : true);
+            
+            int index = tilemapController.gridCells.IndexOf(cell);
+            stationGroups[index].station = instance;
+        }
+    }
+    
+    /// <summary>
+    /// 현재 상태의 스테이션 정보를 JSON으로 저장
+    /// </summary>
+    public void StationSave()
+    {
+        SetStations(); // 현재 상태 갱신
+
+        var stationInfos = GenerateStationSaveData();
+        Debug.Log($"[StationManager] 저장 대상 Station 수: {stationInfos.Count}");
+
+        SaveLoadManager.SaveStationData(stationInfos); // JSON 저장
+
+        Debug.Log($"[StationManager] 저장 완료");
+    }
+
+    /// <summary>
+    /// 현재 게임 상태에 맞는 스테이션을 불러옴
+    /// </summary>
+    /// <param name="phaseObj"></param>
+    public void StationLoad(object phaseObj)
+    {
+        GamePhase newPhase = (GamePhase)phaseObj;
+        DestroyCurrentStations();
+        tilemapController.FindGridCells();
+        SaveLoadManager.RestoreStationState(newPhase);
+        if (showDebugInfo) Debug.Log("[StationManager] 불러오기 완료");
+    }
+    
+    #endregion
 
     /// <summary>
     /// GridCell 아래의 오브젝트들을 수집해서 구조화
@@ -218,112 +334,17 @@ public class StationManager : Singleton<StationManager>
     }
 
     /// <summary>
-    /// 현재 배치된 스테이션 정보를 기반으로 StationSaveInfo 리스트를 생성
-    /// - 스테이션 이름에서 "(Clone)" 문자열을 제거한 ID를 저장
-    /// </summary>
-    public List<StationSaveInfo> GenerateStationSaveData()
-    {
-        var saveList = new List<StationSaveInfo>();
-
-        for (int i = 0; i < stationGroups.Count; i++)
-        {
-            var group = stationGroups[i];
-            var cell = tilemapController.gridCells[i];
-
-            if (group.station == null)
-            {
-                if (showDebugInfo) Debug.Log($"[Generate] stationGroups[{i}]의 station이 null → 저장 제외됨 (cell: '{cell.name}')");
-                continue;
-            }
-
-            // 프리팹 이름에서 (Clone) 제거
-            string cleanId = group.station.name.Replace("(Clone)", "").Trim();
-
-            var info = new StationSaveInfo
-            {
-                id = cleanId,
-                gridCellName = cell.name
-            };
-
-            saveList.Add(info);
-
-            if (showDebugInfo) Debug.Log($"[Generate] 저장됨: id = '{info.id}', cell = '{info.gridCellName}'");
-        }
-
-        return saveList;
-    }
-
-    /// <summary>
-    /// 저장된 Station 정보를 바탕으로 스테이션들을 복원
-    /// 각 GridCell에 맞는 Station 프리팹을 Instantiate하여 배치
-    /// StorageGridCell이 붙은 셀에 배치되는 Station은 초기에는 비활성화 상태로 시작
-    /// </summary>
-    /// <param name="infos">StationSaveInfo 리스트 (station.json에서 불러온 데이터)</param>
-    public void RestoreStations(List<StationSaveInfo> infos, GamePhase currentPhase)
-    {
-        // stationGroups 초기화 (GridCell 수만큼)
-        stationGroups.Clear();
-        for (int i = 0; i < tilemapController.gridCells.Count; i++)
-            stationGroups.Add(new StationGroup());
-
-        foreach (var info in infos)
-        {
-            // 프리팹 로드
-            GameObject prefab = Resources.Load<GameObject>($"Prefabs/Stations/{info.id}");
-            if (prefab == null)
-            {
-                if (showDebugInfo) Debug.LogError($"[Restore] 프리팹 못 찾음: {info.id}");
-                continue;
-            }
-
-            // 셀 찾기
-            GameObject cell = tilemapController.gridCells.FirstOrDefault(c => c.name == info.gridCellName);
-            if (cell == null)
-            {
-                if (showDebugInfo) Debug.LogError($"[Restore] 셀 못 찾음: {info.gridCellName}");
-                continue;
-            }
-
-            // 프리팹 Instantiate 및 위치 지정
-            GameObject instance = Instantiate(prefab, cell.transform);
-            instance.transform.localPosition = Vector3.zero;
-
-            // Storage 셀이라면 Station을 비활성화된 상태로 시작
-            bool isStorageCell = cell.GetComponent<StorageGridCell>() != null;
-            bool shouldActivate = currentPhase == GamePhase.EditStation || currentPhase == GamePhase.Day;
-
-            if (isStorageCell && !shouldActivate)
-            {
-                instance.SetActive(false);
-                if (showDebugInfo) Debug.Log($"[Restore] StorageCell에서 비활성화 상태로 복원됨: {info.id}");
-            }
-            else
-            {
-                instance.SetActive(true);
-                if (showDebugInfo && isStorageCell)
-                    Debug.Log($"[Restore] StorageCell이지만 활성화 상태로 복원됨: {info.id}");
-            }
-
-            // StationGroup에 등록
-            int index = tilemapController.gridCells.IndexOf(cell);
-            stationGroups[index].station = instance;
-
-            if (showDebugInfo) Debug.Log($"[Restore] 복원 완료: '{info.id}' → '{info.gridCellName}'");
-        }
-    }
-    
-
-    /// <summary>
     /// 각 GridCell 타입별로 스테이션 개수를 세고 출력
     /// </summary>
-    public void CountStationsPerCellType()
+    private void CountStationsPerCellType()
     {
         if (tilemapController == null || stationGroups == null || tilemapController.gridCells.Count != stationGroups.Count)
         {
             if (showDebugInfo) Debug.LogError("[StationManager] 데이터 정합성 오류: gridCell 개수와 stationGroup 개수가 맞지 않습니다.");
             return;
         }
-
+        
+        stationTypeCounts.Clear(); 
         TotalStationCount = 0;
         GridCellStationCount = 0;
         StorageGridCellStationCount = 0;
@@ -333,14 +354,21 @@ public class StationManager : Singleton<StationManager>
             GameObject gridCell = tilemapController.gridCells[i];
             StationGroup group = stationGroups[i];
 
+            GameObject stationGO = group.station;
+            if (stationGO == null) continue;
+            
+            var stationComponent = stationGO.GetComponent<IMovableStation>();
+            if (stationComponent == null || stationComponent.StationData == null)
+            {
+                if(showDebugInfo) Debug.LogWarning($"[StationManager] '{stationGO.name}'에 IMovableStation 컴포넌트나 StationData가 없습니다.");
+                continue;
+            }
+            string stationType = stationComponent.StationData.id;
+            
+            
             string cellType = gridCell.name.StartsWith("StorageGridCell") ? "Storage" : "Grid";
-
-            GameObject station = group.station;
-            if (station == null) continue;
-
-            string stationType = station.GetComponent<Station>().stationData.id;
-
-            TotalStationCount++;               // 스테이션 개수 카운트
+            
+            TotalStationCount++;
 
             if (cellType == "Grid") GridCellStationCount++;
             else if (cellType == "Storage") StorageGridCellStationCount++;
@@ -357,8 +385,7 @@ public class StationManager : Singleton<StationManager>
             else
                 stationTypeCounts[stationType] = (counts.gridCellCount, counts.storageGridCellCount + 1);
         }
-
-        // 결과 출력
+        
         foreach (var kvp in stationTypeCounts)
         {
             string stationName = kvp.Key;
@@ -433,38 +460,6 @@ public class StationManager : Singleton<StationManager>
         }
     }
 
-    /// <summary>
-    /// 현재 상태의 스테이션 정보를 JSON으로 저장
-    /// </summary>
-    /// <param name="phaseobj"></param>
-    public void stationSave()
-    {
-        SetStations(); // 현재 상태 갱신
-
-        var stationInfos = GenerateStationSaveData();
-        Debug.Log($"[StationManager] 저장 대상 Station 수: {stationInfos.Count}");
-
-        SaveLoadManager.SaveStationData(stationInfos); // JSON 저장
-
-        Debug.Log($"[StationManager] 저장 완료");
-    }
-
-    /// <summary>
-    /// 현재 게임 상태에 맞는 스테이션을 불러옴
-    /// </summary>
-    /// <param name="phaseObj"></param>
-    public void StationLoad(object phaseObj)
-    {
-        GamePhase newPhase = (GamePhase)phaseObj;
-
-        DestroyCurrentStations(); // 커스텀 함수로 오브젝트 제거
-
-        tilemapController.FindGridCells();
-
-        SaveLoadManager.RestoreStationState(newPhase); // 상태 복원
-
-        Debug.Log($"[StationManager] 불러오기 완료");
-    }
 
     /// <summary>
     /// 모든 GridCell 아래의 IMovableStation 오브젝트를 제거
@@ -494,109 +489,49 @@ public class StationManager : Singleton<StationManager>
 
         if (showDebugInfo) Debug.Log("[StationManager] 기존 스테이션 제거 완료");
     }
-    /// <summary>
-    /// 주어진 Station ID를 기준으로 stationGroups 리스트에서 해당 Station의 InteractableTutorial 컴포넌트를 찾아 활성화
-    /// </summary>
-    /// <param name="id">활성화할 Station의 고유 식별자</param>
-    public void ActivateInteractable(string id)
-    {
-        foreach (var group in stationGroups) 
-        {
-            var stationGO = group.station;
-            var baseStation = stationGO.GetComponent<BaseStation>();
-            if (baseStation != null && baseStation.StationId == id)
-            {
-                var interactable = stationGO.GetComponent<InteractableTutorial>();
-                if (interactable != null)
-                {
-                    interactable.SetInteractable(true);
-                    return;
-                }
 
-                Debug.LogWarning($"[StationManager] Station '{id}'에 InteractableTutorial 컴포넌트가 없습니다.");
-                return;
-            }
-        }
+    #region 튜토리얼 관리
 
-        Debug.LogWarning($"[StationManager] StationGroups에서 ID '{id}'를 가진 Station을 찾을 수 없습니다.");
-    }
-
+    public void ActivateStation(string id) => SetInteractableState(id, true);
+    public void DeactivateStation(string id) => SetInteractableState(id, false);
+    
     /// <summary>
     /// 주어진 Station ID를 기준으로 stationGroups 리스트에서 해당 Station의 InteractableTutorial 컴포넌트를 찾아 비활성화
     /// </summary>
-    /// <param name="id">비활성화할 Station의 고유 식별자</param>
-    public void DeactivateInteractable(string id)
+    /// <param name="id"> Station의 고유 식별자 </param>
+    /// <param name="isInteractable"> 활성화 여부 </param>
+    private void SetInteractableState(string id, bool isInteractable)
     {
+        SetStations();
+        
         foreach (var group in stationGroups)
         {
             var stationGO = group.station;
-            var baseStation = stationGO.GetComponent<BaseStation>();
-            if (baseStation != null && baseStation.StationId == id)
+            
+            if (!stationGO)
             {
-                var interactable = stationGO.GetComponent<InteractableTutorial>();
-                if (interactable != null)
+                continue;
+            }
+
+            var data = stationGO.GetComponent<IMovableStation>().StationData;
+            if (data && data.id == id)
+            {
+                var interactableComponent = stationGO.GetComponent<InteractableTutorial>();
+                if (interactableComponent)
                 {
-                    interactable.SetInteractable(false); 
+                    interactableComponent.SetInteractable(isInteractable);
+                    if (showDebugInfo) Debug.Log($"[StationManager] Station '{id}'의 InteractableTutorial 상태를 {isInteractable}(으)로 변경");
                     return;
                 }
 
-                Debug.LogWarning($"[StationManager] Station '{id}'에 InteractableTutorial 컴포넌트가 없습니다.");
+                Debug.LogWarning($"[StationManager] Station '{id}'에서 InteractableTutorial 컴포넌트를 찾지 못함");
                 return;
             }
         }
 
-        Debug.LogWarning($"[StationManager] StationGroups에서 ID '{id}'를 가진 Station을 찾을 수 없습니다.");
+        Debug.LogWarning($"[StationManager] StationGroups에서 ID '{id}'를 가진 Station을 찾을 수 없음");
     }
+
+    #endregion
     
-    /// <summary>
-    /// 특정 ID의 Station이 현재 GridCell에 배치된 개수
-    /// </summary>
-    public int GetPlacedStationCount(string id)
-    {
-        int count = 0;
-
-        for (int i = 0; i < stationGroups.Count; i++)
-        {
-            var group = stationGroups[i];
-            var station = group.station;
-            if (station == null) continue;
-
-            // "(Clone)" 제거한 이름이 ID와 일치할 경우
-            string stationId = station.name.Replace("(Clone)", "").Trim();
-
-            // GridCell (보관소 제외)
-            var cell = tilemapController.gridCells[i];
-            bool isStorage = cell.GetComponent<StorageGridCell>() != null;
-
-            if (!isStorage && stationId == id)
-                count++;
-        }
-
-        return count;
-    }
-
-    /// <summary>
-    /// 특정 ID의 Station이 현재 StorageGridCell에 보관 중인 개수
-    /// </summary>
-    public int GetStoredStationCount(string id)
-    {
-        int count = 0;
-
-        for (int i = 0; i < stationGroups.Count; i++)
-        {
-            var group = stationGroups[i];
-            var station = group.station;
-            if (station == null) continue;
-
-            string stationId = station.name.Replace("(Clone)", "").Trim();
-
-            var cell = tilemapController.gridCells[i];
-            bool isStorage = cell.GetComponent<StorageGridCell>() != null;
-
-            if (isStorage && stationId == id)
-                count++;
-        }
-
-        return count;
-    }
 }

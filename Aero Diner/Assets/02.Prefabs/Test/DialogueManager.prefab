@@ -59,7 +59,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3846600332202d847be259b414be8362, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showDebugInfo: 0
+  showDebugInfo: 1
 --- !u!114 &4634308119744986232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,4 +72,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a883933c87028b4ab58920afbbfa478, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showDebugInfo: 0
+  showDebugInfo: 1

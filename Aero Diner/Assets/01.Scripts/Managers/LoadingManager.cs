@@ -62,7 +62,7 @@ public class LoadingManager : MonoBehaviour
 
         EventBus.RaiseFadeEvent(
             FadeEventType.FadeOut,
-            new FadeEventPayload(alpha: 1f, duration: 1f, autoFade: true)
+            new FadeEventPayload(alpha: 1f, duration: 1.5f, autoFade: true)
         );
 
         yield return new WaitUntil(() => fadeCompleted);

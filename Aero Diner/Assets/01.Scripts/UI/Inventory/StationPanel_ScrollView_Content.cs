@@ -21,8 +21,8 @@ public class StationPanel_ScrollView_Content : BaseScrollViewItem
         stationNameText.text = data.displayName;
         stationIconImage.sprite = data.stationIcon;
 
-        int placed = StationManager.Instance.GetPlacedStationCount(data.id);
-        int stored = StationManager.Instance.GetStoredStationCount(data.id);
+        int placed = StationManager.Instance.GetStationPlacedCount(data.id);
+        int stored = StationManager.Instance.GetStationStoredCount(data.id);
 
         placedCountText.text = placed.ToString();
         storedCountText.text = stored.ToString();

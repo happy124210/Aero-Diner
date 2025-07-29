@@ -164,7 +164,7 @@ public class StoryManager : Singleton<StoryManager>
                     break;
                 case StoryType.ActivateStation:
                     //TODO: 특정 설비 활성화
-                    StationManager.Instance.ActivateInteractable(action.targetId);
+                    StationManager.Instance.ActivateStation(action.targetId);
                     break;
                 case StoryType.SetTutorialMode:
                     GameManager.Instance.SetTutorialMode(true);

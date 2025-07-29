@@ -118,8 +118,6 @@ public class GameManager : Singleton<GameManager>
         IncreaseDay();
         SaveData();
         
-        ChangePhase(GamePhase.Day);
-        
         if (showDebugInfo) Debug.Log($"[GameManager] 저장 완료. 하루 수입: {earningsFromDay}");
     }
     

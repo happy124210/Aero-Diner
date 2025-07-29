@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
@@ -29,7 +28,7 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
     protected CookingTimer timer;
     protected bool isCooking = false;
 
-    public string StationId => stationData != null ? stationData.id : string.Empty;
+    public string StationId => stationData? stationData.id : string.Empty;
 
     private void Awake()
     {
@@ -37,23 +36,6 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
         timerController.gameObject.SetActive(false);
 
         outline = GetComponent<OutlineShaderController>(); // 외곽선 컴포넌트 연결
-
-        string objName = gameObject.name;
-        string resourcePath = $"Datas/Station/{objName}Data";
-
-        // SO 로드
-        StationData data = Resources.Load<StationData>(resourcePath);
-        if (data != null)
-        {
-            // stationData 필드 연결
-            stationData = data;
-
-            // 스프라이트 아이콘 설정
-            if (TryGetComponent<SpriteRenderer>(out var sr) && data.stationIcon != null)
-            {
-                sr.sprite = data.stationIcon;
-            }
-        }
     }
 
     private void Start()
@@ -70,6 +52,19 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
             if (showDebugInfo) Debug.LogWarning("stationData 또는 slotDisplays가 할당되지 않았습니다.");
         }
     }
+    
+    public void Initialize(StationData data)
+    {
+        if (data == null) return;
+        
+        stationData = data; 
+        
+        if (TryGetComponent<SpriteRenderer>(out var sr) && StationData.stationIcon != null)
+        {
+            sr.sprite = StationData.stationIcon;
+        }
+    }
+
 
     /// <summary>
     /// 플레이어가 재료를 놓았을 때 호출됨
