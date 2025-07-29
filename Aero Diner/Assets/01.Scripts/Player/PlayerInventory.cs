@@ -48,11 +48,12 @@ public class PlayerInventory : MonoBehaviour
             if (col) col.enabled = false;
 
             tilemapController?.ShowAllCells();
+            EventBus.Raise(GameEventType.PlayerPickedUpItem, heldStation.StationData);
             return;
         }
 
-        // Operation 페이즈 전용 처리
-        if (GameManager.Instance.CurrentPhase == GamePhase.Operation)
+        // Operation, Closing 페이즈 전용 처리
+        if (GameManager.Instance.CurrentPhase == GamePhase.Operation || GameManager.Instance.CurrentPhase == GamePhase.Closing)
         {
             // IngredientStation → Interact 호출로 재료 생성
             if (target is IngredientStation station)
@@ -76,6 +77,7 @@ public class PlayerInventory : MonoBehaviour
                 if (col) col.enabled = false;
 
                 food.originPlace?.OnPlayerPickup();
+                EventBus.Raise(GameEventType.PlayerPickedUpItem, holdingItem.foodData);
             }
         }
     }
@@ -239,5 +241,6 @@ public class PlayerInventory : MonoBehaviour
     public void SetHeldItem(FoodDisplay item)
     {
         holdingItem = item;
+        EventBus.Raise(GameEventType.PlayerPickedUpItem, holdingItem.foodData);
     }
 }

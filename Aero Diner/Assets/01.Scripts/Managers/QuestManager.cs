@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -37,6 +38,13 @@ public class QuestManager : Singleton<QuestManager>
         
         LoadQuestDatabase();
         LoadQuestData();
+        
+        EventBus.OnGameEvent += HandleGameEvent;
+    }
+
+    private void OnDestroy()
+    {
+        EventBus.OnGameEvent -= HandleGameEvent;
     }
 
     private void LoadQuestDatabase()
@@ -280,27 +288,42 @@ public class QuestManager : Singleton<QuestManager>
     /// </summary>
     public void UpdateQuestProgress(QuestObjectiveType type, string targetId, int amount = 1)
     {
-        // 현재 진행 중인 모든 퀘스트를 확인
-        foreach (var questEntry in playerQuestStatus.Where(pair => pair.Value == QuestStatus.InProgress))
+        List<string> completedQuestIds = new List<string>();
+        
+        foreach (var questEntry in playerQuestStatus.Where(pair => pair.Value == QuestStatus.InProgress).ToList())
         {
             string questId = questEntry.Key;
-            QuestData quest = FindQuestByID(questEntry.Key);
+            QuestData quest = FindQuestByID(questId);
 
             // 해당 퀘스트의 목표들 중에 일치하는 것이 있는지 확인
             foreach (var objective in quest.objectives.Where(obj => obj.objectiveType == type && obj.targetId == targetId))
             {
                 if (!playerQuestProgress.ContainsKey(questId)) continue;
-                
-                // 현재 진행도를 가져와서 업데이트
+            
                 int currentAmount = playerQuestProgress[questId].GetValueOrDefault(targetId, 0);
                 currentAmount += amount;
                 playerQuestProgress[questId][targetId] = currentAmount;
-                
+            
                 if (showDebugInfo) Debug.Log($"[QuestManager] 퀘스트 진행도 업데이트: {questId} - {targetId} ({currentAmount}/{objective.requiredAmount})");
 
-                // 퀘스트 완료 여부 체크
-                CheckQuestCompletion(questId);
+                // 퀘스트 완료 여부 체크 후 완료되었다면 리스트에 추가
+                if (CheckQuestCompletion(questId))
+                {
+                    if (!completedQuestIds.Contains(questId))
+                    {
+                        completedQuestIds.Add(questId);
+                    }
+                }
             }
+        }
+
+        // 모든 순회가 끝난 후 완료된 퀘스트들의 상태변경
+        foreach (var questId in completedQuestIds)
+        {
+            playerQuestStatus[questId] = QuestStatus.Completed;
+            if (showDebugInfo) Debug.Log($"[QuestManager] 퀘스트 목표 달성!: {questId}");
+        
+            EventBus.Raise(GameEventType.QuestStatusChanged, questId);
         }
     }
     
@@ -320,25 +343,41 @@ public class QuestManager : Singleton<QuestManager>
         return 0;
     }
 
-    private void CheckQuestCompletion(string questId)
+    private bool CheckQuestCompletion(string questId)
     {
         QuestData quest = questDatabase[questId];
-        
+
         // 모든 목표가 달성되었는지 확인
         foreach (var objective in quest.objectives)
         {
             int currentAmount = playerQuestProgress[questId].GetValueOrDefault(objective.targetId, 0);
             if (currentAmount < objective.requiredAmount)
             {
-                return;
+                return false; // 하나라도 달성 못했으면 false 반환
             }
         }
-        
-        // 모든 목표를 달성했다면 퀘스트 상태를 Completed로 변경
-        playerQuestStatus[questId] = QuestStatus.Completed;
-        if (showDebugInfo) Debug.Log($"[QuestManager] 퀘스트 목표 달성!: {questId}");
-        
-        // TODO: 퀘스트 완료 알림
+
+        return true; // 모든 목표를 달성했으면 true 반환
+    }
+
+    #endregion
+
+    #region 이벤트 관리
+
+    private void HandleGameEvent(GameEventType eventType, object payload)
+    {
+        if (eventType == GameEventType.PlayerPickedUpItem)
+        {
+            if (payload is FoodData foodData)
+            {
+                UpdateQuestProgress(QuestObjectiveType.HoldFood, foodData.id);
+            }
+            
+            else if (payload is StationData stationData)
+            {
+                UpdateQuestProgress(QuestObjectiveType.HoldStation, stationData.id);
+            }
+        }
     }
 
     #endregion
