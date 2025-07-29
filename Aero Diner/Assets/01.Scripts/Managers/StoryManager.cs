@@ -79,7 +79,7 @@ public class StoryManager : Singleton<StoryManager>
         });
 
         // 만약 실행할 다음 스토리를 찾았다면
-        if (nextStory != null)
+        if (nextStory)
         {
             if (showDebugInfo) Debug.Log($"[StoryManager] 다음 스토리 트리거: {nextStory.id}");
             executedStoryIds.Add(nextStory.id);

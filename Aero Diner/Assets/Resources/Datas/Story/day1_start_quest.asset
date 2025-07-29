@@ -23,3 +23,6 @@ MonoBehaviour:
   - storyType: 1
     targetId: main_quest_01
     value: 
+  - storyType: 11
+    targetId: Tu1
+    value: 
