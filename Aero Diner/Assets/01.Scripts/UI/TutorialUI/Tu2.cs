@@ -81,6 +81,11 @@ public class Tu2 : MonoBehaviour
             }
         }
     }
+    public void UncheckMenu()
+    {
+        pointer2.SetActive(false);
+        pointer1.SetActive(true);
+    }
     public void GenerateFoodList()
     {
         foreach (Transform child in contentTransform)

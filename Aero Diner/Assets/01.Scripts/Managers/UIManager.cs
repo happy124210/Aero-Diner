@@ -18,6 +18,8 @@ public class UIManager : Singleton<UIManager>
         typeof(Store),
         typeof(Tu1),
         typeof(Tu2),
+        typeof(Tu3),
+
 
         
         // 필요한 타입 추가 가능

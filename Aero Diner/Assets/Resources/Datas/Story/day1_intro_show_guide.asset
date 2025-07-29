@@ -25,5 +25,5 @@ MonoBehaviour:
     rValue: 
   actions:
   - storyType: 11
-    targetId: Tu1
+    targetId: tu1
     value: 
