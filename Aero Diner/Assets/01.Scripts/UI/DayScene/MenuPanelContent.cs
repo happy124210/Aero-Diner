@@ -29,13 +29,17 @@ public class MenuPanelContent : BaseScrollViewItem
         toggle.onValueChanged.AddListener((isOn) =>
         {
             OnToggle(isOn);
-
+            var tu2 = FindObjectOfType<Tu2>();
             // 체크되었을 때 Tu2의 포인터 위치 이동
             if (isOn)
             {
-                var tu2 = FindObjectOfType<Tu2>();
                 if (tu2 != null)
                     tu2.CheckMenuSelectionAndSwitchPointer(menu.foodData.id);
+            }
+            else
+            {
+                if (tu2 != null)
+                    tu2.UncheckMenu();
             }
         });
     }
