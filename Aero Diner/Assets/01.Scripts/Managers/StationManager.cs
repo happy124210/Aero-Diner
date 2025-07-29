@@ -77,6 +77,13 @@ public class StationManager : Singleton<StationManager>
 
     private void Start()
     {
+        var phase = GameManager.Instance.CurrentPhase;
+
+        if (phase == GamePhase.Day || phase == GamePhase.Opening)
+        {
+            StationLoad(phase);
+        }
+
         tilemapController.FindGridCells();
         if (showDebugInfo) Debug.Log($"[StationManager] GridCell 수: {tilemapController.gridCells.Count}");
 
@@ -358,6 +365,7 @@ public class StationManager : Singleton<StationManager>
 
         if (showDebugInfo) Debug.Log($"[StationManager] 전체 스테이션 수: {TotalStationCount} (GridCell: {GridCellStationCount}, StorageGridCell: {StorageGridCellStationCount})");
     }
+
     /// <summary>
     /// 특정 ID의 Station이 현재 GridCell에 배치된 개수
     /// </summary>
@@ -474,53 +482,37 @@ public class StationManager : Singleton<StationManager>
         }
     }
 
-    private void OnEnable()
+    /// <summary>
+    /// 현재 상태의 스테이션 정보를 JSON으로 저장
+    /// </summary>
+    /// <param name="phaseobj"></param>
+    public void stationSave()
     {
-        EventBus.Register(GameEventType.GamePhaseChanged, OnGamePhaseChanged);
+        SetStations(); // 현재 상태 갱신
+
+        var stationInfos = GenerateStationSaveData();
+        Debug.Log($"[StationManager] 저장 대상 Station 수: {stationInfos.Count}");
+
+        SaveLoadManager.SaveStationData(stationInfos); // JSON 저장
+
+        Debug.Log($"[StationManager] 저장 완료");
     }
 
-    private void OnDisable()
-    {
-        EventBus.Unregister(GameEventType.GamePhaseChanged, OnGamePhaseChanged);
-    }
-
-    private void OnGamePhaseChanged(object phaseObj)
+    /// <summary>
+    /// 현재 게임 상태에 맞는 스테이션을 불러옴
+    /// </summary>
+    /// <param name="phaseObj"></param>
+    public void StationLoad(object phaseObj)
     {
         GamePhase newPhase = (GamePhase)phaseObj;
 
-        // 복원 조건
-        if (newPhase == GamePhase.EditStation || newPhase == GamePhase.Day || newPhase == GamePhase.Opening)
-        {
-            if (showDebugInfo) Debug.Log($"[StationManager] 복원 조건 진입: newPhase = {newPhase}");
+        DestroyCurrentStations(); // 커스텀 함수로 오브젝트 제거
 
-            // 기존 오브젝트 제거
-            DestroyCurrentStations(); // 커스텀 함수로 오브젝트 제거
+        tilemapController.FindGridCells();
 
-            tilemapController.FindGridCells(); // 강제 초기화
-            if (showDebugInfo) Debug.Log("[StationManager] 복원용 stationGroups 초기화 완료");
+        SaveLoadManager.RestoreStationState(newPhase); // 상태 복원
 
-            SaveLoadManager.RestoreStationState(newPhase); // 상태 복원
-        }
-
-
-        // 저장 & 제거 조건
-        if (newPhase == GamePhase.EditStation || newPhase == GamePhase.Day || newPhase == GamePhase.SelectMenu || newPhase == GamePhase.Opening)
-        {
-            SetStations(); // 현재 상태 갱신
-
-            var stationInfos = GenerateStationSaveData();
-            if (showDebugInfo) Debug.Log($"[StationManager] 저장 대상 Station 수: {stationInfos.Count}");
-
-            SaveLoadManager.SaveStationData(stationInfos); // JSON 저장
-
-            if (showDebugInfo) Debug.Log("[StationManager] station.json 저장 완료");
-        }
-
-        // 제거만 조건
-        if (newPhase == GamePhase.Closing)
-        {
-            stationGroups.Clear(); // 기존 스테이션 그룹 초기화
-        }
+        Debug.Log($"[StationManager] 불러오기 완료");
     }
 
     /// <summary>
@@ -550,5 +542,58 @@ public class StationManager : Singleton<StationManager>
         }
 
         if (showDebugInfo) Debug.Log("[StationManager] 기존 스테이션 제거 완료");
+    }
+    /// <summary>
+    /// 주어진 Station ID를 기준으로 stationGroups 리스트에서 해당 Station의 InteractableTutorial 컴포넌트를 찾아 활성화
+    /// </summary>
+    /// <param name="id">활성화할 Station의 고유 식별자</param>
+    public void ActivateInteractable(string id)
+    {
+        foreach (var group in stationGroups) 
+        {
+            var stationGO = group.station;
+            var baseStation = stationGO.GetComponent<BaseStation>();
+            if (baseStation != null && baseStation.StationId == id)
+            {
+                var interactable = stationGO.GetComponent<InteractableTutorial>();
+                if (interactable != null)
+                {
+                    interactable.SetInteractable(true);
+                    return;
+                }
+
+                Debug.LogWarning($"[StationManager] Station '{id}'에 InteractableTutorial 컴포넌트가 없습니다.");
+                return;
+            }
+        }
+
+        Debug.LogWarning($"[StationManager] StationGroups에서 ID '{id}'를 가진 Station을 찾을 수 없습니다.");
+    }
+
+    /// <summary>
+    /// 주어진 Station ID를 기준으로 stationGroups 리스트에서 해당 Station의 InteractableTutorial 컴포넌트를 찾아 비활성화
+    /// </summary>
+    /// <param name="id">비활성화할 Station의 고유 식별자</param>
+    public void DeactivateInteractable(string id)
+    {
+        foreach (var group in stationGroups)
+        {
+            var stationGO = group.station;
+            var baseStation = stationGO.GetComponent<BaseStation>();
+            if (baseStation != null && baseStation.StationId == id)
+            {
+                var interactable = stationGO.GetComponent<InteractableTutorial>();
+                if (interactable != null)
+                {
+                    interactable.SetInteractable(false); 
+                    return;
+                }
+
+                Debug.LogWarning($"[StationManager] Station '{id}'에 InteractableTutorial 컴포넌트가 없습니다.");
+                return;
+            }
+        }
+
+        Debug.LogWarning($"[StationManager] StationGroups에서 ID '{id}'를 가진 Station을 찾을 수 없습니다.");
     }
 }
