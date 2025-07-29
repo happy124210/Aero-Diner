@@ -358,6 +358,7 @@ public class StationManager : Singleton<StationManager>
 
         if (showDebugInfo) Debug.Log($"[StationManager] 전체 스테이션 수: {TotalStationCount} (GridCell: {GridCellStationCount}, StorageGridCell: {StorageGridCellStationCount})");
     }
+
     /// <summary>
     /// 특정 ID의 Station이 현재 GridCell에 배치된 개수
     /// </summary>
@@ -474,53 +475,30 @@ public class StationManager : Singleton<StationManager>
         }
     }
 
-    private void OnEnable()
-    {
-        EventBus.Register(GameEventType.GamePhaseChanged, OnGamePhaseChanged);
-    }
-
-    private void OnDisable()
-    {
-        EventBus.Unregister(GameEventType.GamePhaseChanged, OnGamePhaseChanged);
-    }
-
-    private void OnGamePhaseChanged(object phaseObj)
+    private void StationSave(object phaseObj)
     {
         GamePhase newPhase = (GamePhase)phaseObj;
 
-        // 복원 조건
-        if (newPhase == GamePhase.EditStation || newPhase == GamePhase.Day || newPhase == GamePhase.Opening)
-        {
-            if (showDebugInfo) Debug.Log($"[StationManager] 복원 조건 진입: newPhase = {newPhase}");
+        SetStations(); // 현재 상태 갱신
 
-            // 기존 오브젝트 제거
-            DestroyCurrentStations(); // 커스텀 함수로 오브젝트 제거
+        var stationInfos = GenerateStationSaveData();
+        Debug.Log($"[StationManager] 저장 대상 Station 수: {stationInfos.Count}");
 
-            tilemapController.FindGridCells(); // 강제 초기화
-            if (showDebugInfo) Debug.Log("[StationManager] 복원용 stationGroups 초기화 완료");
+        SaveLoadManager.SaveStationData(stationInfos); // JSON 저장
 
-            SaveLoadManager.RestoreStationState(newPhase); // 상태 복원
-        }
+        Debug.Log($"[StationManager] 저장 완료");
+    }
+    private void StationLoad(object phaseObj)
+    {
+        GamePhase newPhase = (GamePhase)phaseObj;
 
+        DestroyCurrentStations(); // 커스텀 함수로 오브젝트 제거
 
-        // 저장 & 제거 조건
-        if (newPhase == GamePhase.EditStation || newPhase == GamePhase.Day || newPhase == GamePhase.SelectMenu || newPhase == GamePhase.Opening)
-        {
-            SetStations(); // 현재 상태 갱신
+        tilemapController.FindGridCells();
 
-            var stationInfos = GenerateStationSaveData();
-            if (showDebugInfo) Debug.Log($"[StationManager] 저장 대상 Station 수: {stationInfos.Count}");
+        SaveLoadManager.RestoreStationState(newPhase); // 상태 복원
 
-            SaveLoadManager.SaveStationData(stationInfos); // JSON 저장
-
-            if (showDebugInfo) Debug.Log("[StationManager] station.json 저장 완료");
-        }
-
-        // 제거만 조건
-        if (newPhase == GamePhase.Closing)
-        {
-            stationGroups.Clear(); // 기존 스테이션 그룹 초기화
-        }
+        Debug.Log($"[StationManager] 불러오기 완료");
     }
 
     /// <summary>
