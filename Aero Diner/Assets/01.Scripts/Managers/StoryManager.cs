@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class StoryManager : Singleton<StoryManager>
 {
@@ -12,17 +13,27 @@ public class StoryManager : Singleton<StoryManager>
     private List<StoryData> storyDatabase;
     private HashSet<string> executedStoryIds = new();
     
+    private bool isCurrentSceneUIReady;
+    
     protected override void Awake()
     {
         base.Awake();
         DontDestroyOnLoad(this);
         LoadStoryDatabase();
         EventBus.OnGameEvent += HandleGameEvent;
+        SceneManager.activeSceneChanged += OnActiveSceneChanged;
     }
 
     private void OnDestroy()
     {
         EventBus.OnGameEvent -= HandleGameEvent;
+        SceneManager.activeSceneChanged -= OnActiveSceneChanged;
+    }
+    
+    private void OnActiveSceneChanged(Scene current, Scene next)
+    {
+        isCurrentSceneUIReady = false;
+        if (showDebugInfo) Debug.Log($"[StoryManager] 씬 변경: {next.name}. UI 준비 상태 초기화");
     }
 
     private void LoadStoryDatabase()
@@ -35,9 +46,16 @@ public class StoryManager : Singleton<StoryManager>
         switch (eventType)
         {
             case GameEventType.GamePhaseChanged:
-                if (showDebugInfo) Debug.Log($"[StoryManager] {(GamePhase)data} Phase 진입. 다음 할 일을 확인합니다.");
+                if ((GamePhase)data == GamePhase.Paused || (GamePhase)data == GamePhase.Dialogue) return;
+                if (showDebugInfo) Debug.Log($"[StoryManager] {(GamePhase)data} Phase 진입");
                 CheckAndTriggerStory();
                 break;
+            
+            case GameEventType.UISceneReady:
+                isCurrentSceneUIReady = true;
+                if (showDebugInfo) Debug.Log("[StoryManager] UISceneReady 이벤트 수신, 스토리 트리거 확인");
+                CheckAndTriggerStory();
+                break;;
             
             case GameEventType.DialogueEnded:
                 string endedDialogueId = data as string;
@@ -53,6 +71,12 @@ public class StoryManager : Singleton<StoryManager>
     /// <param name="endedDialogueId">방금 끝난 대화의 ID (없으면 null)</param>
     private void CheckAndTriggerStory(string endedDialogueId = null)
     {
+        if (!isCurrentSceneUIReady)
+        {
+            if (showDebugInfo) Debug.Log("[StoryManager] UI가 아직 준비되지 않아 스토리 확인 보류");
+            return;
+        }
+        
         var currentPhase = GameManager.Instance.CurrentPhase;
         
         var nextStory = storyDatabase.FirstOrDefault(story => 
