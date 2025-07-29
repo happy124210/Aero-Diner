@@ -27,6 +27,10 @@ public enum GameEventType
     DialogueEnded,
     QuestStatusChanged,
     
+    // 플레이어
+    PlayerPickedUpItem,
+    
+    // UI
     UISceneReady,
 }
 

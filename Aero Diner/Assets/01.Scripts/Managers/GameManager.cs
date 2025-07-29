@@ -152,6 +152,8 @@ public class GameManager : Singleton<GameManager>
     public void AddMoney(int amount)
     {
         totalEarnings += amount;
+        EventBus.Raise(UIEventType.UpdateTotalEarnings, TotalEarnings);
+        EventBus.OnSFXRequested(SFXType.CustomerPay);
     }
 
     private void IncreaseDay()
