@@ -74,7 +74,7 @@ public class StoryManager : Singleton<StoryManager>
         if (!isCurrentSceneUIReady)
         {
             if (showDebugInfo) Debug.Log("[StoryManager] UI가 아직 준비되지 않아 스토리 확인 보류");
-            
+            return;
         }
         
         var currentPhase = GameManager.Instance.CurrentPhase;
