@@ -15,8 +15,8 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] private bool showDebugInfo;
     
     // 인벤토리 정보
-    private FoodDisplay holdingItem;
-    private IMovableStation heldStation;
+    public FoodDisplay holdingItem;
+    public IMovableStation heldStation;
     
     public bool IsHoldingItem => holdingItem != null || heldStation != null;
 
