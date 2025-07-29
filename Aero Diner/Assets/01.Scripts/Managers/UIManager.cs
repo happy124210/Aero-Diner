@@ -123,6 +123,7 @@ public class UIManager : Singleton<UIManager>
             Debug.Log($"[UIManager] {sceneName} 씬 UI 로딩 완료, 프리팹 수: {assetRefs.Count}");
 
         RegisterHandlersForScene(sceneName); // 중복 제거
+        EventBus.Raise(GameEventType.UISceneReady);
     }
 
     private void RegisterHandlersForScene(string sceneName)
