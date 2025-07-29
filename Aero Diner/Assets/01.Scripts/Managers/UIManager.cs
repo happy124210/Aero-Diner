@@ -17,6 +17,8 @@ public class UIManager : Singleton<UIManager>
         typeof(DialogueUI),
         typeof(Store),
         typeof(Tu1),
+        typeof(Tu2),
+
         
         // 필요한 타입 추가 가능
     };

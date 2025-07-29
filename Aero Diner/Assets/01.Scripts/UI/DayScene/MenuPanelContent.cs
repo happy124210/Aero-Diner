@@ -10,7 +10,7 @@ public class MenuPanelContent : BaseScrollViewItem
     public Toggle toggle;
 
     private Menu currentMenu;
-    
+
     /// <summary>
     /// Menu 데이터로 UI 설정
     /// </summary>
@@ -18,15 +18,28 @@ public class MenuPanelContent : BaseScrollViewItem
     {
         currentMenu = menu;
 
-        // 기본 UI
         iconImage.sprite = menu.foodData.foodIcon;
         nameText.text = menu.foodData.displayName ?? menu.foodData.foodName;
         priceText.text = $"{menu.foodData.foodCost}G";
-        
-        // Toggle 기본 상태
+
+        toggle.onValueChanged.RemoveAllListeners();
+
         toggle.isOn = menu.isSelected;
+
+        toggle.onValueChanged.AddListener((isOn) =>
+        {
+            OnToggle(isOn);
+
+            // 체크되었을 때 Tu2의 포인터 위치 이동
+            if (isOn)
+            {
+                var tu2 = FindObjectOfType<Tu2>();
+                if (tu2 != null)
+                    tu2.CheckMenuSelectionAndSwitchPointer(menu.foodData.id);
+            }
+        });
     }
-    
+
     public void OnToggle(bool isOn)
     {
         MenuManager.Instance.SetMenuSelection(currentMenu.foodData.id, isOn);

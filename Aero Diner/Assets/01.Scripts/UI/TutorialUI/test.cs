@@ -5,7 +5,7 @@ public class test : MonoBehaviour
     
     public void OnButtonClick()
     {
-        UIEventCaller.CallUIEvent("Tu1");
+        UIEventCaller.CallUIEvent("tu1");
     }
 
 }

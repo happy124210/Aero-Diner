@@ -97,7 +97,7 @@ public enum UIEventType
     ShowDialogueLine, HideDialoguePanel,
     ShowDialoguePanel,
     //Tutorial
-    Tu1, 
+    tu1, tu2
 }
 
 public static class EventBus
