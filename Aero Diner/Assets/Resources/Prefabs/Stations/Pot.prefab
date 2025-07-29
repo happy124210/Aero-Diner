@@ -117,6 +117,7 @@ GameObject:
   - component: {fileID: 7403288732177050498}
   - component: {fileID: 1937741638958831452}
   - component: {fileID: 15119849027485779}
+  - component: {fileID: -717729963765887411}
   m_Layer: 6
   m_Name: Pot
   m_TagString: Station
@@ -315,6 +316,22 @@ MonoBehaviour:
   m_Area: 1
   m_IgnoreFromBuild: 0
   m_AffectedAgents: ffffffff
+--- !u!114 &-717729963765887411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7288475346454272569}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e53382f3988a6cf42ab64bc1f17f40c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isIInteractable: 0
+  spriteRenderer: {fileID: 0}
+  defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  disabledColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
 --- !u!1001 &6786570598756168923
 PrefabInstance:
   m_ObjectHideFlags: 0
