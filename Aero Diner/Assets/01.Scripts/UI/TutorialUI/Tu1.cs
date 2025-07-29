@@ -1,13 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿using UnityEngine;
 public class Tu1 : MonoBehaviour
 {
+
     public void OnOpenButtonClick()
     {
         EventBus.PlaySFX(SFXType.ButtonClick);
-        EventBus.Raise(UIEventType.ShowMenuPanel);
+        UIEventCaller.CallUIEvent("tu2");
         EventBus.PlayBGM(BGMEventType.PlayRecipeChoice);
     }
     public void OnShopButtonClick()
