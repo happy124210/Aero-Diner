@@ -75,62 +75,57 @@ public class StoryManager : Singleton<StoryManager>
     /// </summary>
     /// <param name="endedDialogueId"> 방금 끝난 대화의 ID (없으면 null)</param>
     private void CheckAndTriggerStory(string endedDialogueId = null)
+{
+    if (!isCurrentSceneUIReady)
     {
-        if (!isCurrentSceneUIReady)
+        if (showDebugInfo) Debug.Log("[StoryManager] UI가 아직 준비되지 않아 스토리 확인 보류");
+        return;
+    }
+
+    var currentPhase = GameManager.Instance.CurrentPhase;
+
+    var nextStory = storyDatabase.FirstOrDefault(story =>
+    {
+        if (executedStoryIds.Contains(story.id)) return false;
+
+        if (endedDialogueId != null)
         {
-            if (showDebugInfo) Debug.Log("[StoryManager] UI가 아직 준비되지 않아 스토리 확인 보류");
-            return;
+            return story.conditions.Any(c =>
+                c.conditionType == ConditionType.DialogueEnded &&
+                c.lValue == endedDialogueId
+            );
         }
-
-        var currentPhase = GameManager.Instance.CurrentPhase;
-
-        var nextStory = storyDatabase.FirstOrDefault(story =>
+        
+        if (story.conditions.Any(c => c.conditionType == ConditionType.DialogueEnded))
         {
-            if (executedStoryIds.Contains(story.id)) return false;
-            
-            if (endedDialogueId != null)
-            {
-                // 이 스토리가 방금 끝난 대화에 의해 트리거되는지 확인
-                bool isTriggeredByDialogue = story.conditions.Any(c =>
-                    c.conditionType == ConditionType.DialogueEnded &&
-                    c.lValue == endedDialogueId
-                );
-                // 맞다면 다른 조건들도 만족하는지 최종 확인하고 아니라면 이 스토리는 넘어감
-                return isTriggeredByDialogue && AreConditionsMet(story.conditions);
-            }
-            
-            bool isDialogueTriggerStory = story.conditions.Any(c => c.conditionType == ConditionType.DialogueEnded);
-            if (isDialogueTriggerStory) return false;
-            
-            bool isPhaseCompatible = (story.triggerPhase == currentPhase || story.triggerPhase == GamePhase.None);
-
-            return isPhaseCompatible && AreConditionsMet(story.conditions);
-        });
-
-        // 만약 실행할 다음 스토리를 찾았다면
-        if (nextStory)
-        {
-            if (showDebugInfo) Debug.Log($"[StoryManager] 다음 스토리 트리거: {nextStory.id}");
-            executedStoryIds.Add(nextStory.id);
-            StartCoroutine(ExecuteActions(nextStory.actions));
+            return false;
         }
-        // 실행할 스토리가 더 이상 없다면
-        else if (endedDialogueId == null)
+        
+        bool isPhaseCompatible = (story.triggerPhase == currentPhase || story.triggerPhase == GamePhase.None);
+        return isPhaseCompatible && AreConditionsMet(story.conditions);
+    });
+
+    if (nextStory)
+    {
+        if (showDebugInfo) Debug.Log($"[StoryManager] 다음 스토리 트리거: {nextStory.id}");
+        executedStoryIds.Add(nextStory.id);
+        StartCoroutine(ExecuteActions(nextStory.actions));
+    }
+    else if (endedDialogueId == null)
+    {
+        if (showDebugInfo) Debug.Log($"[StoryManager] {currentPhase} Phase에서 실행할 스토리가 더 이상 없습니다.");
+        
+        switch (currentPhase)
         {
-            if (showDebugInfo) Debug.Log($"[StoryManager] {currentPhase} Phase에서 실행할 스토리가 더 이상 없습니다.");
-            
-            // 현재 단계에 따라 다음 목적지로 이동
-            switch (currentPhase)
-            {
-                case GamePhase.Day:
-                    GameManager.Instance.ProceedToEditStation();
-                    break;
-                case GamePhase.Opening:
-                    GameManager.Instance.ProceedToOperation();
-                    break;
-            }
+            case GamePhase.Day:
+                GameManager.Instance.ProceedToEditStation();
+                break;
+            case GamePhase.Opening:
+                GameManager.Instance.ProceedToOperation();
+                break;
         }
     }
+}
     
     private IEnumerator ExecuteActions(List<StoryAction> actions)
     {
@@ -163,7 +158,6 @@ public class StoryManager : Singleton<StoryManager>
                     //UIManager.Instance.ShowUI(action.targetId);
                     break;
                 case StoryType.ActivateStation:
-                    //TODO: 특정 설비 활성화
                     StationManager.Instance.ActivateStation(action.targetId);
                     break;
                 case StoryType.SetTutorialMode:
@@ -178,9 +172,10 @@ public class StoryManager : Singleton<StoryManager>
         }
     }
 
-    private bool AreConditionsMet(List<StoryCondition> conditions)
+    private bool AreConditionsMet(List<StoryCondition> conditions, string endedDialogueId = null)
     {
-        if (conditions == null || conditions.Count == 0) return true;
+        if (conditions == null || !conditions.Any()) return true;
+
         foreach (var c in conditions)
         {
             bool result = false;
@@ -193,11 +188,12 @@ public class StoryManager : Singleton<StoryManager>
                     result = CheckQuestStatusCondition(c.lValue, c.@operator, c.rValue);
                     break;
                 case ConditionType.DialogueEnded:
-                    result = true; 
+                    result = (c.lValue == endedDialogueId);
                     break;
             }
             if (!result) return false;
         }
+
         return true;
     }
     

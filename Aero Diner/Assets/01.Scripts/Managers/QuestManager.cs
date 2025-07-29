@@ -288,21 +288,21 @@ public class QuestManager : Singleton<QuestManager>
     public void UpdateQuestProgress(QuestObjectiveType type, string targetId, int amount = 1)
     {
         List<string> completedQuestIds = new List<string>();
-        
+    
         foreach (var questEntry in playerQuestStatus.Where(pair => pair.Value == QuestStatus.InProgress).ToList())
         {
             string questId = questEntry.Key;
             QuestData quest = FindQuestByID(questId);
 
-            // 해당 퀘스트의 목표들 중에 일치하는 것이 있는지 확인
+            // 해당 퀘스트의 목표들 중에 일치하는 게 있는지 확인
             foreach (var objective in quest.objectives.Where(obj => obj.objectiveType == type && obj.targetId == targetId))
             {
                 if (!playerQuestProgress.ContainsKey(questId)) continue;
-            
+        
                 int currentAmount = playerQuestProgress[questId].GetValueOrDefault(targetId, 0);
                 currentAmount += amount;
                 playerQuestProgress[questId][targetId] = currentAmount;
-            
+        
                 if (showDebugInfo) Debug.Log($"[QuestManager] 퀘스트 진행도 업데이트: {questId} - {targetId} ({currentAmount}/{objective.requiredAmount})");
 
                 // 퀘스트 완료 여부 체크 후 완료되었다면 리스트에 추가
@@ -315,13 +315,20 @@ public class QuestManager : Singleton<QuestManager>
                 }
             }
         }
-
-        // 모든 순회가 끝난 후 완료된 퀘스트들의 상태변경
+        
         foreach (var questId in completedQuestIds)
         {
-            playerQuestStatus[questId] = QuestStatus.Completed;
-            if (showDebugInfo) Debug.Log($"[QuestManager] 퀘스트 목표 달성!: {questId}");
-        
+            if (questId.StartsWith("t_"))
+            {
+                playerQuestStatus[questId] = QuestStatus.Finished; // 튜토리얼 퀘스트는 Finished로 설정
+                if (showDebugInfo) Debug.Log($"[QuestManager] 튜토리얼 퀘스트 최종 완료: {questId} (Finished)");
+            }
+            else
+            {
+                playerQuestStatus[questId] = QuestStatus.Completed; // 일반 퀘스트는 Completed로 설정
+                if (showDebugInfo) Debug.Log($"[QuestManager] 퀘스트 목표 달성!: {questId} (Completed)");
+            }
+            
             EventBus.Raise(GameEventType.QuestStatusChanged, questId);
         }
     }
