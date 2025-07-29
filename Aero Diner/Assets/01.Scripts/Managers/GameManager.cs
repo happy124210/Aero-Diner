@@ -17,12 +17,14 @@ public class GameManager : Singleton<GameManager>
     
     private static readonly int[] DaysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
     private GamePhase previousPhase;
+    private bool isTutorialActive;
     
     #region Property
     
     public int TotalEarnings => totalEarnings;
     public int CurrentDay => currentDay;
     public GamePhase CurrentPhase => currentPhase;
+    public bool IsTutorialActive => isTutorialActive;
     
     #endregion
     
@@ -64,7 +66,8 @@ public class GameManager : Singleton<GameManager>
             //or GamePhase.Dialogue
             or GamePhase.GameOver 
             //or GamePhase.SelectMenu 
-            or GamePhase.Shop ? 0f : 1f;
+            //or GamePhase.Shop
+            ? 0f : 1f;
         
         if (showDebugInfo) Debug.Log($"[GameManager] Game Phase 변경됨: {newPhase}");
     }
@@ -100,12 +103,6 @@ public class GameManager : Singleton<GameManager>
 
     private void HandleUIEvent(UIEventType eventType, object data)
     {
-        if (eventType == UIEventType.ShowMenuPanel)
-        {
-            if (CurrentPhase == GamePhase.EditStation)
-                ChangePhase(GamePhase.SelectMenu);
-        }
-        
         if (eventType == UIEventType.HideResultPanel)
         {
             int earningsFromDay = RestaurantManager.Instance.TodayEarnings;
@@ -178,8 +175,10 @@ public class GameManager : Singleton<GameManager>
         data.currentDay = currentDay;
         
         SaveLoadManager.SaveGame(data);
+        
         StationManager.Instance.SaveStationDatabase();
         MenuManager.Instance.SaveMenuDatabase();
+        QuestManager.Instance.SaveQuestData();
         
         if (showDebugInfo) Debug.Log("[GameManager]: 게임 데이터 저장 완료.");
     }
@@ -219,6 +218,17 @@ public class GameManager : Singleton<GameManager>
     }
     #endregion
 
+    #region 튜토리얼 관리
+
+    public void SetTutorialMode(bool value)
+    {
+        isTutorialActive = value;
+        
+        // 기타 튜토리얼 로직
+    }
+
+    #endregion
+    
     #region Debug Commands
 #if UNITY_EDITOR
     private void OnGUI()

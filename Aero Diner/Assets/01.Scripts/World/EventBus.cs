@@ -26,6 +26,8 @@ public enum GameEventType
     RoundTimerEnded,  // 영업 시간 종료
     DialogueEnded,
     QuestStatusChanged,
+    
+    UISceneReady,
 }
 
 public enum SFXType
@@ -95,7 +97,7 @@ public enum UIEventType
     ShowDialogueLine, HideDialoguePanel,
     ShowDialoguePanel,
     //Tutorial
-    Tu1, 
+    tu1, tu2
 }
 
 public static class EventBus

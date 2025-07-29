@@ -7,7 +7,8 @@ public enum QuestStatus
     Inactive,   // 비활성
     InProgress, // 진행 중
     Completed,  // 완료 (보상 수령까지 끝)
-    Failed
+    Failed,
+    Finished    // 튜토리얼용 완료 상태 (UI에 표시되지 않음)
 }
 
 // 퀘스트 목표의 종류
@@ -38,19 +39,19 @@ public class QuestObjective
 {
     public QuestObjectiveType objectiveType;
     public string targetId;       // 목표 대상 ID
+    public string description;    // 목표 설명
     public int requiredAmount;    // 목표 수량
-    // TODO: public int currentAmount; // 현재 달성 수량 (저장/불러오기 필요)
 }
 
 [CreateAssetMenu(fileName = "QuestData", menuName = "Data/Quest Data")]
 public class QuestData : ScriptableObject
 {
     [Header("퀘스트 기본 정보")]
-    public string id;                //
-    public string questName;         //
-    public string description;       // 퀘스트 설명
-    public string rewardDescription; // 퀘스트 보상 설명
-    
+    public string id;
+    public string questName;
+    public string description; // 퀘스트 스토리 설명
+    public string rewardDescription;
+
     [Header("퀘스트 목표 (AND)")]
     public List<QuestObjective> objectives;
 

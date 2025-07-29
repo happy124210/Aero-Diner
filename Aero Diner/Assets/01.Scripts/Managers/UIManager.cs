@@ -17,6 +17,8 @@ public class UIManager : Singleton<UIManager>
         typeof(DialogueUI),
         typeof(Store),
         typeof(Tu1),
+        typeof(Tu2),
+
         
         // 필요한 타입 추가 가능
     };
@@ -123,6 +125,7 @@ public class UIManager : Singleton<UIManager>
             Debug.Log($"[UIManager] {sceneName} 씬 UI 로딩 완료, 프리팹 수: {assetRefs.Count}");
 
         RegisterHandlersForScene(sceneName); // 중복 제거
+        EventBus.Raise(GameEventType.UISceneReady);
     }
 
     private void RegisterHandlersForScene(string sceneName)

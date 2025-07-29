@@ -22,18 +22,23 @@ public class RestaurantManager : Singleton<RestaurantManager>
     [Header("Debug Info")]
     [SerializeField] private CustomerSpawner customerSpawner;
     [SerializeField] private bool showDebugInfo;
+    private bool tutorialMode = false;
     
     // private fields
     
     private float currentRoundTime;
     
-    #region property
+    #region property & public methods
     
     public float CurrentRoundTime => currentRoundTime;
     public float RoundTimeLimit => roundTimeLimit;
     public int CustomersServed => customersServed;
     public int CustomersVisited => customersVisited;
     public int TodayEarnings => todayEarnings;
+    
+    public Vector3 GetEntrancePoint() => entrancePoint.position;
+    public Vector3 GetExitPoint() => exitPoint.position;
+    public void SpawnTutorialCustomer() => customerSpawner.SpawnTutorialCustomer();
     
     #endregion
 
@@ -55,7 +60,8 @@ public class RestaurantManager : Singleton<RestaurantManager>
     // 영업 중 타이머 계산
     private void Update()
     {
-        if (GameManager.Instance.CurrentPhase != GamePhase.Operation) return;
+        if (GameManager.Instance.CurrentPhase != GamePhase.Operation
+            || GameManager.Instance.IsTutorialActive) return;
         
         currentRoundTime += Time.deltaTime;
 
@@ -86,6 +92,9 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
             // 영업 시작
             case GamePhase.Operation:
+
+                if (GameManager.Instance.IsTutorialActive) return;
+                
                 customerSpawner.StartSpawning();
                 
                 if (showDebugInfo) Debug.Log("[RestaurantManager] Operation: 손님 스폰 시작");
@@ -148,13 +157,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
         EventBus.OnSFXRequested(SFXType.CustomerPay);
     }
 
-    #endregion
-
-    #region public getters
-
-    public Vector3 GetEntrancePoint() => entrancePoint.position;
-    public Vector3 GetExitPoint() => exitPoint.position;
-    
     #endregion
     
     #region Debug Commands
