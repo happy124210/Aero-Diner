@@ -42,6 +42,7 @@ public class PlayerController : Singleton<PlayerController>
     private string lastWallMessage = null;
     private bool isTouchingWall = false;
     #endregion
+    
     #region 외부 접근용 Getter
 
     public string GetHeldFoodID()

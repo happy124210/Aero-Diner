@@ -22,7 +22,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
     [Header("Debug Info")]
     [SerializeField] private CustomerSpawner customerSpawner;
     [SerializeField] private bool showDebugInfo;
-    private bool tutorialMode = false;
     
     // private fields
     
@@ -153,8 +152,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
         GameManager.Instance.AddMoney(amount);
         EventBus.Raise(UIEventType.UpdateTodayEarnings, todayEarnings);
-        EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
-        EventBus.OnSFXRequested(SFXType.CustomerPay);
     }
 
     #endregion

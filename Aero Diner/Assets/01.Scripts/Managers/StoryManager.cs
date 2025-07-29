@@ -62,13 +62,18 @@ public class StoryManager : Singleton<StoryManager>
                 if (showDebugInfo) Debug.Log($"[StoryManager] Dialogue '{endedDialogueId}' 종료. 다음 할 일을 확인합니다.");
                 CheckAndTriggerStory(endedDialogueId);
                 break;
+            
+            case GameEventType.QuestStatusChanged:
+                if (showDebugInfo) Debug.Log("[StoryManager] QuestStatusChanged 이벤트 수신, 스토리 트리거 확인");
+                CheckAndTriggerStory();
+                break;
         }
     }
     
     /// <summary>
-    /// 실행할 다음 스토리를 찾고, 없으면 다음 단계 결정
+    /// 실행할 다음 스토리를 찾고 없으면 다음 단계 결정
     /// </summary>
-    /// <param name="endedDialogueId">방금 끝난 대화의 ID (없으면 null)</param>
+    /// <param name="endedDialogueId"> 방금 끝난 대화의 ID (없으면 null)</param>
     private void CheckAndTriggerStory(string endedDialogueId = null)
     {
         if (!isCurrentSceneUIReady)
@@ -76,30 +81,30 @@ public class StoryManager : Singleton<StoryManager>
             if (showDebugInfo) Debug.Log("[StoryManager] UI가 아직 준비되지 않아 스토리 확인 보류");
             return;
         }
-        
+
         var currentPhase = GameManager.Instance.CurrentPhase;
-        
-        var nextStory = storyDatabase.FirstOrDefault(story => 
+
+        var nextStory = storyDatabase.FirstOrDefault(story =>
         {
             if (executedStoryIds.Contains(story.id)) return false;
-
-            // 대화가 방금 끝났고, 이 대화를 조건으로 하는 스토리를 찾을 때
-            if (endedDialogueId != null && story.triggerPhase == GamePhase.None)
+            
+            if (endedDialogueId != null)
             {
-                // 조건 중에 "DialogueEnded"가 있고, 그 ID가 방금 끝난 대화 ID와 일치하는지 확인
-                return story.conditions.Any(c => 
-                    c.conditionType == ConditionType.DialogueEnded && 
+                // 이 스토리가 방금 끝난 대화에 의해 트리거되는지 확인
+                bool isTriggeredByDialogue = story.conditions.Any(c =>
+                    c.conditionType == ConditionType.DialogueEnded &&
                     c.lValue == endedDialogueId
                 );
+                // 맞다면 다른 조건들도 만족하는지 최종 확인하고 아니라면 이 스토리는 넘어감
+                return isTriggeredByDialogue && AreConditionsMet(story.conditions);
             }
             
-            // 일반적인 단계 변경 시 해당 단계에 맞는 스토리를 찾을 때
-            if (endedDialogueId == null && story.triggerPhase == currentPhase)
-            {
-                return AreConditionsMet(story.conditions);
-            }
+            bool isDialogueTriggerStory = story.conditions.Any(c => c.conditionType == ConditionType.DialogueEnded);
+            if (isDialogueTriggerStory) return false;
+            
+            bool isPhaseCompatible = (story.triggerPhase == currentPhase || story.triggerPhase == GamePhase.None);
 
-            return false;
+            return isPhaseCompatible && AreConditionsMet(story.conditions);
         });
 
         // 만약 실행할 다음 스토리를 찾았다면
@@ -109,7 +114,6 @@ public class StoryManager : Singleton<StoryManager>
             executedStoryIds.Add(nextStory.id);
             StartCoroutine(ExecuteActions(nextStory.actions));
         }
-        
         // 실행할 스토리가 더 이상 없다면
         else if (endedDialogueId == null)
         {
@@ -144,10 +148,10 @@ public class StoryManager : Singleton<StoryManager>
                     QuestManager.Instance.EndQuest(action.targetId);
                     break;
                 case StoryType.GiveMoney:
-                    GameManager.Instance.AddMoney(int.Parse(action.targetId));
+                    GameManager.Instance.AddMoney(int.Parse(action.value));
                     break;
                 case StoryType.LostMoney:
-                    GameManager.Instance.AddMoney(-int.Parse(action.targetId));
+                    GameManager.Instance.AddMoney(-int.Parse(action.value));
                     break;
                 
                 // 튜토리얼용

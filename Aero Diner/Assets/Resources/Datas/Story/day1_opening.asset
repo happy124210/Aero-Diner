@@ -23,3 +23,6 @@ MonoBehaviour:
   - storyType: 0
     targetId: day1_opening_dialogue
     value: 
+  - storyType: 1
+    targetId: t_operation_1
+    value: 

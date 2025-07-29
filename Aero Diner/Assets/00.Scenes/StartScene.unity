@@ -175,10 +175,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: FadeManager
       objectReference: {fileID: 0}
-    - target: {fileID: 6703350350660544847, guid: f5c0e362ba368d14eb809d8b0d105740, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -702,14 +698,6 @@ PrefabInstance:
     - target: {fileID: 6127106076098399162, guid: e3855422d71835d4a98171c3335a085e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8981872372140789260, guid: e3855422d71835d4a98171c3335a085e, type: 3}
-      propertyPath: sceneUIPrefabs.Array.data[2].uiPrefabs.Array.size
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 8981872372140789260, guid: e3855422d71835d4a98171c3335a085e, type: 3}
-      propertyPath: sceneUIPrefabs.Array.data[2].uiPrefabs.Array.data[8].m_AssetGUID
-      value: 2f95afbaad5372f4996b6945d7fa89bf
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
