@@ -29,6 +29,7 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
     protected CookingTimer timer;
     protected bool isCooking = false;
 
+    public string StationId => stationData != null ? stationData.id : string.Empty;
 
     private void Awake()
     {

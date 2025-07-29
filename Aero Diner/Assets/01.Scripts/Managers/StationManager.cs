@@ -529,4 +529,57 @@ public class StationManager : Singleton<StationManager>
 
         if (showDebugInfo) Debug.Log("[StationManager] 기존 스테이션 제거 완료");
     }
+    /// <summary>
+    /// 주어진 Station ID를 기준으로 stationGroups 리스트에서 해당 Station의 InteractableTutorial 컴포넌트를 찾아 활성화
+    /// </summary>
+    /// <param name="id">활성화할 Station의 고유 식별자</param>
+    public void ActivateInteractable(string id)
+    {
+        foreach (var group in stationGroups) 
+        {
+            var stationGO = group.station;
+            var baseStation = stationGO.GetComponent<BaseStation>();
+            if (baseStation != null && baseStation.StationId == id)
+            {
+                var interactable = stationGO.GetComponent<InteractableTutorial>();
+                if (interactable != null)
+                {
+                    interactable.SetInteractable(true);
+                    return;
+                }
+
+                Debug.LogWarning($"[StationManager] Station '{id}'에 InteractableTutorial 컴포넌트가 없습니다.");
+                return;
+            }
+        }
+
+        Debug.LogWarning($"[StationManager] StationGroups에서 ID '{id}'를 가진 Station을 찾을 수 없습니다.");
+    }
+
+    /// <summary>
+    /// 주어진 Station ID를 기준으로 stationGroups 리스트에서 해당 Station의 InteractableTutorial 컴포넌트를 찾아 비활성화
+    /// </summary>
+    /// <param name="id">비활성화할 Station의 고유 식별자</param>
+    public void DeactivateInteractable(string id)
+    {
+        foreach (var group in stationGroups)
+        {
+            var stationGO = group.station;
+            var baseStation = stationGO.GetComponent<BaseStation>();
+            if (baseStation != null && baseStation.StationId == id)
+            {
+                var interactable = stationGO.GetComponent<InteractableTutorial>();
+                if (interactable != null)
+                {
+                    interactable.SetInteractable(false); 
+                    return;
+                }
+
+                Debug.LogWarning($"[StationManager] Station '{id}'에 InteractableTutorial 컴포넌트가 없습니다.");
+                return;
+            }
+        }
+
+        Debug.LogWarning($"[StationManager] StationGroups에서 ID '{id}'를 가진 Station을 찾을 수 없습니다.");
+    }
 }
