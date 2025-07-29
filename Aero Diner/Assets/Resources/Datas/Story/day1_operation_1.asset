@@ -19,4 +19,7 @@ MonoBehaviour:
     lValue: day1_opening_dialogue
     operator: ==
     rValue: 
-  actions: []
+  actions:
+  - storyType: 11
+    targetId: tu3
+    value: 
