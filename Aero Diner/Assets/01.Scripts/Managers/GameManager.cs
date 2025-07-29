@@ -225,7 +225,6 @@ public class GameManager : Singleton<GameManager>
     public void SetTutorialMode(bool value)
     {
         isTutorialActive = value;
-        
         // 기타 튜토리얼 로직
     }
 

@@ -152,7 +152,7 @@ public class Tu2 : MonoBehaviour
     /// </summary>
     public void OnClickDayStartBtn()
     {
-        // TODO: Station 저장
+        StationManager.Instance.stationSave();
         _ = HandleDayStartAsync();
     }
 

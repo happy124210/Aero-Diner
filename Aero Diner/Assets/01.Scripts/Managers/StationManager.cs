@@ -36,6 +36,11 @@ public class StationManager : Singleton<StationManager>
     
     public bool IsUnlocked(string id) => unlockedStationIds.Contains(id);
     
+    // Station 개수 조회
+    // TODO
+    // public string GetStationPlacedCount(string id) => stationTypeCounts.Where(station => station.Key == id).Grid.ToString();
+    
+    // public methods
     public List<Station> GetAllStations() => stationDatabase.Values.ToList();
     public List<Station> GetUnlockedStations() => stationDatabase.Values.Where(station => station.isUnlocked).ToList();
     public HashSet<string> GetUnlockedStationIds() => stationDatabase.Keys.ToHashSet();
@@ -323,8 +328,6 @@ public class StationManager : Singleton<StationManager>
         GridCellStationCount = 0;
         StorageGridCellStationCount = 0;
 
-        Dictionary<string, (int gridCellCount, int storageGridCellCount)> stationTypeCounts = new();
-
         for (int i = 0; i < stationGroups.Count; i++)
         {
             GameObject gridCell = tilemapController.gridCells[i];
@@ -335,7 +338,7 @@ public class StationManager : Singleton<StationManager>
             GameObject station = group.station;
             if (station == null) continue;
 
-            string stationType = station.name; // 또는 station.GetComponent<Station>().stationData.id
+            string stationType = station.GetComponent<Station>().stationData.id;
 
             TotalStationCount++;               // 스테이션 개수 카운트
 
@@ -364,58 +367,6 @@ public class StationManager : Singleton<StationManager>
         }
 
         if (showDebugInfo) Debug.Log($"[StationManager] 전체 스테이션 수: {TotalStationCount} (GridCell: {GridCellStationCount}, StorageGridCell: {StorageGridCellStationCount})");
-    }
-
-    /// <summary>
-    /// 특정 ID의 Station이 현재 GridCell에 배치된 개수
-    /// </summary>
-    public int GetPlacedStationCount(string id)
-    {
-        int count = 0;
-
-        for (int i = 0; i < stationGroups.Count; i++)
-        {
-            var group = stationGroups[i];
-            var station = group.station;
-            if (station == null) continue;
-
-            // "(Clone)" 제거한 이름이 ID와 일치할 경우
-            string stationId = station.name.Replace("(Clone)", "").Trim();
-
-            // GridCell (보관소 제외)
-            var cell = tilemapController.gridCells[i];
-            bool isStorage = cell.GetComponent<StorageGridCell>() != null;
-
-            if (!isStorage && stationId == id)
-                count++;
-        }
-
-        return count;
-    }
-
-    /// <summary>
-    /// 특정 ID의 Station이 현재 StorageGridCell에 보관 중인 개수
-    /// </summary>
-    public int GetStoredStationCount(string id)
-    {
-        int count = 0;
-
-        for (int i = 0; i < stationGroups.Count; i++)
-        {
-            var group = stationGroups[i];
-            var station = group.station;
-            if (station == null) continue;
-
-            string stationId = station.name.Replace("(Clone)", "").Trim();
-
-            var cell = tilemapController.gridCells[i];
-            bool isStorage = cell.GetComponent<StorageGridCell>() != null;
-
-            if (isStorage && stationId == id)
-                count++;
-        }
-
-        return count;
     }
     
     /// <summary>
@@ -595,5 +546,57 @@ public class StationManager : Singleton<StationManager>
         }
 
         Debug.LogWarning($"[StationManager] StationGroups에서 ID '{id}'를 가진 Station을 찾을 수 없습니다.");
+    }
+    
+    /// <summary>
+    /// 특정 ID의 Station이 현재 GridCell에 배치된 개수
+    /// </summary>
+    public int GetPlacedStationCount(string id)
+    {
+        int count = 0;
+
+        for (int i = 0; i < stationGroups.Count; i++)
+        {
+            var group = stationGroups[i];
+            var station = group.station;
+            if (station == null) continue;
+
+            // "(Clone)" 제거한 이름이 ID와 일치할 경우
+            string stationId = station.name.Replace("(Clone)", "").Trim();
+
+            // GridCell (보관소 제외)
+            var cell = tilemapController.gridCells[i];
+            bool isStorage = cell.GetComponent<StorageGridCell>() != null;
+
+            if (!isStorage && stationId == id)
+                count++;
+        }
+
+        return count;
+    }
+
+    /// <summary>
+    /// 특정 ID의 Station이 현재 StorageGridCell에 보관 중인 개수
+    /// </summary>
+    public int GetStoredStationCount(string id)
+    {
+        int count = 0;
+
+        for (int i = 0; i < stationGroups.Count; i++)
+        {
+            var group = stationGroups[i];
+            var station = group.station;
+            if (station == null) continue;
+
+            string stationId = station.name.Replace("(Clone)", "").Trim();
+
+            var cell = tilemapController.gridCells[i];
+            bool isStorage = cell.GetComponent<StorageGridCell>() != null;
+
+            if (isStorage && stationId == id)
+                count++;
+        }
+
+        return count;
     }
 }

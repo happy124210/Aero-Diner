@@ -13,7 +13,7 @@ public class Tu3 : MonoBehaviour
 
     private void OnEnable()
     {
-        ShowTutorialStep3();
+        ShowTutorialStep1();
     }
 
     private void ShowTextWithTyping(string message)

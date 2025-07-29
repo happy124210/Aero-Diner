@@ -57,7 +57,6 @@ public class CSVImporter
         data.workType = (WorkType)Enum.Parse(typeof(WorkType), cols[4].Trim());
         data.stationIcon = LoadIcon($"{data.stationName}", "Station");
         data.description = cols[5].Trim();
-        data.stationCost = int.Parse(cols[6]);
 
         return data;
     }

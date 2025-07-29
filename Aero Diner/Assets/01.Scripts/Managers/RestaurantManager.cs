@@ -24,7 +24,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
     [SerializeField] private bool showDebugInfo;
     
     // private fields
-    
     private float currentRoundTime;
     
     #region property & public methods
