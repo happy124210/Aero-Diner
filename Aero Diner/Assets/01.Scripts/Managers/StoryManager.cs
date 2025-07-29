@@ -189,9 +189,8 @@ public class StoryManager : Singleton<StoryManager>
                 case ConditionType.Day:
                     result = CheckNumericCondition(GameManager.Instance.CurrentDay, c.@operator, c.rValue);
                     break;
-                case ConditionType.QuestCompleted:
-                    var status = QuestManager.Instance.GetQuestStatus(c.lValue);
-                    result = (status == QuestStatus.Completed);
+                case ConditionType.QuestStatus:
+                    result = CheckQuestStatusCondition(c.lValue, c.@operator, c.rValue);
                     break;
                 case ConditionType.DialogueEnded:
                     result = true; 

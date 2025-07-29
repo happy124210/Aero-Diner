@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public enum ConditionType
 {
     Day,              // N일차 이상/이하/같음
-    QuestCompleted,   // 특정 퀘스트의 상태
+    QuestStatus,   // 특정 퀘스트의 상태
     DialogueEnded,    // 특정 대화 끝났을 때
 }
 

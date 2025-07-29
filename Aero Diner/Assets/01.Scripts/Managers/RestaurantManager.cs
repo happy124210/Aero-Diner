@@ -22,7 +22,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
     [Header("Debug Info")]
     [SerializeField] private CustomerSpawner customerSpawner;
     [SerializeField] private bool showDebugInfo;
-    private bool tutorialMode = false;
     
     // private fields
     

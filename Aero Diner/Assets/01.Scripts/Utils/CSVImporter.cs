@@ -391,7 +391,7 @@ public class CSVImporter
                         condition.rValue = attrs[2];
                         break;
                     
-                    case ConditionType.QuestCompleted:
+                    case ConditionType.QuestStatus:
                         // 형식: QuestStatus;quest_id;==;Completed
                         condition.lValue = attrs[1];
                         condition.@operator = attrs[2];
