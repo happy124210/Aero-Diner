@@ -34,6 +34,7 @@ public enum StoryType
     ShowGuideUI, // 딤드처리 UI 표시
     ForceUI,     // 특정 창 강제 열기
     ActivateStation,
+    SpawnCustomer,
     
     None,
 }
