@@ -138,6 +138,12 @@ public class StoryManager : Singleton<StoryManager>
                     //TODO: 특정 설비 활성화
                     //StationManager.Instance.ActivateStation(action.targetId);
                     break;
+                case StoryType.SetTutorialMode:
+                    GameManager.Instance.SetTutorialMode(true);
+                    break;
+                case StoryType.SpawnCustomer:
+                    RestaurantManager.Instance.SpawnTutorialCustomer();
+                    break;
 
             }
             yield return null;

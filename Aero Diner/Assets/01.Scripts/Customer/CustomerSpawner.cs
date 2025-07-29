@@ -137,4 +137,12 @@ public class CustomerSpawner : MonoBehaviour
         if (!Application.isPlaying) return;
         SpawnRandomCustomer();
     }
+
+    public void SpawnTutorialCustomer()
+    {
+        Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+        CustomerData customerData = SelectRandomCustomerByRarity();
+        CustomerController cc = CustomerManager.Instance.SpawnCustomer(customerData, spawnPoint.position, spawnPoint.rotation);
+        cc.SetTutorialMode(true);
+    }
 }

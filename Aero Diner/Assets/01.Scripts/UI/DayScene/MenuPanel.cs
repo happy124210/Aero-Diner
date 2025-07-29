@@ -84,6 +84,10 @@ public class MenuPanel : MonoBehaviour
             
             float delay = 1f;
             var cg = go.GetComponent<CanvasGroup>();
+            if (!cg)
+            {
+                cg = go.AddComponent<CanvasGroup>();
+            }
 
             RectTransform rt = go.GetComponent<RectTransform>();
             rt.anchoredPosition += new Vector2(0, 100f); // 약간 위에서 떨어짐

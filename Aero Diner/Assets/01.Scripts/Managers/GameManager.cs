@@ -17,12 +17,14 @@ public class GameManager : Singleton<GameManager>
     
     private static readonly int[] DaysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
     private GamePhase previousPhase;
+    private bool isTutorialActive;
     
     #region Property
     
     public int TotalEarnings => totalEarnings;
     public int CurrentDay => currentDay;
     public GamePhase CurrentPhase => currentPhase;
+    public bool IsTutorialActive => isTutorialActive;
     
     #endregion
     
@@ -219,6 +221,17 @@ public class GameManager : Singleton<GameManager>
     }
     #endregion
 
+    #region 튜토리얼 관리
+
+    public void SetTutorialMode(bool value)
+    {
+        isTutorialActive = value;
+        
+        // 기타 튜토리얼 로직
+    }
+
+    #endregion
+    
     #region Debug Commands
 #if UNITY_EDITOR
     private void OnGUI()
