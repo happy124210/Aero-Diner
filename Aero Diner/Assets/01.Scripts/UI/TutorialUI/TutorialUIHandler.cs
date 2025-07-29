@@ -18,7 +18,7 @@ public class TutorialUIHandler : IUIEventHandler
                 foreach (var ui in sceneUIs)
                 {
                     Debug.Log("TU 호출됨");
-                    
+
                     ui?.GetComponentInChildren<Tu1>(true)?.gameObject.SetActive(true);
                 }
                 return true;
@@ -61,6 +61,14 @@ public class TutorialUIHandler : IUIEventHandler
             case UIEventType.tu3_step7:
                 foreach (var ui in sceneUIs)
                     ui?.GetComponentInChildren<Tu3>(true)?.ShowTutorialStep7();
+                return true;
+            case UIEventType.tu4:
+                foreach (var ui in sceneUIs)
+                {
+                    Debug.Log("TU 호출됨");
+
+                    ui?.GetComponentInChildren<Tu4>(true)?.gameObject.SetActive(true);
+                }
                 return true;
         }
         
