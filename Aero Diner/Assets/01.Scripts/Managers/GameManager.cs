@@ -175,8 +175,10 @@ public class GameManager : Singleton<GameManager>
         data.currentDay = currentDay;
         
         SaveLoadManager.SaveGame(data);
+        
         StationManager.Instance.SaveStationDatabase();
         MenuManager.Instance.SaveMenuDatabase();
+        QuestManager.Instance.SaveQuestData();
         
         if (showDebugInfo) Debug.Log("[GameManager]: 게임 데이터 저장 완료.");
     }
