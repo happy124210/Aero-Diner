@@ -77,6 +77,13 @@ public class StationManager : Singleton<StationManager>
 
     private void Start()
     {
+        var phase = GameManager.Instance.CurrentPhase;
+
+        if (phase == GamePhase.Day || phase == GamePhase.Opening)
+        {
+            StationLoad(phase);
+        }
+
         tilemapController.FindGridCells();
         if (showDebugInfo) Debug.Log($"[StationManager] GridCell 수: {tilemapController.gridCells.Count}");
 
@@ -475,10 +482,12 @@ public class StationManager : Singleton<StationManager>
         }
     }
 
-    private void StationSave(object phaseObj)
+    /// <summary>
+    /// 현재 상태의 스테이션 정보를 JSON으로 저장
+    /// </summary>
+    /// <param name="phaseobj"></param>
+    public void stationSave()
     {
-        GamePhase newPhase = (GamePhase)phaseObj;
-
         SetStations(); // 현재 상태 갱신
 
         var stationInfos = GenerateStationSaveData();
@@ -488,7 +497,12 @@ public class StationManager : Singleton<StationManager>
 
         Debug.Log($"[StationManager] 저장 완료");
     }
-    private void StationLoad(object phaseObj)
+
+    /// <summary>
+    /// 현재 게임 상태에 맞는 스테이션을 불러옴
+    /// </summary>
+    /// <param name="phaseObj"></param>
+    public void StationLoad(object phaseObj)
     {
         GamePhase newPhase = (GamePhase)phaseObj;
 

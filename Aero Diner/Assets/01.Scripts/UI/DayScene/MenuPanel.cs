@@ -118,6 +118,7 @@ public class MenuPanel : MonoBehaviour
     public void OnClickDayStartBtn()
     {
         // TODO: Station 저장
+        StationManager.Instance.stationSave();
         _ = HandleDayStartAsync();
     }
 
