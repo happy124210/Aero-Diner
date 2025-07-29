@@ -78,7 +78,7 @@ MonoBehaviour:
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
-    - m_AssetGUID: 12e1040d40fefa14983308670ca22f9f
+    - m_AssetGUID: 9486c998c9bc5a048ae04010c6f12b31
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
@@ -113,10 +113,6 @@ MonoBehaviour:
       m_SubObjectType: 
       m_EditorAssetChanged: 0
     - m_AssetGUID: db44f1c37eca39e4f87a2496c8da76c1
-      m_SubObjectName: 
-      m_SubObjectType: 
-      m_EditorAssetChanged: 0
-    - m_AssetGUID: 2f95afbaad5372f4996b6945d7fa89bf
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0

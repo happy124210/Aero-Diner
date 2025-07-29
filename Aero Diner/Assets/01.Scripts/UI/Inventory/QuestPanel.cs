@@ -1,6 +1,7 @@
 ﻿
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 using UnityEngine.UI; 
 
@@ -20,11 +21,11 @@ public class QuestPanel : MonoBehaviour
     [Header("퀘스트 상세정보")]
     [SerializeField] private TMP_Text questNameText;
     [SerializeField] private TMP_Text descriptionText;
+    [SerializeField] private TMP_Text objectiveText;
     [SerializeField] private TMP_Text rewardText;
-    [SerializeField] private Transform objectivesContainer;
-    [SerializeField] private GameObject objectiveTextPrefab;
 
-    public bool IsDebug = false;
+    [Header("Debug Info")]
+    [SerializeField] private bool showDebugInfo;
 
     private void OnEnable()
     {
@@ -35,26 +36,31 @@ public class QuestPanel : MonoBehaviour
         tabController.ApplyTabSelectionVisuals();
         RefreshQuestLists();
     }
+    
     #region 버튼메서드
+    
     public void OnClickDoningBtn()
     {
-        if (IsDebug)
+        if (showDebugInfo)
             Debug.Log("버튼 클릭 됨");
         EventBus.PlaySFX(SFXType.ButtonClick);
         tabController.RequestSelectTab(0);
         tabController.ApplyTabSelectionVisuals();
         RefreshQuestLists();
     }
+    
     public void OnClickCompleteBtn()
     {
-        if (IsDebug)
+        if (showDebugInfo)
             Debug.Log("버튼 클릭 됨");
         EventBus.PlaySFX(SFXType.ButtonClick);
         tabController.RequestSelectTab(1);
         tabController.ApplyTabSelectionVisuals();
         RefreshQuestLists();
     }
+    
     #endregion
+    
     private void RefreshQuestLists()
     {
         ClearChildren(doingContent);
@@ -82,6 +88,7 @@ public class QuestPanel : MonoBehaviour
         // 상세 패널 초기화
         ShowQuestDetail(null);
     }
+    
     private void CreateQuestListItem(QuestData questData, Transform parent)
     {
         GameObject go = Instantiate(questListItemPrefab, parent);
@@ -89,6 +96,7 @@ public class QuestPanel : MonoBehaviour
         item.SetData(questData);
         item.OnClicked = () => ShowQuestDetail(questData);
     }
+    
     private void ShowQuestDetail(QuestData quest)
     {
         // 초기화 시 호출되는 경우
@@ -97,7 +105,7 @@ public class QuestPanel : MonoBehaviour
             questNameText.text = "";
             descriptionText.text = "";
             rewardText.text = "";
-            ClearChildren(objectivesContainer);
+            objectiveText.text = "";
             return;
         }
 
@@ -106,14 +114,26 @@ public class QuestPanel : MonoBehaviour
         descriptionText.text = quest.description;
         rewardText.text = $"보상: {quest.rewardDescription} ({quest.rewardMoney}G)";
 
-        ClearChildren(objectivesContainer);
-
         foreach (var obj in quest.objectives)
         {
-            var txt = Instantiate(objectiveTextPrefab, objectivesContainer).GetComponent<TMP_Text>();
-            txt.text = $"• {obj.objectiveType} {obj.targetId} x{obj.requiredAmount}";
+            int currentAmount;
+            
+            if (obj.objectiveType == QuestObjectiveType.EarnMoney)
+            {
+                // 돈 퀘스트만 GameManager에서 현재까지 번 총액 가져오기
+                currentAmount = GameManager.Instance.TotalEarnings; 
+            }
+            else
+            {
+                currentAmount = QuestManager.Instance.GetQuestObjectiveProgress(quest.id, obj.targetId);
+            }
+            
+            currentAmount = Mathf.Min(currentAmount, obj.requiredAmount);
+            
+            objectiveText.text = $"• {obj.description} ({currentAmount} / {obj.requiredAmount})";
         }
     }
+    
     private void ClearChildren(Transform container)
     {
         if (container == null) return;

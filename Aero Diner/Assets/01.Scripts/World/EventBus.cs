@@ -26,6 +26,12 @@ public enum GameEventType
     RoundTimerEnded,  // 영업 시간 종료
     DialogueEnded,
     QuestStatusChanged,
+    
+    // 플레이어
+    PlayerPickedUpItem,
+    
+    // UI
+    UISceneReady,
 }
 
 public enum SFXType

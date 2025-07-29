@@ -66,7 +66,8 @@ public class GameManager : Singleton<GameManager>
             //or GamePhase.Dialogue
             or GamePhase.GameOver 
             //or GamePhase.SelectMenu 
-            or GamePhase.Shop ? 0f : 1f;
+            //or GamePhase.Shop
+            ? 0f : 1f;
         
         if (showDebugInfo) Debug.Log($"[GameManager] Game Phase 변경됨: {newPhase}");
     }
@@ -102,12 +103,6 @@ public class GameManager : Singleton<GameManager>
 
     private void HandleUIEvent(UIEventType eventType, object data)
     {
-        if (eventType == UIEventType.ShowMenuPanel)
-        {
-            if (CurrentPhase == GamePhase.EditStation)
-                ChangePhase(GamePhase.SelectMenu);
-        }
-        
         if (eventType == UIEventType.HideResultPanel)
         {
             int earningsFromDay = RestaurantManager.Instance.TodayEarnings;
@@ -157,6 +152,8 @@ public class GameManager : Singleton<GameManager>
     public void AddMoney(int amount)
     {
         totalEarnings += amount;
+        EventBus.Raise(UIEventType.UpdateTotalEarnings, TotalEarnings);
+        EventBus.OnSFXRequested(SFXType.CustomerPay);
     }
 
     private void IncreaseDay()
@@ -180,8 +177,10 @@ public class GameManager : Singleton<GameManager>
         data.currentDay = currentDay;
         
         SaveLoadManager.SaveGame(data);
+        
         StationManager.Instance.SaveStationDatabase();
         MenuManager.Instance.SaveMenuDatabase();
+        QuestManager.Instance.SaveQuestData();
         
         if (showDebugInfo) Debug.Log("[GameManager]: 게임 데이터 저장 완료.");
     }

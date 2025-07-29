@@ -4,10 +4,9 @@ using System.Collections.Generic;
 // 조건 종류
 public enum ConditionType
 {
-    Day,           // N일차 이상/이하/같음
-    QuestStatus,   // 특정 퀘스트의 상태
-    DialogueEnded, // 특정 대화가 끝났을 때
-    Money          // 소지금 이상/이하/같음
+    Day,              // N일차 이상/이하/같음
+    QuestCompleted,   // 특정 퀘스트의 상태
+    DialogueEnded,    // 특정 대화 끝났을 때
 }
 
 // 액션의 종류

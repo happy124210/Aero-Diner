@@ -10,17 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d9ddc00ae20433a48abb200af3016cce, type: 3}
-  m_Name: main_quest_01
+  m_Name: t_operation_1
   m_EditorClassIdentifier: 
-  id: main_quest_01
-  questName: "\uC170\uD504\uC758 \uCCAB\uAC78\uC74C"
-  description: "\"7\uC77C \uC548\uC5D0 10000\uACE8\uB4DC\uB97C \uBC8C\uC5B4 \uAC00\uAC8C\uC758
-    \uAE30\uBC18\uC744 \uB2E4\uC9C0\uC790.\""
-  rewardDescription: "\"\uB808\uC2A4\uD1A0\uB791 \uC218\uB9AC\""
+  id: t_operation_1
+  questName: 
+  description: 
+  rewardDescription: 
   objectives:
-  - objectiveType: 0
-    targetId: 
-    description: "10000\uACE8\uB4DC \uBC8C\uAE30"
-    requiredAmount: 10000
+  - objectiveType: 4
+    targetId: f4
+    description: 
+    requiredAmount: 0
   rewardMoney: 0
   rewardItemIds: []
