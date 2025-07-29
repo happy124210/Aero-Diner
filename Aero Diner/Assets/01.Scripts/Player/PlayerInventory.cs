@@ -10,14 +10,14 @@ public class PlayerInventory : MonoBehaviour
     [Header("아이템 슬롯 위치")]
     [SerializeField] private Transform itemSlotTransform;
     [SerializeField] private TilemapController tilemapController;
-
-    public bool ShowDebugInfo;
-
-
     
-    ///현재 들고 있는 재료
-    public FoodDisplay holdingItem;
-    public IMovableStation heldStation;
+    [Header("Debug Info")]
+    [SerializeField] private bool showDebugInfo;
+    
+    // 인벤토리 정보
+    private FoodDisplay holdingItem;
+    private IMovableStation heldStation;
+    
     public bool IsHoldingItem => holdingItem != null || heldStation != null;
 
     private void Start()
@@ -108,17 +108,17 @@ public class PlayerInventory : MonoBehaviour
 
         if (GameManager.Instance.CurrentPhase != GamePhase.Operation)
         {
-            if (ShowDebugInfo)
+            if (showDebugInfo)
                 Debug.Log("[Inventory] Operation 페이즈가 아니므로 재료를 배치할 수 없습니다.");
             return;
         }
 
-        if (ShowDebugInfo)
+        if (showDebugInfo)
             Debug.Log($"[Inventory] target 타입: {target.GetType().Name}");
 
         if (!IsHoldingItem || target == null)
         {
-            if (ShowDebugInfo)
+            if (showDebugInfo)
                 Debug.Log("[Inventory] 아이템이 없거나 타겟이 없습니다.");
             return;
         }
@@ -133,13 +133,13 @@ public class PlayerInventory : MonoBehaviour
                 {
                     Destroy(holdingItem.gameObject);
                     holdingItem = null;
-                    if (ShowDebugInfo)
+                    if (showDebugInfo)
                         Debug.Log($"[Inventory] 재료 일치 - 재료 소비됨");
                     placed = true;
                 }
                 else
                 {
-                    if (ShowDebugInfo)
+                    if (showDebugInfo)
                         Debug.Log("[Inventory] 재료 불일치 - 내려놓을 수 없음");
                 }
                 break;
@@ -151,13 +151,13 @@ public class PlayerInventory : MonoBehaviour
                         shelf.PlaceObject(holdingItem.foodData);
                         Destroy(holdingItem.gameObject);
                         holdingItem = null;
-                        if (ShowDebugInfo)
+                        if (showDebugInfo)
                             Debug.Log("[Inventory] 선반에 아이템 배치됨");
                         placed = true;
                     }
                     else
                     {
-                        if (ShowDebugInfo)
+                        if (showDebugInfo)
                             Debug.Log("[Inventory] 선반에 재료를 배치할 수 없습니다.");
                     }
                     break;
@@ -166,7 +166,7 @@ public class PlayerInventory : MonoBehaviour
             case Trashcan:
                 Destroy(holdingItem.gameObject);
                 holdingItem = null;
-                if (ShowDebugInfo)
+                if (showDebugInfo)
                     Debug.Log("[Inventory] 아이템을 쓰레기통에 버렸습니다.");
                 placed = true;
                 break;
@@ -180,14 +180,14 @@ public class PlayerInventory : MonoBehaviour
 
                     Destroy(holdingItem.gameObject);
                     holdingItem = null;
-                    if (ShowDebugInfo)
+                    if (showDebugInfo)
                         Debug.Log("[Inventory] PassiveStation에 아이템 배치됨");
                     placed = true;
                 }
 
                 else
                 {
-                    if (ShowDebugInfo)
+                    if (showDebugInfo)
                         Debug.Log("[Inventory] PassiveStation에 재료 배치 실패");
                 }
                 break;
@@ -201,13 +201,13 @@ public class PlayerInventory : MonoBehaviour
 
                     Destroy(holdingItem.gameObject);
                     holdingItem = null;
-                    if (ShowDebugInfo)
+                    if (showDebugInfo)
                         Debug.Log("[Inventory] AutoStation에 아이템 배치됨");
                     placed = true;
                 }
                 else
                 {
-                    if (ShowDebugInfo)
+                    if (showDebugInfo)
                         Debug.Log("[Inventory] AutoStation에 배치 불가");
                 }
                 break;
@@ -218,13 +218,13 @@ public class PlayerInventory : MonoBehaviour
                     table.PlaceObject(holdingItem.foodData);
                     Destroy(holdingItem.gameObject);
                     holdingItem = null;
-                    if (ShowDebugInfo)
+                    if (showDebugInfo)
                         Debug.Log("[Inventory] 테이블에 아이템 배치됨");
                     placed = true;
                 }
                 else
                 {
-                    if (ShowDebugInfo)
+                    if (showDebugInfo)
                         Debug.Log("[Inventory] 테이블에 재료를 배치할 수 없습니다.");
                 }
                 break;
@@ -233,7 +233,7 @@ public class PlayerInventory : MonoBehaviour
 
         if (!placed)
         {
-            if (ShowDebugInfo)
+            if (showDebugInfo)
                 Debug.Log("감지는 되었으나 배치 실패");
         }
     }
