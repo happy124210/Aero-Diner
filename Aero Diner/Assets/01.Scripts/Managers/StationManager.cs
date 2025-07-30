@@ -395,7 +395,7 @@ public class StationManager : Singleton<StationManager>
 
         if (showDebugInfo) Debug.Log($"[StationManager] 전체 스테이션 수: {TotalStationCount} (GridCell: {GridCellStationCount}, StorageGridCell: {StorageGridCellStationCount})");
     }
-    
+
     /// <summary>
     /// 보관장소에 스테이션 생성
     /// 상점에서 구매했을 때 호출됨
@@ -445,7 +445,7 @@ public class StationManager : Singleton<StationManager>
         // 스테이션 인스턴스 생성
         GameObject instance = Instantiate(prefab, targetCell.transform);
         instance.transform.localPosition = Vector3.zero;
-        instance.SetActive(true); 
+        instance.SetActive(true);
 
         // stationGroups 동기화
         int index = tilemapController.gridCells.IndexOf(targetCell);
@@ -530,6 +530,76 @@ public class StationManager : Singleton<StationManager>
         Debug.LogWarning($"[StationManager] StationGroups에서 ID '{id}'를 가진 Station을 찾을 수 없음");
     }
 
+    /// <summary>
+    /// 특정 설비에 특정 음식이 배치되어있는지 여부 판단
+    /// </summary>
+    public void CheckIngredients(string stationId, string[] ingredients)
+    {
+        SetStations();
+
+        foreach (var group in stationGroups)
+        {
+            var stationGO = group.station;
+
+            if (!stationGO)
+            {
+                continue;
+            }
+
+            var data = stationGO.GetComponent<IMovableStation>()?.StationData;
+            if (data != null && data.id == stationId)
+            {
+                var baseStation = stationGO.GetComponent<BaseStation>();
+                if (!baseStation)
+                {
+                    if (showDebugInfo) Debug.Log($"[StationManager] Station '{stationId}'에서 BaseStation 컴포넌트를 찾지 못함");
+                    return;
+                }
+
+                var currentIngredients = baseStation.currentIngredients;
+                foreach (var ingredient in ingredients)
+                {
+                    if (currentIngredients.Contains(ingredient))
+                    {
+                        if (showDebugInfo) Debug.Log($"[StationManager] Station '{stationId}'에 '{ingredient}'이 배치되어 있음");
+                    }
+                    else
+                    {
+                        if (showDebugInfo) Debug.Log($"[StationManager] Station '{stationId}'에 '{ingredient}'이 배치되어 있지 않음");
+                    }
+                }
+
+                return;
+            }
+        }
+
+        Debug.LogWarning($"[StationManager] StationGroups에서 ID '{stationId}'를 가진 Station을 찾을 수 없음");
+    }
+
+    /// <summary>
+    /// 디버깅용
+    /// 특정 Station ID의 currentIngredients 목록을 콘솔에 출력하는 테스트 메서드
+    /// </summary>
+    public List<string> GetCurrentIngredients(string stationId)
+    {
+        SetStations();
+
+        foreach (var group in stationGroups)
+        {
+            var stationGO = group.station;
+            if (!stationGO) continue;
+
+            var data = stationGO.GetComponent<IMovableStation>()?.StationData;
+            if (data != null && data.id == stationId)
+            {
+                var baseStation = stationGO.GetComponent<BaseStation>();
+                if (!baseStation) return new List<string>();
+
+                return new List<string>(baseStation.currentIngredients);
+            }
+        }
+
+        return new List<string>();
+    }
     #endregion
-    
 }
