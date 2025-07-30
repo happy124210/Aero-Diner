@@ -373,7 +373,7 @@ GameObject:
   - component: {fileID: 132878344304846980}
   - component: {fileID: 2158648765208215207}
   m_Layer: 0
-  m_Name: tu1
+  m_Name: Tu1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -408,6 +408,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetPanel: {fileID: 2636222300038435694}
+  canvasGroup: {fileID: 2158648765208215207}
 --- !u!114 &132878344304846980
 MonoBehaviour:
   m_ObjectHideFlags: 0

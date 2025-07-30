@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3016406984b8b94e9f7c7e996cc12e2, type: 3}
   m_Name: day1_tutorialEnd_dialogue
   m_EditorClassIdentifier: 
-  id: day1_opening_dialogue
+  id: day1_tutorialEnd_dialogue
   lines:
   - speakerId: KAYA
     expression: 1

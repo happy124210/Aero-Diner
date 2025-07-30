@@ -21,5 +21,8 @@ MonoBehaviour:
     rValue: Finished
   actions:
   - storyType: 0
-    targetId: 
+    targetId: day1_tutorialEnd_dialogue
     value: 
+  - storyType: 10
+    targetId: day1_tutorialEnd_dialogue
+    value: false

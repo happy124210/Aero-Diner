@@ -3,9 +3,7 @@ using UnityEngine;
 public class Tu1 : MonoBehaviour
 {
     [SerializeField] private GameObject targetPanel;
-
-    private CanvasGroup canvasGroup;
-
+    [SerializeField] private CanvasGroup canvasGroup;
 
     private void Awake()
     {
