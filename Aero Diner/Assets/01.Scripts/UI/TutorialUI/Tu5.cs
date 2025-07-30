@@ -202,7 +202,7 @@ public class Tu5 : MonoBehaviour
         AnimateStoreMoney(GameManager.Instance.TotalEarnings);
         EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
         MenuManager.Instance.UnlockMenu("f29");
-        ForcePurchase("f29");
+        ForcePurchase("b32");
     }
 
     private void Tu5BuyStation()
