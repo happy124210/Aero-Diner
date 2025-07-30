@@ -18,3 +18,19 @@ public static class StringPath
     public const string QUEST_DATA_PATH = "Datas/Quest";
     public const string STORE_DATA_PATH = "Datas/Store";
 }
+
+public static class StringTag
+{
+    public const string INVISIBLE_WALL_TAG = "InvisibleWall";
+    public const string STATION_TAG = "Station";
+    public const string GRID_CELL_TAG = "GridCell";
+
+    public const string INTERACTABLE_LAYER = "Interactable";
+}
+
+public static class StringMessage
+{
+    public const string OPERATION_ALERT = "지금은 영업 중이니 다른 곳에 가면 안돼!";
+    public const string STATION_ALERT = "설비를 든 상태로는 무거워서 멀리까지 나갈 수 없어!";
+    public const string ESCAPE_ALERT = "이 지역에서는 멀리 나가봐야 아무 것도 없어! \n 비행선을 수리해서 다른 지역으로 간다면 모를까...";
+}

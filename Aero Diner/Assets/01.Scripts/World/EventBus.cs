@@ -27,14 +27,11 @@ public enum GameEventType
     DialogueEnded,
     QuestStatusChanged,
     
-    // 플레이어
+    // 튜토리얼용
     PlayerPickedUpItem,
     StationUsed,
-    
-    // 손님
     CustomerServed,
-    
-    // UI
+    StationLayoutChanged,
     UISceneReady,
 }
 

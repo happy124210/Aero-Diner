@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : Singleton<PlayerController>
 {
     #region 참조
+    
     [Header("입력 액션 참조")]
     public InputActionReference moveActionRef;
     public InputActionReference interactActionRef;
@@ -18,52 +19,56 @@ public class PlayerController : Singleton<PlayerController>
 
     [SerializeField] private PlayerInventory playerInventory;
     [SerializeField] private Transform itemSlotTransform;
-    [SerializeField] private Vector2 slotOffsetUp = new Vector2(0, 0.5f);
-    [SerializeField] private Vector2 slotOffsetDown = new Vector2(0, -0.5f);
-    [SerializeField] private Vector2 slotOffsetLeft = new Vector2(-0.5f, 0);
-    [SerializeField] private Vector2 slotOffsetRight = new Vector2(0.5f, 0);
+    [SerializeField] private Vector2 slotOffsetUp = new(0, 0.5f);
+    [SerializeField] private Vector2 slotOffsetDown = new(0, -0.5f);
+    [SerializeField] private Vector2 slotOffsetLeft = new(-0.5f, 0);
+    [SerializeField] private Vector2 slotOffsetRight = new(0.5f, 0);
     [SerializeField] private AudioSource moveSFXSource;
     [SerializeField] private AudioClip moveSFXClip;
 
+    public InteractionType interactionType;
+    
     private Rigidbody2D rb;
     private Animator animator;
 
-    private float idleTimer = 0f;
-    private float idleBreakTime = 5f;
-    private bool hasTriggeredIdleBreak = false;
-
+    private float idleTimer;
     private Vector2 moveInput;
     private Vector2 lastMoveDir = Vector2.down;
-
-    public InteractionType interactionType;
-    public IInteractable currentTarget;
+    
+    private IInteractable currentTarget;
     private TilemapController tilemapController;
 
-    private string lastWallMessage = null;
-    private bool isTouchingWall = false;
+    private string lastWallMessage;
+    private bool isTouchingWall;
+    
+    // const
+    private const float IDLE_BREAK_TIME = 5f;
+    
+    // animation hash
+    private static readonly int PutDown = Animator.StringToHash("PutDown");
+    private static readonly int PickUp = Animator.StringToHash("PickUp");
+    private static readonly int MoveX = Animator.StringToHash("MoveX");
+    private static readonly int MoveY = Animator.StringToHash("MoveY");
+    private static readonly int IsMoving = Animator.StringToHash("IsMoving");
+    private static readonly int LastMoveX = Animator.StringToHash("LastMoveX");
+    private static readonly int LastMoveY = Animator.StringToHash("LastMoveY");
+    private static readonly int IsCarrying = Animator.StringToHash("IsCarrying");
+    private static readonly int IsInteract = Animator.StringToHash("IsInteract");
+    private static readonly int IdleBreakIndex = Animator.StringToHash("IdleBreakIndex");
+    private static readonly int TriggerIdleBreak = Animator.StringToHash("TriggerIdleBreak");
+    
     #endregion
     
     #region 외부 접근용 Getter
 
-    public string GetHeldFoodID()
-    {
-        return playerInventory?.holdingItem?.foodData?.id;
-    }
+    public bool IsHoldingFood(string id) => GetHeldFoodID() == id;
+    public bool IsHoldingStation(string id) => GetHeldStationID() == id;
+    
+    private string GetHeldFoodID() => playerInventory?.holdingItem?.foodData?.id;
+    private string GetHeldStationID() => playerInventory?.holdingItem?.foodData?.id;
 
-    public string GetHeldStationID()
-    {
-        return playerInventory?.heldStation?.StationData?.id;
-    }
-    public bool IsHoldingFood(string id)
-    {
-        return GetHeldFoodID() == id;
-    }
-
-    public bool IsHoldingStation(string id)
-    {
-        return GetHeldStationID() == id;
-    }
     #endregion
+    
     protected override void Awake()
     {
         base.Awake();
@@ -108,11 +113,11 @@ public class PlayerController : Singleton<PlayerController>
         UpdateItemSlotPosition();
         RaycastForInteractable();
 
-        animator.SetBool("IsCarrying", playerInventory.IsHoldingItem);
+        animator.SetBool(IsCarrying, playerInventory.IsHoldingItem);
 
         bool isHolding = interactActionRef.action.IsPressed();
         bool isInteracting = currentTarget != null && interactionType == InteractionType.Use && isHolding;
-        animator.SetBool("IsInteract", isInteracting);
+        animator.SetBool(IsInteract, isInteracting);
 
         if (isInteracting)
         {
@@ -122,11 +127,11 @@ public class PlayerController : Singleton<PlayerController>
         if (moveInput.sqrMagnitude < 0.01f)
         {
             idleTimer += Time.deltaTime;
-            if (idleTimer >= idleBreakTime)
+            if (idleTimer >= IDLE_BREAK_TIME)
             {
                 int random = Random.Range(0, 2);
-                animator.SetInteger("IdleBreakIndex", random);
-                animator.SetTrigger("TriggerIdleBreak");
+                animator.SetInteger(IdleBreakIndex, random);
+                animator.SetTrigger(TriggerIdleBreak);
                 idleTimer = 0f;
             }
         }
@@ -137,9 +142,11 @@ public class PlayerController : Singleton<PlayerController>
     }
     private void FixedUpdate()
     {
-        rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + moveInput * (moveSpeed * Time.fixedDeltaTime));
     }
+    
     #region 상호작용부분
+    
     private void OnInteract(InputAction.CallbackContext context)
     {
         var target = FindBestInteractable(InteractionType.Use);
@@ -154,10 +161,17 @@ public class PlayerController : Singleton<PlayerController>
         {
             if (currentTarget != null)
             {
+                bool wasHoldingStation = playerInventory.heldStation != null;
+
                 SetDirectionParams();
-                animator.SetTrigger("PutDown");
+                animator.SetTrigger(PutDown);
                 playerInventory.DropItem(currentTarget);
                 EventBus.OnSFXRequested(SFXType.ItemLaydown);
+                
+                if (wasHoldingStation)
+                {
+                    EventBus.Raise(GameEventType.StationLayoutChanged);
+                }
             }
         }
         else
@@ -166,7 +180,7 @@ public class PlayerController : Singleton<PlayerController>
             if (pickupTarget != null)
             {
                 SetDirectionParams();
-                animator.SetTrigger("PickUp");
+                animator.SetTrigger(PickUp);
                 playerInventory.TryPickup(pickupTarget);
                 EventBus.OnSFXRequested(SFXType.ItemPickup);
             }
@@ -185,9 +199,9 @@ public class PlayerController : Singleton<PlayerController>
             var interactable = hit.collider.GetComponent<IInteractable>();
             if (interactable == null) continue;
 
-            if (hit.collider.CompareTag("Station") && stationTarget == null)
+            if (hit.collider.CompareTag(StringTag.STATION_TAG) && stationTarget == null)
                 stationTarget = interactable;
-            else if (hit.collider.CompareTag("GridCell") && gridTarget == null)
+            else if (hit.collider.CompareTag(StringTag.GRID_CELL_TAG) && gridTarget == null)
                 gridTarget = interactable;
         }
 
@@ -205,7 +219,7 @@ public class PlayerController : Singleton<PlayerController>
         }
     }
 
-    private IInteractable FindBestInteractable(InteractionType interactionType)
+    private IInteractable FindBestInteractable(InteractionType type)
     {
         var hits = CastAll(transform.position, lastMoveDir, interactionRadius, interactableLayer);
         IInteractable best = null;
@@ -219,7 +233,7 @@ public class PlayerController : Singleton<PlayerController>
 
             float dist = Vector2.Distance(transform.position, hit.point);
 
-            if (interactionType == InteractionType.Pickup)
+            if (type == InteractionType.Pickup)
             {
                 if (GameManager.Instance.CurrentPhase == GamePhase.EditStation && interactable is IMovableStation)
                 {
@@ -246,17 +260,6 @@ public class PlayerController : Singleton<PlayerController>
                         closestDist = dist;
                     }
                 }
-
-                else if (interactionType == InteractionType.Use || interactionType == InteractionType.Stop)
-            
-                if (interactable is PassiveStation || interactable is AutomaticStation)
-                {
-                    if (dist < closestDist)
-                    {
-                        best = interactable;
-                        closestDist = dist;
-                    }
-                }
             }
             
             
@@ -270,11 +273,11 @@ public class PlayerController : Singleton<PlayerController>
         Vector2 direction = lastMoveDir == Vector2.zero ? Vector2.down : lastMoveDir.normalized;
         float distance = 2f;
 
-        var hit = CastSingle(origin, direction, distance, LayerMask.GetMask("IInteractable"));
+        var hit = CastSingle(origin, direction, distance, LayerMask.GetMask(StringTag.INTERACTABLE_LAYER));
         Debug.DrawRay(origin, direction * distance, Color.green);
 
         // GridCell 감지됨
-        if (hit.HasValue && hit.Value.collider.CompareTag("GridCell"))
+        if (hit.HasValue && hit.Value.collider.CompareTag(StringTag.GRID_CELL_TAG))
         {
             GameObject hitCell = hit.Value.collider.gameObject;
 
@@ -301,18 +304,19 @@ public class PlayerController : Singleton<PlayerController>
         return Physics2D.RaycastAll(origin, direction, distance, layer);
     }
     #endregion
+    
     #region 애니메이션 부분
     private void Animate()
     {
         if (moveInput.sqrMagnitude > 0.01f)
         {
-            animator.SetFloat("MoveX", moveInput.x);
-            animator.SetFloat("MoveY", moveInput.y);
-            animator.SetBool("IsMoving", true);
+            animator.SetFloat(MoveX, moveInput.x);
+            animator.SetFloat(MoveY, moveInput.y);
+            animator.SetBool(IsMoving, true);
 
             lastMoveDir = moveInput.normalized;
-            animator.SetFloat("LastMoveX", lastMoveDir.x);
-            animator.SetFloat("LastMoveY", lastMoveDir.y);
+            animator.SetFloat(LastMoveX, lastMoveDir.x);
+            animator.SetFloat(LastMoveY, lastMoveDir.y);
 
             if (!moveSFXSource.isPlaying)
             {
@@ -323,7 +327,7 @@ public class PlayerController : Singleton<PlayerController>
         }
         else
         {
-            animator.SetBool("IsMoving", false);
+            animator.SetBool(IsMoving, false);
             if (moveSFXSource.isPlaying)
             {
                 moveSFXSource.Stop();
@@ -333,7 +337,7 @@ public class PlayerController : Singleton<PlayerController>
 
     private void UpdateItemSlotPosition()
     {
-        if (itemSlotTransform == null) return;
+        if (!itemSlotTransform) return;
 
         Vector2 dir = lastMoveDir;
         if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
@@ -351,8 +355,8 @@ public class PlayerController : Singleton<PlayerController>
         if (lastMoveDir == Vector2.zero)
             lastMoveDir = Vector2.down;
 
-        animator.SetFloat("LastMoveX", lastMoveDir.x);
-        animator.SetFloat("LastMoveY", lastMoveDir.y);
+        animator.SetFloat(LastMoveX, lastMoveDir.x);
+        animator.SetFloat(LastMoveY, lastMoveDir.y);
     }
 
     private void OnInteractCancel(InputAction.CallbackContext context)
@@ -362,9 +366,10 @@ public class PlayerController : Singleton<PlayerController>
     #endregion
 
     #region 투명벽 상호작용
+    
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("InvisibleWall"))
+        if (collision.CompareTag(StringTag.INVISIBLE_WALL_TAG))
         {
             isTouchingWall = true;
 
@@ -377,7 +382,7 @@ public class PlayerController : Singleton<PlayerController>
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.CompareTag("InvisibleWall") && !isTouchingWall)
+        if (collision.CompareTag(StringTag.INVISIBLE_WALL_TAG) && !isTouchingWall)
         {
             isTouchingWall = true;
 
@@ -392,23 +397,25 @@ public class PlayerController : Singleton<PlayerController>
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("InvisibleWall"))
+        if (collision.CompareTag(StringTag.INVISIBLE_WALL_TAG))
         {
             isTouchingWall = false;
-            EventBus.Raise(UIEventType.HideWallPopup); // 이 이벤트 추가
+            EventBus.Raise(UIEventType.HideWallPopup);
         }
     }
 
     private string GetWallPopupMessage()
     {
         if (GameManager.Instance.CurrentPhase == GamePhase.Operation)
-            return "지금은 영업 중이니 다른 곳에 가면 안돼!";
-        else if (playerInventory.heldStation != null)
-            return "설비를 든 상태로는 무거워서 멀리까지 나갈 수 없어!";
-        else
-            return "이 지역에서는 멀리 나가봐야 아무 것도 없어! \n 비행선을 수리해서 다른 지역으로 간다면 모를까...";
+            return StringMessage.OPERATION_ALERT;
+        
+        if (playerInventory.heldStation != null)
+            return StringMessage.STATION_ALERT;
+        
+        return StringMessage.ESCAPE_ALERT;
     }
     #endregion
+    
     #region Gizmo
     private void OnDrawGizmosSelected()
     {
