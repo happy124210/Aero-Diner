@@ -1,15 +1,16 @@
 ﻿using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Store : MonoBehaviour
 {
-    [Header("")]
+    [Header("참조")]
     [SerializeField] private TabController tabController;
     [SerializeField] private Store_RecipeScrollView recipeScrollView;
     [SerializeField] private Store_StationScrollView stationScrollView;
     
-    [Header("")]
+    [Header("UI")]
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private TextMeshProUGUI currentMoney;
     [SerializeField] private GameObject insufficientMoneyPanel;
@@ -17,11 +18,12 @@ public class Store : MonoBehaviour
     [Header("DOTween 설정")]
     [SerializeField] private float animateDuration = 0.5f;
     [SerializeField] private Color flashColor = Color.yellow;
-    private int currentDisplayAmount;
-    private Color originalColor;
     
     [Header("Debug Info")]
-    [SerializeField] private bool IsDebug = false;
+    [SerializeField] private bool showDebugInfo;
+    
+    private int currentDisplayAmount;
+    private Color originalColor;
 
     private void Awake()
     {
@@ -59,13 +61,30 @@ public class Store : MonoBehaviour
                 
                 // 설비
                 case StationData:
-                    StationManager.Instance.CreateStationInStorage(item.ID);
+                    // 생성 성공했을 때
+                    if (StationManager.Instance.CreateStationInStorage(item.ID))
+                    {
+                        item.IsPurchased = true;
+                        if (showDebugInfo) Debug.Log($"구매 성공: {item.DisplayName}");
+                    }
+                    // 생성 실패했을 때
+                    else
+                    {
+                        GameManager.Instance.AddMoney(item.Cost); // 돈 환불
+                        AnimateStoreMoney(GameManager.Instance.TotalEarnings); // UI 갱신
+                        EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
+        
+                        item.IsPurchased = false; 
+        
+                        // TODO: 보관공간 부족 경고 메시지 UI 표시
+                        if (showDebugInfo) Debug.LogWarning($"구매 실패: {item.DisplayName} - 보관 공간 부족");
+                    }
                     break;
             }
             
             item.IsPurchased = true;
             
-            Debug.Log($"구매 성공: {item.DisplayName}");
+            if (showDebugInfo) Debug.Log($"구매 성공: {item.DisplayName}");
             recipeScrollView.InitializeAndPopulate();
             stationScrollView.InitializeAndPopulate();
         }
@@ -74,6 +93,42 @@ public class Store : MonoBehaviour
             ShowInsufficientMoneyPanel();
         }
     }
+    
+    #region 버튼 메서드
+    
+    public void OnIngredientTabClick()
+    {
+        if (showDebugInfo) Debug.Log("버튼 클릭 됨");
+        EventBus.PlaySFX(SFXType.ButtonClick);
+        tabController.RequestSelectTab(2);
+        // EventBus.Raise(UIEventType.ShowInventory);
+        // TODO: 아직 해금 안 됨 경고 팝업
+    }
+    
+    public void OnRecipeTabClick()
+    {
+        if (showDebugInfo) Debug.Log("버튼 클릭 됨");
+        EventBus.PlaySFX(SFXType.ButtonClick);
+        tabController.RequestSelectTab(0);
+        // EventBus.Raise(UIEventType.ShowRecipeBook);
+    }
+    
+    public void OnStationTabClick()
+    {
+        if (showDebugInfo)
+            Debug.Log("버튼 클릭 됨");
+        EventBus.PlaySFX(SFXType.ButtonClick);
+        tabController.RequestSelectTab(1);
+        // EventBus.Raise(UIEventType.ShowStationPanel);
+    }
+    
+    public void OnCloseButtonClick()
+    {
+        EventBus.PlaySFX(SFXType.ButtonClick);
+        EventBus.Raise(UIEventType.FadeOutStore);
+    }
+    
+    #endregion
     
     #region 두트윈 메서드
     
@@ -92,7 +147,8 @@ public class Store : MonoBehaviour
             .Append(group.DOFade(0, 0.5f))
             .OnComplete(() => insufficientMoneyPanel.SetActive(false));
     }
-    public void AnimateStoreMoney(int newAmount)
+
+    private void AnimateStoreMoney(int newAmount)
     {
         DOTween.Kill(currentMoney);
         DOTween.Kill(currentMoney.transform);
@@ -131,42 +187,5 @@ public class Store : MonoBehaviour
             gameObject.SetActive(false);
         });
     }
-    #endregion
-    
-    #region 버튼 메서드
-    public void OnIngredientTabClick()
-    {
-        if (IsDebug)
-            Debug.Log("버튼 클릭 됨");
-        EventBus.PlaySFX(SFXType.ButtonClick);
-        tabController.RequestSelectTab(2);
-        // EventBus.Raise(UIEventType.ShowInventory);
-        // TODO: 아직 해금 안 됨 경고 팝업
-    }
-    
-    public void OnRecipeTabClick()
-    {
-        if (IsDebug)
-            Debug.Log("버튼 클릭 됨");
-        EventBus.PlaySFX(SFXType.ButtonClick);
-        tabController.RequestSelectTab(0);
-        // EventBus.Raise(UIEventType.ShowRecipeBook);
-    }
-    
-    public void OnStationTabClick()
-    {
-        if (IsDebug)
-            Debug.Log("버튼 클릭 됨");
-        EventBus.PlaySFX(SFXType.ButtonClick);
-        tabController.RequestSelectTab(1);
-        // EventBus.Raise(UIEventType.ShowStationPanel);
-    }
-    
-    public void OnCloseButtonClick()
-    {
-        EventBus.PlaySFX(SFXType.ButtonClick);
-        EventBus.Raise(UIEventType.FadeOutStore);
-    }
-    
     #endregion
 }
