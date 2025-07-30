@@ -2,13 +2,16 @@
 
 public class CookingTimer
 {
-    public float Duration { get; }              // 전체 요리 시간
+    public float Duration { get; private set; }  // 전체 요리 시간
     public float Remaining { get; private set; } // 남은 시간
     public bool IsRunning { get; private set; }  // 동작 여부
 
-    public CookingTimer(float duration)
+    private FoodData foodData;
+
+    public CookingTimer(FoodData foodData)
     {
-        Duration = duration;
+        this.foodData = foodData;
+        Duration = foodData != null ? foodData.cookTime : 0f;
         Remaining = 0f;
         IsRunning = false;
     }

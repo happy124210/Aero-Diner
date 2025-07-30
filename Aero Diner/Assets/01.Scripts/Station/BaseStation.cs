@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
 {
     public Transform GetTransform() => transform;
 
     public Transform spawnPoint;
-    public float cookingTime = 5f;
+    private CookingTimer cookingTimer;
     [SerializeField] private StationData stationData;
     public StationData StationData => stationData;
     public List<string> currentIngredients = new();
@@ -32,7 +33,7 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
 
     private void Awake()
     {
-        timer = new CookingTimer(cookingTime);
+        timer = new CookingTimer(cookedIngredient);
         timerController.gameObject.SetActive(false);
 
         outline = GetComponent<OutlineShaderController>(); // 외곽선 컴포넌트 연결
@@ -227,7 +228,7 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
         // 만약 타이머가 없거나 0이면 새로 시작
         if (timer == null || timer.Remaining <= 0f)
         {
-            timer = new CookingTimer(cookingTime);
+            timer = new CookingTimer(cookedIngredient);
             timer.Start();                                                              // Duration으로 리셋 시작
             if (showDebugInfo) Debug.Log("[StartCooking] 새 타이머 시작");
         }
@@ -295,7 +296,7 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
     /// </summary>
     protected void ResetStation()
     {
-        timer = new CookingTimer(cookingTime);
+        timer = new CookingTimer(cookedIngredient);
         iconDisplay?.ResetAll();                   // 아이콘 리셋
         ClearPlacedObjects();                      // 오브젝트 제거
         var sfx = StationSFXResolver.GetSFXFromStationData(stationData);

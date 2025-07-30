@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Linq;
+using UnityEngine.UI;
 
 /// <summary>
 /// 플레이어가 상호작용하면 재료를 가공하여 가공된 재료를 생성하는 스테이션
@@ -19,7 +20,7 @@ public class PassiveStation : BaseStation, IInteractable
     /// InteractionType.Use: 타이머 감소 및 조리 진행
     /// InteractionType.Stop: 조리 중단 및 사운드 정지
     /// </summary>
-    public void Interact(PlayerInventory playerInventory, InteractionType interactionType)
+    public new void Interact(PlayerInventory playerInventory, InteractionType interactionType)
     {
         if (interactionType == InteractionType.Use)
         {
@@ -30,7 +31,7 @@ public class PassiveStation : BaseStation, IInteractable
 
                 // 인스턴스 없으면 생성, 있으면 리셋
                 if (timer == null)
-                    timer = new CookingTimer(cookingTime);
+                    timer = new CookingTimer(cookedIngredient);
                 else
                     timer.Reset(); // 기존 타이머 유지하면서 리셋
 
@@ -94,7 +95,7 @@ public class PassiveStation : BaseStation, IInteractable
     private void ResetCookingTimer()
     {
         if (timer == null)
-            timer = new CookingTimer(cookingTime);
+            timer = new CookingTimer(cookedIngredient);
         else
             timer.Reset(); // 인스턴스 유지하며 초기화
 
