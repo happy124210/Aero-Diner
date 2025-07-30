@@ -14,11 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: day1_operation_5
   triggerPhase: 5
-  conditions:
-  - conditionType: 1
-    lValue: t_operation_3
-    operator: ==
-    rValue: Finished
+  conditions: []
   actions:
   - storyType: 11
     targetId: tu3_step5

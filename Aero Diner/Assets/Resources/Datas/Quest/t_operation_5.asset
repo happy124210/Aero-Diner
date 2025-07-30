@@ -22,7 +22,7 @@ MonoBehaviour:
     description: 
     requiredIds:
     - f18
-    - f12
     - f20
+    - f12
   rewardMoney: 0
   rewardItemIds: []

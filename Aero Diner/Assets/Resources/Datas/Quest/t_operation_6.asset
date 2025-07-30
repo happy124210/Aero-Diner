@@ -17,7 +17,7 @@ MonoBehaviour:
   description: 
   rewardDescription: 
   objectives:
-  - objectiveType: 6
+  - objectiveType: 7
     targetId: s8
     description: 
     requiredIds:

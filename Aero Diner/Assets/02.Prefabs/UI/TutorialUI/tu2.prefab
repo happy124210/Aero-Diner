@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4187755682353850516}
   - component: {fileID: 8108614856464976992}
   - component: {fileID: 8784496810696297839}
+  - component: {fileID: 503559762477086284}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -30,6 +31,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4002355484639753095}
   - {fileID: 4013042534933299457}
   m_Father: {fileID: 1677590649209505316}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -76,6 +78,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &503559762477086284
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 203155900377734067}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &775630865159963796
 GameObject:
   m_ObjectHideFlags: 0
@@ -553,11 +567,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1677590649209505316}
+  m_Father: {fileID: 4187755682353850516}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -50, y: 50}
+  m_AnchoredPosition: {x: -388.77173, y: -75}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4947859357760565390
@@ -1272,7 +1286,6 @@ RectTransform:
   - {fileID: 3557191442169654042}
   - {fileID: 100858616781590366}
   - {fileID: 2210766785665745458}
-  - {fileID: 4002355484639753095}
   - {fileID: 5908632906767642254}
   - {fileID: 2917582812278540597}
   - {fileID: 4187755682353850516}
@@ -1993,6 +2006,8 @@ MonoBehaviour:
   popupFadeDuration: 0.5
   popupVisibleTime: 2
   showDebugInfo: 0
+  smallcanvasGroup: {fileID: 503559762477086284}
+  targetPanel: {fileID: 203155900377734067}
   pointer1: {fileID: 1506975289992807872}
   pointer2: {fileID: 5990577029268599393}
   pointer2TargetTransform: {fileID: 2917582812278540597}

@@ -9,17 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce4ff5776a5c66845bd9a49d594fcc0b, type: 3}
-  m_Name: day1_intro_ui
+  m_Script: {fileID: 11500000, guid: e3016406984b8b94e9f7c7e996cc12e2, type: 3}
+  m_Name: day1_tutorialEnd_dialogue
   m_EditorClassIdentifier: 
-  id: day1_intro_ui
-  triggerPhase: 1
-  conditions:
-  - conditionType: 0
-    lValue: 
-    operator: ==
-    rValue: 1
-  actions:
-  - storyType: 11
-    targetId: tu1
-    value: 
+  id: day1_opening_dialogue
+  lines:
+  - speakerId: KAYA
+    expression: 1
+    text: "\uC218\uACE0\uD588\uC5B4! \uC774\uC81C \uC9C4\uC9DC \uC601\uC5C5\uC774\uC57C."
