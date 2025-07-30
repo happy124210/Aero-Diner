@@ -25,8 +25,10 @@ public enum QuestObjectiveType
     DeliverFood,
     
     HoldStation,  // 설비 들고있는지
-    UseStation,   // 설비 사용
-    PlaceStation, // 설비 배치되었는지
+    CheckIngredients,   // 설비에 필요 재료 전부 들어있는지
+    CheckFood, // 설비에 완성 음식 있는지
+    
+    PlaceStation, // 설비가 배치되었는지
     
     SelectItemInUI,
 }

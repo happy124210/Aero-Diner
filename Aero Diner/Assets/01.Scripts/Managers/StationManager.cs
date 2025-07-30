@@ -568,6 +568,23 @@ public class StationManager : Singleton<StationManager>
         return true;
     }
     
+    /// <summary>
+    /// 특정 설비 아래 FoodData의 오브젝트가 있는지 확인
+    /// (최종 결과물 확인할 때 사용)
+    /// </summary>
+    public bool CheckObjectOnStation(string stationId, string objectId)
+    {
+        if (string.IsNullOrEmpty(objectId)) return false;
+
+        SetStations();
+
+        var stationGroup = stationGroups.FirstOrDefault(g => g.station && g.station.GetComponent<IMovableStation>()?.StationData.id == stationId);
+        if (stationGroup == null || !stationGroup.station) return false;
+
+        var foodDisplays = stationGroup.station.GetComponentsInChildren<FoodDisplay>();
+        return foodDisplays.Any(display => display.foodData && display.foodData.id == objectId);
+    }
+    
   #if UNITY_EDITOR
     /// <summary>
     /// 디버깅용

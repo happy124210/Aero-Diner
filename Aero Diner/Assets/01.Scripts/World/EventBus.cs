@@ -29,6 +29,7 @@ public enum GameEventType
     
     // 플레이어
     PlayerPickedUpItem,
+    StationUsed,
     
     // UI
     UISceneReady,

@@ -182,10 +182,13 @@ public class QuestManager : Singleton<QuestManager>
                 case QuestObjectiveType.HoldStation:
                     isObjectiveMet = PlayerController.Instance.IsHoldingStation(objective.targetId);
                     break;
-                case QuestObjectiveType.UseStation:
+                case QuestObjectiveType.CheckIngredients:
                     isObjectiveMet = StationManager.Instance.CheckIngredients(objective.targetId, objective.requiredIds.ToArray());
                     break;
-
+                case QuestObjectiveType.CheckFood:
+                    isObjectiveMet = StationManager.Instance.CheckObjectOnStation(objective.targetId, objective.requiredIds[0]);
+                    break;
+                    
                 // --- 횟수/수량 누적형 퀘스트 ---
                 default:
                     if (int.TryParse(objective.requiredIds.FirstOrDefault(), out int required))
@@ -230,7 +233,7 @@ public class QuestManager : Singleton<QuestManager>
                     case GameEventType.PlayerPickedUpItem:
                         return obj.objectiveType == QuestObjectiveType.HoldFood || obj.objectiveType == QuestObjectiveType.HoldStation;
                     case GameEventType.StationUsed:
-                        return obj.objectiveType == QuestObjectiveType.UseStation;
+                        return obj.objectiveType == QuestObjectiveType.CheckIngredients || obj.objectiveType == QuestObjectiveType.CheckFood;
                     default:
                         return false;
                 }
