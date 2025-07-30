@@ -22,7 +22,7 @@ public class StationManager : Singleton<StationManager>
     private HashSet<string> unlockedStationIds = new();
     
     // 현재 상태 관리
-    private List<StationGroup> stationGroups = new();         // 각 GridCell 아래에 있는 Station 리스트
+    [SerializeField] private List<StationGroup> stationGroups = new();         // 각 GridCell 아래에 있는 Station 리스트
     private Dictionary<string, (int gridCellCount, int storageGridCellCount)> stationTypeCounts = new();
     
     #region public getters & methods
