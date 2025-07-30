@@ -96,6 +96,6 @@ public class Store_StationScrollView : MonoBehaviour
     {
         EventBus.PlaySFX(SFXType.ButtonClick);
         bool canBePurchased = AreConditionsMet(item);
-        detailPanel.SetData(item, () => store.TryBuyItem(item), canBePurchased);
+        detailPanel.SetData(item, () => store?.TryBuyItem(item), canBePurchased);
     }
 }
