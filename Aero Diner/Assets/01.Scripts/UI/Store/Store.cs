@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 public class Store : MonoBehaviour
 {
     [Header("참조")]
-    [SerializeField] private TabController tabController;
+    [SerializeField] protected TabController tabController;
     [SerializeField] private Store_RecipeScrollView recipeScrollView;
     [SerializeField] private Store_StationScrollView stationScrollView;
     
