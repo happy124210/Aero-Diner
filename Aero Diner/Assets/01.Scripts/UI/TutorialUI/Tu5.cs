@@ -221,5 +221,10 @@ public class Tu5 : MonoBehaviour
         step4Panel.SetActive(true);
         step4Pointer.SetActive(true);
     }
+    public void Tu5Step5()
+    {
+        UIEventCaller.CallUIEvent("tu6");
+    }
+
     #endregion
 }
