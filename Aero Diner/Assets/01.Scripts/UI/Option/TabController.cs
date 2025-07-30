@@ -18,6 +18,9 @@ public class TabController : MonoBehaviour
 
     private int currentSelectedIndex = -1;
     public int CurrentIndex => currentSelectedIndex;
+
+
+
     private void Start()
     {
         RequestSelectTab(0, true);              // 0번 탭을 예약하고

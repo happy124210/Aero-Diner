@@ -23,6 +23,21 @@ public class Tu5 : MonoBehaviour
     [Header("Debug Info")]
     [SerializeField] private bool IsDebug = false;
 
+    [Header("Tutorial UI")]
+    [SerializeField] private GameObject step1Panel1;
+    [SerializeField] private GameObject step1Panel2;
+    [SerializeField] private GameObject step1Pointer;
+
+    [SerializeField] private GameObject step2Panel1;
+    [SerializeField] private GameObject stationBtnPanel;
+    [SerializeField] private GameObject recipeBtnPanel;
+
+    [SerializeField] private GameObject step3Panel1;
+    [SerializeField] private GameObject step3Panel2;
+    [SerializeField] private GameObject step3Pointer;
+
+    [SerializeField] private GameObject step4Panel;
+    [SerializeField] private GameObject step4Pointer;
     private void Awake()
     {
         if (tabController == null)
@@ -38,6 +53,7 @@ public class Tu5 : MonoBehaviour
         currentDisplayAmount = GameManager.Instance.TotalEarnings;
         currentMoney.text = $"{currentDisplayAmount:N0} G";
         EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
+        Tu5Step1();
     }
 
     public void TryBuyItem(StoreItem item)
@@ -168,5 +184,39 @@ public class Tu5 : MonoBehaviour
         EventBus.Raise(UIEventType.FadeOutStore);
     }
 
+    #endregion
+
+    #region Tutorial
+    public void Tu5Step1()
+    {
+        step1Panel1.SetActive(true);
+        step1Panel2.SetActive(true);
+        step1Pointer.SetActive(true);
+        stationBtnPanel.SetActive(true);
+        recipeBtnPanel.SetActive(true);
+    }
+
+    public void Tu5Step2()
+    {
+        step1Panel1.SetActive(false);
+        step1Panel2.SetActive(false);
+        step1Pointer.SetActive(false);
+        stationBtnPanel.SetActive(false);
+        step2Panel1.SetActive(true);
+    }
+    public void Tu5Step3()
+    {
+        step3Panel1.SetActive(true);
+        step3Panel2.SetActive(true);
+        step3Pointer.SetActive(true);
+    }
+    public void Tu5Step4()
+    {
+        step3Panel1.SetActive(false);
+        step3Panel2.SetActive(false);
+        step3Pointer.SetActive(false);
+        step4Panel.SetActive(true);
+        step4Pointer.SetActive(true);
+    }
     #endregion
 }
