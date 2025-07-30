@@ -115,13 +115,17 @@ public class StoryManager : Singleton<StoryManager>
     {
         if (showDebugInfo) Debug.Log($"[StoryManager] {currentPhase} Phase에서 실행할 스토리가 더 이상 없습니다.");
         
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        
         switch (currentPhase)
         {
             case GamePhase.Day:
-                GameManager.Instance.ProceedToEditStation();
+                if (currentSceneName == StringScene.DAY_SCENE) 
+                    GameManager.Instance.ProceedToEditStation();
                 break;
             case GamePhase.Opening:
-                GameManager.Instance.ProceedToOperation();
+                if (currentSceneName == StringScene.MAIN_SCENE)
+                    GameManager.Instance.ProceedToOperation();
                 break;
         }
     }
