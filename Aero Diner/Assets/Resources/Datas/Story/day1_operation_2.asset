@@ -20,11 +20,11 @@ MonoBehaviour:
     operator: ==
     rValue: Finished
   actions:
+  - storyType: 11
+    targetId: tu3_step2
+    value: 
   - storyType: 13
     targetId: s5
-    value: 
-  - storyType: 11
-    targetId: tu3_step3
     value: 
   - storyType: 1
     targetId: t_operation_2

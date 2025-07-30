@@ -17,9 +17,10 @@ MonoBehaviour:
   description: 
   rewardDescription: 
   objectives:
-  - objectiveType: 4
-    targetId: f20
+  - objectiveType: 6
+    targetId: s5
     description: 
-    requiredAmount: 0
+    requiredIds:
+    - f4
   rewardMoney: 0
   rewardItemIds: []

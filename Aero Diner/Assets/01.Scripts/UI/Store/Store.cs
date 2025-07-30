@@ -56,13 +56,13 @@ public class Store : MonoBehaviour
             {
                 // 레시피
                 case FoodData:
-                    MenuManager.Instance.UnlockMenu(item.ID);
+                    MenuManager.Instance.UnlockMenu(item.TargetID);
                     break;
                 
                 // 설비
                 case StationData:
                     // 생성 성공했을 때
-                    if (StationManager.Instance.CreateStationInStorage(item.ID))
+                    if (StationManager.Instance.CreateStationInStorage(item.TargetID))
                     {
                         item.IsPurchased = true;
                         if (showDebugInfo) Debug.Log($"구매 성공: {item.DisplayName}");
