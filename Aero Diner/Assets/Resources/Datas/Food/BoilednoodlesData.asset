@@ -22,5 +22,5 @@ MonoBehaviour:
   ingredients:
   - f1
   - f2
-  cookTime: 5
+  cookTime: 1
   foodCost: 500
