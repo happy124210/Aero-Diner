@@ -371,6 +371,7 @@ GameObject:
   - component: {fileID: 242990212668782806}
   - component: {fileID: 274024121330236236}
   - component: {fileID: 132878344304846980}
+  - component: {fileID: 2158648765208215207}
   m_Layer: 0
   m_Name: tu1
   m_TagString: Untagged
@@ -406,6 +407,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c723412beccf7f245acf4e09ab69e3ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetPanel: {fileID: 2636222300038435694}
 --- !u!114 &132878344304846980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -422,6 +424,18 @@ MonoBehaviour:
   spriteA: {fileID: 781281365, guid: ce2e2ac6180737d438646ad1f93aac9d, type: 3}
   spriteB: {fileID: 152957395, guid: ce2e2ac6180737d438646ad1f93aac9d, type: 3}
   interval: 0.5
+--- !u!225 &2158648765208215207
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4469959179281078485}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &6939319981953860621
 GameObject:
   m_ObjectHideFlags: 0

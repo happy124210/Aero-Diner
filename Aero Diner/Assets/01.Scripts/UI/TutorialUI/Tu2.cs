@@ -21,7 +21,8 @@ public class Tu2 : MonoBehaviour
     [Header("Debug Info")]
     [SerializeField] private bool showDebugInfo;
 
-
+    [SerializeField] private CanvasGroup smallcanvasGroup;
+    [SerializeField] private GameObject targetPanel;
     [SerializeField] private GameObject pointer1;
     [SerializeField] private GameObject pointer2;
     [SerializeField] private RectTransform pointer2TargetTransform;
@@ -273,6 +274,7 @@ public class Tu2 : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f); // 약간의 연출 지연
         AnimateEntrance();
+        FadeInPanel();
     }
 
     private void AnimateEntrance()
@@ -284,7 +286,22 @@ public class Tu2 : MonoBehaviour
         seq.Append(canvasGroup.DOFade(1f, 0.7f));
         seq.Join(menuPanelTransform.DOAnchorPos(originalPos, 0.5f).SetEase(Ease.OutBack));
     }
-
+    public void FadeInPanel(float duration = 0.5f)
+    {
+        targetPanel.SetActive(false);
+        DOVirtual.DelayedCall(1f, () =>
+        {
+            targetPanel.SetActive(true);
+            smallcanvasGroup.alpha = 0f;
+            smallcanvasGroup.DOFade(1f, duration)
+                .SetEase(Ease.OutQuad)
+                .OnStart(() =>
+                {
+                    smallcanvasGroup.interactable = true;
+                    smallcanvasGroup.blocksRaycasts = true;
+                });
+        });
+    }
     private void PlayExitAnimation()
     {
         Vector2 originalPos = menuPanelTransform.anchoredPosition;
