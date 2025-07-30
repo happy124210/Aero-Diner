@@ -227,8 +227,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Tu1, Assembly-CSharp
+      - m_Target: {fileID: 3751649749499826965}
+        m_TargetAssemblyTypeName: Tu4, Assembly-CSharp
         m_MethodName: OnShopButtonClick
         m_Mode: 1
         m_Arguments:

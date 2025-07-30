@@ -6,7 +6,8 @@ using UnityEngine;
 public class Store_RecipeScrollView : MonoBehaviour
 {
     [SerializeField] private Store store;
-    
+    [SerializeField] private Tu5 tu5;
+
     [SerializeField] private RectTransform contentTransform;
     [SerializeField] private GameObject lockedMenuPrefab;
     [SerializeField] private GameObject unlockedMenuPrefab;

@@ -38,6 +38,8 @@ public class Tu5 : MonoBehaviour
 
     [SerializeField] private GameObject step4Panel;
     [SerializeField] private GameObject step4Pointer;
+
+    [SerializeField] private GameObject xPanel;
     private void Awake()
     {
         if (tabController == null)
@@ -215,6 +217,7 @@ public class Tu5 : MonoBehaviour
         step3Panel1.SetActive(false);
         step3Panel2.SetActive(false);
         step3Pointer.SetActive(false);
+        xPanel.SetActive(false);
         step4Panel.SetActive(true);
         step4Pointer.SetActive(true);
     }
