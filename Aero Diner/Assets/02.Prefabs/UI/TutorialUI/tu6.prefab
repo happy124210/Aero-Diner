@@ -480,6 +480,7 @@ GameObject:
   - component: {fileID: 3293745071701575936}
   - component: {fileID: 5146837414292167379}
   - component: {fileID: 8357378138961688341}
+  - component: {fileID: 9222477964497291877}
   m_Layer: 5
   m_Name: tu6
   m_TagString: Untagged
@@ -570,6 +571,20 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 0
+--- !u!114 &9222477964497291877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4125973985489877916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25ef43ea26dbe114892ce3d1970a9565, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monthText: {fileID: 6174173474788808288}
+  dayText: {fileID: 879998816351304008}
 --- !u!1 &4343721686710515698
 GameObject:
   m_ObjectHideFlags: 0
@@ -1398,7 +1413,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3909636533390904820}
-  - component: {fileID: 6035457680923584240}
   m_Layer: 0
   m_Name: MainSceneUI
   m_TagString: Untagged
@@ -1422,20 +1436,6 @@ Transform:
   - {fileID: 6402691588115168798}
   m_Father: {fileID: 165173640485565840}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6035457680923584240
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8377925551426012991}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66cd8db881468df40bb1c35ba1f8b2da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  monthText: {fileID: 6174173474788808288}
-  dayText: {fileID: 879998816351304008}
 --- !u!1 &8572827871079446820
 GameObject:
   m_ObjectHideFlags: 0
@@ -1556,7 +1556,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6035457680923584240}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MainSceneUI, Assembly-CSharp
         m_MethodName: OnClickPause
         m_Mode: 1
@@ -1990,8 +1990,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6035457680923584240}
-        m_TargetAssemblyTypeName: MainSceneUI, Assembly-CSharp
+      - m_Target: {fileID: 9222477964497291877}
+        m_TargetAssemblyTypeName: Tu6, Assembly-CSharp
         m_MethodName: OnClickRecipeBook
         m_Mode: 1
         m_Arguments:
@@ -2122,7 +2122,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6035457680923584240}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MainSceneUI, Assembly-CSharp
         m_MethodName: OnClickInventory
         m_Mode: 1

@@ -82,6 +82,7 @@ public class TutorialUIHandler : IUIEventHandler
             case UIEventType.tu7:
                 foreach (var ui in sceneUIs)
                 {
+                    ui?.GetComponentInChildren<Tu6>(true)?.gameObject.SetActive(false);
                     var inventory = ui?.GetComponentInChildren<Inventory>(true);
                     var tab = inventory?.GetComponentInChildren<TabController>(true);
 
@@ -99,12 +100,14 @@ public class TutorialUIHandler : IUIEventHandler
             case UIEventType.tu8:
                 foreach (var ui in sceneUIs)
                 {
+                    ui?.GetComponentInChildren<Tu7>(true)?.gameObject.SetActive(false);
                     ui?.GetComponentInChildren<Tu8>(true)?.gameObject.SetActive(true);
                 }
                 return true;
             case UIEventType.tu9:
                 foreach (var ui in sceneUIs)
                 {
+                    ui?.GetComponentInChildren<Tu8>(true)?.gameObject.SetActive(false);
                     var inventory = ui?.GetComponentInChildren<Inventory>(true);
                     var tab = inventory?.GetComponentInChildren<TabController>(true);
 
