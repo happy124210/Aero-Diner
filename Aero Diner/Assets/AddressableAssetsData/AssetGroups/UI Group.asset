@@ -92,6 +92,16 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 12d40f60e56d6224486c6b7805d9f255
+    m_Address: Assets/02.Prefabs/UI/TutorialUI/tu4.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3129bb9dea375cd4eb1e927e0de5f57b
+    m_Address: Assets/02.Prefabs/UI/TutorialUI/tu5.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 0453cdc04330a03449ad1a1148e5f26b, type: 2}
   m_SchemaSet:

@@ -70,6 +70,14 @@ public class TutorialUIHandler : IUIEventHandler
                     ui?.GetComponentInChildren<Tu4>(true)?.gameObject.SetActive(true);
                 }
                 return true;
+            case UIEventType.tu5:
+                foreach (var ui in sceneUIs)
+                {
+                    Debug.Log("TU 호출됨");
+                    ui?.GetComponentInChildren<Tu4>(true)?.gameObject.SetActive(false);
+                    ui?.GetComponentInChildren<Tu5>(true)?.gameObject.SetActive(true);
+                }
+                return true;
         }
         
         return false;
