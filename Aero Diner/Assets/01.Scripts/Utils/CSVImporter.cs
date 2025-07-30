@@ -458,7 +458,7 @@ public class CSVImporter
     }
 
     #endregion
-    
+
     #region QuestData 생성
 
     [MenuItem("Tools/Import Game Data/Quest Data")]
@@ -470,7 +470,7 @@ public class CSVImporter
         string[] lines = File.ReadAllLines(path);
         if (lines.Length <= 1)
         {
-            Debug.LogWarning("CSV 파일에 데이터 없음");
+            Debug.LogWarning("CSV 파일에 데이터가 없습니다.");
             return;
         }
         
@@ -479,69 +479,89 @@ public class CSVImporter
         {
             Directory.CreateDirectory(targetFolder);
         }
+
+        Dictionary<string, QuestData> questDataMap = new Dictionary<string, QuestData>();
         
-        int successCount = 0;
         for (int i = 1; i < lines.Length; i++)
         {
             try
             {
                 string[] cols = lines[i].Split(',');
-                if (cols.Length < 4) continue;
+                if (cols.Length < 9) continue; 
 
                 string id = cols[0].Trim();
-                string assetPath = $"{targetFolder}/{id}.asset";
-                QuestData data = AssetDatabase.LoadAssetAtPath<QuestData>(assetPath);
-                if (data == null)
+                QuestData data;
+
+                // 딕셔너리에서 기존 퀘스트 데이터를 찾거나, 없으면 새로 생성
+                if (questDataMap.TryGetValue(id, out var value))
                 {
-                    data = ScriptableObject.CreateInstance<QuestData>();
-                    AssetDatabase.CreateAsset(data, assetPath);
+                    data = value;
                 }
+                else
+                {
+                    string assetPath = $"{targetFolder}/{id}.asset";
+                    data = AssetDatabase.LoadAssetAtPath<QuestData>(assetPath);
+                    if (data == null)
+                    {
+                        data = ScriptableObject.CreateInstance<QuestData>();
+                        AssetDatabase.CreateAsset(data, assetPath);
+                    }
+                    
+                    data.objectives = new List<QuestObjective>();
+                    questDataMap.Add(id, data);
+                    
+                    data.id = id;
+                    data.questName = cols[1].Trim();
+                    data.description = cols[2].Trim();
+                    data.rewardDescription = cols[3].Trim();
+                    data.rewardMoney = int.TryParse(cols[7], out int money) ? money : 0;
+                    data.rewardItemIds = string.IsNullOrEmpty(cols[8]) ? Array.Empty<string>() : cols[8].Split('|').Select(s => s.Trim()).ToArray();
+                }
+
+                // --- 각 줄의 목표정보를 파싱하여 data.objectives 리스트에 추가 ---
                 
-                data.id = id;
-                data.questName = cols[1].Trim();
-                data.description = cols[2].Trim();
-                data.rewardDescription = cols[3].Trim();
-                
-                data.objectives = ParseQuestObjectives(cols.Length > 4 ? cols[4] : "");
-                data.rewardMoney = (cols.Length > 5 && int.TryParse(cols[5], out int money)) ? money : 0;
-                data.rewardItemIds = (cols.Length > 6) ? ParseStringArray(cols[6]) : Array.Empty<string>();
-                
-                EditorUtility.SetDirty(data);
-                successCount++;
+                // 목표 타입(ObjectType) 파싱
+                if (Enum.TryParse<QuestObjectiveType>(cols[5].Trim(), true, out var type))
+                {
+                    // 목표(Objective) 컬럼 파싱 ('targetId;requiredIds' 형식)
+                    string[] objectiveParts = cols[6].Split(';');
+                    string targetId = "";
+                    string[] requiredIds = Array.Empty<string>();
+
+                    if (objectiveParts.Length > 0)
+                    {
+                        targetId = objectiveParts[0].Trim();
+                    }
+                    if (objectiveParts.Length > 1 && !string.IsNullOrEmpty(objectiveParts[1]))
+                    {
+                        requiredIds = objectiveParts[1].Split('|').Select(s => s.Trim()).ToArray();
+                    }
+
+                    // QuestObjective 인스턴스 생성 및 리스트에 추가
+                    var objective = new QuestObjective
+                    {
+                        description = cols[4].Trim(),
+                        objectiveType = type,
+                        targetId = targetId,
+                        requiredIds = requiredIds
+                    };
+                    data.objectives.Add(objective);
+                }
             }
             catch (Exception e)
             {
-                Debug.LogError($"Quest ID '{lines[i].Split(',')[0]}' 처리 중 오류 발생: {e.Message}");
+                Debug.LogError($"CSV 라인 {i + 1} (퀘스트 ID: {lines[i].Split(',')[0]}) 처리 중 오류 발생: {e.Message}");
             }
+        }
+        
+        foreach (var data in questDataMap.Values)
+        {
+            EditorUtility.SetDirty(data);
         }
         
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        Debug.Log($"총 {successCount}개의 QuestData CSV 임포트 완료");
-    }
-
-    private static List<QuestObjective> ParseQuestObjectives(string objectivesString)
-    {
-        var result = new List<QuestObjective>();
-        if (string.IsNullOrEmpty(objectivesString)) return result;
-
-        string[] objectiveParts = objectivesString.Split('|');
-        foreach (var part in objectiveParts)
-        {
-            string[] attrs = part.Split(';');
-            if (attrs.Length < 3) continue;
-
-            if (Enum.TryParse<QuestObjectiveType>(attrs[0].Trim(), true, out var type))
-            {
-                result.Add(new QuestObjective
-                {
-                    objectiveType = type,
-                    targetId = attrs[1].Trim(),
-                    requiredAmount = int.TryParse(attrs[2].Trim(), out int amount) ? amount : 1
-                });
-            }
-        }
-        return result;
+        Debug.Log($"총 {questDataMap.Count}개의 QuestData CSV 임포트/업데이트 완료");
     }
 
     #endregion
