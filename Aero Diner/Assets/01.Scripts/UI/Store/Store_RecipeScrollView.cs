@@ -1,19 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class Store_RecipeScrollView : MonoBehaviour
 {
-    [SerializeField] private Store store;
-    
+    [Header("UI 연결")]
     [SerializeField] private RectTransform contentTransform;
-    [SerializeField] private GameObject lockedMenuPrefab;
-    [SerializeField] private GameObject unlockedMenuPrefab;
     [SerializeField] private Store_RecipePanel detailPanel;
     [SerializeField] private GameObject lockedPanel;
     [SerializeField] private GameObject noRecipePanel;
-
+    
+    [Header("프리팹")]
+    [SerializeField] private GameObject lockedMenuPrefab;
+    [SerializeField] private GameObject unlockedMenuPrefab;
+    
+    [Header("참조")]
+    [SerializeField] private Store store;
+    
     private List<StoreItem> recipeStoreItems = new ();
     
     private void Awake()
@@ -21,7 +24,7 @@ public class Store_RecipeScrollView : MonoBehaviour
         if (store == null) store = FindObjectOfType<Store>();
     }
     
-    void Start()
+    private void Start()
     {
         InitializeAndPopulate();
     }
@@ -31,8 +34,7 @@ public class Store_RecipeScrollView : MonoBehaviour
         recipeStoreItems.Clear();
         var allMenus = MenuManager.Instance.GetAllMenus();
         var storeDataMap = StoreDataManager.Instance.StoreItemMap;
-
-        // SO 데이터와 CSV 데이터를 조합해서 StoreItem 리스트 생성
+        
         foreach (var menu in allMenus)
         {
             if (storeDataMap.TryGetValue(menu.foodData.id, out var csvData))
@@ -52,7 +54,7 @@ public class Store_RecipeScrollView : MonoBehaviour
         PopulateScrollView();
     }
 
-    public void PopulateScrollView()
+    private void PopulateScrollView()
     {
         foreach (Transform child in contentTransform)
         {
@@ -104,13 +106,10 @@ public class Store_RecipeScrollView : MonoBehaviour
     }
     
     // 아이템 해금 조건 충족 여부 체크
-    public bool AreConditionsMet(StoreItem item)
+    private bool AreConditionsMet(StoreItem item)
     {
         // 해금 조건이 없으면 항상 true
-        if (item.CsvData.Type == UnlockType.None)
-        {
-            return true;
-        }
+        if (item.CsvData.Type == UnlockType.None) return true;
         
         switch (item.CsvData.Type)
         {

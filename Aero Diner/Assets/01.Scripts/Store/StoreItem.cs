@@ -10,7 +10,8 @@ public class StoreItem
     public StoreItemData CsvData { get; private set; }
 
     // 편의용 속성들
-    public string ID => (BaseData is StationData s) ? s.id : ((BaseData is FoodData f) ? f.id : null);
+    public string ID => CsvData.ID;
+    public string TargetID => (BaseData is StationData s) ? s.id : ((BaseData is FoodData f) ? f.id : null);
     public string DisplayName => (BaseData is StationData s) ? s.displayName : ((BaseData is FoodData f) ? f.displayName : null);
     public Sprite Icon => (BaseData is StationData s) ? s.stationIcon : ((BaseData is FoodData f) ? f.foodIcon : null);
     public string Description => (BaseData is StationData s) ? s.description : ((BaseData is FoodData f) ? f.description : null);
