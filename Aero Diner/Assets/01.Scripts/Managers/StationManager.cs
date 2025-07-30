@@ -613,5 +613,38 @@ public class StationManager : Singleton<StationManager>
     }
     #endif
     
+    /// <summary>
+    /// 특정 그리드 셀에 특정 ID의 설비가 배치되었는지 확인
+    /// </summary>
+    /// <param name="stationId">확인할 설비의 ID</param>
+    /// <param name="gridCellName">확인할 그리드 셀의 이름</param>
+    public bool CheckStationPlacedOnCell(string stationId, string gridCellName)
+    {
+        if (string.IsNullOrEmpty(stationId) || string.IsNullOrEmpty(gridCellName)) return false;
+        
+        for (int i = 0; i < stationGroups.Count; i++)
+        {
+            // 현재 인덱스의 그리드 셀 이름 다르면 건너뜀
+            if (tilemapController.gridCells[i].name != gridCellName)
+            {
+                continue;
+            }
+
+            // 해당 셀에 스테이션이 있는지, 일치하는지 확인
+            var station = stationGroups[i].station;
+            if (station != null)
+            {
+                var stationData = station.GetComponent<IMovableStation>()?.StationData;
+                if (stationData != null && stationData.id == stationId)
+                {
+                    if (showDebugInfo) Debug.Log($"[StationManager] '{gridCellName}'에 '{stationId}'가 배치됨");
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+    
     #endregion
 }

@@ -191,6 +191,9 @@ public class QuestManager : Singleton<QuestManager>
                 case QuestObjectiveType.DeliverFood:
                     isObjectiveMet = CustomerManager.Instance.IsFirstCustomerEating();
                     break;
+                case QuestObjectiveType.PlaceStation:
+                    isObjectiveMet = StationManager.Instance.CheckStationPlacedOnCell(objective.targetId, objective.requiredIds[0]);
+                    break;
                     
                 // --- 횟수/수량 누적형 퀘스트 ---
                 default:
@@ -239,6 +242,8 @@ public class QuestManager : Singleton<QuestManager>
                     case GameEventType.StationUsed:
                         return obj.objectiveType == QuestObjectiveType.CheckIngredients ||
                                obj.objectiveType == QuestObjectiveType.CheckFood;
+                    case GameEventType.StationLayoutChanged:
+                        return obj.objectiveType == QuestObjectiveType.PlaceStation;
                     case GameEventType.CustomerServed:
                         return obj.objectiveType == QuestObjectiveType.DeliverFood;
                 }
