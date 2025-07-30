@@ -401,14 +401,14 @@ public class StationManager : Singleton<StationManager>
     /// 상점에서 구매했을 때 호출됨
     /// </summary>
     /// <param name="id">StationData의 ID (프리팹 이름과 같음)</param>
-    public void CreateStationInStorage(string id)
+    public bool CreateStationInStorage(string id)
     {
         // StationData 확인
         StationData stationData = FindStationDataById(id);
         if (stationData == null)
         {
             Debug.LogError($"[StationManager] StationData를 찾을 수 없음: {id}");
-            return;
+            return false;
         }
 
         // 프리팹 찾기 (StationData의 ID를 비교하여 찾음)
@@ -439,7 +439,7 @@ public class StationManager : Singleton<StationManager>
         if (targetCell == null)
         {
             Debug.LogWarning($"[StationManager] 빈 Storage 셀을 찾을 수 없음 - 스테이션 생성 실패: {id}");
-            return;
+            return false;
         }
 
         // 스테이션 인스턴스 생성
@@ -454,10 +454,8 @@ public class StationManager : Singleton<StationManager>
             stationGroups[index].station = instance;
         }
 
-        if (showDebugInfo)
-        {
-            Debug.Log($"[StationManager] 스토리지에 Station 생성됨: {id} → {targetCell.name}");
-        }
+        if (showDebugInfo) Debug.Log($"[StationManager] 스토리지에 Station 생성됨: {id} → {targetCell.name}");
+        return true;
     }
 
 
