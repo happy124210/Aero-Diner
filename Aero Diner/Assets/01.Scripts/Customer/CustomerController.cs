@@ -155,6 +155,8 @@ public class CustomerController : MonoBehaviour, IPoolable
         {
             ChangeState(new PayingState());
         });
+        
+        EventBus.Raise(GameEventType.CustomerServed);
     }
 
     private void HandlePayment()

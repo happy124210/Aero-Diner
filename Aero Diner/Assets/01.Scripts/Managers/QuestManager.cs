@@ -234,12 +234,16 @@ public class QuestManager : Singleton<QuestManager>
                 switch (eventType)
                 {
                     case GameEventType.PlayerPickedUpItem:
-                        return obj.objectiveType == QuestObjectiveType.HoldFood || obj.objectiveType == QuestObjectiveType.HoldStation;
+                        return obj.objectiveType == QuestObjectiveType.HoldFood ||
+                               obj.objectiveType == QuestObjectiveType.HoldStation;
                     case GameEventType.StationUsed:
-                        return obj.objectiveType == QuestObjectiveType.CheckIngredients || obj.objectiveType == QuestObjectiveType.CheckFood;
-                    default:
+                        return obj.objectiveType == QuestObjectiveType.CheckIngredients ||
+                               obj.objectiveType == QuestObjectiveType.CheckFood;
+                    case GameEventType.CustomerServed:
                         return obj.objectiveType == QuestObjectiveType.DeliverFood;
                 }
+
+                return false;
             });
             
             if (needsRecheck)

@@ -2824,14 +2824,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6e646e18608d74428265169c365279d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  store: {fileID: 0}
-  tu5: {fileID: 0}
   contentTransform: {fileID: 285303282506979547}
-  lockedMenuPrefab: {fileID: 5703386257619053623, guid: b8dd0bc55b111f741aeb882c47181180, type: 3}
-  unlockedMenuPrefab: {fileID: 3979155822031108023, guid: f35685f990ff946468799a8b22070c9e, type: 3}
   detailPanel: {fileID: 2338453135769887097}
   lockedPanel: {fileID: 4023355490671504266}
   noRecipePanel: {fileID: 2930245344426422958}
+  lockedMenuPrefab: {fileID: 5703386257619053623, guid: b8dd0bc55b111f741aeb882c47181180, type: 3}
+  unlockedMenuPrefab: {fileID: 3979155822031108023, guid: f35685f990ff946468799a8b22070c9e, type: 3}
+  store: {fileID: 0}
 --- !u!1 &2297608806429362583
 GameObject:
   m_ObjectHideFlags: 0

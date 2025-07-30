@@ -122,8 +122,7 @@ public class Store_RecipeScrollView : MonoBehaviour
 
         return false;
     }
-
-
+    
     // 아이템 선택 시 상세 정보 패널 업데이트
     private void OnItemSelected(StoreItem item, bool playSFX = true)
     {
@@ -132,5 +131,26 @@ public class Store_RecipeScrollView : MonoBehaviour
 
         bool canBePurchased = AreConditionsMet(item);
         detailPanel.SetData(item, () => store.TryBuyItem(item), canBePurchased);
+    }
+    
+    
+    /// <summary>
+    /// 지정된 ID의 레시피 아이템을 강제로 구매 완료 상태로 만듦 (튜토리얼용)
+    /// </summary>
+    public void ForcePurchaseItem(string id)
+    {
+        var itemToPurchase = recipeStoreItems.FirstOrDefault(item => item.ID == id);
+        
+        if (itemToPurchase != null && !itemToPurchase.IsPurchased)
+        {
+            itemToPurchase.IsPurchased = true;
+            PopulateScrollView();
+            
+            //Debug.Log($"[Store_RecipeScrollView] 아이템 강제 구매 처리 완료: {id}");
+        }
+        else if (itemToPurchase == null)
+        {
+            Debug.LogWarning($"[Store_RecipeScrollView] ID '{id}'에 해당하는 아이템을 찾을 수 없습니다.");
+        }
     }
 }

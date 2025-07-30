@@ -18,7 +18,7 @@ MonoBehaviour:
   rewardDescription: 
   objectives:
   - objectiveType: 4
-    targetId: f26
+    targetId: 
     description: 
     requiredIds: []
   rewardMoney: 0

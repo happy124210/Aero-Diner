@@ -75,61 +75,61 @@ public class StoryManager : Singleton<StoryManager>
     /// </summary>
     /// <param name="endedDialogueId"> 방금 끝난 대화의 ID (없으면 null)</param>
     private void CheckAndTriggerStory(string endedDialogueId = null)
-{
-    if (!isCurrentSceneUIReady)
     {
-        if (showDebugInfo) Debug.Log("[StoryManager] UI가 아직 준비되지 않아 스토리 확인 보류");
-        return;
-    }
-
-    var currentPhase = GameManager.Instance.CurrentPhase;
-
-    var nextStory = storyDatabase.FirstOrDefault(story =>
-    {
-        if (executedStoryIds.Contains(story.id)) return false;
-
-        if (endedDialogueId != null)
+        if (!isCurrentSceneUIReady)
         {
-            return story.conditions.Any(c =>
-                c.conditionType == ConditionType.DialogueEnded &&
-                c.lValue == endedDialogueId
-            );
+            if (showDebugInfo) Debug.Log("[StoryManager] UI가 아직 준비되지 않아 스토리 확인 보류");
+            return;
         }
-        
-        if (story.conditions.Any(c => c.conditionType == ConditionType.DialogueEnded))
-        {
-            return false;
-        }
-        
-        bool isPhaseCompatible = (story.triggerPhase == currentPhase || story.triggerPhase == GamePhase.None);
-        return isPhaseCompatible && AreConditionsMet(story.conditions);
-    });
 
-    if (nextStory)
-    {
-        if (showDebugInfo) Debug.Log($"[StoryManager] 다음 스토리 트리거: {nextStory.id}");
-        executedStoryIds.Add(nextStory.id);
-        StartCoroutine(ExecuteActions(nextStory.actions));
-    }
-    else if (endedDialogueId == null)
-    {
-        if (showDebugInfo) Debug.Log($"[StoryManager] {currentPhase} Phase에서 실행할 스토리가 더 이상 없습니다.");
-        
-        string currentSceneName = SceneManager.GetActiveScene().name;
-        
-        switch (currentPhase)
+        var currentPhase = GameManager.Instance.CurrentPhase;
+
+        var nextStory = storyDatabase.FirstOrDefault(story =>
         {
-            case GamePhase.Day:
-                if (currentSceneName == StringScene.DAY_SCENE) 
-                    GameManager.Instance.ProceedToEditStation();
-                break;
-            case GamePhase.Opening:
-                if (currentSceneName == StringScene.MAIN_SCENE)
-                    GameManager.Instance.ProceedToOperation();
-                break;
+            if (executedStoryIds.Contains(story.id)) return false;
+
+            if (endedDialogueId != null)
+            {
+                return story.conditions.Any(c =>
+                    c.conditionType == ConditionType.DialogueEnded &&
+                    c.lValue == endedDialogueId
+                );
+            }
+            
+            if (story.conditions.Any(c => c.conditionType == ConditionType.DialogueEnded))
+            {
+                return false;
+            }
+            
+            bool isPhaseCompatible = (story.triggerPhase == currentPhase || story.triggerPhase == GamePhase.None);
+            return isPhaseCompatible && AreConditionsMet(story.conditions);
+        });
+
+        if (nextStory)
+        {
+            if (showDebugInfo) Debug.Log($"[StoryManager] 다음 스토리 트리거: {nextStory.id}");
+            executedStoryIds.Add(nextStory.id);
+            StartCoroutine(ExecuteActions(nextStory.actions));
+        }
+        else if (endedDialogueId == null)
+        {
+            if (showDebugInfo) Debug.Log($"[StoryManager] {currentPhase} Phase에서 실행할 스토리가 더 이상 없습니다.");
+            
+            string currentSceneName = SceneManager.GetActiveScene().name;
+            
+            switch (currentPhase)
+            {
+                case GamePhase.Day:
+                    if (currentSceneName == StringScene.DAY_SCENE) 
+                        GameManager.Instance.ProceedToEditStation();
+                    break;
+                case GamePhase.Opening:
+                    if (currentSceneName == StringScene.MAIN_SCENE)
+                        GameManager.Instance.ProceedToOperation();
+                    break;
+            }
         }
     }
-}
     
     private IEnumerator ExecuteActions(List<StoryAction> actions)
     {
@@ -165,7 +165,8 @@ public class StoryManager : Singleton<StoryManager>
                     StationManager.Instance.ActivateStation(action.targetId);
                     break;
                 case StoryType.SetTutorialMode:
-                    GameManager.Instance.SetTutorialMode(true);
+                    bool tutorialState = bool.Parse(action.targetId);
+                    GameManager.Instance.SetTutorialMode(tutorialState);
                     break;
                 case StoryType.SpawnCustomer:
                     RestaurantManager.Instance.SpawnTutorialCustomer();

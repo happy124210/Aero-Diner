@@ -1,6 +1,8 @@
 ﻿using DG.Tweening;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using Sequence = DG.Tweening.Sequence;
 
 public class Tu5 : MonoBehaviour
 {
@@ -40,6 +42,7 @@ public class Tu5 : MonoBehaviour
     [SerializeField] private GameObject step4Pointer;
 
     [SerializeField] private GameObject xPanel;
+    
     private void Awake()
     {
         if (tabController == null)
@@ -56,41 +59,6 @@ public class Tu5 : MonoBehaviour
         currentMoney.text = $"{currentDisplayAmount:N0} G";
         EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
         Tu5Step1();
-    }
-
-    public void TryBuyItem(StoreItem item)
-    {
-        if (item == null || item.IsPurchased) return;
-
-        if (GameManager.Instance.TotalEarnings >= item.Cost)
-        {
-            GameManager.Instance.AddMoney(-item.Cost);
-            AnimateStoreMoney(GameManager.Instance.TotalEarnings);
-            EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
-
-            switch (item.BaseData)
-            {
-                // 레시피
-                case FoodData:
-                    MenuManager.Instance.UnlockMenu(item.ID);
-                    break;
-
-                // 설비
-                case StationData:
-                    StationManager.Instance.CreateStationInStorage(item.ID);
-                    break;
-            }
-
-            item.IsPurchased = true;
-
-            Debug.Log($"구매 성공: {item.DisplayName}");
-            recipeScrollView.InitializeAndPopulate();
-            stationScrollView.InitializeAndPopulate();
-        }
-        else
-        {
-            ShowInsufficientMoneyPanel();
-        }
     }
 
     #region 두트윈 메서드
@@ -200,6 +168,7 @@ public class Tu5 : MonoBehaviour
 
     public void Tu5Step2()
     {
+        Tu5BuyRecipe();
         step1Panel1.SetActive(false);
         step1Panel2.SetActive(false);
         step1Pointer.SetActive(false);
@@ -214,6 +183,7 @@ public class Tu5 : MonoBehaviour
     }
     public void Tu5Step4()
     {
+        Tu5BuyStation();
         step3Panel1.SetActive(false);
         step3Panel2.SetActive(false);
         step3Pointer.SetActive(false);
@@ -225,6 +195,25 @@ public class Tu5 : MonoBehaviour
     {
         UIEventCaller.CallUIEvent("tu6");
     }
+
+    private void Tu5BuyRecipe()
+    {
+        GameManager.Instance.AddMoney(-100);
+        AnimateStoreMoney(GameManager.Instance.TotalEarnings);
+        EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
+        MenuManager.Instance.UnlockMenu("f29");
+        ForcePurchase("f29");
+    }
+
+    private void Tu5BuyStation()
+    {
+        GameManager.Instance.AddMoney(-100);
+        AnimateStoreMoney(GameManager.Instance.TotalEarnings);
+        EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
+        StationManager.Instance.CreateStationInStorage("s23");
+    }
+
+    private void ForcePurchase(string id) => recipeScrollView.ForcePurchaseItem(id);
 
     #endregion
 }
