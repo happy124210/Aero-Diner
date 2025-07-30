@@ -621,6 +621,7 @@ public class StationManager : Singleton<StationManager>
     public bool CheckStationPlacedOnCell(string stationId, string gridCellName)
     {
         if (string.IsNullOrEmpty(stationId) || string.IsNullOrEmpty(gridCellName)) return false;
+        SetStations();
         
         for (int i = 0; i < stationGroups.Count; i++)
         {
@@ -632,10 +633,10 @@ public class StationManager : Singleton<StationManager>
 
             // 해당 셀에 스테이션이 있는지, 일치하는지 확인
             var station = stationGroups[i].station;
-            if (station != null)
+            if (station)
             {
                 var stationData = station.GetComponent<IMovableStation>()?.StationData;
-                if (stationData != null && stationData.id == stationId)
+                if (stationData && stationData.id == stationId)
                 {
                     if (showDebugInfo) Debug.Log($"[StationManager] '{gridCellName}'에 '{stationId}'가 배치됨");
                     return true;
