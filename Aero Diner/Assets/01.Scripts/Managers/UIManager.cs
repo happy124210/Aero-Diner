@@ -21,6 +21,9 @@ public class UIManager : Singleton<UIManager>
         typeof(Tu3),
         typeof(Tu4),
         typeof(Tu5),
+        typeof(Tu6),
+        typeof(Tu7),
+        typeof(Tu8),
 
 
         

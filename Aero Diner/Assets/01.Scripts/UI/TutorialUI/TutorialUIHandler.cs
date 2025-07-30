@@ -17,7 +17,6 @@ public class TutorialUIHandler : IUIEventHandler
             case UIEventType.tu1:
                 foreach (var ui in sceneUIs)
                 {
-                    Debug.Log("TU 호출됨");
 
                     ui?.GetComponentInChildren<Tu1>(true)?.gameObject.SetActive(true);
                 }
@@ -25,7 +24,6 @@ public class TutorialUIHandler : IUIEventHandler
             case UIEventType.tu2:
                 foreach (var ui in sceneUIs)
                 {
-                    Debug.Log("TU 호출됨");
                     ui?.GetComponentInChildren<Tu1>(true)?.gameObject.SetActive(false);
                     ui?.GetComponentInChildren<Tu2>(true)?.gameObject.SetActive(true);
                 }
@@ -33,7 +31,6 @@ public class TutorialUIHandler : IUIEventHandler
             case UIEventType.tu3:
                 foreach (var ui in sceneUIs)
                 {
-                    Debug.Log("TU 호출됨");
 
                     ui?.GetComponentInChildren<Tu3>(true)?.gameObject.SetActive(true);
                 }
@@ -65,7 +62,6 @@ public class TutorialUIHandler : IUIEventHandler
             case UIEventType.tu4:
                 foreach (var ui in sceneUIs)
                 {
-                    Debug.Log("TU 호출됨");
 
                     ui?.GetComponentInChildren<Tu4>(true)?.gameObject.SetActive(true);
                 }
@@ -73,9 +69,56 @@ public class TutorialUIHandler : IUIEventHandler
             case UIEventType.tu5:
                 foreach (var ui in sceneUIs)
                 {
-                    Debug.Log("TU 호출됨");
                     ui?.GetComponentInChildren<Tu4>(true)?.gameObject.SetActive(false);
                     ui?.GetComponentInChildren<Tu5>(true)?.gameObject.SetActive(true);
+                }
+                return true;
+            case UIEventType.tu6:
+                foreach (var ui in sceneUIs)
+                {
+                    ui?.GetComponentInChildren<Tu6>(true)?.gameObject.SetActive(true);
+                }
+                return true;
+            case UIEventType.tu7:
+                foreach (var ui in sceneUIs)
+                {
+                    ui?.GetComponentInChildren<Tu6>(true)?.gameObject.SetActive(false);
+                    var inventory = ui?.GetComponentInChildren<Inventory>(true);
+                    var tab = inventory?.GetComponentInChildren<TabController>(true);
+
+                    inventory?.Show();
+                    ui?.GetComponentInChildren<RecipePanel>(true)?.gameObject.SetActive(true);
+                    ui?.GetComponentInChildren<StationPanel>(true)?.gameObject.SetActive(false);
+                    ui?.GetComponentInChildren<IngredientPanel>(true)?.gameObject.SetActive(false);
+                    ui?.GetComponentInChildren<QuestPanel>(true)?.gameObject.SetActive(false);
+                    ui?.GetComponentInChildren<Tu7>(true)?.gameObject.SetActive(true);
+
+                    tab?.RequestSelectTab(2);
+                    tab?.ApplyTabSelectionVisuals();
+                }
+                return true;
+            case UIEventType.tu8:
+                foreach (var ui in sceneUIs)
+                {
+                    ui?.GetComponentInChildren<Tu7>(true)?.gameObject.SetActive(false);
+                    ui?.GetComponentInChildren<Tu8>(true)?.gameObject.SetActive(true);
+                }
+                return true;
+            case UIEventType.tu9:
+                foreach (var ui in sceneUIs)
+                {
+                    ui?.GetComponentInChildren<Tu8>(true)?.gameObject.SetActive(false);
+                    var inventory = ui?.GetComponentInChildren<Inventory>(true);
+                    var tab = inventory?.GetComponentInChildren<TabController>(true);
+
+                    inventory?.Show();
+                    ui?.GetComponentInChildren<RecipePanel>(true)?.gameObject.SetActive(false);
+                    ui?.GetComponentInChildren<StationPanel>(true)?.gameObject.SetActive(false);
+                    ui?.GetComponentInChildren<IngredientPanel>(true)?.gameObject.SetActive(false);
+                    ui?.GetComponentInChildren<QuestPanel>(true)?.gameObject.SetActive(true);
+
+                    tab?.RequestSelectTab(3);
+                    tab?.ApplyTabSelectionVisuals();
                 }
                 return true;
         }

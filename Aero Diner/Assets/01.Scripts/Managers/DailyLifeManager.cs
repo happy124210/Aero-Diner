@@ -11,7 +11,7 @@ public class DailyLifeManager : Singleton<DailyLifeManager>
     
     private async void Start()
     {
-        await Task.Delay(1000);
+        await Task.Delay(1600);
         EventBus.RaiseFadeEvent(FadeEventType.FadeIn, new FadeEventPayload(0f, 1f));
         StartCoroutine(ResendEarningsAfterDelay());
         
