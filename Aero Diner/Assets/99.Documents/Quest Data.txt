@@ -1,2 +1,0 @@
-id,questName,description,rewardDescription,objectives,rewardMoney,rewardItemIds
-main_quest_01,셰프의 첫걸음,"7일 안에 10000골드를 벌어 가게의 기반을 다지자.","레스토랑 수리",EarnMoney;;10000,0,

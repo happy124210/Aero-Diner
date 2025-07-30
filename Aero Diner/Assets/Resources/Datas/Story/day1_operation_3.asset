@@ -12,20 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce4ff5776a5c66845bd9a49d594fcc0b, type: 3}
   m_Name: day1_operation_3
   m_EditorClassIdentifier: 
-  id: day1_operation_2
+  id: day1_operation_3
   triggerPhase: 5
   conditions:
   - conditionType: 1
-    lValue: t_operation_1
+    lValue: t_operation_2
     operator: ==
     rValue: Finished
   actions:
   - storyType: 13
-    targetId: s5
+    targetId: s16
+    value: 
+  - storyType: 13
+    targetId: s15
+    value: 
+  - storyType: 13
+    targetId: s3
     value: 
   - storyType: 11
-    targetId: tu3_step2
-    value: 
-  - storyType: 1
-    targetId: 
+    targetId: tu3_step4
     value: 
