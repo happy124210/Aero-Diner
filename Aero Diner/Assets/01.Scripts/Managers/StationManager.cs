@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 using static SaveData;
 
 public class StationManager : Singleton<StationManager>
@@ -43,9 +44,10 @@ public class StationManager : Singleton<StationManager>
     public List<Station> GetUnlockedStations() => stationDatabase.Values.Where(station => station.isUnlocked).ToList();
     public HashSet<string> GetUnlockedStationIds() => stationDatabase.Keys.ToHashSet();
     
-    public int TotalStationCount;
-    public int GridCellStationCount;
-    public int StorageGridCellStationCount;
+    // 설비 개수
+    private int totalStationCount; // 전체 스테이션 개수
+    private int gridCellStationCount; // 영업 공간에 배치되어있는 개수
+    private int storageGridCellStationCount; // 보관 공간에 배치되어있는 개수
    
     #endregion
 
@@ -345,9 +347,9 @@ public class StationManager : Singleton<StationManager>
         }
         
         stationTypeCounts.Clear(); 
-        TotalStationCount = 0;
-        GridCellStationCount = 0;
-        StorageGridCellStationCount = 0;
+        totalStationCount = 0;
+        gridCellStationCount = 0;
+        storageGridCellStationCount = 0;
 
         for (int i = 0; i < stationGroups.Count; i++)
         {
@@ -368,10 +370,10 @@ public class StationManager : Singleton<StationManager>
             
             string cellType = gridCell.name.StartsWith("StorageGridCell") ? "Storage" : "Grid";
             
-            TotalStationCount++;
+            totalStationCount++;
 
-            if (cellType == "Grid") GridCellStationCount++;
-            else if (cellType == "Storage") StorageGridCellStationCount++;
+            if (cellType == "Grid") gridCellStationCount++;
+            else if (cellType == "Storage") storageGridCellStationCount++;
 
             if (!stationTypeCounts.ContainsKey(stationType))
             {
@@ -393,41 +395,38 @@ public class StationManager : Singleton<StationManager>
             if (showDebugInfo) Debug.Log($"[StationManager] {stationName} → GridCell: {gridCount}, StorageGridCell: {storageCount}");
         }
 
-        if (showDebugInfo) Debug.Log($"[StationManager] 전체 스테이션 수: {TotalStationCount} (GridCell: {GridCellStationCount}, StorageGridCell: {StorageGridCellStationCount})");
+        if (showDebugInfo) Debug.Log($"[StationManager] 전체 스테이션 수: {totalStationCount} (GridCell: {gridCellStationCount}, StorageGridCell: {storageGridCellStationCount})");
     }
 
     /// <summary>
     /// 보관장소에 스테이션 생성
     /// 상점에서 구매했을 때 호출됨
     /// </summary>
-    /// <param name="id">StationData의 ID (프리팹 이름과 같음)</param>
+    /// <param name="id">StationData의 고유 ID</param>
     public bool CreateStationInStorage(string id)
     {
         // StationData 확인
-        StationData stationData = FindStationDataById(id);
-        if (stationData == null)
+        if (!stationDatabase.ContainsKey(id))
         {
             Debug.LogError($"[StationManager] StationData를 찾을 수 없음: {id}");
             return false;
         }
-
-        // 프리팹 찾기 (StationData의 ID를 비교하여 찾음)
-        GameObject prefab = stationPrefabs.FirstOrDefault(p =>
+        
+        if (!stationPrefabDatabase.TryGetValue(id, out GameObject prefab))
         {
-            var station = p.GetComponent<IMovableStation>();
-            return station != null &&
-                   station.StationData != null &&
-                   station.StationData.id == id;
-        });
+            Debug.LogError($"[StationManager] ID에 해당하는 프리팹을 찾을 수 없음: {id}");
+            return false;
+        }
 
-        // Storage 셀 중 비어있는 셀 찾기 (IMovableStation 없는 경우)
+        // Storage 셀 중 비어있는 셀 찾기
         GameObject targetCell = null;
-
         foreach (var cell in tilemapController.gridCells)
         {
+            // StorageGridCell 컴포넌트가 있는 셀만 대상
             if (cell.GetComponent<StorageGridCell>() == null)
                 continue;
 
+            // 자식 중에 이미 다른 스테이션이 있는지 확인
             bool hasStation = cell.GetComponentsInChildren<IMovableStation>(true).Length > 0;
             if (!hasStation)
             {
@@ -445,7 +444,7 @@ public class StationManager : Singleton<StationManager>
         // 스테이션 인스턴스 생성
         GameObject instance = Instantiate(prefab, targetCell.transform);
         instance.transform.localPosition = Vector3.zero;
-        instance.SetActive(true);
+        instance.SetActive(true); 
 
         // stationGroups 동기화
         int index = tilemapController.gridCells.IndexOf(targetCell);
@@ -531,51 +530,45 @@ public class StationManager : Singleton<StationManager>
     }
 
     /// <summary>
-    /// 특정 설비에 특정 음식이 배치되어있는지 여부 판단
+    /// 특정 설비에 특정 음식들이 모두 배치되어 있는지 여부 판단
     /// </summary>
-    public void CheckIngredients(string stationId, string[] ingredients)
+    public bool CheckIngredients(string stationId, string[] requiredIngredients)
     {
+        if (requiredIngredients == null || requiredIngredients.Length == 0) return false;
+    
         SetStations();
 
-        foreach (var group in stationGroups)
+        var stationGroup = stationGroups.FirstOrDefault(g => g.station && g.station.GetComponent<IMovableStation>()?.StationData.id == stationId);
+
+        if (stationGroup == null || !stationGroup.station)
         {
-            var stationGO = group.station;
-
-            if (!stationGO)
-            {
-                continue;
-            }
-
-            var data = stationGO.GetComponent<IMovableStation>()?.StationData;
-            if (data != null && data.id == stationId)
-            {
-                var baseStation = stationGO.GetComponent<BaseStation>();
-                if (!baseStation)
-                {
-                    if (showDebugInfo) Debug.Log($"[StationManager] Station '{stationId}'에서 BaseStation 컴포넌트를 찾지 못함");
-                    return;
-                }
-
-                var currentIngredients = baseStation.currentIngredients;
-                foreach (var ingredient in ingredients)
-                {
-                    if (currentIngredients.Contains(ingredient))
-                    {
-                        if (showDebugInfo) Debug.Log($"[StationManager] Station '{stationId}'에 '{ingredient}'이 배치되어 있음");
-                    }
-                    else
-                    {
-                        if (showDebugInfo) Debug.Log($"[StationManager] Station '{stationId}'에 '{ingredient}'이 배치되어 있지 않음");
-                    }
-                }
-
-                return;
-            }
+            Debug.LogWarning($"[StationManager] StationGroups에서 ID '{stationId}'를 가진 Station을 찾을 수 없음");
+            return false;
         }
 
-        Debug.LogWarning($"[StationManager] StationGroups에서 ID '{stationId}'를 가진 Station을 찾을 수 없음");
-    }
+        var baseStation = stationGroup.station.GetComponent<BaseStation>();
+        if (!baseStation)
+        {
+            if (showDebugInfo) Debug.LogWarning($"[StationManager] Station '{stationId}'에서 BaseStation 컴포넌트를 찾지 못함");
+            return false;
+        }
 
+        var currentIngredients = baseStation.currentIngredients;
+        
+        foreach (var required in requiredIngredients)
+        {
+            if (!currentIngredients.Contains(required))
+            {
+                if (showDebugInfo) Debug.Log($"[StationManager] Station '{stationId}'에 '{required}'이(가) 없음. 조건 미충족.");
+                return false;
+            }
+        }
+        
+        if (showDebugInfo) Debug.Log($"[StationManager] Station '{stationId}'에 모든 필요 재료가 배치됨. 조건 충족!");
+        return true;
+    }
+    
+  #if UNITY_EDITOR
     /// <summary>
     /// 디버깅용
     /// 특정 Station ID의 currentIngredients 목록을 콘솔에 출력하는 테스트 메서드
@@ -601,5 +594,7 @@ public class StationManager : Singleton<StationManager>
 
         return new List<string>();
     }
+    #endif
+    
     #endregion
 }
