@@ -10,19 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce4ff5776a5c66845bd9a49d594fcc0b, type: 3}
-  m_Name: day1_operation_start
+  m_Name: day1_operation_5
   m_EditorClassIdentifier: 
-  id: day1_operation_start
+  id: day1_operation_5
   triggerPhase: 5
   conditions:
-  - conditionType: 0
-    lValue: 
+  - conditionType: 1
+    lValue: t_operation_3
     operator: ==
-    rValue: 1
+    rValue: Finished
   actions:
-  - storyType: 10
-    targetId: 
+  - storyType: 11
+    targetId: tu3_step5
     value: 
-  - storyType: 14
-    targetId: 
+  - storyType: 1
+    targetId: t_operation_5
+    value: 
+  - storyType: 13
+    targetId: s8
+    value: 
+  - storyType: 13
+    targetId: s17
     value: 
