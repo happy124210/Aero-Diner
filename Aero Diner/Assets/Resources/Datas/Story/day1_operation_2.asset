@@ -24,8 +24,8 @@ MonoBehaviour:
     targetId: s5
     value: 
   - storyType: 11
-    targetId: tu3_step2
+    targetId: tu3_step3
     value: 
   - storyType: 1
-    targetId: 
+    targetId: t_operation_2
     value: 
