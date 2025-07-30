@@ -10,16 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce4ff5776a5c66845bd9a49d594fcc0b, type: 3}
-  m_Name: day7_evaluate
+  m_Name: day1_operation_5
   m_EditorClassIdentifier: 
-  id: day7_evaluate
-  triggerPhase: 10
-  conditions:
-  - conditionType: 2
-    lValue: day7_check_dialogue
-    operator: ==
-    rValue: 
+  id: day1_operation_5
+  triggerPhase: 5
+  conditions: []
   actions:
-  - storyType: 2
-    targetId: main_quest_01
+  - storyType: 11
+    targetId: tu3_step5
+    value: 
+  - storyType: 1
+    targetId: t_operation_5
+    value: 
+  - storyType: 13
+    targetId: s8
+    value: 
+  - storyType: 13
+    targetId: s17
     value: 

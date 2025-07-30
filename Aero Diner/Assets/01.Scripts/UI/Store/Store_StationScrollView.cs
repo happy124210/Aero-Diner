@@ -16,7 +16,7 @@ public class Store_StationScrollView : MonoBehaviour
     [Header("참조")]
     [SerializeField] private Store store;
 
-    private List<StoreItem> stationStoreItems = new List<StoreItem>();
+    private List<StoreItem> stationStoreItems = new();
 
     private void Awake()
     {
@@ -44,10 +44,9 @@ public class Store_StationScrollView : MonoBehaviour
             }
         }
 
-        stationStoreItems = stationStoreItems.OrderBy(item =>
-        {
-            string numericPart = new string(item.ID.Where(char.IsDigit).ToArray());
-            return int.TryParse(numericPart, out int n) ? n : int.MaxValue;
+        stationStoreItems = stationStoreItems.OrderBy(item => {
+            string numPart = new string(item.ID.Where(char.IsDigit).ToArray());
+            return int.TryParse(numPart, out int n) ? n : int.MaxValue;
         }).ToList();
 
         PopulateScrollView();
@@ -77,7 +76,7 @@ public class Store_StationScrollView : MonoBehaviour
         }
     }
 
-    public bool AreConditionsMet(StoreItem item)
+    private bool AreConditionsMet(StoreItem item)
     {
         if (item.CsvData.Type == UnlockType.None) return true;
 

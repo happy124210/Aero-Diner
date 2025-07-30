@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 
 // 퀘스트의 현재 상태
 public enum QuestStatus
@@ -20,14 +21,15 @@ public enum QuestObjectiveType
     BuyRecipe,
     
     // == 튜토리얼용 ==
-    SelectRecipe,
-    
     HoldFood,
-    HoldStation,
-    UseStation,
     DeliverFood,
     
-    PlaceStation,
+    HoldStation,  // 설비 들고있는지
+    CheckIngredients,   // 설비에 필요 재료 전부 들어있는지
+    CheckFood, // 설비에 완성 음식 있는지
+    
+    PlaceStation, // 설비가 배치되었는지
+    
     SelectItemInUI,
 }
 
@@ -40,7 +42,7 @@ public class QuestObjective
     public QuestObjectiveType objectiveType;
     public string targetId;       // 목표 대상 ID
     public string description;    // 목표 설명
-    public int requiredAmount;    // 목표 수량
+    public string[] requiredIds;    // 필요 대상
 }
 
 [CreateAssetMenu(fileName = "QuestData", menuName = "Data/Quest Data")]
@@ -48,7 +50,7 @@ public class QuestData : ScriptableObject
 {
     [Header("퀘스트 기본 정보")]
     public string id;
-    public string questName;
+    public string questName; // UI표시용 이름
     public string description; // 퀘스트 스토리 설명
     public string rewardDescription;
 

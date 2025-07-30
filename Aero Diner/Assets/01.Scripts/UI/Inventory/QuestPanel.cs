@@ -1,9 +1,6 @@
-﻿
+﻿using System.Text;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UIElements;
-using UnityEngine.UI; 
 
 public class QuestPanel : MonoBehaviour
 {
@@ -99,7 +96,6 @@ public class QuestPanel : MonoBehaviour
     
     private void ShowQuestDetail(QuestData quest)
     {
-        // 초기화 시 호출되는 경우
         if (quest == null)
         {
             questNameText.text = "";
@@ -109,29 +105,43 @@ public class QuestPanel : MonoBehaviour
             return;
         }
 
-        // 실제 데이터 바인딩
+        // --- 퀘스트 기본 정보 표시 ---
         questNameText.text = quest.questName;
         descriptionText.text = quest.description;
-        rewardText.text = $"보상: {quest.rewardDescription} ({quest.rewardMoney}G)";
+    
+        // 보상 정보가 있을 경우에만 표시
+        if (!string.IsNullOrEmpty(quest.rewardDescription) || quest.rewardMoney > 0)
+        {
+            rewardText.text = $"보상: {quest.rewardDescription}";
+        }
+        else
+        {
+            rewardText.text = "보상: 없음";
+        }
+
+        // 모든 퀘스트 목표(Objective)를 순회하며 텍스트 생성
+        StringBuilder objectiveBuilder = new StringBuilder();
 
         foreach (var obj in quest.objectives)
         {
-            int currentAmount;
+            int currentAmount = 0;
+            int requiredAmount = 1;
             
-            if (obj.objectiveType == QuestObjectiveType.EarnMoney)
+            if (obj.requiredIds != null && obj.requiredIds.Length > 0 && int.TryParse(obj.requiredIds[0], out int req))
             {
-                // 돈 퀘스트만 GameManager에서 현재까지 번 총액 가져오기
-                currentAmount = GameManager.Instance.TotalEarnings; 
+                requiredAmount = req;
             }
-            else
-            {
-                currentAmount = QuestManager.Instance.GetQuestObjectiveProgress(quest.id, obj.targetId);
-            }
+
+            // 목표 타입에 따라 현재 진행도를 가져옵니다.
+            currentAmount = obj.objectiveType == QuestObjectiveType.EarnMoney 
+                ? GameManager.Instance.TotalEarnings 
+                : QuestManager.Instance.GetQuestObjectiveProgress(quest.id, obj.targetId);
             
-            currentAmount = Mathf.Min(currentAmount, obj.requiredAmount);
-            
-            objectiveText.text = $"• {obj.description} ({currentAmount} / {obj.requiredAmount})";
+            currentAmount = Mathf.Min(currentAmount, requiredAmount);
+            objectiveBuilder.AppendLine($"• {obj.description} ({currentAmount} / {requiredAmount})");
         }
+        
+        objectiveText.text = objectiveBuilder.ToString();
     }
     
     private void ClearChildren(Transform container)
