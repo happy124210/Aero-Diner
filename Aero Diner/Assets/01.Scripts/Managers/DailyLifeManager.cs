@@ -8,6 +8,7 @@ public class DailyLifeManager : Singleton<DailyLifeManager>
     {
         EventBus.OnBGMRequested(BGMEventType.PlayLifeTheme);
     }
+    
     private async void Start()
     {
         await Task.Delay(1000);
