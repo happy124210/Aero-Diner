@@ -23,3 +23,6 @@ MonoBehaviour:
   - storyType: 11
     targetId: tu3_step7
     value: 
+  - storyType: 1
+    targetId: t_operation_7
+    value: 

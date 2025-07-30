@@ -10,17 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d9ddc00ae20433a48abb200af3016cce, type: 3}
-  m_Name: t_operation_2
+  m_Name: t_day1_operation_1
   m_EditorClassIdentifier: 
-  id: t_operation_2
+  id: t_operation_1
   questName: 
   description: 
   rewardDescription: 
   objectives:
-  - objectiveType: 6
-    targetId: s5
+  - objectiveType: 3
+    targetId: f4
     description: 
-    requiredIds:
-    - f4
+    requiredIds: []
   rewardMoney: 0
   rewardItemIds: []
