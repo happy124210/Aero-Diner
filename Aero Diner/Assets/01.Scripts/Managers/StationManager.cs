@@ -613,7 +613,6 @@ public class StationManager : Singleton<StationManager>
         return foodDisplays.Any(display => display.foodData && display.foodData.id == objectId);
     }
     
-  #if UNITY_EDITOR
     /// <summary>
     /// 디버깅용
     /// 특정 Station ID의 currentIngredients 목록을 콘솔에 출력하는 테스트 메서드
@@ -639,7 +638,6 @@ public class StationManager : Singleton<StationManager>
 
         return new List<string>();
     }
-    #endif
     
     /// <summary>
     /// 특정 그리드 셀에 특정 ID의 설비가 배치되었는지 확인
