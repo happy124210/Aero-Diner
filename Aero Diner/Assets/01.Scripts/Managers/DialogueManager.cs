@@ -116,7 +116,11 @@ public class DialogueManager : Singleton<DialogueManager>
         EventBus.Raise(GameEventType.DialogueEnded, currentDialogue.id);
         GameManager.Instance.ContinueGame();
     }
-    
+    public void SkipDialogue()
+    {
+        linesQueue.Clear(); // 남은 대사 삭제
+        EndDialogue();      // 바로 종료 처리
+    }
     // /// <summary>
     // /// 선택지 확인
     // /// 보여줄 선택지 있으면 event로 choices 넘겨주고, 없으면 종료
