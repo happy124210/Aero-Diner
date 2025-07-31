@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// 게임의 전체적인 상태와 데이터를 관리
@@ -14,10 +12,10 @@ public class GameManager : Singleton<GameManager>
     [Header("디버그 정보")]
     [SerializeField, ReadOnly] private GamePhase currentPhase;
     [SerializeField] private bool showDebugInfo;
+    [SerializeField] private bool isTutorialActive;
     
     private static readonly int[] DaysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
     private GamePhase previousPhase;
-    private bool isTutorialActive;
     
     #region Property
     
@@ -223,7 +221,12 @@ public class GameManager : Singleton<GameManager>
     public void SetTutorialMode(bool value)
     {
         isTutorialActive = value;
-        // 기타 튜토리얼 로직
+        
+        if (isTutorialActive == false)
+        {
+            ChangePhase(GamePhase.Opening);
+            RestaurantManager.Instance.ReStartRestaurant();
+        }
     }
 
     #endregion
@@ -293,8 +296,8 @@ public class GameManager : Singleton<GameManager>
 public enum GamePhase
 {
     // === DAY SCENE ===
-    EditStation, // 배치 편집 ( 배 안에 있을 때 )
-    Day,         // 일상 ( 배 밖에 있을 때 )
+    EditStation, // 배치 편집
+    Day,         // 일상
     SelectMenu, // 메뉴 선택창 켰을 때
     Shop,        // 상점
     

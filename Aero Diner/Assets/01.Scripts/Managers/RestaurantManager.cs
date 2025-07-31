@@ -90,7 +90,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
 
             // 영업 시작
             case GamePhase.Operation:
-
                 if (GameManager.Instance.IsTutorialActive) return;
                 
                 customerSpawner.StartSpawning();
@@ -136,6 +135,12 @@ public class RestaurantManager : Singleton<RestaurantManager>
         
         Debug.Log("[RestaurantManager]: 손님 다 나감. 결과창 표시");
         EventBus.Raise(UIEventType.ShowResultPanel, todayEarnings);
+    }
+
+    public void ReStartRestaurant()
+    {
+        InitializeDay();
+        customerSpawner.StartSpawning();
     }
 
     #endregion
