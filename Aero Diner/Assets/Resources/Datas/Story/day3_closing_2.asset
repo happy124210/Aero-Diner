@@ -23,3 +23,6 @@ MonoBehaviour:
   - storyType: 11
     targetId: tu9
     value: 
+  - storyType: 1
+    targetId: q_day7
+    value: 
