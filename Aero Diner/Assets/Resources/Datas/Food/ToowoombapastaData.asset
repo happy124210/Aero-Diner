@@ -22,6 +22,6 @@ MonoBehaviour:
   ingredients:
   - f18
   - f14
-  - f26
+  - f25
   cookTime: 5
-  foodCost: 500
+  foodCost: 250

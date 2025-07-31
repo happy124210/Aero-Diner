@@ -24,4 +24,4 @@ MonoBehaviour:
   - f16
   - f23
   cookTime: 5
-  foodCost: 500
+  foodCost: 150

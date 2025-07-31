@@ -1,13 +1,8 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Aero Diner/Assets/03.Datas/Food/AglioolioData.asset.meta
 guid: 0f5a68b1c98b3b7428510bfc3dd8af76
 NativeFormatImporter:
-========
-guid: c91257ded4abbb64ba082520ea1d3370
-folderAsset: yes
-DefaultImporter:
->>>>>>>> dev:Aero Diner/Assets/01.Scripts/Restaurant/Menu.meta
   externalObjects: {}
+  mainObjectFileID: 11400000
   userData: 
   assetBundleName: 
   assetBundleVariant: 

@@ -23,5 +23,5 @@ MonoBehaviour:
   - f9
   - f10
   - f11
-  cookTime: 5
-  foodCost: 500
+  cookTime: 3
+  foodCost: 0

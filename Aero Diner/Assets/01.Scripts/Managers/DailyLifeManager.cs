@@ -16,6 +16,7 @@ public class DailyLifeManager : Singleton<DailyLifeManager>
         StartCoroutine(ResendEarningsAfterDelay());
         
         GameManager.Instance.ChangePhase(GamePhase.Day);
+        StationManager.Instance.InitializeStations();
     }
 
     private IEnumerator ResendEarningsAfterDelay()

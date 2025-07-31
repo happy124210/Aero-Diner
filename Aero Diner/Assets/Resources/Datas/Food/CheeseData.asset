@@ -21,4 +21,4 @@ MonoBehaviour:
   stationType: 03000000
   ingredients: []
   cookTime: 5
-  foodCost: 500
+  foodCost: 0

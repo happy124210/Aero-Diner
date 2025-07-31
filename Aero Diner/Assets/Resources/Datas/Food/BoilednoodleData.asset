@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca77332d7f9b4134e9c53ece37a21432, type: 3}
-  m_Name: BoilednoodlesData
+  m_Name: BoilednoodleData
   m_EditorClassIdentifier: 
   id: f18
-  foodName: BoiledNoodles
+  foodName: BoiledNoodle
   displayName: "\uC0B6\uC740 \uBA74"
   foodType: 3
   foodIcon: {fileID: 21300000, guid: 4dca00c71c1ec294f9c661d9639a7620, type: 3}
@@ -22,5 +22,5 @@ MonoBehaviour:
   ingredients:
   - f1
   - f2
-  cookTime: 1
-  foodCost: 500
+  cookTime: 3
+  foodCost: 0
