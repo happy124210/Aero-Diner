@@ -141,6 +141,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
     {
         InitializeDay();
         customerSpawner.StartSpawning();
+        StationManager.Instance.ResetAllStationsInteractable();
     }
 
     #endregion

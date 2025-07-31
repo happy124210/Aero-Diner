@@ -507,6 +507,20 @@ public class StationManager : Singleton<StationManager>
     }
     
     /// <summary>
+    /// 모든 설비의 상호작용을 강제로 활성화
+    /// </summary>
+    public void ResetAllStationsInteractable()
+    {
+        foreach (var stationId in startStationIds)
+        {
+            if (stationId != null)
+            {
+                ActivateStation(stationId, true);
+            }
+        }
+    }
+    
+    /// <summary>
     /// 주어진 Station ID를 기준으로 stationGroups 리스트에서 해당 Station의 InteractableTutorial 컴포넌트를 찾아 비활성화
     /// </summary>
     /// <param name="id"> Station의 고유 식별자 </param>
@@ -540,7 +554,7 @@ public class StationManager : Singleton<StationManager>
             }
         }
 
-        Debug.LogWarning($"[StationManager] StationGroups에서 ID '{id}'를 가진 Station을 찾을 수 없음");
+        if (showDebugInfo) Debug.LogWarning($"[StationManager] StationGroups에서 ID '{id}'를 가진 Station을 찾을 수 없음");
     }
 
     /// <summary>

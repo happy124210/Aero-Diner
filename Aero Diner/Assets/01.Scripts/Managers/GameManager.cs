@@ -249,7 +249,7 @@ public class GameManager : Singleton<GameManager>
                 break;
             
             case false:
-                ChangePhase(GamePhase.Opening);
+                ChangePhase(GamePhase.Operation);
                 RestaurantManager.Instance.ReStartRestaurant();
                 break;
         }
