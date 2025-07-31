@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 /// <summary>
 /// 게임의 전체적인 상태와 데이터를 관리
@@ -76,7 +77,7 @@ public class GameManager : Singleton<GameManager>
         if (CurrentPhase == GamePhase.Day)
         {
             if (showDebugInfo) Debug.Log("[GameManager] 모든 스토리가 종료되어 EditStation으로 전환");
-            ChangePhase(GamePhase.EditStation);
+            StartCoroutine(ProceedToEditStation_Coroutine());
         }
     }
 
@@ -86,9 +87,29 @@ public class GameManager : Singleton<GameManager>
         if (CurrentPhase == GamePhase.Opening)
         {
             if (showDebugInfo) Debug.Log("[GameManager] 모든 Opening 스토리가 종료되어 Operation으로 전환");
-            ChangePhase(GamePhase.Operation);
+            StartCoroutine(ProceedToOperation_Coroutine());
         }
     }
+    
+    // TODO === 임시방편. 7/31 저녁에 수정 예정 ===
+    private IEnumerator ProceedToOperation_Coroutine()
+    {
+        yield return null; 
+        yield return null;
+
+        if (showDebugInfo) Debug.Log("[GameManager] 모든 Opening 스토리가 종료되어 Operation으로 전환");
+        ChangePhase(GamePhase.Operation);
+    }
+    
+    private IEnumerator ProceedToEditStation_Coroutine()
+    {
+        yield return null; 
+        yield return null;
+
+        if (showDebugInfo) Debug.Log("[GameManager] 모든 Opening 스토리가 종료되어 Operation으로 전환");
+        ChangePhase(GamePhase.EditStation);
+    }
+    // TODO === END ===
     
     private void HandleGameEvent(GameEventType eventType, object data)
     {
@@ -221,11 +242,17 @@ public class GameManager : Singleton<GameManager>
     public void SetTutorialMode(bool value)
     {
         isTutorialActive = value;
-        
-        if (isTutorialActive == false)
+
+        switch (isTutorialActive)
         {
-            ChangePhase(GamePhase.Opening);
-            RestaurantManager.Instance.ReStartRestaurant();
+            case true:
+                StationManager.Instance.SetTutorialStation();
+                break;
+            
+            case false:
+                ChangePhase(GamePhase.Opening);
+                RestaurantManager.Instance.ReStartRestaurant();
+                break;
         }
     }
 
