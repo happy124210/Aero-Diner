@@ -40,7 +40,7 @@ public class PlayerController : Singleton<PlayerController>
 
     private string lastWallMessage;
     private bool isTouchingWall;
-    
+
     // const
     private const float IDLE_BREAK_TIME = 5f;
     
@@ -189,6 +189,7 @@ public class PlayerController : Singleton<PlayerController>
 
     private void RaycastForInteractable()
     {
+        // 기존 Station/GridCell 탐지
         var hits = CastAll(transform.position, lastMoveDir, interactionRadius, interactableLayer);
 
         IInteractable stationTarget = null;
@@ -205,17 +206,29 @@ public class PlayerController : Singleton<PlayerController>
                 gridTarget = interactable;
         }
 
-        //조건 분기: 들고 있는 Station이 있으면 GridCell 우선, 아니면 Station 우선
-        bool holdingStation = playerInventory.heldStation != null;
+        // 보조: GridCell이 안 잡혔으면 FindGridCellInFront()로 추가 탐지
+        if (gridTarget == null)
+        {
+            Transform frontCell = FindGridCellInFront();
+            if (frontCell != null)
+                gridTarget = frontCell.GetComponent<IInteractable>();
+        }
 
+        // 상호작용 우선순위 결정
+        bool holdingStation = playerInventory.heldStation != null;
         IInteractable newTarget = holdingStation ? gridTarget ?? stationTarget
                                                  : stationTarget ?? gridTarget;
 
+        // Hover 상태 갱신
         if (newTarget != currentTarget)
         {
             currentTarget?.OnHoverExit();
             newTarget?.OnHoverEnter();
             currentTarget = newTarget;
+            if (newTarget == null)
+            {
+                tilemapController.ClearSelection();
+            }
         }
     }
 
@@ -280,6 +293,8 @@ public class PlayerController : Singleton<PlayerController>
         if (hit.HasValue && hit.Value.collider.CompareTag(StringTag.GRID_CELL_TAG))
         {
             GameObject hitCell = hit.Value.collider.gameObject;
+
+            Debug.Log($"[PlayerController] 감지된 셀: {hitCell.name}");
 
             // 현재 선택된 셀과 다를 경우에만 갱신
             if (tilemapController != null)

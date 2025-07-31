@@ -89,22 +89,30 @@ public class TilemapController : MonoBehaviour
         }
     }
 
+
     /// <summary>
-    /// 모든 셀의 SpriteRenderer를 활성화하여 셀을 보이게 함
+    /// 모든 셀의 SpriteRenderer를 활성화하고 상태에 따른 머티리얼을 설정
+    /// 선택된 셀은 selectMaterial을 적용
     /// </summary>
     public void ShowAllCells()
     {
         foreach (var cell in gridCells)
         {
+            // 렌더링 활성화
             var sr = cell.GetComponent<SpriteRenderer>();
             if (sr != null)
                 sr.enabled = true;
 
+            // 셀 상태 업데이트
             var status = cell.GetComponent<GridCellStatus>();
             if (status != null)
             {
+                // 머티리얼 설정
                 status.SetMaterials(placeableMaterial, notPlaceableMaterial, selectMaterial);
-                status.UpdateStatus();
+
+                // 선택 여부 반영
+                bool isCurrentSelection = (cell == selectedCell);
+                status.SetSelected(isCurrentSelection);
             }
         }
     }
@@ -147,11 +155,20 @@ public class TilemapController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 사용자가 선택한 셀을 강조 표시하고, 전체 셀의 상태를 갱신
+    /// 선택된 셀은 활성화(true) 상태로 설정되며, 나머지 셀들은 비활성화(false)
+    /// 디버그 모드에서는 선택된 셀의 이름을 출력
+    /// </summary>
+    /// <param name="newSelection">새로 선택된 셀 GameObject</param>
     public void HighlightSelectedCell(GameObject newSelection)
     {
         selectedCell = newSelection;
-        UpdateGridCellStates(); // 모든 셀 상태 갱신 (선택된 셀은 true, 나머지는 false)
 
+        // 셀 상태 업데이트: 선택 여부 반영
+        UpdateGridCellStates();
+
+        // 디버그 정보 출력
         if (showDebugInfo && selectedCell != null)
             Debug.Log($"[TilemapController] 선택된 셀: {selectedCell.name}");
     }
