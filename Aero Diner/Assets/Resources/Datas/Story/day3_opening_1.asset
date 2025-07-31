@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce4ff5776a5c66845bd9a49d594fcc0b, type: 3}
   m_Name: day3_opening_1
   m_EditorClassIdentifier: 
-  id: day3_opening_2
+  id: day3_opening_1
   triggerPhase: 1
   conditions:
-  - conditionType: 2
-    lValue: day3_opening_dialogue_1
+  - conditionType: 0
+    lValue: 
     operator: ==
-    rValue: 
+    rValue: 3
   actions:
-  - storyType: 11
-    targetId: tu9
+  - storyType: 0
+    targetId: day3_opening_dialogue_1
     value: 
