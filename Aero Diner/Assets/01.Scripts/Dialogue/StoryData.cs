@@ -35,6 +35,7 @@ public enum StoryType
     ActivateStation,
     SpawnCustomer,
     
+    ChangeGamePhase, // 게임 페이즈 강제 전환
     None,
 }
 

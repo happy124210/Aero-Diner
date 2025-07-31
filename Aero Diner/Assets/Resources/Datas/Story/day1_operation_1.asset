@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: day1_operation_1
   m_EditorClassIdentifier: 
   id: day1_operation_1
-  triggerPhase: 5
+  triggerPhase: 4
   conditions:
   - conditionType: 2
     lValue: day1_opening_dialogue
@@ -25,4 +25,4 @@ MonoBehaviour:
     value: 
   - storyType: 13
     targetId: s24
-    value: 
+    value: true

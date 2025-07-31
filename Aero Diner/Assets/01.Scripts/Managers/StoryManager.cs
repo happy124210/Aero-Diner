@@ -152,6 +152,9 @@ public class StoryManager : Singleton<StoryManager>
                 case StoryType.LostMoney:
                     GameManager.Instance.AddMoney(-int.Parse(action.value));
                     break;
+                case StoryType.ChangeGamePhase:
+                    GameManager.Instance.ChangePhase((GamePhase)Enum.Parse(typeof(GamePhase), action.targetId));
+                    break;
                 
                 // 튜토리얼용
                 case StoryType.ShowGuideUI:
@@ -162,7 +165,7 @@ public class StoryManager : Singleton<StoryManager>
                     //UIManager.Instance.ShowUI(action.targetId);
                     break;
                 case StoryType.ActivateStation:
-                    StationManager.Instance.ActivateStation(action.targetId);
+                    StationManager.Instance.ActivateStation(action.targetId, bool.Parse(action.value));
                     break;
                 case StoryType.SetTutorialMode:
                     bool tutorialState = bool.Parse(action.targetId);
@@ -171,7 +174,6 @@ public class StoryManager : Singleton<StoryManager>
                 case StoryType.SpawnCustomer:
                     RestaurantManager.Instance.SpawnTutorialCustomer();
                     break;
-
             }
             yield return null;
         }
