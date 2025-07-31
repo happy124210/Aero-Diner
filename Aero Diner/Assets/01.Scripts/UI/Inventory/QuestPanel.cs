@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 using TMPro;
 using UnityEngine;
 
@@ -105,10 +106,10 @@ public class QuestPanel : MonoBehaviour
             return;
         }
 
-        // --- 퀘스트 기본 정보 표시 ---
+        // 퀘스트 기본 정보 표시
         questNameText.text = quest.questName;
         descriptionText.text = quest.description;
-    
+
         // 보상 정보가 있을 경우에만 표시
         if (!string.IsNullOrEmpty(quest.rewardDescription) || quest.rewardMoney > 0)
         {
@@ -118,29 +119,33 @@ public class QuestPanel : MonoBehaviour
         {
             rewardText.text = "보상: 없음";
         }
-
-        // 모든 퀘스트 목표(Objective)를 순회하며 텍스트 생성
+        
         StringBuilder objectiveBuilder = new StringBuilder();
 
         foreach (var obj in quest.objectives)
         {
-            int currentAmount = 0;
-            int requiredAmount = 1;
-            
-            if (obj.requiredIds != null && obj.requiredIds.Length > 0 && int.TryParse(obj.requiredIds[0], out int req))
-            {
-                requiredAmount = req;
-            }
+            int currentAmount;
+            int requiredAmount;
 
-            // 목표 타입에 따라 현재 진행도를 가져옵니다.
-            currentAmount = obj.objectiveType == QuestObjectiveType.EarnMoney 
-                ? GameManager.Instance.TotalEarnings 
-                : QuestManager.Instance.GetQuestObjectiveProgress(quest.id, obj.targetId);
+            // objectiveType에 따라 분기
+            switch (obj.objectiveType)
+            {
+                // EarnMoney 퀘스트만 목표액
+                case QuestObjectiveType.EarnMoney:
+                    currentAmount = GameManager.Instance.TotalEarnings;
+                    int.TryParse(obj.targetId, out requiredAmount);
+                    break;
             
-            currentAmount = Mathf.Min(currentAmount, requiredAmount);
+                // 그 외 다른 모든 퀘스트
+                default:
+                    currentAmount = QuestManager.Instance.GetQuestObjectiveProgress(quest.id, obj.targetId);
+                    int.TryParse(obj.requiredIds.FirstOrDefault(), out requiredAmount);
+                    break;
+            }
+            
             objectiveBuilder.AppendLine($"• {obj.description} ({currentAmount} / {requiredAmount})");
         }
-        
+    
         objectiveText.text = objectiveBuilder.ToString();
     }
     
