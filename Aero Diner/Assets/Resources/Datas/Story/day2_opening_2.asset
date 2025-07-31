@@ -16,7 +16,7 @@ MonoBehaviour:
   triggerPhase: 1
   conditions:
   - conditionType: 2
-    lValue: day2_opening_dialogue_1
+    lValue: day2_tutorial_start
     operator: ==
     rValue: 
   actions:
