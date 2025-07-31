@@ -500,8 +500,10 @@ public class StationManager : Singleton<StationManager>
     {
         foreach (var stationId in startStationIds)
         {
-            SetInteractableState(stationId, false);
+            ActivateStation(stationId, false);
         }
+        
+        ActivateStation("s24", true);
     }
     
     /// <summary>

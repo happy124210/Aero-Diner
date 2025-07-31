@@ -246,7 +246,6 @@ public class GameManager : Singleton<GameManager>
         switch (isTutorialActive)
         {
             case true:
-                StationManager.Instance.SetTutorialStation();
                 break;
             
             case false:
