@@ -16,7 +16,7 @@ MonoBehaviour:
   triggerPhase: 5
   conditions:
   - conditionType: 1
-    lValue: t_operation_7
+    lValue: t_day1_operation_7
     operator: ==
     rValue: Finished
   actions:
