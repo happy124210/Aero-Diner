@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: day1_operation_1
   m_EditorClassIdentifier: 
   id: day1_operation_1
-  triggerPhase: 4
+  triggerPhase: 5
   conditions:
   - conditionType: 2
-    lValue: day1_opening_dialogue
+    lValue: day1_tutorial_start
     operator: ==
     rValue: 
   actions:

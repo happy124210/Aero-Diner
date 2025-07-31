@@ -500,7 +500,23 @@ public class StationManager : Singleton<StationManager>
     {
         foreach (var stationId in startStationIds)
         {
-            SetInteractableState(stationId, false);
+            ActivateStation(stationId, false);
+        }
+        
+        ActivateStation("s24", true);
+    }
+    
+    /// <summary>
+    /// 모든 설비의 상호작용을 강제로 활성화
+    /// </summary>
+    public void ResetAllStationsInteractable()
+    {
+        foreach (var stationId in startStationIds)
+        {
+            if (stationId != null)
+            {
+                ActivateStation(stationId, true);
+            }
         }
     }
     
@@ -538,7 +554,7 @@ public class StationManager : Singleton<StationManager>
             }
         }
 
-        Debug.LogWarning($"[StationManager] StationGroups에서 ID '{id}'를 가진 Station을 찾을 수 없음");
+        if (showDebugInfo) Debug.LogWarning($"[StationManager] StationGroups에서 ID '{id}'를 가진 Station을 찾을 수 없음");
     }
 
     /// <summary>

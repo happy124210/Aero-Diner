@@ -40,7 +40,7 @@ public enum QuestObjectiveType
 public class QuestObjective
 {
     public QuestObjectiveType objectiveType;
-    public string targetId;       // 목표 대상 ID
+    public string targetId; // 목표 대상 ID
     public string description;    // 목표 설명
     public string[] requiredIds;    // 필요 대상
 }
@@ -51,7 +51,9 @@ public class QuestData : ScriptableObject
     [Header("퀘스트 기본 정보")]
     public string id;
     public string questName; // UI표시용 이름
+    [TextArea(3, 10)]
     public string description; // 퀘스트 스토리 설명
+    [TextArea(3, 10)]
     public string rewardDescription;
 
     [Header("퀘스트 목표 (AND)")]

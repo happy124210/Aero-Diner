@@ -17,8 +17,9 @@ public class QuestManager : Singleton<QuestManager>
         playerQuestStatus.Where(p => p.Value == QuestStatus.InProgress)
             .Select(p => questDatabase[p.Key])
             .ToList();
+    
     public List<QuestData> GetCompletedQuests() => 
-        playerQuestStatus.Where(p => p.Value == QuestStatus.Completed || p.Value == QuestStatus.Finished)
+        playerQuestStatus.Where(p => p.Value == QuestStatus.Completed)
             .Select(p => questDatabase[p.Key])
             .ToList();
     

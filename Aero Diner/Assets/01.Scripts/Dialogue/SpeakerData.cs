@@ -7,7 +7,8 @@ public enum Expression
     Default,
     Happy,
     Sad,
-    Angry
+    Angry,
+    Surprised,
 }
 
 [System.Serializable]

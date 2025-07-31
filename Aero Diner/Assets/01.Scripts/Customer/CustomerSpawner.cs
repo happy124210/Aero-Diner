@@ -51,12 +51,15 @@ public class CustomerSpawner : MonoBehaviour
 
         while (true)
         {
-            if (CustomerManager.Instance.ActiveCustomerCount < maxCustomers && 
-                TableManager.Instance.CanAcceptNewCustomer())
+            if (!GameManager.Instance.IsTutorialActive)
             {
-                SpawnRandomCustomer();
+                if (CustomerManager.Instance.ActiveCustomerCount < maxCustomers && 
+                    TableManager.Instance.CanAcceptNewCustomer())
+                {
+                    SpawnRandomCustomer();
+                }
             }
-        
+
             float waitTime = Random.Range(minSpawnInterval, maxSpawnInterval);
             yield return new WaitForSeconds(waitTime);
         }
