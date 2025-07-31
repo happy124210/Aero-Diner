@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -99,22 +100,24 @@ public class CSVImporter
     {
         string path = EditorUtility.OpenFilePanel("Select Dialogue CSV", "", "csv");
         if (string.IsNullOrEmpty(path)) return;
+        
+        string fileContent = File.ReadAllText(path);
+        List<string[]> allRows = ParseCsv(fileContent);
 
-        string[] lines = File.ReadAllLines(path);
-        if (lines.Length <= 1)
+        if (allRows.Count <= 1)
         {
             Debug.LogWarning("CSV 파일에 데이터가 없습니다.");
             return;
         }
 
-        // csv 파일의 모든 라인을 첫 번째 열(id)을 기준으로 그룹화
+        // id를 기준으로 그룹화
         var groupedById = new Dictionary<string, List<string[]>>();
-        for (int i = 1; i < lines.Length; i++)
+        for (int i = 1; i < allRows.Count; i++)
         {
-            string[] cols = lines[i].Split(',');
-            if (cols.Length < 1 || string.IsNullOrEmpty(cols[0].Trim())) continue;
+            string[] cols = allRows[i];
+            if (cols.Length < 1 || string.IsNullOrEmpty(cols[0])) continue;
 
-            string dialogueId = cols[0].Trim();
+            string dialogueId = cols[0];
             if (!groupedById.ContainsKey(dialogueId))
             {
                 groupedById[dialogueId] = new List<string[]>();
@@ -138,7 +141,6 @@ public class CSVImporter
                 AssetDatabase.CreateAsset(newAsset, assetPath);
             }
         }
-
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
@@ -154,10 +156,8 @@ public class CSVImporter
                 string assetPath = $"{targetFolder}/{dialogueId}.asset";
                 DialogueData data = AssetDatabase.LoadAssetAtPath<DialogueData>(assetPath);
 
-                // 데이터 초기화
                 data.id = dialogueId;
                 data.lines = new List<DialogueLine>();
-                // data.choices = new List<DialogueChoice>();
                 
                 rows.Sort((a, b) => int.Parse(a[1]).CompareTo(int.Parse(b[1])));
                 
@@ -168,29 +168,18 @@ public class CSVImporter
                     {
                         parsedExpression = tempExpression;
                     }
-                
+                    
+                    string rawText = cols[5].Trim();
+                    string processedText = rawText.Replace("\\n", "\n");
+
                     data.lines.Add(new DialogueLine
                     {
                         speakerId = cols[2].Trim(),
-                        text = cols[4].Trim(),
+                        text = processedText,
                         expression = parsedExpression
                     });
                 }
                 
-                // // 선택지 파싱
-                // for (int i = 0; i < 2; i++)
-                // {
-                //     int textIndex = 7 + i;
-                //     if (lastRow.Length > textIndex && !string.IsNullOrEmpty(lastRow[textIndex].Trim()))
-                //     {
-                //         data.choices.Add(new DialogueChoice
-                //         {
-                //             text = lastRow[textIndex].Trim(),
-                //             nextDialogueId = $"{dialogueId}_choice{i + 1}"
-                //         });
-                //     }
-                // }
-
                 EditorUtility.SetDirty(data);
                 successCount++;
             }
@@ -704,6 +693,75 @@ public class CSVImporter
             .Where(t=> Enum.TryParse<TEnum>(t, out _))
             .Select(t => Enum.Parse<TEnum>(t))
             .ToArray();
+    }
+    
+    /// <summary>
+    /// 따옴표로 묶인 필드와 필드 내 줄바꿈을 지원하는 CSV 파서
+    /// </summary>
+    /// <param name="fileContent">CSV 파일의 전체 텍스트 내용</param>
+    /// <returns>모든 행의 데이터 리스트</returns>
+    public static List<string[]> ParseCsv(string fileContent)
+    {
+        List<string[]> rows = new List<string[]>();
+        List<string> currentRow = new List<string>();
+        StringBuilder currentField = new StringBuilder();
+        bool inQuotes = false;
+
+        for (int i = 0; i < fileContent.Length; i++)
+        {
+            char c = fileContent[i];
+
+            if (c == '\r') continue;
+
+            if (inQuotes)
+            {
+                if (c == '"' && i + 1 < fileContent.Length && fileContent[i + 1] == '"')
+                {
+                    currentField.Append('"');
+                    i++;
+                }
+                else if (c == '"')
+                {
+                    inQuotes = false;
+                }
+                else
+                {
+                    currentField.Append(c);
+                }
+            }
+            else
+            {
+                if (c == '"')
+                {
+                    inQuotes = true;
+                }
+                else if (c == ',')
+                {
+                    currentRow.Add(currentField.ToString());
+                    currentField.Clear();
+                }
+                else if (c == '\n')
+                {
+                    currentRow.Add(currentField.ToString());
+                    rows.Add(currentRow.ToArray());
+                    currentRow.Clear();
+                    currentField.Clear();
+                }
+                else
+                {
+                    currentField.Append(c);
+                }
+            }
+        }
+
+        // 파일의 마지막 부분 처리
+        if (currentField.Length > 0 || currentRow.Count > 0)
+        {
+            currentRow.Add(currentField.ToString());
+            rows.Add(currentRow.ToArray());
+        }
+
+        return rows;
     }
     
     #endregion

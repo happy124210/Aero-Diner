@@ -20,9 +20,6 @@ MonoBehaviour:
     operator: ==
     rValue: 1
   actions:
-  - storyType: 10
-    targetId: true
-    value: 
   - storyType: 14
     targetId: 
     value: 

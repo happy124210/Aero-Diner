@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fdb017a3d25acc4fa7eeb83ffb21e4c, type: 3}
+  m_Name: lota
+  m_EditorClassIdentifier: 
+  id: lota
+  speakerName: "\uB85C\uD0C0"
+  portraits:
+  - expression: 0
+    portrait: {fileID: 21300000, guid: 90153cffc76b8374cb94a9fb99edab06, type: 3}
+  - expression: 1
+    portrait: {fileID: 21300000, guid: cbe7d3596f0aa9e47b77a4f84896ac17, type: 3}
+  - expression: 2
+    portrait: {fileID: 21300000, guid: 089e345ec49532449a43d37a83ab0ec7, type: 3}
+  - expression: 3
+    portrait: {fileID: 21300000, guid: cedaba5cba17b894ba3a5e63fb05cc20, type: 3}
+  - expression: 4
+    portrait: {fileID: 21300000, guid: 0b49f988760891742858a860baa19cd0, type: 3}

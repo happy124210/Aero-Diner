@@ -16,7 +16,7 @@ MonoBehaviour:
   triggerPhase: 5
   conditions:
   - conditionType: 2
-    lValue: day1_tutorialEnd_dialogue
+    lValue: day1_tutorial_end
     operator: ==
     rValue: 
   actions:

@@ -77,6 +77,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     {
         model.Initialize(data);
         view.Initialize(data);
+        isTutorialMode = false;
         
         SetupNavMeshAgent(model.Data.speed);
         SubscribeToModelEvents();
