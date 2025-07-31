@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce4ff5776a5c66845bd9a49d594fcc0b, type: 3}
-  m_Name: day2_opening_4
+  m_Name: day3_opening_1
   m_EditorClassIdentifier: 
-  id: day2_opening_3
-  triggerPhase: 0
+  id: day3_opening_2
+  triggerPhase: 1
   conditions:
-  - conditionType: 1
-    lValue: t_day2_editstation_1
+  - conditionType: 2
+    lValue: day3_opening_dialogue_1
     operator: ==
-    rValue: Finished
+    rValue: 
   actions:
-  - storyType: 0
-    targetId: day2_opening_dialogue_2
+  - storyType: 11
+    targetId: tu9
     value: 
