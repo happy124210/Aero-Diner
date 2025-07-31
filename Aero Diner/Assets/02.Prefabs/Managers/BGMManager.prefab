@@ -56,6 +56,12 @@ MonoBehaviour:
     bgmClip: {fileID: 8300000, guid: ef31131f89dca6048805bf9577cd44e3, type: 3}
   - type: 1
     bgmClip: {fileID: 8300000, guid: 70bfd6683d25b034b973d8469a3ec62c, type: 3}
+  - type: 6
+    bgmClip: {fileID: 8300000, guid: 49fbf9768dc3c7140b539d7f3358be9b, type: 3}
+  - type: 7
+    bgmClip: {fileID: 8300000, guid: 2dd5b01f78d30f842afffeb44786074a, type: 3}
+  - type: 8
+    bgmClip: {fileID: 8300000, guid: 034cd682ad1028446ad8686b85d892c5, type: 3}
 --- !u!82 &7791191475152574374
 AudioSource:
   m_ObjectHideFlags: 0

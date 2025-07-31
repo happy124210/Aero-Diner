@@ -9,13 +9,16 @@ EditorBuildSettings:
     path: Assets/00.Scenes/StartScene.unity
     guid: 263f489a2ecfaba4797ff4117526765e
   - enabled: 1
-    path: Assets/00.Scenes/MainScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
-  - enabled: 1
     path: Assets/00.Scenes/LoadingScene.unity
     guid: f984af9c00bc0b74396f861acf91f1ce
   - enabled: 1
+    path: Assets/00.Scenes/IntroScene.unity
+    guid: 60406a7d2229d6c499559f5518f393be
+  - enabled: 1
     path: Assets/00.Scenes/DayScene.unity
     guid: 408d7966cf49cfa428b960768ed5748a
+  - enabled: 1
+    path: Assets/00.Scenes/MainScene.unity
+    guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: b3caf1145d5a5f74baf3bf90cbcb8d3e, type: 2}

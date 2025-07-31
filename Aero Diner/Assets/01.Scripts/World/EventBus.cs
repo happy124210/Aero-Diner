@@ -17,7 +17,8 @@ public enum BGMEventType
     PlayStartMenu,
     PlayRecipeChoice,
     PlayLifeTheme,
-    StopBGM
+    StopBGM,
+    Intro1, Intro2, Intro3,
 }
 
 public enum GameEventType
@@ -64,7 +65,7 @@ public enum SFXType
     
     //추후 추가(리스트 번호 오류 방지)
     OpenPause, ClosePause,
-    OpenBook, OpenInventory,
+    OpenBook, OpenInventory,Rain, Sunder, Crash1, Crash2,
 }
 public enum UIEventType
 {
@@ -80,7 +81,7 @@ public enum UIEventType
     ShowStartWarningPanel, ShowStartMenuWithSave,
     ShowStartMenuNoSave, LoadMainScene,
     QuitGame, ShowPressAnyKey,LoadDayScene,
-    
+    LoadIntroScene,
     //MainSceneUI
     ShowRoundTimer, HideRoundTimer,
     UpdateTotalEarnings, UpdateTodayEarnings,

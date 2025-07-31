@@ -23,7 +23,10 @@ public class StartSceneUIHandler : IUIEventHandler
                 break;
             case UIEventType.OnClickNewGame:
                 SaveLoadManager.ResetProgressOnly(); // 욥션빼고 저장 삭제.
-                EventBus.Raise(UIEventType.LoadDayScene);
+                EventBus.Raise(UIEventType.LoadIntroScene);
+                break;
+            case UIEventType.LoadIntroScene:
+                EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(alpha: 1f, duration: 1f, scene: "IntroScene"));
                 break;
 
 
