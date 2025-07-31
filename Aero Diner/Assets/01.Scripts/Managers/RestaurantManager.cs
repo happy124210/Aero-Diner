@@ -84,6 +84,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
         {
             // 영업 시작 준비
             case GamePhase.Opening:
+                StationManager.Instance.InitializeStations();
                 InitializeDay();
                 EventBus.Raise(UIEventType.ShowRoundTimer);
                 break;
@@ -121,7 +122,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
         todayEarnings = 0;
         currentRoundTime = 0f;
         GameManager.Instance.BackupEarningsBeforeDayStart();
-        StationManager.Instance.InitializeStations();
     }
 
     /// <summary>

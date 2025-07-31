@@ -28,7 +28,7 @@ MonoBehaviour:
     value: 
   - storyType: 13
     targetId: s8
-    value: 
+    value: true
   - storyType: 13
     targetId: s17
-    value: 
+    value: true

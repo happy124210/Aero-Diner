@@ -28,10 +28,10 @@ MonoBehaviour:
     value: 
   - storyType: 13
     targetId: s3
-    value: 
+    value: true
   - storyType: 13
     targetId: s15
-    value: 
+    value: true
   - storyType: 13
     targetId: s16
-    value: 
+    value: true

@@ -23,6 +23,7 @@ public enum BGMEventType
 public enum GameEventType
 {
     GamePhaseChanged, // 게임 상태 변경
+    
     RoundTimerEnded,  // 영업 시간 종료
     DialogueEnded,
     QuestStatusChanged,
@@ -124,6 +125,7 @@ public static class EventBus
         //Debug.Log($"[SFX DEBUG] 요청된 SFXType: {type} | 호출 스택:\n{Environment.StackTrace}");
         OnSFXRequested?.Invoke(type);
     }
+    
     public static void Raise(UIEventType eventType, object payload = null)
     {
         OnUIEvent?.Invoke(eventType, payload);
