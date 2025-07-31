@@ -23,3 +23,6 @@ MonoBehaviour:
   - storyType: 0
     targetId: day7_Closing_Start
     value: 
+  - storyType: 2
+    targetId: q_day7
+    value: 

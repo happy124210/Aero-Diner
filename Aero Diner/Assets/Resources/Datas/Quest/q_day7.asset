@@ -28,7 +28,6 @@ MonoBehaviour:
     description: "7\uC77C\uCC28 \uC601\uC5C5\uC774 \uB05D\uB098\uB294 \uC2DC\uC810\uC744
       \uAE30\uC900\uC73C\uB85C 10,000G \uC774\uC0C1 \uBCF4\uC720\uD55C \uC0C1\uD0DC\uC5EC\uC57C
       \uD568"
-    requiredIds:
-    - 
+    requiredIds: []
   rewardMoney: 0
   rewardItemIds: []

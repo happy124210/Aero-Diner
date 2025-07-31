@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: day7_closing_failed
   m_EditorClassIdentifier: 
   id: day7_closing_failed
-  triggerPhase: 6
+  triggerPhase: 11
   conditions:
   - conditionType: 2
     lValue: day7_Closing_Start

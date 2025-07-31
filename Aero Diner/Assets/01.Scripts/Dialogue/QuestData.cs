@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.Serialization;
 
 // 퀘스트의 현재 상태
 public enum QuestStatus
@@ -29,8 +28,6 @@ public enum QuestObjectiveType
     CheckFood, // 설비에 완성 음식 있는지
     
     PlaceStation, // 설비가 배치되었는지
-    
-    SelectItemInUI,
 }
 
 /// <summary>

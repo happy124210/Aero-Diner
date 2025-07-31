@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: day1_operation_9
   m_EditorClassIdentifier: 
   id: day1_operation_9
-  triggerPhase: 5
+  triggerPhase: 11
   conditions:
   - conditionType: 2
     lValue: day1_tutorial_end
