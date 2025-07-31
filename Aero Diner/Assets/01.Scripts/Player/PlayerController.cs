@@ -106,7 +106,13 @@ public class PlayerController : Singleton<PlayerController>
 
     private void Update()
     {
-        bool canMove = GameManager.Instance.CurrentPhase is GamePhase.EditStation or GamePhase.Day or GamePhase.Operation;
+        // 플레이어 움직임 가능 Phase 설정
+        bool canMove = GameManager.Instance.CurrentPhase 
+            is GamePhase.EditStation 
+            or GamePhase.Day 
+            or GamePhase.Operation 
+            or GamePhase.Closing;
+        
         moveInput = canMove ? moveActionRef.action.ReadValue<Vector2>() : Vector2.zero;
 
         Animate();
