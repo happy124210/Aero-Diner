@@ -121,6 +121,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
         todayEarnings = 0;
         currentRoundTime = 0f;
         GameManager.Instance.BackupEarningsBeforeDayStart();
+        StationManager.Instance.InitializeStations();
     }
 
     /// <summary>

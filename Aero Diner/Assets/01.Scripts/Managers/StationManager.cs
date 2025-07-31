@@ -83,10 +83,15 @@ public class StationManager : Singleton<StationManager>
 
     private void Start()
     {
+        InitializeStations();
+    }
+
+    public void InitializeStations()
+    {
         var phase = GameManager.Instance.CurrentPhase;
         bool didLoad = false;
 
-        if (phase == GamePhase.Day || phase == GamePhase.Opening)
+        if (phase == GamePhase.Day || phase == GamePhase.Opening || phase == GamePhase.Operation)
         {
             StationLoad(phase);
             didLoad = true;
