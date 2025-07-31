@@ -83,6 +83,11 @@ public class StationManager : Singleton<StationManager>
 
     private void Start()
     {
+        InitializeStations();
+    }
+
+    public void InitializeStations()
+    {
         var phase = GameManager.Instance.CurrentPhase;
         bool didLoad = false;
 
@@ -489,8 +494,15 @@ public class StationManager : Singleton<StationManager>
 
     #region 튜토리얼 관리
 
-    public void ActivateStation(string id) => SetInteractableState(id, true);
-    public void DeactivateStation(string id) => SetInteractableState(id, false);
+    public void ActivateStation(string id, bool value) => SetInteractableState(id, value);
+
+    public void SetTutorialStation()
+    {
+        foreach (var stationId in startStationIds)
+        {
+            SetInteractableState(stationId, false);
+        }
+    }
     
     /// <summary>
     /// 주어진 Station ID를 기준으로 stationGroups 리스트에서 해당 Station의 InteractableTutorial 컴포넌트를 찾아 비활성화
@@ -521,7 +533,7 @@ public class StationManager : Singleton<StationManager>
                     return;
                 }
 
-                Debug.LogWarning($"[StationManager] Station '{id}'에서 InteractableTutorial 컴포넌트를 찾지 못함");
+                if (showDebugInfo) Debug.LogWarning($"[StationManager] Station '{id}'에서 InteractableTutorial 컴포넌트를 찾지 못함");
                 return;
             }
         }

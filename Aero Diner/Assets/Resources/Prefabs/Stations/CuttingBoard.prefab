@@ -207,7 +207,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 408735443372804}
-  cookingTime: 5
   stationData: {fileID: 11400000, guid: 47e7ce222e494a247a4778c1c5be3e93, type: 2}
   currentIngredients: []
   availableFoodIds: []
@@ -324,7 +323,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1967490182239246049}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e53382f3988a6cf42ab64bc1f17f40c2, type: 3}
   m_Name: 

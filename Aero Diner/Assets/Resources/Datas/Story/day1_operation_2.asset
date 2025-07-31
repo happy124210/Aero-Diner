@@ -25,7 +25,7 @@ MonoBehaviour:
     value: 
   - storyType: 13
     targetId: s5
-    value: 
+    value: true
   - storyType: 1
     targetId: t_day1_operation_2
     value: 

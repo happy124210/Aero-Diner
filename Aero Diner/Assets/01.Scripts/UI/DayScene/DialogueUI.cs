@@ -178,4 +178,13 @@ public class DialogueUI : MonoBehaviour
         StopBlinkingNextButton();
         DialogueManager.Instance.RequestNextLine();
     }
+    public void OnClickSkip()
+    {
+        typingTween?.Kill();
+        blinkingTween?.Kill();
+        nextButton.SetActive(false);
+
+        DialogueManager.Instance.SkipDialogue();
+        rootPanel.SetActive(false);
+    }
 }
