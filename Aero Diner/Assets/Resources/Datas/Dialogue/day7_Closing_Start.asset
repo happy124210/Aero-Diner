@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3016406984b8b94e9f7c7e996cc12e2, type: 3}
+  m_Name: day7_Closing_Start
+  m_EditorClassIdentifier: 
+  id: day7_Closing_Start
+  lines:
+  - speakerId: lota
+    expression: 2
+    text: "\"\uC774\uC81C \uACE7 \uC815\uBE44\uACF5\uC774 \uC62C \uB54C\uAC00 \uB410\uB294\uB370...
+      \uB300\uAE08\uC740 \uC798 \uC900\uBE44\uD558\uC168\uC8E0?\""

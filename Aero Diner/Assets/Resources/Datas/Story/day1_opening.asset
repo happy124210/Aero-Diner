@@ -21,7 +21,7 @@ MonoBehaviour:
     rValue: 1
   actions:
   - storyType: 0
-    targetId: day1_opening_dialogue
+    targetId: day1_tutorial_start
     value: 
   - storyType: 1
     targetId: t_day1_operation_1

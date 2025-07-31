@@ -9,17 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce4ff5776a5c66845bd9a49d594fcc0b, type: 3}
-  m_Name: day2_opening_1
+  m_Script: {fileID: 11500000, guid: 3fdb017a3d25acc4fa7eeb83ffb21e4c, type: 3}
+  m_Name: lota_Silhouette
   m_EditorClassIdentifier: 
-  id: day2_opening_1
-  triggerPhase: 1
-  conditions:
-  - conditionType: 0
-    lValue: 
-    operator: ==
-    rValue: 2
-  actions:
-  - storyType: 0
-    targetId: day2_tutorial_start
-    value: 
+  id: lota_Silhouette
+  speakerName: ???
+  portraits:
+  - expression: 0
+    portrait: {fileID: 21300000, guid: c1ba19123406d394fad6b3413ea785c5, type: 3}
