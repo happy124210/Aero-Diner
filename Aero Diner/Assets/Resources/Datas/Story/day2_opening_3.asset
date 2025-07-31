@@ -23,3 +23,6 @@ MonoBehaviour:
   - storyType: 0
     targetId: day2_tutorial_end
     value: 
+  - storyType: 11
+    targetId: tu8_stop
+    value: 

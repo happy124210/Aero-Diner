@@ -76,10 +76,23 @@ public class RestaurantManager : Singleton<RestaurantManager>
     
     private void HandleGameEvent(GameEventType eventType, object data)
     {
-        if (eventType != GameEventType.GamePhaseChanged) return;
-
-        GamePhase newPhase = (GamePhase)data;
-        
+        switch (eventType)
+        {
+            case GameEventType.GamePhaseChanged:
+                HandlePhaseChange((GamePhase)data);
+                break;
+            
+            case GameEventType.NoMoreStoriesInPhase:
+                if (GameManager.Instance.CurrentPhase == GamePhase.Closing)
+                {
+                    StartCoroutine(WaitAndShowResultPanel());
+                }
+                break;
+        }
+    }
+    
+    private void HandlePhaseChange(GamePhase newPhase)
+    {
         switch (newPhase)
         {
             // 영업 시작 준비
@@ -101,8 +114,6 @@ public class RestaurantManager : Singleton<RestaurantManager>
             case GamePhase.Closing:
                 customerSpawner.StopSpawning();
                 StartCoroutine(CleanupAndShowResult());
-
-                if (showDebugInfo) Debug.Log("[RestaurantManager] Closing: 손님 스폰 중단, 뒷정리 시작");
                 break;
         }
     }
@@ -133,8 +144,20 @@ public class RestaurantManager : Singleton<RestaurantManager>
         TableManager.Instance.ReleaseAllQueues();
         yield return new WaitUntil(() => CustomerManager.Instance.ActiveCustomerCount == 0);
         
-        Debug.Log("[RestaurantManager]: 손님 다 나감. 결과창 표시");
+        if (showDebugInfo) Debug.Log("[RestaurantManager]: 모든 손님이 퇴장했습니다.");
+        EventBus.Raise(GameEventType.AllCustomersLeft, null);
+    }
+    
+    /// <summary>
+    /// 대화가 진행 중이면 끝날 때까지 기다린 후 결과 패널을 표시
+    /// </summary>
+    private IEnumerator WaitAndShowResultPanel()
+    {
+        if (showDebugInfo) Debug.Log("[RestaurantManager] 결과 패널 표시 전, 대화 종료 여부 확인 중...");
+        
+        yield return new WaitUntil(() => GameManager.Instance.CurrentPhase != GamePhase.Dialogue);
         EventBus.Raise(UIEventType.ShowResultPanel, todayEarnings);
+        if (showDebugInfo) Debug.Log($"[RestaurantManager] 모든 스토리 및 대화 종료");
     }
 
     public void ReStartRestaurant()

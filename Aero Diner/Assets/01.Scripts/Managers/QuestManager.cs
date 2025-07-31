@@ -120,7 +120,16 @@ public class QuestManager : Singleton<QuestManager>
     // StoryManager 등에서 수동으로 퀘스트 완료를 시도할 때 호출
     public void EndQuest(string questId)
     {
-        CheckAndCompleteQuest(questId);
+        if (GetQuestStatus(questId) != QuestStatus.InProgress) return;
+        
+        if (CheckQuestCompletion(questId))
+        {
+            CompleteQuest(questId);
+        }
+        else
+        {
+            FailQuest(questId);
+        }
     }
     
     private void CompleteQuest(string questId)
@@ -130,7 +139,7 @@ public class QuestManager : Singleton<QuestManager>
         QuestData quest = FindQuestByID(questId);
         QuestStatus finalStatus = quest.id.StartsWith("t_") ? QuestStatus.Finished : QuestStatus.Completed;
         playerQuestStatus[questId] = finalStatus;
-
+        
         if (quest.rewardMoney > 0) GameManager.Instance.AddMoney(quest.rewardMoney);
         foreach (var itemId in quest.rewardItemIds)
         {
@@ -140,6 +149,16 @@ public class QuestManager : Singleton<QuestManager>
 
         if (showDebugInfo) Debug.Log($"[QuestManager] 퀘스트 {finalStatus}: {quest.questName}");
         EventBus.Raise(GameEventType.QuestStatusChanged, new KeyValuePair<string, QuestStatus>(questId, finalStatus));
+    }
+    
+    private void FailQuest(string questId)
+    {
+        if (GetQuestStatus(questId) != QuestStatus.InProgress) return;
+
+        playerQuestStatus[questId] = QuestStatus.Failed;
+
+        if (showDebugInfo) Debug.Log($"[QuestManager] 퀘스트 실패: {FindQuestByID(questId)?.questName}");
+        EventBus.Raise(GameEventType.QuestStatusChanged, new KeyValuePair<string, QuestStatus>(questId, QuestStatus.Failed));
     }
 
     #endregion

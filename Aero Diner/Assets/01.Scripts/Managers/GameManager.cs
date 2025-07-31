@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 게임의 전체적인 상태와 데이터를 관리
@@ -113,10 +114,14 @@ public class GameManager : Singleton<GameManager>
     
     private void HandleGameEvent(GameEventType eventType, object data)
     {
-        // RestaurantManager에서 영업 시간 종료 알림 받으면
         if (eventType == GameEventType.RoundTimerEnded)
         {
             ChangePhase(GamePhase.Closing);
+        }
+        
+        if (eventType == GameEventType.NoMoreStoriesInPhase)
+        {
+            OnNoMoreStories();
         }
     }
 
@@ -128,6 +133,23 @@ public class GameManager : Singleton<GameManager>
             EndDayCycle(earningsFromDay);
         }
     }
+    
+    private void OnNoMoreStories()
+    {
+        string currentSceneName = SceneManager.GetActiveScene().name;
+    
+        switch (CurrentPhase)
+        {
+            case GamePhase.Day:
+                if (currentSceneName == StringScene.DAY_SCENE) 
+                    ProceedToEditStation();
+                break;
+            case GamePhase.Opening:
+                if (currentSceneName == StringScene.MAIN_SCENE)
+                    ProceedToOperation();
+                break;
+        }
+    }
 
     /// <summary>
     /// 하루의 모든 사이클이 끝났을 때 호출
@@ -136,6 +158,7 @@ public class GameManager : Singleton<GameManager>
     {
         IncreaseDay();
         SaveData();
+        ChangePhase(GamePhase.Loading);
         
         if (showDebugInfo) Debug.Log($"[GameManager] 저장 완료. 하루 수입: {earningsFromDay}");
     }
@@ -336,5 +359,6 @@ public enum GamePhase
     Dialogue,
     Paused,
     GameOver,
+    Loading,
     None,
 }

@@ -164,17 +164,20 @@ public class CSVImporter
                 foreach (var cols in rows)
                 {
                     Expression parsedExpression = Expression.Default;
-                    if (Enum.TryParse<Expression>(cols[3].Trim(), true, out var tempExpression))
+                    string expressionStr = cols[3].Trim().Trim('"');
+                    if (Enum.TryParse<Expression>(expressionStr, true, out var tempExpression))
                     {
                         parsedExpression = tempExpression;
                     }
                     
-                    string rawText = cols[5].Trim();
+                    string speaker = cols[2].Trim();
+                    string rawText = cols[5].Trim().Trim('"');
+                    
                     string processedText = rawText.Replace("\\n", "\n");
 
                     data.lines.Add(new DialogueLine
                     {
-                        speakerId = cols[2].Trim(),
+                        speakerId = speaker,
                         text = processedText,
                         expression = parsedExpression
                     });
