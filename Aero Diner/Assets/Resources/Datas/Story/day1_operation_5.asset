@@ -18,7 +18,7 @@ MonoBehaviour:
   - conditionType: 1
     lValue: t_day1_operation_4
     operator: ==
-    rValue: 
+    rValue: Finished
   actions:
   - storyType: 11
     targetId: tu3_step5

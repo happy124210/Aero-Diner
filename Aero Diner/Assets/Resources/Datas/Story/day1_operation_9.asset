@@ -20,6 +20,9 @@ MonoBehaviour:
     operator: ==
     rValue: 
   actions:
+  - storyType: 11
+    targetId: tu3_stop
+    value: 
   - storyType: 10
     targetId: false
     value: 
