@@ -16,7 +16,7 @@ MonoBehaviour:
   triggerPhase: 5
   conditions:
   - conditionType: 1
-    lValue: t_operation_1
+    lValue: t_day1_operation_1
     operator: ==
     rValue: Finished
   actions:
@@ -27,5 +27,5 @@ MonoBehaviour:
     targetId: s5
     value: 
   - storyType: 1
-    targetId: t_operation_2
+    targetId: t_day1_operation_2
     value: 
