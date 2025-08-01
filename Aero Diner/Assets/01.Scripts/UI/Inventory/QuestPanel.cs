@@ -85,6 +85,10 @@ public class QuestPanel : MonoBehaviour
 
         // 상세 패널 초기화
         ShowQuestDetail(null);
+        if (tabController.CurrentIndex == 0 && doingQuests.Count > 0)
+        {
+            ShowQuestDetail(doingQuests[0]);
+        }
     }
     
     private void CreateQuestListItem(QuestData questData, Transform parent)
