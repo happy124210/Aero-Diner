@@ -145,6 +145,7 @@ public class Tu2 : MonoBehaviour
     public void OnClickBackBtn()
     {
         PlayExitAnimation();
+        GameManager.Instance.ChangePhase(GamePhase.EditStation);
         EventBus.PlayBGM(BGMEventType.PlayLifeTheme);
     }
 
@@ -153,7 +154,6 @@ public class Tu2 : MonoBehaviour
     /// </summary>
     public void OnClickDayStartBtn()
     {
-        StationManager.Instance.StationSave();
         _ = HandleDayStartAsync();
     }
 
