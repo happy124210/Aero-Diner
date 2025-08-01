@@ -85,7 +85,7 @@ public class CSVImporter
         data.ingredients = ParseStringArray(cols[6]);
         data.cookTime = float.Parse(cols[7]);
         data.foodCost = int.Parse(cols[8]);
-        data.recipeDescription = cols[9];
+        data.recipeDescription = cols[9].Replace("\\n", "\n");
         
         return data;
     }

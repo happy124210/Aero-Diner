@@ -23,3 +23,4 @@ MonoBehaviour:
   - f3
   cookTime: 3
   foodCost: 0
+  recipeDescription: 

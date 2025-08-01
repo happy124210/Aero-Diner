@@ -1,37 +1,181 @@
-id,foodName,displayName,foodType,description,stationType,ingredients,cookTime,foodCost
-f1,Water,물,Water,물 입니다,Pot,,5,0
-f2,Noodle,건조된 면,DryNoodle,건조된 면 입니다,Pot,,5,0
-f3,Meat,고기,Raw,고기 입니다,CuttingBoard,,5,0
-f4,Vegetable,채소,Raw,채소 입니다,CuttingBoard,,5,0
-f5,Mushroom,버섯,Raw,버섯 입니다,CuttingBoard,,5,0
-f6,Seafood,해산물,Raw,해산물 입니다,CuttingBoard,,5,0
-f7,Bacon,베이컨,Raw,베이컨 입니다,CuttingBoard,,5,0
-f8,Cheese,치즈 덩이,Cheese,치즈 덩이 입니다,Grater,,5,0
-f9,Chili,고추,Chili,고추 입니다,Grinding,,5,0
-f10,Capsicum,파프리카,Capsicum,파프리카 입니다,Grinding,,5,0
-f11,Pepper,후추,Pepper,후추 입니다,Grinding,,5,0
-f12,TomatoSauce,토마토 소스,Sauce,토마토 소스 입니다,FryingPan,,5,0
-f13,OilSauce,오일,Sauce,오일 입니다,FryingPan,,5,0
-f14,CreamSauce,크림 소스,Sauce,크림 소스 입니다,FryingPan,,5,0
-f15,RoseSauce,로제 소스,Sauce,로제 소스 입니다,FryingPan,,5,0
-f16,CarbonaraSauce,까르보나라 소스,Sauce,까르보나라 소스 입니다,FryingPan,,5,0
-f17,PestoSauce,페스토 소스,Sauce,페스토 소스 입니다,FryingPan,,5,0
-f18,BoiledNoodle,삶은 면,Noodle,삶은 면 입니다,FryingPan,f1|f2,3,0
-f19,CuttingMeat,손질한 고기,Topping,손질한 고기 입니다,FryingPan|Kneading,f3,3,0
-f20,CuttingVegetable,손질한 채소,Topping,손질한 채소 입니다,FryingPan|Kneading,f4,3,0
-f21,CuttingMushroom,손질한 버섯,Topping,손질한 버섯 입니다,FryingPan,f5,3,0
-f22,CuttingSeafood,손질한 해산물,Topping,손질한 해산물 입니다,FryingPan,f6,3,0
-f23,CuttingBacon,손질한 베이컨,Topping,손질한 베이컨 입니다,FryingPan,f7,3,0
-f24,GratedCheese,치즈 가루,GratedCheese,치즈 가루 입니다,Oven,f8,3,0
-f25,SpicySpice,매콤 향신료,Topping,매콤 향신료 입니다,FryingPan,f9|f10|f11,3,0
-f26,TomatoPasta,토마토 파스타,Menu,토마토 파스타 입니다,None,f18|f12|f20,5,100
-f27,MushroomPasta,버섯 파스타,Menu,버섯 파스타 입니다,None,f18|f12|f21,5,120
-f28,AglioOlio,알리오 올리오,Menu,알리오 올리오 입니다,None,f18|f13|f20,5,120
-f29,Bolognese,볼로네제,Menu,볼로네제 입니다,Oven,f18|f12|f19,5,120
-f30,CreamPasta,크림 파스타,Menu,크림 파스타 입니다,None,f18|f14|f21,5,120
-f31,VongolePasta,봉골레 파스타,Menu,봉골레 파스타 입니다,None,f18|f13|f22,5,150
-f32,PestoPasta,페스토 파스타,Menu,페스토 파스타 입니다,None,f18|f17|f20,5,120
-f33,RosePasta,로제 파스타,Menu,로제 파스타 입니다,None,f18|f15|f22,5,150
-f34,ToowoombaPasta,투움바 파스타,Menu,투움바 파스타 입니다,None,f18|f14|f25,5,250
-f35,CarbonaraPasta,까르보나라,Menu,까르보나라 입니다,None,f18|f16|f23,5,150
-f36,CheeseOvenPasta,치즈 오븐 파스타,Menu,치즈 오븐 파스타 입니다,None,f30|f24,5,150
+id,foodName,displayName,foodType,description,stationType,ingredients,cookTime,foodCost,recipeDescription
+f1,Water,물,Water,물 입니다,Pot,,5,0,
+f2,Noodle,건조된 면,DryNoodle,건조된 면 입니다,Pot,,5,0,
+f3,Meat,고기,Raw,고기 입니다,CuttingBoard,,5,0,
+f4,Vegetable,채소,Raw,채소 입니다,CuttingBoard,,5,0,
+f5,Mushroom,버섯,Raw,버섯 입니다,CuttingBoard,,5,0,
+f6,Seafood,해산물,Raw,해산물 입니다,CuttingBoard,,5,0,
+f7,Bacon,베이컨,Raw,베이컨 입니다,CuttingBoard,,5,0,
+f8,Cheese,치즈 덩이,Cheese,치즈 덩이 입니다,Grater,,5,0,
+f9,Chili,고추,Chili,고추 입니다,Grinding,,5,0,
+f10,Capsicum,파프리카,Capsicum,파프리카 입니다,Grinding,,5,0,
+f11,Pepper,후추,Pepper,후추 입니다,Grinding,,5,0,
+f12,TomatoSauce,토마토 소스,Sauce,토마토 소스 입니다,FryingPan,,5,0,
+f13,OilSauce,오일,Sauce,오일 입니다,FryingPan,,5,0,
+f14,CreamSauce,크림 소스,Sauce,크림 소스 입니다,FryingPan,,5,0,
+f15,RoseSauce,로제 소스,Sauce,로제 소스 입니다,FryingPan,,5,0,
+f16,CarbonaraSauce,까르보나라 소스,Sauce,까르보나라 소스 입니다,FryingPan,,5,0,
+f17,PestoSauce,페스토 소스,Sauce,페스토 소스 입니다,FryingPan,,5,0,
+f18,BoiledNoodle,삶은 면,Noodle,삶은 면 입니다,FryingPan,f1|f2,3,0,
+f19,CuttingMeat,손질한 고기,Topping,손질한 고기 입니다,FryingPan|Kneading,f3,3,0,
+f20,CuttingVegetable,손질한 채소,Topping,손질한 채소 입니다,FryingPan|Kneading,f4,3,0,
+f21,CuttingMushroom,손질한 버섯,Topping,손질한 버섯 입니다,FryingPan,f5,3,0,
+f22,CuttingSeafood,손질한 해산물,Topping,손질한 해산물 입니다,FryingPan,f6,3,0,
+f23,CuttingBacon,손질한 베이컨,Topping,손질한 베이컨 입니다,FryingPan,f7,3,0,
+f24,GratedCheese,치즈 가루,GratedCheese,치즈 가루 입니다,Oven,f8,3,0,
+f25,SpicySpice,매콤 향신료,Topping,매콤 향신료 입니다,FryingPan,f9|f10|f11,3,0,
+f26,TomatoPasta,토마토 파스타,Menu,토마토 파스타 입니다,None,f18|f12|f20,5,100,"[조리 방법]\n
+1. 다음 재료들을 프라이팬 or 롤팬에 배치한다.\n
+- 토마토 소스 / 삶은 면 / 손질된 채소\n\n
+2. 재료가 모두 배치됐으면 프라이팬은 수동으로 가공한다.\n
+롤팬은 재료를 모두 배치한 후 일정 시간 동안 대기한다.\n\n
+[토마토 소스]\n
+1. 토마토 소스를 재료 설비에서 들어올려 꺼낸다.\n\n
+[삶은 면]\n
+1. 물과 건조된 면을 냄비 혹은 열전도 냄비에 넣는다.\n
+2. 일정 시간 동안 대기한다.\n\n
+[손질된 채소]\n
+1. 채소를 도마 or 전동 채칼에 배치한다.\n
+2. 채소 배치 후 도마의 경우, 수동으로 가공한다.\n
+전동 채칼의 경우, 채소 배치 후 일정 시간 동안 대기한다."
+f27,MushroomPasta,버섯 파스타,Menu,버섯 파스타 입니다,None,f18|f12|f21,5,120,"[조리 방법]\n
+1. 다음 재료들을 프라이팬 or 롤팬에 배치한다.\n
+- 토마토 소스 / 삶은 면 / 손질된 버섯\n\n
+2. 재료가 모두 배치됐으면 프라이팬은 수동으로 가공한다.\n
+롤팬은 재료를 모두 배치한 후 일정 시간 동안 대기한다.\n\n
+[토마토 소스]\n
+1. 토마토 소스를 재료 설비에서 들어올려 꺼낸다.\n\n
+[삶은 면]\n
+1. 물과 건조된 면을 냄비 혹은 열전도 냄비에 넣는다.\n
+2. 일정 시간 동안 대기한다.\n\n
+[손질된 버섯]\n
+1. 버섯을 도마 or 전동 채칼에 배치한다.\n
+2. 버섯 배치 후 도마의 경우, 수동으로 가공한다.\n
+전동 채칼의 경우, 버섯 배치 후 일정 시간 동안 대기한다."
+f28,AglioOlio,알리오 올리오,Menu,알리오 올리오 입니다,None,f18|f13|f20,5,120,"[조리 방법]\n
+1. 다음 재료들을 프라이팬 or 롤팬에 배치한다.\n
+- 오일 / 삶은 면 / 손질된 채소\n\n
+2. 재료가 모두 배치됐으면 프라이팬은 수동으로 가공한다.\n
+롤팬은 재료를 모두 배치한 후 일정 시간 동안 대기한다.\n\n
+[오일]\n
+1. 오일을 재료 설비에서 들어올려 꺼낸다.\n\n
+[삶은 면]\n
+1. 물과 건조된 면을 냄비 혹은 열전도 냄비에 넣는다.\n
+2. 일정 시간 동안 대기한다.\n\n
+[손질된 채소]\n
+1. 채소를 도마 or 전동 채칼에 배치한다.\n
+2. 채소 배치 후 도마의 경우, 수동으로 가공한다.\n
+전동 채칼의 경우, 채소 배치 후 일정 시간 동안 대기한다."
+f29,Bolognese,볼로네제,Menu,볼로네제 입니다,Oven,f18|f12|f19,5,120,"[조리 방법]\n
+1. 다음 재료들을 프라이팬 or 롤팬에 배치한다.\n
+- 토마토 소스 / 삶은 면 / 손질된 고기\n\n
+2. 재료가 모두 배치됐으면 프라이팬은 수동으로 가공한다.\n
+롤팬은 재료를 모두 배치한 후 일정 시간 동안 대기한다.\n\n
+[토마토 소스]\n
+1. 토마토 소스를 재료 설비에서 들어올려 꺼낸다.\n\n
+[삶은 면]\n
+1. 물과 건조된 면을 냄비 혹은 열전도 냄비에 넣는다.\n
+2. 일정 시간 동안 대기한다.\n\n
+[손질된 고기]\n
+1. 고기를 도마 or 전동 채칼에 배치한다.\n
+2. 고기 배치 후 도마의 경우, 수동으로 가공한다.\n
+전동 채칼의 경우, 고기 배치 후 일정 시간 동안 대기한다."
+f30,CreamPasta,크림 파스타,Menu,크림 파스타 입니다,None,f18|f14|f21,5,120,"[조리 방법]\n
+1. 다음 재료들을 프라이팬 or 롤팬에 배치한다.\n
+- 크림 소스 / 삶은 면 / 손질된 버섯\n\n
+2. 재료가 모두 배치됐으면 프라이팬은 수동으로 가공한다.\n
+롤팬은 재료를 모두 배치한 후 일정 시간 동안 대기한다.\n\n
+[크림 소스]\n
+1. 크림 소스를 재료 설비에서 들어올려 꺼낸다.\n\n
+[삶은 면]\n
+1. 물과 건조된 면을 냄비 혹은 열전도 냄비에 넣는다.\n
+2. 일정 시간 동안 대기한다.\n\n
+[손질된 버섯]\n
+1. 버섯을 도마 or 전동 채칼에 배치한다.\n
+2. 버섯 배치 후 도마의 경우, 수동으로 가공한다.\n
+전동 채칼의 경우, 버섯 배치 후 일정 시간 동안 대기한다."
+f31,VongolePasta,봉골레 파스타,Menu,봉골레 파스타 입니다,None,f18|f13|f22,5,150,"[조리 방법]\n
+1. 다음 재료들을 프라이팬 or 롤팬에 배치한다.\n
+- 오일 / 삶은 면 / 손질된 해산물\n\n
+2. 재료가 모두 배치됐으면 프라이팬은 수동으로 가공한다.\n
+롤팬은 재료를 모두 배치한 후 일정 시간 동안 대기한다.\n\n
+[오일]\n
+1. 오일을 재료 설비에서 들어올려 꺼낸다.\n\n
+[삶은 면]\n
+1. 물과 건조된 면을 냄비 혹은 열전도 냄비에 넣는다.\n
+2. 일정 시간 동안 대기한다.\n\n
+[손질된 해산물]\n
+1. 해산물을 도마 or 전동 채칼에 배치한다.\n
+2. 해산물 배치 후 도마의 경우, 수동으로 가공한다.\n
+전동 채칼의 경우, 해산물 배치 후 일정 시간 동안 대기한다."
+f32,PestoPasta,페스토 파스타,Menu,페스토 파스타 입니다,None,f18|f17|f20,5,120,"[조리 방법]\n
+1. 다음 재료들을 프라이팬 or 롤팬에 배치한다.\n
+- 페스토 소스 / 삶은 면 / 손질된 채소\n\n
+2. 재료가 모두 배치됐으면 프라이팬은 수동으로 가공한다.\n
+롤팬은 재료를 모두 배치한 후 일정 시간 동안 대기한다.\n\n
+[페스토 소스]\n
+1. 페스토 소스를 재료 설비에서 들어올려 꺼낸다.\n\n
+[삶은 면]\n
+1. 물과 건조된 면을 냄비 혹은 열전도 냄비에 넣는다.\n
+2. 일정 시간 동안 대기한다.\n\n
+[손질된 채소]\n
+1. 채소를 도마 or 전동 채칼에 배치한다.\n
+2. 채소 배치 후 도마의 경우, 수동으로 가공한다.\n
+전동 채칼의 경우, 채소 배치 후 일정 시간 동안 대기한다."
+f33,RosePasta,로제 파스타,Menu,로제 파스타 입니다,None,f18|f15|f22,5,150,"[조리 방법]\n
+1. 다음 재료들을 프라이팬 or 롤팬에 배치한다.\n
+- 로제 소스 / 삶은 면 / 손질된 해산물\n\n
+2. 재료가 모두 배치됐으면 프라이팬은 수동으로 가공한다.\n
+롤팬은 재료를 모두 배치한 후 일정 시간 동안 대기한다.\n\n
+[로제 소스]\n
+1. 로제 소스를 재료 설비에서 들어올려 꺼낸다.\n\n
+[삶은 면]\n
+1. 물과 건조된 면을 냄비 혹은 열전도 냄비에 넣는다.\n
+2. 일정 시간 동안 대기한다.\n\n
+[손질된 해산물]\n
+1. 해산물을 도마 or 전동 채칼에 배치한다.\n
+2. 해산물 배치 후 도마의 경우, 수동으로 가공한다.\n
+전동 채칼의 경우, 해산물 배치 후 일정 시간 동안 대기한다."
+f34,ToowoombaPasta,투움바 파스타,Menu,투움바 파스타 입니다,None,f18|f14|f25,5,250,"[조리 방법]\n
+1. 다음 재료들을 프라이팬 or 롤팬에 배치한다.\n
+- 크림 소스 / 삶은 면 / 매콤 향신료\n\n
+2. 재료가 모두 배치됐으면 프라이팬은 수동으로 가공한다.\n
+롤팬은 재료를 모두 배치한 후 일정 시간 동안 대기한다.\n\n
+[크림 소스]\n
+1. 크림 소스를 재료 설비에서 들어올려 꺼낸다.\n\n
+[삶은 면]\n
+1. 물과 건조된 면을 냄비 혹은 열전도 냄비에 넣는다.\n
+2. 일정 시간 동안 대기한다.\n\n
+[매콤 향신료]\n
+1. 다음 재료들을 막자 사발 or 믹서기에 배치한다.\n
+- 고추, 파프리카, 후추\n\n
+2. 모든 재료 배치 후 막자 사발의 경우, 수동으로 가공한다.\n
+믹서기의 경우, 재료 배치 후 일정 시간 동안 대기한다."
+f35,CarbonaraPasta,까르보나라,Menu,까르보나라 입니다,None,f18|f16|f23,5,150,"[조리 방법]\n
+1. 다음 재료들을 프라이팬 or 롤팬에 배치한다.\n
+- 까르보나라 소스 / 삶은 면 / 손질된 해산물\n\n
+2. 재료가 모두 배치됐으면 프라이팬은 수동으로 가공한다.\n
+롤팬은 재료를 모두 배치한 후 일정 시간 동안 대기한다.\n\n
+[까르보나라 소스]\n
+1. 까르보나라 소스를 재료 설비에서 들어올려 꺼낸다.\n\n
+[삶은 면]\n
+1. 물과 건조된 면을 냄비 혹은 열전도 냄비에 넣는다.\n
+2. 일정 시간 동안 대기한다.\n\n
+[손질된 베이컨]\n
+1. 베이컨을 도마 or 전동 채칼에 배치한다.\n
+2. 베이컨 배치 후 도마의 경우, 수동으로 가공한다.\n
+전동 채칼의 경우, 베이컨 배치 후 일정 시간 동안 대기한다."
+f36,CheeseOvenPasta,치즈 오븐 파스타,Menu,치즈 오븐 파스타 입니다,None,f30|f24,5,150,"[조리 방법]\n
+1. 다음 재료들을 오븐 or 고화력오븐에 배치한다.\n
+- 볼로네제 / 치즈 가루\n\n
+2. 재료가 모두 배치됐으면 일정 시간 동안 대기한다.\n\n
+[볼로네제]\n
+1. 다음 재료들을 프라이팬 or 롤팬에 배치한다.\n
+- 토마토 소스 / 삶은 면 / 손질된 고기\n\n
+2. 재료가 모두 배치됐으면 프라이팬은 수동으로 가공한다.\n
+롤팬은 재료를 모두 배치한 후 일정 시간 동안 대기한다.\n\n
+\n\n
+[치즈 가루]\n
+1. 치즈 덩이를 강판 or 전동 강판에 배치한다.\n
+2. 치즈 덩이 배치 후 강판의 경우, 수동으로 가공한다.\n
+전동 강판의 경우, 치즈 덩이 배치 후 일정 시간 동안 대기한다."
