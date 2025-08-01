@@ -17,7 +17,9 @@ MonoBehaviour:
   - speakerId: player
     expression: 1
     text: "\uAC71\uC815\uB9C8, \uD655\uC2E4\uD788 \uC900\uBE44\uB418\uC5B4 \uC788\uC73C\uB2C8\uAE4C."
+    position: 0
   - speakerId: lota
     expression: 1
     text: "\uC5ED\uC2DC, \uAD1C\uD55C \uAC71\uC815\uD588\uB124\uC694. \uC81C\uAC00
       \uC0AC\uB78C \uBCF4\uB294 \uB208\uC740 \uC788\uB2E4\uB2C8\uAE4C\uC694?"
+    position: 1
