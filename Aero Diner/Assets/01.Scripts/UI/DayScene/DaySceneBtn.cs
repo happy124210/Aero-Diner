@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class DaySceneBtn : MonoBehaviour
 {
@@ -8,6 +6,7 @@ public class DaySceneBtn : MonoBehaviour
     {
         EventBus.PlaySFX(SFXType.ButtonClick);
         EventBus.Raise(UIEventType.ShowMenuPanel);
+        GameManager.Instance.ChangePhase(GamePhase.SelectMenu);
         EventBus.PlayBGM(BGMEventType.PlayRecipeChoice);
     }
     public void OnShopButtonClick()

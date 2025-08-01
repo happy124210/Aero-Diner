@@ -97,17 +97,13 @@ public class RestaurantManager : Singleton<RestaurantManager>
         {
             // 영업 시작 준비
             case GamePhase.Opening:
-                StationManager.Instance.InitializeStations();
                 InitializeDay();
                 EventBus.Raise(UIEventType.ShowRoundTimer);
                 break;
 
             // 영업 시작
             case GamePhase.Operation:
-                if (GameManager.Instance.IsTutorialActive) StationManager.Instance.SetTutorialStation();
                 customerSpawner.StartSpawning();
-                
-                if (showDebugInfo) Debug.Log("[RestaurantManager] Operation: 손님 스폰 시작");
                 break;
 
             // 마감 시작
