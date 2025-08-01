@@ -272,10 +272,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Map_Daily
       objectReference: {fileID: 0}
-    - target: {fileID: 8616364069437543417, guid: 8c02f27201db00445926dd482ffc8c49, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8952099723172253124, guid: 8c02f27201db00445926dd482ffc8c49, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
