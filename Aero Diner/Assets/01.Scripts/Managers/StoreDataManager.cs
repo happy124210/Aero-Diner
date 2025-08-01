@@ -53,11 +53,11 @@ public class StoreDataManager : Singleton<StoreDataManager>
                         requiredRecipeNames.Add(foodData.displayName);
                     }
                 }
-                return $"선행 레시피: [{string.Join(", ", requiredRecipeNames)}] 필요";
+                return $"선행 레시피\n[{string.Join(", ", requiredRecipeNames)}] 필요";
 
             case UnlockType.Quest:
                 string questName = itemData.Conditions.FirstOrDefault(); // "더미 퀘스트"
-                return $"선행 퀘스트: [{questName}] 완료 필요";
+                return $"선행 퀘스트\n[{questName}] 완료 필요";
 
             case UnlockType.None:
                 break;

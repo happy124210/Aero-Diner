@@ -13,6 +13,7 @@ public class Store_StationPanel : MonoBehaviour
     [SerializeField] private TMP_Text costText;
     [SerializeField] private Button buyButton;
     [SerializeField] private GameObject lockedOverlayPanel;
+    [SerializeField] private TMP_Text unlockConditionText;
 
     private StoreItem currentItem;
 
@@ -35,10 +36,6 @@ public class Store_StationPanel : MonoBehaviour
         {
             descriptionText.text = item.Description;
         }
-        else
-        {
-            descriptionText.text = StoreDataManager.Instance.GenerateUnlockDescription(item.CsvData);
-        }
 
         buyButton.interactable = canBePurchased;
         SetLockedOverlayVisible(!canBePurchased);
@@ -51,23 +48,23 @@ public class Store_StationPanel : MonoBehaviour
         });
     }
 
-    public void SetLockedOverlayVisible(bool isVisible)
+    private void SetLockedOverlayVisible(bool isVisible)
     {
         if (lockedOverlayPanel == null) return;
 
         CanvasGroup group = lockedOverlayPanel.GetComponent<CanvasGroup>();
         if (group == null)
-            group = lockedOverlayPanel.AddComponent<CanvasGroup>();
+            lockedOverlayPanel.AddComponent<CanvasGroup>();
 
         if (isVisible)
         {
+            unlockConditionText.text = StoreDataManager.Instance.GenerateUnlockDescription(currentItem.CsvData);
+        
             lockedOverlayPanel.SetActive(true);
-            group.alpha = 0f;
-            group.DOFade(1f, 0.3f);
         }
         else
         {
-            group.DOFade(0f, 0.3f).OnComplete(() => lockedOverlayPanel.SetActive(false));
+            lockedOverlayPanel.SetActive(false);
         }
     }
 }

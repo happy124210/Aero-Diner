@@ -176,6 +176,7 @@ MonoBehaviour:
   costText: {fileID: 8787776400735708249}
   buyButton: {fileID: 4019217897929127176}
   lockedOverlayPanel: {fileID: 7083783968728111583}
+  unlockConditionText: {fileID: 5542453489040421314}
 --- !u!1 &113634497301480598
 GameObject:
   m_ObjectHideFlags: 0
@@ -3142,9 +3143,9 @@ RectTransform:
   m_Father: {fileID: 7152782033277776604}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -17, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &8013523039289365071
 CanvasRenderer:
@@ -3503,7 +3504,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3161494588396160658
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3585,6 +3586,7 @@ MonoBehaviour:
   saleText: {fileID: 2941173052539743625}
   buyButton: {fileID: 2426168795625960765}
   lockedOverlayPanel: {fileID: 7083783968728111583}
+  unlockConditionText: {fileID: 5542453489040421314}
 --- !u!1 &3101422783005648498
 GameObject:
   m_ObjectHideFlags: 0
@@ -5269,7 +5271,7 @@ GameObject:
   - component: {fileID: 2429254567073899129}
   - component: {fileID: 5542453489040421314}
   m_Layer: 5
-  m_Name: Tmp_Quest
+  m_Name: Tmp_UnlockCondition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6762,7 +6764,7 @@ GameObject:
   - component: {fileID: 2262627298134741395}
   - component: {fileID: 2302190613950171198}
   m_Layer: 5
-  m_Name: Btn_ingredient TAB
+  m_Name: Btn_Ingredient TAB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7630,7 +7632,7 @@ GameObject:
   - component: {fileID: 1060651949521902873}
   - component: {fileID: 6056114657088158551}
   m_Layer: 5
-  m_Name: Img_Quest
+  m_Name: Img_UnlockCondition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8196,7 +8198,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3889150252783164471
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9074,7 +9076,7 @@ RectTransform:
   m_Father: {fileID: 9196531732246845628}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}

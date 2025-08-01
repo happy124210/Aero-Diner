@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 public class RecipePanel_RecipeScrollView : MonoBehaviour
 {
@@ -11,9 +8,12 @@ public class RecipePanel_RecipeScrollView : MonoBehaviour
     [SerializeField] private RecipePanel_IngredientScrollView ingredientScroll;
     [SerializeField] private RecipePanel detailPanel;
     [SerializeField] private GameObject noItemPanel;
-    private FoodData currentSelected;
-    private bool suppressNextSFX = false;
-    void Start()
+    
+    // private
+    private bool suppressNextSFX;
+    private StoreItem currentSelectedItem;
+
+    private void Start()
     {
         PopulateMenuList();
     }
@@ -57,8 +57,6 @@ public class RecipePanel_RecipeScrollView : MonoBehaviour
 
     private void OnSlotSelected(FoodData menuData)
     {
-        currentSelected = menuData; // 계속 갱신해도 괜찮음
-
         if (!suppressNextSFX)
             EventBus.PlaySFX(SFXType.ButtonClick);
         else
