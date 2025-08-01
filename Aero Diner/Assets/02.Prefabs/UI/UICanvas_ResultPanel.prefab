@@ -659,7 +659,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2608745741943835709}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.14285715
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2212,7 +2212,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!114 &2974043118364940953
 MonoBehaviour:
