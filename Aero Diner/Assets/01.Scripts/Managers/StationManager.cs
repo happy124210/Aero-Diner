@@ -326,6 +326,11 @@ public class StationManager : Singleton<StationManager>
         Debug.Log($"[StationManager] 저장 완료");
     }
 
+    public void Save()
+    {
+        StationSave();
+    }
+
     /// <summary>
     /// 현재 게임 상태에 맞는 스테이션을 불러옴
     /// </summary>

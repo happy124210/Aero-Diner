@@ -146,7 +146,18 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
             {
                 if (Instance?.showDebugInfo == true)
                     Debug.LogWarning($"[SaveLoadManager] station.json 파일이 존재하지 않습니다 → {path}");
-                return null;
+
+                // 현재 상태 저장
+                StationManager.Instance.Save();
+
+                // 다시 불러오기
+                string jsonAfterSave = File.ReadAllText(path);
+                var infosAfterSave = JsonConvert.DeserializeObject<List<StationSaveInfo>>(jsonAfterSave);
+
+                if (Instance?.showDebugInfo == true)
+                    Debug.Log($"[SaveLoadManager] station.json 저장 후 로드 완료: {infosAfterSave.Count}개 항목");
+
+                return infosAfterSave;
             }
 
             string json = File.ReadAllText(path);
