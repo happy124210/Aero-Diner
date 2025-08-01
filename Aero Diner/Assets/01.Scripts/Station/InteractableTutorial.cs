@@ -11,10 +11,11 @@
 /// </summary>
 public class InteractableTutorial : MonoBehaviour
 {
-    [SerializeField] private bool isIInteractable = false;          // 오브젝트가 상호작용 가능한지 여부 (true: 가능, false: 불가능)
-    [SerializeField] private SpriteRenderer spriteRenderer;         // 오브젝트의 SpriteRenderer 컴포넌트 참조
-    [SerializeField] private Color defaultColor = Color.white;      // 원래의 색상 (상호작용 가능 시 적용)
-    [SerializeField] private Color disabledColor = Color.gray;      // 비활성 상태일 때 적용할 색상
+    [SerializeField] private bool isIInteractable = false;                 // 오브젝트가 상호작용 가능한지 여부 (true: 가능, false: 불가능)
+    [SerializeField] private SpriteRenderer spriteRenderer;                // 오브젝트의 SpriteRenderer 컴포넌트 참조
+    [SerializeField] private Color defaultColor = Color.white;             // 원래의 색상 (상호작용 가능 시 적용)
+    [SerializeField] private Color disabledColor = Color.gray;             // 비활성 상태일 때 적용할 색상
+    [SerializeField] private FoodSlotIconDisplay foodSlotIconDisplay;      // FoodSlotIconDisplay 컴포넌트 참조
 
     private void Awake()
     {
@@ -47,13 +48,21 @@ public class InteractableTutorial : MonoBehaviour
         {
             // 상호작용 가능: 색상을 원래대로, 레이어를 Interactable로 설정
             spriteRenderer.color = defaultColor;
-            gameObject.layer = LayerMask.NameToLayer("Interactable"); 
+            gameObject.layer = LayerMask.NameToLayer("Interactable");
+            if (foodSlotIconDisplay != null)
+            {
+                foodSlotIconDisplay.ResetAll(); 
+            }
         }
         else
         {
             // 상호작용 불가능: 색상을 회색으로, 레이어를 Default로 설정
             spriteRenderer.color = disabledColor;
-            gameObject.layer = LayerMask.NameToLayer("Default"); 
+            gameObject.layer = LayerMask.NameToLayer("Default");
+            if (foodSlotIconDisplay != null)
+            {
+                foodSlotIconDisplay.CloseSlot();
+            }
         }
     }
 }
