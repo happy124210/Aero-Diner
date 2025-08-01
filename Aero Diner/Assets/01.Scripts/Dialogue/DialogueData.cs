@@ -8,16 +8,17 @@ using System.Collections.Generic;
 public struct DialogueLine
 {
     public string speakerId;  // SpeakerData의 id
-    public Expression expression; // Happy, Sad 등 초상화용 (나중에 매칭 enum으로 변경할수도)
+    public Expression expression; // Happy, Sad 등 초상화용
     public string text;       // 실제 대사 텍스트
+    public DialoguePosition position; // 이 대사의 화자가 표시될 위치
 }
 
-// [System.Serializable]
-// public struct DialogueChoice
-// {
-//     public string text; // UI용 선택지 텍스트
-//     public string nextDialogueId; // 해당 선택지 후 넘어갈 id
-// }
+public enum DialoguePosition
+{
+    Left,
+    Right
+}
+
 
 /// <summary>
 /// CSV의 dialogueData id 하나에 해당하는 전체 대화 묶음 데이터
@@ -30,7 +31,4 @@ public class DialogueData : ScriptableObject
 
     [Header("대화 내용")]
     public List<DialogueLine> lines;
-
-    // [Header("선택지")]
-    // public List<DialogueChoice> choices;
 }

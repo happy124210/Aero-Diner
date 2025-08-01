@@ -135,14 +135,16 @@ public class CSVImporter
             foreach (var cols in rows)
             {
                 Enum.TryParse<Expression>(cols[3].Trim().Trim('"'), true, out var parsedExpression);
-                
-                string processedText = cols[5].Trim().Trim('"').Replace("\\n", "\n");
+                Enum.TryParse<DialoguePosition>(cols[4].Trim().Trim('"'), true, out var parsedPosition); // position 파싱 추가
+            
+                string processedText = cols[6].Trim().Trim('"').Replace("\\n", "\n");
 
                 data.lines.Add(new DialogueLine
                 {
                     speakerId = cols[2].Trim(),
                     text = processedText,
-                    expression = parsedExpression
+                    expression = parsedExpression,
+                    position = parsedPosition
                 });
             }
             EditorUtility.SetDirty(data);
