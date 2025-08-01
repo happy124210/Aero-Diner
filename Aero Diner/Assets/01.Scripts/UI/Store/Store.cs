@@ -15,6 +15,7 @@ public class Store : MonoBehaviour
     [SerializeField] private TextMeshProUGUI currentMoney;
     [SerializeField] private GameObject insufficientMoneyPanel;
     [SerializeField] private GameObject noPlacePanel;
+    [SerializeField] private GameObject noContentPanel;
 
     [Header("DOTween 설정")]
     [SerializeField] private float animateDuration = 0.5f;
@@ -171,7 +172,21 @@ public class Store : MonoBehaviour
             .Append(group.DOFade(0, 0.5f))
             .OnComplete(() => noPlacePanel.SetActive(false));
     }
-    
+    public void ShowNoContentPanel()
+    {
+        var group = noContentPanel.GetComponent<CanvasGroup>();
+        if (group == null)
+            group = noContentPanel.AddComponent<CanvasGroup>();
+
+        group.alpha = 0;
+        noContentPanel.SetActive(true);
+
+        Sequence seq = DOTween.Sequence();
+        seq.Append(group.DOFade(1, 0.5f))
+            .AppendInterval(1.2f)
+            .Append(group.DOFade(0, 0.5f))
+            .OnComplete(() => noContentPanel.SetActive(false));
+    }
     private void AnimateStoreMoney(int newAmount)
     {
         DOTween.Kill(currentMoney);

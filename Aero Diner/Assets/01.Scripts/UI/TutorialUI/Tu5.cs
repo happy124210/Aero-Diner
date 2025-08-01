@@ -31,6 +31,8 @@ public class Tu5 : MonoBehaviour
     [SerializeField] private GameObject step1Pointer;
 
     [SerializeField] private GameObject step2Panel1;
+    [SerializeField] private GameObject step2Pointer;
+    [SerializeField] private GameObject step2Outline;
     [SerializeField] private GameObject stationBtnPanel;
     [SerializeField] private GameObject recipeBtnPanel;
 
@@ -174,9 +176,14 @@ public class Tu5 : MonoBehaviour
         step1Pointer.SetActive(false);
         stationBtnPanel.SetActive(false);
         step2Panel1.SetActive(true);
+        step2Pointer.SetActive(true);
+        step2Outline.SetActive(true);
     }
     public void Tu5Step3()
     {
+        step2Panel1.SetActive(false);
+        step2Pointer.SetActive(false);
+        step2Outline.SetActive(false);
         step3Panel1.SetActive(true);
         step3Panel2.SetActive(true);
         step3Pointer.SetActive(true);

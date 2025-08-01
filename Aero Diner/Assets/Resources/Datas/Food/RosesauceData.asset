@@ -22,3 +22,4 @@ MonoBehaviour:
   ingredients: []
   cookTime: 5
   foodCost: 0
+  recipeDescription: 
