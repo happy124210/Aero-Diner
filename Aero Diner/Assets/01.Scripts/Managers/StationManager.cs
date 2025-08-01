@@ -346,7 +346,7 @@ public class StationManager : Singleton<StationManager>
     /// </summary>
     private void SetStations()
     {
-        if (tilemapController == null)
+        if (!tilemapController)
         {
             if (showDebugInfo) Debug.LogError("[StationManager] tilemapController가 할당되지 않았습니다.");
             return;
@@ -354,9 +354,8 @@ public class StationManager : Singleton<StationManager>
 
         stationGroups.Clear();
 
-        for (int i = 0; i < tilemapController.gridCells.Count; i++)
+        foreach (var gridCell in tilemapController.gridCells)
         {
-            GameObject gridCell = tilemapController.gridCells[i];
             StationGroup group = new StationGroup();
 
             foreach (Transform child in gridCell.transform)
@@ -372,7 +371,7 @@ public class StationManager : Singleton<StationManager>
 
             // 디버그 로그 추가: 셀 이름과 스테이션 이름 출력
             string cellName = gridCell.name;
-            string stationName = group.station != null ? group.station.name : "없음";
+            string stationName = group.station ? group.station.name : "없음";
             if (showDebugInfo) Debug.Log($"[StationManager] '{cellName}' 셀에 스테이션: {stationName}");
         }
 
@@ -384,7 +383,7 @@ public class StationManager : Singleton<StationManager>
     /// </summary>
     private void CountStationsPerCellType()
     {
-        if (tilemapController == null || stationGroups == null || tilemapController.gridCells.Count != stationGroups.Count)
+        if (!tilemapController || stationGroups == null || tilemapController.gridCells.Count != stationGroups.Count)
         {
             if (showDebugInfo) Debug.LogError("[StationManager] 데이터 정합성 오류: gridCell 개수와 stationGroup 개수가 맞지 않습니다.");
             return;
@@ -401,10 +400,10 @@ public class StationManager : Singleton<StationManager>
             StationGroup group = stationGroups[i];
 
             GameObject stationGO = group.station;
-            if (stationGO == null) continue;
+            if (!stationGO) continue;
             
             var stationComponent = stationGO.GetComponent<IMovableStation>();
-            if (stationComponent == null || stationComponent.StationData == null)
+            if (stationComponent == null || !stationComponent.StationData)
             {
                 if(showDebugInfo) Debug.LogWarning($"[StationManager] '{stationGO.name}'에 IMovableStation 컴포넌트나 StationData가 없습니다.");
                 continue;
@@ -507,7 +506,7 @@ public class StationManager : Singleton<StationManager>
     /// </summary>
     private void DestroyCurrentStations()
     {
-        if (tilemapController == null)
+        if (!tilemapController)
         {
             if (showDebugInfo) Debug.LogError("[StationManager] tilemapController가 없습니다.");
             return;
@@ -534,16 +533,6 @@ public class StationManager : Singleton<StationManager>
     #region 튜토리얼 관리
 
     public void ActivateStation(string id, bool value) => SetInteractableState(id, value);
-
-    public void SetTutorialStation()
-    {
-        foreach (var stationId in startStationIds)
-        {
-            ActivateStation(stationId, false);
-        }
-        
-        ActivateStation("s24", true);
-    }
     
     /// <summary>
     /// 모든 설비의 상호작용을 강제로 활성화
