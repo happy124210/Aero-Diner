@@ -33,4 +33,5 @@ public class FoodData : ScriptableObject
     public string[] ingredients; // 레시피. 원재료라면 null
     public float cookTime;
     public int foodCost;
+    public string recipeDescription;
 }
