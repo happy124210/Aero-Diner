@@ -282,6 +282,8 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
         {
             var display = result.AddComponent<FoodDisplay>();
             display.foodData = cookedIngredient;
+            display.originPlace = this;
+
             EventBus.Raise(GameEventType.StationUsed, StationData.id);
         }
     }
@@ -297,7 +299,6 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
     protected void ResetStation()
     {
         timer = new CookingTimer(cookedIngredient);
-        iconDisplay?.ResetAll();                   // 아이콘 리셋
         ClearPlacedObjects();                      // 오브젝트 제거
         var sfx = StationSFXResolver.GetSFXFromStationData(stationData);
         EventBus.StopLoopSFX(sfx);                 // 사운드 중지
@@ -344,102 +345,73 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
 
     private IEnumerator HandlePickup()
     {
-        if (placedIngredients.Count == 0)
+        // 1. cookedIngredient 존재 → 결과물 꺼냄
+        if (cookedIngredient != null)
         {
-            if (showDebugInfo) Debug.LogWarning("[Pickup] 처리할 오브젝트가 없습니다.");
-            yield break;
-        }
-
-        // placedIngredients 역순 탐색하며 유효한 재료 찾기
-        GameObject targetObject = null;
-        FoodDisplay display = null;
-
-        for (int i = placedIngredients.Count - 1; i >= 0; i--)
-        {
-            var obj = placedIngredients[i];
-            var fd = obj?.GetComponent<FoodDisplay>();
-            if (fd && fd.foodData)
-            {
-                targetObject = obj;
-                display = fd;
-                break;
-            }
-        }
-
-        if (!targetObject || !display)
-        {
-            if (showDebugInfo) Debug.LogWarning("[Pickup] 유효한 FoodDisplay를 찾지 못했습니다.");
-            yield break;
-        }
-
-        var pickedData = display.foodData;
-
-        // 결과물 픽업이면 전체 초기화
-        if (cookedIngredient && pickedData == cookedIngredient)
-        {
-            if (showDebugInfo) Debug.Log($"[Pickup] 요리 결과물 픽업: {pickedData.foodName}");
+            if (showDebugInfo) Debug.Log($"[Pickup] 결과물 픽업: {cookedIngredient.foodName}");
 
             iconDisplay?.ResetAll();
             ClearPlacedObjects();
+            currentIngredients.Clear();
 
-            currentIngredients.Clear();            // 결과물 픽업 시에는 전체 클리어
+            foreach (var obj in placedIngredients)
+            {
+                if (obj != null) Destroy(obj);
+            }
+            placedIngredients.Clear(); 
             placedIngredientList.Clear();
-            cookedIngredient = null;
 
+            EventBus.Raise(GameEventType.PlayerPickedUpItem, cookedIngredient);
+
+            cookedIngredient = null;
             UpdateCandidateRecipes();
             yield break;
         }
 
-        // 재료 픽업: 해당 오브젝트 기준으로 제거
-        if (placedIngredients.Contains(targetObject))
+        // 2. 일반 재료 처리
+        if (placedIngredientList.Count == 0)
         {
-            if (showDebugInfo) Debug.Log($"[Pickup] 재료 픽업: {pickedData.foodName}");
+            if (showDebugInfo) Debug.LogWarning("[Pickup] 등록된 재료가 없습니다.");
+            yield break;
+        }
 
-            iconDisplay?.ShowSlot(pickedData.foodType);
+        FoodData targetData = placedIngredientList[^1];
+        placedIngredientList.RemoveAt(placedIngredientList.Count - 1);
+        currentIngredients.Remove(targetData.id);
+        iconDisplay?.ShowSlot(targetData.foodType);
 
-            // 아이콘 로딩 보장
-            if (!pickedData.foodIcon && !string.IsNullOrEmpty(pickedData.id))
+        GameObject targetObject = null;
+        for (int i = placedIngredients.Count - 1; i >= 0; i--)
+        {
+            var fd = placedIngredients[i]?.GetComponent<FoodDisplay>();
+            if (fd != null && fd.foodData == targetData)
             {
-                var loadedIcon = Resources.Load<Sprite>($"Icons/Food/{pickedData.id}");
-                if (loadedIcon)
-                {
-                    pickedData.foodIcon = loadedIcon;
-                }
-            }
-
-            AttachFoodIcon(targetObject, pickedData);
-
-            // 오브젝트 및 데이터 제거
-            placedIngredients.Remove(targetObject);
-            currentIngredients.Remove(pickedData.id);
-
-            // 딱 하나만 제거
-            var targetIndex = placedIngredientList.FindIndex(fd => fd.id == pickedData.id);
-            if (targetIndex >= 0)
-            {
-                placedIngredientList.RemoveAt(targetIndex);
-            }
-
-            yield return null;
-
-            // 아이콘 다시 부착
-            AttachFoodIcon(targetObject, pickedData);
-
-            if (currentIngredients.Count > 0)
-            {
-                UpdateCandidateRecipes();
-            }
-            else
-            {
-                cookedIngredient = null;
-                bestMatchedRecipe = "조건에 맞는 레시피 없음";
-                iconDisplay?.ShowSlot(pickedData.foodType);
+                targetObject = placedIngredients[i];
+                placedIngredients.RemoveAt(i);
+                break;
             }
         }
+
+        if (targetObject != null)
+        {
+            var food = targetObject.GetComponent<FoodDisplay>();
+            if (food != null)
+            {
+                AttachFoodIcon(targetObject, food.foodData);
+                //inventory.holdingItem = food;
+                EventBus.Raise(GameEventType.PlayerPickedUpItem, food.foodData);
+            }
+        }
+
+        if (currentIngredients.Count > 0)
+            UpdateCandidateRecipes();
         else
         {
-            if (showDebugInfo) Debug.LogWarning("[Pickup] 선택된 재료가 placedIngredientList에 존재하지 않습니다.");
+            cookedIngredient = null;
+            bestMatchedRecipe = "조건에 맞는 레시피 없음";
         }
+
+        yield return null;
     }
 
     /// <summary>
@@ -463,14 +435,6 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
             if (!foodData.foodIcon)
                 renderer.color = Color.gray;
         }
-    }
-
-    /// <summary>
-    /// 플레이어가 일상씬에서 k키를 사용했을때 설비를 픽업하는 매서드
-    /// </summary>
-    public void OnStationPickup()
-    {
-
     }
 
     public void OnHoverEnter()
