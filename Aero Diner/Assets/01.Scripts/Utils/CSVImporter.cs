@@ -429,22 +429,28 @@ public class CSVImporter
         }
         
         int successCount = 0;
-        for (int i = 1; i < allRows.Count; i++) 
+        for (int i = 1; i < allRows.Count; i++)
         {
             try
             {
                 string[] cols = allRows[i];
-                if (cols.Length < 2 || string.IsNullOrEmpty(cols[0].Trim())) continue; // 빈 행 스킵
-                
+                if (cols.Length < 2 || string.IsNullOrEmpty(cols[0].Trim())) continue;
+
                 T data = parseFunc(cols);
-                
                 string fileName = getFileNameFunc(cols);
                 string assetPath = $"{targetFolder}/{fileName}.asset";
                 
+                data.name = fileName;
+
                 var existing = AssetDatabase.LoadAssetAtPath<T>(assetPath);
                 if (existing != null)
                 {
                     EditorUtility.CopySerialized(data, existing);
+                    
+                    if (existing.name != fileName)
+                    {
+                        existing.name = fileName;
+                    }
                     EditorUtility.SetDirty(existing);
                 }
                 else
