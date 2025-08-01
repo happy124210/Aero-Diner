@@ -1333,6 +1333,8 @@ MonoBehaviour:
   step1Panel2: {fileID: 4889333460128642627}
   step1Pointer: {fileID: 8040961143831261818}
   step2Panel1: {fileID: 1563411801623429504}
+  step2Pointer: {fileID: 2543423526305280049}
+  step2Outline: {fileID: 5888646505084220454}
   stationBtnPanel: {fileID: 23754486306007825}
   recipeBtnPanel: {fileID: 8486597637692707434}
   step3Panel1: {fileID: 2681680128259213417}
@@ -1939,7 +1941,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3950879669314470108
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7347,7 +7349,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4069247314304790182
 RectTransform:
   m_ObjectHideFlags: 0
