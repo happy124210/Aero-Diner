@@ -84,7 +84,12 @@ public class OptionBtn : MonoBehaviour
 
         EventBus.Raise(UIEventType.LoadIntroScene);
     }
+    public void OnClickloadGame()
+    {
+        EventBus.PlaySFX(SFXType.ButtonClick);
 
+        EventBus.Raise(UIEventType.LoadDayScene);
+    }
     public void QuitGame()
     {
         EventBus.PlaySFX(SFXType.ButtonClick);

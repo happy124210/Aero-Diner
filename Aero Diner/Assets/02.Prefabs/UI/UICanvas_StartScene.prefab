@@ -3326,7 +3326,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6060294209070699424}
         m_TargetAssemblyTypeName: OptionBtn, Assembly-CSharp
-        m_MethodName: OnClickStartGame
+        m_MethodName: OnClickloadGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
