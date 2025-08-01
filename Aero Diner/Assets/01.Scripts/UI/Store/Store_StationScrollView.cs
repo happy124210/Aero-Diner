@@ -17,6 +17,7 @@ public class Store_StationScrollView : MonoBehaviour
     [SerializeField] private Store store;
 
     private List<StoreItem> stationStoreItems = new();
+    private StoreItem currentSelectedItem;
 
     private void Awake()
     {
@@ -30,6 +31,7 @@ public class Store_StationScrollView : MonoBehaviour
 
     public void InitializeAndPopulate()
     {
+        string previouslySelectedId = currentSelectedItem?.ID;
         stationStoreItems.Clear();
 
         var allStations = StationManager.Instance.StationDatabase;
@@ -50,6 +52,15 @@ public class Store_StationScrollView : MonoBehaviour
         }).ToList();
 
         PopulateScrollView();
+        
+        // 구매 후 해당 항목 머무르기
+        StoreItem itemToSelect = stationStoreItems.FirstOrDefault(item => item.ID == previouslySelectedId) 
+                                 ?? stationStoreItems.FirstOrDefault();
+
+        if (itemToSelect != null)
+        {
+            OnSlotSelected(itemToSelect, false);
+        }
     }
 
     private void PopulateScrollView()
@@ -66,13 +77,7 @@ public class Store_StationScrollView : MonoBehaviour
 
             var go = Instantiate(prefabToUse, contentTransform);
             var slotUI = go.GetComponent<Store_Station_Content>();
-            slotUI.Init(item, OnSlotSelected, conditionsMet);
-        }
-
-        var firstItem = stationStoreItems.FirstOrDefault();
-        if (firstItem != null)
-        {
-            OnSlotSelected(firstItem);
+            slotUI.Init(item, selected => OnSlotSelected(selected, true), conditionsMet);
         }
     }
 
@@ -92,10 +97,13 @@ public class Store_StationScrollView : MonoBehaviour
         return false;
     }
 
-    private void OnSlotSelected(StoreItem item)
+    private void OnSlotSelected(StoreItem item, bool playSFX = true)
     {
-        EventBus.PlaySFX(SFXType.ButtonClick);
+        if (playSFX)
+            EventBus.PlaySFX(SFXType.ButtonClick);
+        
+        currentSelectedItem = item;
         bool canBePurchased = AreConditionsMet(item);
-        detailPanel.SetData(item, () => store?.TryBuyItem(item), canBePurchased);
+        detailPanel.SetData(item, () => store.TryBuyItem(item), canBePurchased);
     }
 }

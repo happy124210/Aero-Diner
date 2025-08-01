@@ -52,6 +52,17 @@ public class Store_RecipeScrollView : MonoBehaviour
         }).ToList();
         
         PopulateScrollView();
+        
+        StoreItem itemToSelect = recipeStoreItems.FirstOrDefault(i => !i.IsPurchased);
+        if (itemToSelect != null)
+        {
+            OnItemSelected(itemToSelect, false);
+        }
+        else
+        {
+            if (detailPanel != null) detailPanel.gameObject.SetActive(false);
+            if (noRecipePanel != null) noRecipePanel.SetActive(true);
+        }
     }
 
     private void PopulateScrollView()
@@ -72,36 +83,27 @@ public class Store_RecipeScrollView : MonoBehaviour
 
             var go = Instantiate(prefabToUse, contentTransform);
             var slot = go.GetComponent<Store_Recipe_Content>();
-            slot.Init(item, selected => OnItemSelected(selected, true));
+            slot.Init(item, selected => OnItemSelected(selected));
 
-            hasAvailableItem = true; // 하나라도 추가되면 true
+            hasAvailableItem = true;
         }
-
-        // 조건: 판매 가능한 레시피가 없을 때
+        
         if (!hasAvailableItem)
         {
             if (detailPanel != null) detailPanel.gameObject.SetActive(false);
             if (noRecipePanel != null) noRecipePanel.SetActive(true);
-            return;
         }
         else
         {
             if (detailPanel != null) detailPanel.gameObject.SetActive(true);
             if (noRecipePanel != null) noRecipePanel.SetActive(false);
         }
-
-        // 첫 번째 아이템 자동 선택
-        var firstItem = recipeStoreItems.FirstOrDefault(i => !i.IsPurchased);
-        if (firstItem != null)
-        {
-            OnItemSelected(firstItem, false);
-        }
     }
 
     // 구매했는지 체크
     private bool IsAlreadyPurchased(StoreItem item)
     {
-        var menu = MenuManager.Instance.FindMenuById(item.ID);
+        var menu = MenuManager.Instance.FindMenuById(item.TargetID);
         return menu != null && menu.isUnlocked;
     }
     
@@ -128,7 +130,7 @@ public class Store_RecipeScrollView : MonoBehaviour
     {
         if (playSFX)
             EventBus.PlaySFX(SFXType.ButtonClick);
-
+        
         bool canBePurchased = AreConditionsMet(item);
         detailPanel.SetData(item, () => store.TryBuyItem(item), canBePurchased);
     }

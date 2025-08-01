@@ -176,6 +176,7 @@ MonoBehaviour:
   costText: {fileID: 8787776400735708249}
   buyButton: {fileID: 4019217897929127176}
   lockedOverlayPanel: {fileID: 7083783968728111583}
+  unlockConditionText: {fileID: 5542453489040421314}
 --- !u!1 &113634497301480598
 GameObject:
   m_ObjectHideFlags: 0
@@ -3585,6 +3586,7 @@ MonoBehaviour:
   saleText: {fileID: 2941173052539743625}
   buyButton: {fileID: 2426168795625960765}
   lockedOverlayPanel: {fileID: 7083783968728111583}
+  unlockConditionText: {fileID: 5542453489040421314}
 --- !u!1 &3101422783005648498
 GameObject:
   m_ObjectHideFlags: 0
@@ -4712,7 +4714,6 @@ MonoBehaviour:
   foodTypeIcon: {fileID: 4093185483604443015}
   nameText: {fileID: 8038918571324472904}
   priceText: {fileID: 5037819623528799387}
-  stockText: {fileID: 8917736578900755568}
   descriptionText: {fileID: 3172431546223769509}
 --- !u!1 &4198556223481899283
 GameObject:
@@ -5270,7 +5271,7 @@ GameObject:
   - component: {fileID: 2429254567073899129}
   - component: {fileID: 5542453489040421314}
   m_Layer: 5
-  m_Name: Tmp_Quest
+  m_Name: Tmp_UnlockCondition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6763,7 +6764,7 @@ GameObject:
   - component: {fileID: 2262627298134741395}
   - component: {fileID: 2302190613950171198}
   m_Layer: 5
-  m_Name: Btn_ingredient TAB
+  m_Name: Btn_Ingredient TAB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7631,7 +7632,7 @@ GameObject:
   - component: {fileID: 1060651949521902873}
   - component: {fileID: 6056114657088158551}
   m_Layer: 5
-  m_Name: Img_Quest
+  m_Name: Img_UnlockCondition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

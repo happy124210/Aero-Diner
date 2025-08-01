@@ -44,56 +44,61 @@ public class Store : MonoBehaviour
     }
     
     public void TryBuyItem(StoreItem item)
+{
+    if (item == null) return;
+    if (item.BaseData is FoodData && item.IsPurchased) return;
+
+    if (GameManager.Instance.TotalEarnings >= item.Cost)
     {
-        if (item == null || item.IsPurchased) return;
+        bool purchaseSucceeded = false;
         
-        if (GameManager.Instance.TotalEarnings >= item.Cost)
+        switch (item.BaseData)
+        {
+            case FoodData:
+                MenuManager.Instance.UnlockMenu(item.TargetID);
+                purchaseSucceeded = true;
+                break;
+            
+            case StationData:
+                if (StationManager.Instance.CreateStationInStorage(item.TargetID))
+                {
+                    if (showDebugInfo) Debug.Log($"구매 성공: {item.DisplayName}");
+                    purchaseSucceeded = true;
+                }
+                else
+                {
+                    AnimateStoreMoney(GameManager.Instance.TotalEarnings);
+                    EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
+                    ShowNoPlacePanel();
+                    if (showDebugInfo) Debug.LogWarning($"구매 실패: {item.DisplayName} - 보관 공간 부족");
+                }
+                break;
+        }
+
+        if (purchaseSucceeded)
         {
             GameManager.Instance.AddMoney(-item.Cost);
             AnimateStoreMoney(GameManager.Instance.TotalEarnings);
             EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
             
+            if (showDebugInfo) Debug.Log($"구매 성공 처리 완료, UI 갱신 시작: {item.DisplayName}");
+            
             switch (item.BaseData)
             {
-                // 레시피
                 case FoodData:
-                    MenuManager.Instance.UnlockMenu(item.TargetID);
+                    recipeScrollView.InitializeAndPopulate();
                     break;
-                
-                // 설비
                 case StationData:
-                    // 생성 성공했을 때
-                    if (StationManager.Instance.CreateStationInStorage(item.TargetID))
-                    {
-                        item.IsPurchased = true;
-                        if (showDebugInfo) Debug.Log($"구매 성공: {item.DisplayName}");
-                    }
-                    // 생성 실패했을 때
-                    else
-                    {
-                        GameManager.Instance.AddMoney(item.Cost); // 돈 환불
-                        AnimateStoreMoney(GameManager.Instance.TotalEarnings); // UI 갱신
-                        EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
-        
-                        item.IsPurchased = false;
-
-                        ShownoPlacePanel();
-                        if (showDebugInfo) Debug.LogWarning($"구매 실패: {item.DisplayName} - 보관 공간 부족");
-                    }
+                    stationScrollView.InitializeAndPopulate();
                     break;
             }
-            
-            item.IsPurchased = true;
-            
-            if (showDebugInfo) Debug.Log($"구매 성공: {item.DisplayName}");
-            recipeScrollView.InitializeAndPopulate();
-            stationScrollView.InitializeAndPopulate();
-        }
-        else
-        {
-            ShowInsufficientMoneyPanel();
         }
     }
+    else
+    {
+        ShowInsufficientMoneyPanel();
+    }
+}
     
     #region 버튼 메서드
     
@@ -110,6 +115,7 @@ public class Store : MonoBehaviour
     {
         if (showDebugInfo) Debug.Log("버튼 클릭 됨");
         EventBus.PlaySFX(SFXType.ButtonClick);
+        recipeScrollView.InitializeAndPopulate();
         tabController.RequestSelectTab(0);
         // EventBus.Raise(UIEventType.ShowRecipeBook);
     }
@@ -119,6 +125,7 @@ public class Store : MonoBehaviour
         if (showDebugInfo)
             Debug.Log("버튼 클릭 됨");
         EventBus.PlaySFX(SFXType.ButtonClick);
+        stationScrollView.InitializeAndPopulate();
         tabController.RequestSelectTab(1);
         // EventBus.Raise(UIEventType.ShowStationPanel);
     }
@@ -148,7 +155,8 @@ public class Store : MonoBehaviour
             .Append(group.DOFade(0, 0.5f))
             .OnComplete(() => insufficientMoneyPanel.SetActive(false));
     }
-    private void ShownoPlacePanel()
+    
+    private void ShowNoPlacePanel()
     {
         var group = noPlacePanel.GetComponent<CanvasGroup>();
         if (group == null)
@@ -163,6 +171,7 @@ public class Store : MonoBehaviour
             .Append(group.DOFade(0, 0.5f))
             .OnComplete(() => noPlacePanel.SetActive(false));
     }
+    
     private void AnimateStoreMoney(int newAmount)
     {
         DOTween.Kill(currentMoney);
@@ -183,6 +192,7 @@ public class Store : MonoBehaviour
         seq.Append(currentMoney.DOColor(originalColor, 0.2f));
         seq.Join(currentMoney.transform.DOScale(1.0f, 0.2f));
     }
+    
     public void Show()
     {
         gameObject.SetActive(true);
