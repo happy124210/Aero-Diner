@@ -109,6 +109,7 @@ public class MenuPanel : MonoBehaviour
     public void OnClickBackBtn()
     {
         PlayExitAnimation();
+        GameManager.Instance.ChangePhase(GamePhase.EditStation);
         EventBus.PlayBGM(BGMEventType.PlayLifeTheme);
     }
     
@@ -117,8 +118,6 @@ public class MenuPanel : MonoBehaviour
     /// </summary>
     public void OnClickDayStartBtn()
     {
-        // TODO: Station 저장
-        StationManager.Instance.StationSave();
         _ = HandleDayStartAsync();
     }
 
