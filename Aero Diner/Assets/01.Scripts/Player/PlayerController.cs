@@ -14,8 +14,10 @@ public class PlayerController : Singleton<PlayerController>
     public float moveSpeed = 5f;
 
     [Header("상호작용 설정")]
+    [SerializeField] private Vector2 interactionBoxSize = new(0.8f, 0.5f);
     public float interactionRadius = 1.5f;
     public LayerMask interactableLayer;
+    
 
     [SerializeField] private PlayerInventory playerInventory;
     [SerializeField] private Transform itemSlotTransform;
@@ -195,43 +197,60 @@ public class PlayerController : Singleton<PlayerController>
 
     private void RaycastForInteractable()
     {
-        // 기존 Station/GridCell 탐지
-        var hits = CastAll(transform.position, lastMoveDir, interactionRadius, interactableLayer);
+        var hits = Physics2D.BoxCastAll(
+            transform.position, 
+            interactionBoxSize, 
+            0f, 
+            lastMoveDir, 
+            interactionRadius, 
+            interactableLayer
+        );
 
         IInteractable stationTarget = null;
         IInteractable gridTarget = null;
-
+        float closestStationDist = Mathf.Infinity;
+        float closestGridDist = Mathf.Infinity;
+        
         foreach (var hit in hits)
         {
             var interactable = hit.collider.GetComponent<IInteractable>();
             if (interactable == null) continue;
 
-            if (hit.collider.CompareTag(StringTag.STATION_TAG) && stationTarget == null)
-                stationTarget = interactable;
-            else if (hit.collider.CompareTag(StringTag.GRID_CELL_TAG) && gridTarget == null)
-                gridTarget = interactable;
-        }
+            float dist = Vector2.Distance(transform.position, hit.transform.position);
 
-        // 보조: GridCell이 안 잡혔으면 FindGridCellInFront()로 추가 탐지
-        if (gridTarget == null)
-        {
-            Transform frontCell = FindGridCellInFront();
-            if (frontCell != null)
-                gridTarget = frontCell.GetComponent<IInteractable>();
+            if (hit.collider.CompareTag(StringTag.STATION_TAG))
+            {
+                if (dist < closestStationDist)
+                {
+                    stationTarget = interactable;
+                    closestStationDist = dist;
+                }
+            }
+            else if (hit.collider.CompareTag(StringTag.GRID_CELL_TAG))
+            {
+                if (dist < closestGridDist)
+                {
+                    gridTarget = interactable;
+                    closestGridDist = dist;
+                }
+            }
         }
-
-        // 상호작용 우선순위 결정
+        
         bool holdingStation = playerInventory.heldStation != null;
-        IInteractable newTarget = holdingStation ? gridTarget ?? stationTarget
-                                                 : stationTarget ?? gridTarget;
-
-        // Hover 상태 갱신
+        IInteractable newTarget = holdingStation ? gridTarget ?? stationTarget 
+            : stationTarget ?? gridTarget;
+        
         if (newTarget != currentTarget)
         {
             currentTarget?.OnHoverExit();
             newTarget?.OnHoverEnter();
             currentTarget = newTarget;
-            if (newTarget == null)
+
+            if (currentTarget is GridCellStatus gridCell)
+            {
+                tilemapController.HighlightSelectedCell(gridCell.gameObject);
+            }
+            else
             {
                 tilemapController.ClearSelection();
             }
@@ -284,40 +303,6 @@ public class PlayerController : Singleton<PlayerController>
             
         }
         return best;
-    }
-
-    public Transform FindGridCellInFront()
-    {
-        Vector2 origin = transform.position;
-        Vector2 direction = lastMoveDir == Vector2.zero ? Vector2.down : lastMoveDir.normalized;
-        float distance = 2f;
-
-        var hit = CastSingle(origin, direction, distance, LayerMask.GetMask(StringTag.INTERACTABLE_LAYER));
-        Debug.DrawRay(origin, direction * distance, Color.green);
-
-        // GridCell 감지됨
-        if (hit.HasValue && hit.Value.collider.CompareTag(StringTag.GRID_CELL_TAG))
-        {
-            GameObject hitCell = hit.Value.collider.gameObject;
-
-            Debug.Log($"[PlayerController] 감지된 셀: {hitCell.name}");
-
-            // 현재 선택된 셀과 다를 경우에만 갱신
-            if (tilemapController != null)
-            {
-                tilemapController.HighlightSelectedCell(hitCell);
-            }
-
-            return hitCell.transform;
-        }
-
-        return null;
-    }
-
-    private RaycastHit2D? CastSingle(Vector2 origin, Vector2 direction, float distance, LayerMask layer)
-    {
-        var hit = Physics2D.Raycast(origin, direction, distance, layer);
-        return hit.collider != null ? hit : null;
     }
 
     private RaycastHit2D[] CastAll(Vector2 origin, Vector2 direction, float distance, LayerMask layer)
