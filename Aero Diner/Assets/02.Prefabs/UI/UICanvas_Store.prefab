@@ -3142,9 +3142,9 @@ RectTransform:
   m_Father: {fileID: 7152782033277776604}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -17, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &8013523039289365071
 CanvasRenderer:
@@ -3503,7 +3503,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3161494588396160658
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4712,7 +4712,6 @@ MonoBehaviour:
   foodTypeIcon: {fileID: 4093185483604443015}
   nameText: {fileID: 8038918571324472904}
   priceText: {fileID: 5037819623528799387}
-  stockText: {fileID: 8917736578900755568}
   descriptionText: {fileID: 3172431546223769509}
 --- !u!1 &4198556223481899283
 GameObject:
@@ -8197,7 +8196,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3889150252783164471
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9075,7 +9074,7 @@ RectTransform:
   m_Father: {fileID: 9196531732246845628}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}

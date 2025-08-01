@@ -46,48 +46,49 @@ public class Store : MonoBehaviour
     public void TryBuyItem(StoreItem item)
     {
         if (item == null || item.IsPurchased) return;
-        
+
         if (GameManager.Instance.TotalEarnings >= item.Cost)
         {
-            GameManager.Instance.AddMoney(-item.Cost);
-            AnimateStoreMoney(GameManager.Instance.TotalEarnings);
-            EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
+            bool purchaseSucceeded = false;
             
             switch (item.BaseData)
             {
-                // 레시피
+                // 레시피 구매
                 case FoodData:
                     MenuManager.Instance.UnlockMenu(item.TargetID);
+                    purchaseSucceeded = true;
                     break;
                 
-                // 설비
+                // 설비 구매
                 case StationData:
-                    // 생성 성공했을 때
                     if (StationManager.Instance.CreateStationInStorage(item.TargetID))
                     {
-                        item.IsPurchased = true;
                         if (showDebugInfo) Debug.Log($"구매 성공: {item.DisplayName}");
+                        purchaseSucceeded = true;
                     }
-                    // 생성 실패했을 때
                     else
                     {
-                        GameManager.Instance.AddMoney(item.Cost); // 돈 환불
-                        AnimateStoreMoney(GameManager.Instance.TotalEarnings); // UI 갱신
+                        AnimateStoreMoney(GameManager.Instance.TotalEarnings);
                         EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
-        
-                        item.IsPurchased = false;
-
                         ShownoPlacePanel();
                         if (showDebugInfo) Debug.LogWarning($"구매 실패: {item.DisplayName} - 보관 공간 부족");
+                        purchaseSucceeded = false;
                     }
                     break;
             }
-            
-            item.IsPurchased = true;
-            
-            if (showDebugInfo) Debug.Log($"구매 성공: {item.DisplayName}");
-            recipeScrollView.InitializeAndPopulate();
-            stationScrollView.InitializeAndPopulate();
+
+            // 구매가 성공적으로 이루어졌을 때만 돈을 차감하고 UI를 새로고침
+            if (purchaseSucceeded)
+            {
+                GameManager.Instance.AddMoney(-item.Cost);
+                AnimateStoreMoney(GameManager.Instance.TotalEarnings);
+                EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
+                
+                if (showDebugInfo) Debug.Log($"구매 성공 처리 완료, UI 갱신 시작: {item.DisplayName}");
+                
+                recipeScrollView.InitializeAndPopulate();
+                stationScrollView.InitializeAndPopulate();
+            }
         }
         else
         {

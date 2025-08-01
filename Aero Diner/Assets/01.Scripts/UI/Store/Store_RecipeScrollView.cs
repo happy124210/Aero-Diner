@@ -101,7 +101,7 @@ public class Store_RecipeScrollView : MonoBehaviour
     // 구매했는지 체크
     private bool IsAlreadyPurchased(StoreItem item)
     {
-        var menu = MenuManager.Instance.FindMenuById(item.ID);
+        var menu = MenuManager.Instance.FindMenuById(item.TargetID);
         return menu != null && menu.isUnlocked;
     }
     
