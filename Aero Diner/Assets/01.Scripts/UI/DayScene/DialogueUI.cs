@@ -21,6 +21,7 @@ public class DialogueUI : MonoBehaviour
     private Tween typingTween;
     private Tween blinkingTween;
     private HashSet<string> appearedSpeakers = new();
+    private string fullCurrentText;
 
     private void OnEnable()
     {
@@ -42,23 +43,27 @@ public class DialogueUI : MonoBehaviour
     private void Update()
     {
         if (!rootPanel.activeInHierarchy) return;
-        if (nextButton.activeSelf && (Input.anyKeyDown || Input.GetMouseButtonDown(0)))
+        if (Input.anyKeyDown || Input.GetMouseButtonDown(0))
         {
             OnClickNext();
         }
     }
-    
+
     public void OnClickNext()
     {
         if (typingTween != null && typingTween.IsActive() && typingTween.IsPlaying())
         {
             typingTween.Complete();
+
+            dialogueText.text = fullCurrentText;
+
             return;
         }
+
         StopBlinkingNextButton();
         DialogueManager.Instance.RequestNextLine();
     }
-    
+
     public void OnClickSkip()
     {
         typingTween?.Kill();
@@ -142,11 +147,13 @@ public class DialogueUI : MonoBehaviour
     {
         typingTween?.Kill();
         dialogueText.text = "";
+        fullCurrentText = text; // 현재 전체 문장 저장
+
         typingTween = DOTween.To(() => "", x => dialogueText.text = x, text, 0.03f * text.Length)
             .SetEase(Ease.Linear)
             .OnComplete(StartBlinkingNextButton);
     }
-    
+
     private void SetAlpha(Image image, float alpha)
     {
         if (!image) return;
