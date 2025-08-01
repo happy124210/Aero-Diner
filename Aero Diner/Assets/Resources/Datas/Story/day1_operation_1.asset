@@ -26,3 +26,21 @@ MonoBehaviour:
   - storyType: 13
     targetId: s24
     value: true
+  - storyType: 13
+    targetId: s5
+    value: false
+  - storyType: 13
+    targetId: s3
+    value: false
+  - storyType: 13
+    targetId: s16
+    value: false
+  - storyType: 13
+    targetId: s15
+    value: false
+  - storyType: 13
+    targetId: s17
+    value: false
+  - storyType: 13
+    targetId: s8
+    value: false
