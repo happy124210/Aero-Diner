@@ -332,6 +332,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
   disabledColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  foodSlotIconDisplay: {fileID: 4044890694406128566}
 --- !u!1001 &2812788427457342318
 PrefabInstance:
   m_ObjectHideFlags: 0

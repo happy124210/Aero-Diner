@@ -91,4 +91,10 @@ public class FoodSlotIconDisplay : MonoBehaviour
         }
     }
 
+    public void CloseSlot()
+    {
+        foreach (var list in iconMap.Values)
+            foreach (var icon in list)
+                if (icon) icon.SetActive(false);
+    }
 }
