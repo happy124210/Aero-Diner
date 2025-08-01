@@ -57,10 +57,12 @@ public class Store_RecipeScrollView : MonoBehaviour
         if (itemToSelect != null)
         {
             OnItemSelected(itemToSelect, false);
+            if (detailPanel != null) detailPanel.gameObject.SetActive(true);
+            if (noRecipePanel != null) noRecipePanel.SetActive(false);
         }
+        // 선택할 아이템이 없다면 (모든 레시피를 구매했거나, 판매할 레시피가 처음부터 없다면)
         else
         {
-            if (detailPanel != null) detailPanel.gameObject.SetActive(false);
             if (noRecipePanel != null) noRecipePanel.SetActive(true);
         }
     }
@@ -90,7 +92,6 @@ public class Store_RecipeScrollView : MonoBehaviour
         
         if (!hasAvailableItem)
         {
-            if (detailPanel != null) detailPanel.gameObject.SetActive(false);
             if (noRecipePanel != null) noRecipePanel.SetActive(true);
         }
         else
