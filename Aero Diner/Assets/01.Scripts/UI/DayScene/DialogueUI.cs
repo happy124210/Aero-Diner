@@ -28,6 +28,11 @@ public class DialogueUI : MonoBehaviour
         EventBus.OnUIEvent += HandleUIEvent;
         appearedSpeakers.Clear(); // 대화 시작 시 초기화
         nextButton.SetActive(false);
+
+        leftPortraitImage.sprite = null;
+        rightPortraitImage.sprite = null;
+        SetAlpha(leftPortraitImage, 0f);
+        SetAlpha(rightPortraitImage, 0f);
     }
 
     private void OnDisable()
@@ -82,17 +87,17 @@ public class DialogueUI : MonoBehaviour
 
         Image activePortrait = null;
         Image inactivePortrait = null;
+
         if (line.speakerId == leftSpeakerId)
         {
-            SetAlpha(leftPortraitImage, 0f); //먼저 투명화
+            SetAlpha(leftPortraitImage, 0f);
             leftPortraitImage.sprite = portrait;
             activePortrait = leftPortraitImage;
             inactivePortrait = rightPortraitImage;
-
         }
         else if (line.speakerId == rightSpeakerId)
         {
-            SetAlpha(rightPortraitImage, 0f); // 먼저 투명화
+            SetAlpha(rightPortraitImage, 0f);
             rightPortraitImage.sprite = portrait;
             activePortrait = rightPortraitImage;
             inactivePortrait = leftPortraitImage;
@@ -104,26 +109,22 @@ public class DialogueUI : MonoBehaviour
 
             if (inactivePortrait != null)
             {
-                // 아직 inactive 화자가 등장하지 않았다면 완전 투명 유지
                 string inactiveId = (line.speakerId == leftSpeakerId) ? rightSpeakerId : leftSpeakerId;
+                bool inactiveHasAppeared = !string.IsNullOrEmpty(inactiveId) && appearedSpeakers.Contains(inactiveId);
 
-                if (!string.IsNullOrEmpty(inactiveId) && !appearedSpeakers.Contains(inactiveId))
+                if (inactiveHasAppeared)
                 {
-                    SetAlpha(inactivePortrait, 0f); //아직 안 등장한 화자는 완전 투명
+                    SetAlpha(inactivePortrait, 0.3f);
                 }
                 else
                 {
-                    SetAlpha(inactivePortrait, 0.3f); //등장한 적 있으면 흐리게 유지
+                    inactivePortrait.sprite = null;
+                    SetAlpha(inactivePortrait, 0f);
                 }
             }
         }
-        if (portrait == null)
-        {
-            inactivePortrait.sprite = null;
-            SetAlpha(inactivePortrait, 0f); // 완전 투명하게 설정
-        }
 
-        //처음 등장한 화자면 강조 애니메이션
+        // 처음 등장한 화자면 강조 애니메이션
         if (!appearedSpeakers.Contains(line.speakerId) && activePortrait != null)
         {
             appearedSpeakers.Add(line.speakerId);
@@ -133,16 +134,16 @@ public class DialogueUI : MonoBehaviour
                 .DOScale(1.1f, 0.15f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.OutQuad);
         }
 
-        //텍스트 타이핑 애니메이션
+        // 텍스트 타이핑 애니메이션
         typingTween?.Kill();
         dialogueText.text = "";
 
         typingTween = DOTween.To(() => "", x => dialogueText.text = x, line.text, 0.03f * line.text.Length)
             .SetEase(Ease.Linear)
             .OnComplete(() =>
-             {
-                 StartBlinkingNextButton(); //타이핑 완료 후 버튼 깜빡임 시작
-             });
+            {
+                StartBlinkingNextButton();
+            });
     }
 
     private void SetAlpha(Image image, float alpha)
@@ -180,6 +181,7 @@ public class DialogueUI : MonoBehaviour
     }
     public void OnClickSkip()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         typingTween?.Kill();
         blinkingTween?.Kill();
         nextButton.SetActive(false);
