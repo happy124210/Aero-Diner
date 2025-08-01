@@ -390,6 +390,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuPanelContent: {fileID: 3415938795095629806, guid: adde54187d8988542aebd0453337cc55, type: 3}
+  menuPanelTransform: {fileID: 607150485725278172}
   contentTransform: {fileID: 2017407775838589653}
   canvasGroup: {fileID: 639490359676688581}
   deleteWarningPopup: {fileID: 3581232144899107994}
@@ -397,7 +398,7 @@ MonoBehaviour:
   warningPopupCanvas: {fileID: 2659412645715692286}
   popupFadeDuration: 0.5
   popupVisibleTime: 2
-  menuPanelTransform: {fileID: 607150485725278172}
+  showDebugInfo: 0
 --- !u!225 &639490359676688581
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2625,7 +2626,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 0.7490196}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
