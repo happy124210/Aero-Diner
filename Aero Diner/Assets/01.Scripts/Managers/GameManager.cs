@@ -71,8 +71,8 @@ public class GameManager : Singleton<GameManager>
         
         if (showDebugInfo) Debug.Log($"[GameManager] Game Phase 변경됨: {newPhase}");
     }
-    
-    public void ProceedToEditStation()
+
+    private void ProceedToEditStation()
     {
         // 현재 Day 단계일 때만
         if (CurrentPhase == GamePhase.Day)
@@ -82,7 +82,7 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    public void ProceedToOperation()
+    private void ProceedToOperation()
     {
         // Opening 단계일 때만
         if (CurrentPhase == GamePhase.Opening)
@@ -148,6 +148,9 @@ public class GameManager : Singleton<GameManager>
                 if (currentSceneName == StringScene.MAIN_SCENE)
                     ProceedToOperation();
                 break;
+            case GamePhase.Closing:
+                EventBus.Raise(UIEventType.ShowResultPanel);
+                break;
         }
     }
 
@@ -192,6 +195,14 @@ public class GameManager : Singleton<GameManager>
     public void AddMoney(int amount)
     {
         totalEarnings += amount;
+        EventBus.Raise(UIEventType.UpdateTotalEarnings, TotalEarnings);
+        EventBus.OnSFXRequested(SFXType.CustomerPay);
+    }
+
+    // 강제로 해당 amount로 지정. 사용에 주의할 것 !!!
+    public void SetMoney(int amount)
+    {
+        totalEarnings = amount;
         EventBus.Raise(UIEventType.UpdateTotalEarnings, TotalEarnings);
         EventBus.OnSFXRequested(SFXType.CustomerPay);
     }

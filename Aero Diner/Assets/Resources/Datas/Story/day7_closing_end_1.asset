@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce4ff5776a5c66845bd9a49d594fcc0b, type: 3}
   m_Name: day7_closing_end_1
   m_EditorClassIdentifier: 
-  id: day7_closing_completed
+  id: day7_closing_end_1
   triggerPhase: 11
   conditions:
   - conditionType: 2
@@ -23,3 +23,6 @@ MonoBehaviour:
   - storyType: 0
     targetId: day7_Closing_End
     value: 
+  - storyType: 7
+    targetId: 
+    value: -10000

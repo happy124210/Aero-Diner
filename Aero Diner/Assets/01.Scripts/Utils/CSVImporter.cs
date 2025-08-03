@@ -330,7 +330,7 @@ public class CSVImporter
                         action.targetId = attrs.Length > 1 ? attrs[1] : "";
                         break;
                     case StoryType.GiveMoney:
-                    case StoryType.LostMoney:
+                    case StoryType.SetMoney:
                         action.targetId = "";
                         action.value = attrs.Length > 1 ? attrs[1] : "0";
                         break;

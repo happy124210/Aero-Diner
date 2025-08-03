@@ -76,42 +76,48 @@ public class RestaurantManager : Singleton<RestaurantManager>
     
     private void HandleGameEvent(GameEventType eventType, object data)
     {
-        switch (eventType)
+        if (eventType == GameEventType.GamePhaseChanged)
         {
-            case GameEventType.GamePhaseChanged:
-                HandlePhaseChange((GamePhase)data);
-                break;
-            
-            case GameEventType.NoMoreStoriesInPhase:
-                if (GameManager.Instance.CurrentPhase == GamePhase.Closing)
-                {
-                    StartCoroutine(WaitAndShowResultPanel());
-                }
-                break;
+            if (data is GamePhase newPhase)
+            {
+                HandlePhaseChange(newPhase);
+            }
         }
     }
-    
+
+
     private void HandlePhaseChange(GamePhase newPhase)
     {
         switch (newPhase)
         {
-            // 영업 시작 준비
             case GamePhase.Opening:
                 InitializeDay();
                 EventBus.Raise(UIEventType.ShowRoundTimer);
                 break;
 
-            // 영업 시작
             case GamePhase.Operation:
                 customerSpawner.StartSpawning();
                 break;
-
-            // 마감 시작
+            
             case GamePhase.Closing:
                 customerSpawner.StopSpawning();
-                StartCoroutine(CleanupAndShowResult());
+                StartCoroutine(CleanupAndNotify()); 
                 break;
         }
+    }
+    
+    /// <summary>
+    /// 손님 퇴장 처리, 완료되면 시스템에 알림
+    /// </summary>
+    private IEnumerator CleanupAndNotify()
+    {
+        if (showDebugInfo) Debug.Log("[RestaurantManager] 모든 손님이 떠나길 기다리는 중...");
+        
+        TableManager.Instance.ReleaseAllQueues();
+        yield return new WaitUntil(() => CustomerManager.Instance.ActiveCustomerCount == 0);
+        
+        if (showDebugInfo) Debug.Log("[RestaurantManager] 모든 손님이 퇴장 완료");
+        EventBus.Raise(GameEventType.AllCustomersLeft);
     }
 
     #endregion
@@ -129,33 +135,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
         currentRoundTime = 0f;
         GameManager.Instance.BackupEarningsBeforeDayStart();
     }
-
-    /// <summary>
-    /// 모든 손님이 퇴장할 때까지 기다린 후 결과 패널 표시
-    /// </summary>
-    private IEnumerator CleanupAndShowResult()
-    {
-        if (showDebugInfo) Debug.Log("[RestaurantManager]: 모든 손님이 떠나길 기다리는 중...");
-        
-        TableManager.Instance.ReleaseAllQueues();
-        yield return new WaitUntil(() => CustomerManager.Instance.ActiveCustomerCount == 0);
-        
-        if (showDebugInfo) Debug.Log("[RestaurantManager]: 모든 손님이 퇴장했습니다.");
-        EventBus.Raise(GameEventType.AllCustomersLeft, null);
-    }
     
-    /// <summary>
-    /// 대화가 진행 중이면 끝날 때까지 기다린 후 결과 패널을 표시
-    /// </summary>
-    private IEnumerator WaitAndShowResultPanel()
-    {
-        if (showDebugInfo) Debug.Log("[RestaurantManager] 결과 패널 표시 전, 대화 종료 여부 확인 중...");
-        
-        yield return new WaitUntil(() => GameManager.Instance.CurrentPhase != GamePhase.Dialogue);
-        EventBus.Raise(UIEventType.ShowResultPanel, todayEarnings);
-        if (showDebugInfo) Debug.Log($"[RestaurantManager] 모든 스토리 및 대화 종료");
-    }
-
     public void ReStartRestaurant()
     {
         InitializeDay();

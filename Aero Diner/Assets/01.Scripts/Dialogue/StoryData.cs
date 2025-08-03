@@ -23,8 +23,8 @@ public enum StoryType
     UnlockStation, // 상점에서 해제
     GiveStation,   // 플레이어에게 직접 주기
     
-    GiveMoney,     // 골드 주기
-    LostMoney,     // 골드 뺏기
+    GiveMoney,     // 골드 추가/차감
+    SetMoney,     // 골드 특정 액수로 강제 설정
     
     GameOver,
     

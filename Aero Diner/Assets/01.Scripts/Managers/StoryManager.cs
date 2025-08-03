@@ -129,8 +129,8 @@ public class StoryManager : Singleton<StoryManager>
                 case StoryType.GiveMoney:
                     GameManager.Instance.AddMoney(int.Parse(action.value));
                     break;
-                case StoryType.LostMoney:
-                    GameManager.Instance.AddMoney(-int.Parse(action.value));
+                case StoryType.SetMoney:
+                    GameManager.Instance.SetMoney(int.Parse(action.value));
                     break;
                 case StoryType.ChangeGamePhase:
                     GameManager.Instance.ChangePhase((GamePhase)Enum.Parse(typeof(GamePhase), action.targetId));
