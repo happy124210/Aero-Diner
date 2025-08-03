@@ -1,11 +1,8 @@
 ﻿using DG.Tweening;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class ResultPanel : MonoBehaviour
 {
@@ -15,6 +12,7 @@ public class ResultPanel : MonoBehaviour
     [SerializeField] TextMeshProUGUI totalSalesVolume;
     [SerializeField] TextMeshProUGUI totalRevenue;
     public TextMeshProUGUI TotalRevenueText => totalRevenue;
+    
     [Header("Customer Result")]
     [SerializeField] TextMeshProUGUI allCustomer;
     [SerializeField] TextMeshProUGUI servedCustomer;
@@ -23,48 +21,75 @@ public class ResultPanel : MonoBehaviour
     [SerializeField] public CanvasGroup canvasGroup;
     [SerializeField] private RectTransform panelTransform;
     private Vector2 originalPos;
+    private bool isShown = false;
+
     private void Awake()
     {
-        if (panelTransform == null)
-        {
-            Debug.LogError("[ResultPanel] panelTransform이 할당되지 않았습니다!");
-            return;
-        }
+        if (panelTransform == null) panelTransform = GetComponent<RectTransform>();
+        if (canvasGroup == null) canvasGroup = GetComponent<CanvasGroup>();
 
         originalPos = panelTransform.anchoredPosition;
+
+        canvasGroup.alpha = 0f;
+        canvasGroup.interactable = false;
+        gameObject.SetActive(true);
+    }
+
+    private void OnEnable()
+    {
+        EventBus.OnUIEvent += HandleUIEvent;
+    }
+
+    private void OnDisable()
+    {
+        EventBus.OnUIEvent -= HandleUIEvent;
+    }
+    
+    private void HandleUIEvent(UIEventType eventType, object payload)
+    {
+        if (eventType == UIEventType.ShowResultPanel && GameManager.Instance.CurrentPhase != GamePhase.Dialogue)
+        {
+            ShowPanel();
+        }
+    }
+    
+    private void ShowPanel()
+    {
+        if (isShown) return;
+        isShown = true;
+
         panelTransform.anchoredPosition = originalPos + new Vector2(0, 800f);
 
-        if (canvasGroup != null)
-            canvasGroup.alpha = 0f;
+        Init();
+        StartCoroutine(DelayedAnimate());
     }
-    private void Reset()
+
+    public void OnNextButtonClick()
     {
-        contentTransform = transform.Find("Content");
-        totalSalesVolume = transform.FindChild<TextMeshProUGUI>("Tmp_TotalSalesVolume");
-        totalRevenue = transform.FindChild<TextMeshProUGUI>("Tmp_TotalRevenue");
-        
-        allCustomer = transform.FindChild<TextMeshProUGUI>("Tmp_AllCustomer");
-        servedCustomer = transform.FindChild<TextMeshProUGUI>("Tmp_ServedCustomer");
-        goneCustomer = transform.FindChild<TextMeshProUGUI>("Tmp_GoneCustomer");
+        EventBus.PlaySFX(SFXType.ButtonClick);
+
+        canvasGroup.interactable = false;
+        DOTween.Sequence()
+            .Append(canvasGroup.DOFade(0f, 0.3f))
+            .OnComplete(() =>
+            {
+                EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(scene: "DayScene"));
+            });
     }
+    
+    #region 통계 연결 & 애니메이션
     public void Init()
     {
         SetSalesResult();
         SetCustomerResult();
     }
-
-    private void OnEnable()
-    {
-        Init(); // 데이터 바인딩 먼저
-        StartCoroutine(DelayedAnimate());
-    }
-
+    
     private IEnumerator DelayedAnimate()
     {
-        yield return new WaitForSeconds(1f); // 한 프레임 대기
-        AnimateEntrance(); // DOTween 애니메이션 실행
+        yield return new WaitForSeconds(1f); 
+        AnimateEntrance(); 
     }
-
+    
     private void SetSalesResult()
     {
         foreach (Transform child in contentTransform)
@@ -81,14 +106,13 @@ public class ResultPanel : MonoBehaviour
             var go = Instantiate(contentPrefab, contentTransform);
             var foodUI = go.GetComponent<ResultPanelContent>();
             foodUI.SetData(sales);
-
-            // 애니메이션 연출 추가
+            
             var cg = go.GetComponent<CanvasGroup>();
             if (cg == null)
                 cg = go.AddComponent<CanvasGroup>();
 
             RectTransform rt = go.GetComponent<RectTransform>();
-            rt.anchoredPosition += new Vector2(0, 100f); // 위에서 떨어지기
+            rt.anchoredPosition += new Vector2(0, 100f);
             cg.alpha = 0f;
             rt.localScale = Vector3.one * 0.8f;
 
@@ -98,13 +122,12 @@ public class ResultPanel : MonoBehaviour
                 .Join(rt.DOAnchorPosY(rt.anchoredPosition.y - 100f, 0.3f).SetRelative().SetEase(Ease.OutQuad))
                 .Join(rt.DOScale(1f, 0.3f).SetEase(Ease.OutBack));
 
-            delay += 0.05f; // 순차 등장
+            delay += 0.05f;
         }
 
         totalSalesVolume.text = MenuManager.Instance.GetTotalSalesToday().ToString();
         totalRevenue.text = MenuManager.Instance.GetTotalRevenueToday().ToString();
     }
-
     private void SetCustomerResult()
     {
         int all = RestaurantManager.Instance.CustomersVisited;
@@ -114,26 +137,18 @@ public class ResultPanel : MonoBehaviour
         float delay = 1.5f;
         AnimateNumber(allCustomer, all, delay);
         delay += 0.3f;
-
         AnimateNumber(servedCustomer, served, delay);
         delay += 0.3f;
-
         AnimateNumber(goneCustomer, gone, delay);
-    }
-
-    public void OnNextButtonClick()
-    {
-        EventBus.PlaySFX(SFXType.ButtonClick);
-        EventBus.Raise(UIEventType.HideResultPanel);
-        EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(scene: "DayScene"));
     }
     private void AnimateEntrance()
     {
-        if (canvasGroup == null || panelTransform == null) return;
+        if (!canvasGroup || !panelTransform) return;
 
         DG.Tweening.Sequence seq = DOTween.Sequence();
         seq.Append(canvasGroup.DOFade(1f, 0.7f));
         seq.Join(panelTransform.DOAnchorPos(originalPos, 0.5f).SetEase(Ease.OutBack));
+        seq.OnComplete(() => canvasGroup.interactable = true);
         EventBus.OnBGMRequested(BGMEventType.PlayResultTheme);
 
     }
@@ -147,4 +162,5 @@ public class ResultPanel : MonoBehaviour
             }).SetEase(Ease.OutQuad);
         });
     }
+    #endregion
 }
