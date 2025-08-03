@@ -92,7 +92,7 @@ public class Store_StationScrollView : MonoBehaviour
                 return false;
             
             case UnlockType.Recipe:
-                return item.CsvData.Conditions.All(id => MenuManager.Instance.FindMenuById(id).isUnlocked);
+                return item.CsvData.Conditions.Any(id => MenuManager.Instance.FindMenuById(id).isUnlocked);
         }
         return false;
     }

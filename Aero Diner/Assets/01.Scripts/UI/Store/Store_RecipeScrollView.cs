@@ -120,7 +120,7 @@ public class Store_RecipeScrollView : MonoBehaviour
                 // TODO : 퀘스트 체크
                 return true;
             case UnlockType.Recipe:
-                return item.CsvData.Conditions.All(recipeId => MenuManager.Instance.FindMenuById(recipeId).isUnlocked);
+                return item.CsvData.Conditions.Any(recipeId => MenuManager.Instance.FindMenuById(recipeId).isUnlocked);
         }
 
         return false;
