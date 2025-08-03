@@ -108,7 +108,7 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
     /// <summary>
     /// 식사 대기 후 음식 제거
     /// </summary>
-    public void ClearFood()
+    private void ClearFood()
     {
         Destroy(currentFoodObj);
         currentFoodObj = null;

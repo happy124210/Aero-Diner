@@ -66,8 +66,8 @@ public class PlayerController : Singleton<PlayerController>
     public bool IsHoldingFood(string id) => GetHeldFoodID() == id;
     public bool IsHoldingStation(string id) => GetHeldStationID() == id;
     
-    private string GetHeldFoodID() => playerInventory?.holdingItem?.foodData?.id;
-    private string GetHeldStationID() => playerInventory?.holdingItem?.foodData?.id;
+    private string GetHeldFoodID() => playerInventory?.HoldingFood?.foodData?.id;
+    private string GetHeldStationID() => playerInventory?.HoldingFood?.foodData?.id;
 
     #endregion
     
@@ -169,7 +169,7 @@ public class PlayerController : Singleton<PlayerController>
         {
             if (currentTarget != null)
             {
-                bool wasHoldingStation = playerInventory.heldStation != null;
+                bool wasHoldingStation = playerInventory.HoldingStation != null;
 
                 SetDirectionParams();
                 animator.SetTrigger(PutDown);
@@ -236,7 +236,7 @@ public class PlayerController : Singleton<PlayerController>
             }
         }
         
-        bool holdingStation = playerInventory.heldStation != null;
+        bool holdingStation = playerInventory.HoldingStation != null;
         IInteractable newTarget = holdingStation ? gridTarget ?? stationTarget 
             : stationTarget ?? gridTarget;
         
@@ -273,29 +273,28 @@ public class PlayerController : Singleton<PlayerController>
 
             if (type == InteractionType.Pickup)
             {
-                if (GameManager.Instance.CurrentPhase == GamePhase.EditStation && interactable is IMovableStation)
+                switch (interactable)
                 {
-                    if (dist < closestDist)
+                    case IMovableStation when GameManager.Instance.CurrentPhase == GamePhase.EditStation:
                     {
-                        best = interactable;
-                        closestDist = dist;
+                        if (dist < closestDist)
+                        {
+                            best = interactable;
+                            closestDist = dist;
+                        }
+                        continue;
                     }
-                    continue;
-                }
-                if (interactable is FoodDisplay food && food.CanPickup())
-                {
-                    if (dist < closestDist)
+                    
+                    case FoodDisplay food when food.CanPickup():
+                    case IngredientStation:
                     {
-                        best = interactable;
-                        closestDist = dist;
-                    }
-                }
-                if (interactable is IngredientStation)
-                {
-                    if (dist < closestDist)
-                    {
-                        best = interactable;
-                        closestDist = dist;
+                        if (dist < closestDist)
+                        {
+                            best = interactable;
+                            closestDist = dist;
+                        }
+
+                        break;
                     }
                 }
             }
@@ -415,7 +414,7 @@ public class PlayerController : Singleton<PlayerController>
         if (GameManager.Instance.CurrentPhase == GamePhase.Operation)
             return StringMessage.OPERATION_ALERT;
         
-        if (playerInventory.heldStation != null)
+        if (playerInventory.HoldingStation != null)
             return StringMessage.STATION_ALERT;
         
         return StringMessage.ESCAPE_ALERT;
