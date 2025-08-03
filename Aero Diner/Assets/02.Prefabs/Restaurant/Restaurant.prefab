@@ -675,7 +675,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57f19b05d0bc5e34488f3821311ef775, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roundTimeLimit: 300
+  roundTimeLimit: 180
   entrancePoint: {fileID: 324621470884776571}
   exitPoint: {fileID: 5825409973683639667}
   customersServed: 0
