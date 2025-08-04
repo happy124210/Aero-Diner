@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: t_day1_operation_6
   m_EditorClassIdentifier: 
   id: t_day1_operation_6
-  questName: 
+  questName: "\uC5F0\uC2B5"
   description: 
   rewardDescription: 
   objectives:

@@ -1,42 +1,42 @@
 id,targetId,unlockType,unlockConditions,cost
-b1,s23,Recipe,f29,1000
-b2,s24,None,,1000
-b3,s25,Recipe,f27|f30,1000
-b4,s26,Recipe,f31|f33,1000
-b5,s27,Recipe,f35,1000
-b6,s28,Quest,더미 퀘스트,1000
-b7,s29,Recipe,f34,1000
-b8,s30,Recipe,f34,1000
-b9,s31,Recipe,f34,1000
-b10,s17,None,,1000
-b11,s18,Recipe,f28|f31,1000
-b12,s19,Recipe,f30|f34,1000
-b13,s20,Recipe,f33,1000
-b14,s21,Recipe,f35,1000
-b15,s22,Recipe,f32,1000
-b16,s15,None,,1000
-b17,s16,None,,1000
-b18,s1,None,,1000
-b19,s2,None,,1000
-b20,s3,None,,1000
-b21,s4,Quest,더미 퀘스트,1000
+b1,s23,Recipe,f29,50
+b2,s24,None,,200
+b3,s25,Recipe,f27|f30,200
+b4,s26,Recipe,f31|f33,200
+b5,s27,Recipe,f35,200
+b6,s28,Quest,q_dummy,200
+b7,s29,Recipe,f34,200
+b8,s30,Recipe,f34,200
+b9,s31,Recipe,f34,200
+b10,s17,None,,150
+b11,s18,Recipe,f28|f31,150
+b12,s19,Recipe,f30|f34,150
+b13,s20,Recipe,f33,150
+b14,s21,Recipe,f35,150
+b15,s22,Recipe,f32,150
+b16,s15,None,,50
+b17,s16,None,,50
+b18,s1,None,,50
+b19,s2,None,,50
+b20,s3,None,,300
+b21,s4,Quest,q_dummy,1000
 b22,s5,None,,1000
 b23,s6,Recipe,f34,1000
-b24,s7,Quest,더미 퀘스트,1000
+b24,s7,Quest,q_dummy,1000
 b25,s8,None,,1000
-b26,s9,Quest,더미 퀘스트,1000
-b27,s10,Quest,더미 퀘스트,1000
-b28,s11,Quest,더미 퀘스트,1000
-b29,s12,Quest,더미 퀘스트,1000
-b30,s13,Quest,더미 퀘스트,1000
-b31,s14,Quest,더미 퀘스트,1000
-b32,f29,None,,1000
-b33,f27,None,,1000
-b34,f28,None,,1000
-b35,f30,None,,1000
-b36,f31,Recipe,f28,1000
-b37,f32,None,,1000
-b38,f33,Recipe,f30,1000
-b39,f34,Recipe,f33,1000
-b40,f35,Recipe,f30,1000
-b41,f36,Quest,더미 퀘스트,1000
+b26,s9,Quest,q_dummy,1000
+b27,s10,Quest,q_dummy,1000
+b28,s11,Quest,q_dummy,1000
+b29,s12,Quest,q_dummy,1000
+b30,s13,Quest,q_dummy,1000
+b31,s14,Quest,q_dummy,1000
+b32,f29,None,,50
+b33,f27,None,,200
+b34,f28,None,,200
+b35,f30,None,,200
+b36,f31,Recipe,f28,350
+b37,f32,None,,200
+b38,f33,Recipe,f30,350
+b39,f34,Recipe,f33,500
+b40,f35,Recipe,f30,350
+b41,f36,Quest,q_dummy,1000

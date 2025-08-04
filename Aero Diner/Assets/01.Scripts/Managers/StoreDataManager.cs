@@ -56,8 +56,7 @@ public class StoreDataManager : Singleton<StoreDataManager>
                 return $"선행 레시피\n[{string.Join("\nor ", requiredRecipeNames)}] 필요";
 
             case UnlockType.Quest:
-                string questName = itemData.Conditions.FirstOrDefault(); // "더미 퀘스트"
-                return $"선행 퀘스트\n[{questName}] 완료 필요";
+                return "선행 퀘스트\n[기술의 발전] 완료 필요";
 
             case UnlockType.None:
                 break;
