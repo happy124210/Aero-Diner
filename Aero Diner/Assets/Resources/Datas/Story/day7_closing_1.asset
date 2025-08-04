@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: day7_closing_1
   m_EditorClassIdentifier: 
   id: day7_closing_1
-  triggerPhase: 6
+  triggerPhase: 1
   conditions:
   - conditionType: 0
     lValue: 
     operator: ==
-    rValue: 7
+    rValue: 8
   actions:
   - storyType: 0
     targetId: day7_Closing_Start
