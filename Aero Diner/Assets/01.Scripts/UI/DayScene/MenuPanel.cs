@@ -110,6 +110,7 @@ public class MenuPanel : MonoBehaviour
     {
         PlayExitAnimation();
         GameManager.Instance.ChangePhase(GamePhase.EditStation);
+        EventBus.PlaySFX(SFXType.ButtonClick);
         EventBus.PlayBGM(BGMEventType.PlayLifeTheme);
     }
     
