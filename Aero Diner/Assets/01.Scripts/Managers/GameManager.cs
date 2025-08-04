@@ -117,6 +117,7 @@ public class GameManager : Singleton<GameManager>
         if (eventType == GameEventType.RoundTimerEnded)
         {
             ChangePhase(GamePhase.Closing);
+            EventBus.Raise(UIEventType.ShowResultPanel);
         }
         
         if (eventType == GameEventType.NoMoreStoriesInPhase)
@@ -190,6 +191,21 @@ public class GameManager : Singleton<GameManager>
         ChangePhase(previousPhase);
     }
     
+    public void EnterDialogue()
+    {
+        if (currentPhase == GamePhase.Dialogue || currentPhase == GamePhase.Paused) return;
+
+        previousPhase = currentPhase;
+        ChangePhase(GamePhase.Dialogue);
+    }
+
+    public void ExitDialogue()
+    {
+        if (currentPhase != GamePhase.Dialogue) return;
+    
+        ChangePhase(previousPhase);
+    }
+    
     #endregion
     
     #region 데이터 관리 (돈, 날짜, 저장/불러오기)
@@ -236,6 +252,15 @@ public class GameManager : Singleton<GameManager>
         QuestManager.Instance.SaveQuestData();
         
         if (showDebugInfo) Debug.Log("[GameManager]: 게임 데이터 저장 완료.");
+    }
+    
+    public void ResetGameData()
+    {
+        currentDay = 1;
+        totalEarnings = 0;
+
+        StoryManager.Instance.ResetStoryData();
+        QuestManager.Instance.ResetQuestData();
     }
 
     public void GetCurrentDate(out int month, out int day)

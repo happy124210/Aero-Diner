@@ -102,6 +102,12 @@ public class QuestManager : Singleton<QuestManager>
         SaveLoadManager.SaveGame(data);
     }
 
+    public void ResetQuestData()
+    {
+        playerQuestStatus.Clear();
+        playerQuestProgress.Clear();
+    }
+
     #endregion
     
     #region 퀘스트 상태 관리

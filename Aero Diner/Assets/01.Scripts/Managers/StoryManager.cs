@@ -89,12 +89,14 @@ public class StoryManager : Singleton<StoryManager>
         }
 
         var currentPhase = GameManager.Instance.CurrentPhase;
-        
+    
         var nextStory = storyDatabase.FirstOrDefault(story =>
         {
             if (executedStoryIds.Contains(story.id)) return false;
-            
-            bool isPhaseCompatible = (story.triggerPhase == currentPhase || story.triggerPhase == GamePhase.None);
+
+            bool isPhaseCompatible = (story.triggerPhase == currentPhase) || 
+                                     (story.triggerPhase == GamePhase.None && endedDialogueId != null);
+
             return isPhaseCompatible && AreConditionsMet(story.conditions, endedDialogueId);
         });
 
@@ -104,10 +106,10 @@ public class StoryManager : Singleton<StoryManager>
             executedStoryIds.Add(nextStory.id);
             StartCoroutine(ExecuteActions(nextStory.actions));
         }
-        else if (endedDialogueId == null)
+        else 
         {
             if (showDebugInfo) Debug.Log($"[StoryManager] {currentPhase} Phase에서 실행할 스토리가 더 이상 없음");
-            EventBus.Raise(GameEventType.NoMoreStoriesInPhase, null);
+            EventBus.Raise(GameEventType.NoMoreStoriesInPhase, currentPhase);
         }
     }
     
@@ -181,6 +183,11 @@ public class StoryManager : Singleton<StoryManager>
         }
         
         return true;
+    }
+
+    public void ResetStoryData()
+    {
+        executedStoryIds =  new HashSet<string>();
     }
     
     #region helper
