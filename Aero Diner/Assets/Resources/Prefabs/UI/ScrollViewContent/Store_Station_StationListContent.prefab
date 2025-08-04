@@ -353,6 +353,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6dc91de6a00b9d4c8664da7f2f58dec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  outline: {fileID: 2106807435404673889}
   stationNameText: {fileID: 3259159550466852690}
   stationIcon: {fileID: 5975457250293388654}
   selectButton: {fileID: 2597329491975992938}
