@@ -26,11 +26,31 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
     protected FoodData cookedIngredient;                               // 조리 완료 시 결과가 되는 레시피
     protected OutlineShaderController outline;                         // 외곽선 효과를 제어하는 컴포넌트
     protected bool hasInitialized = false;                             // 아이콘 초기화 플래그
+    private FoodData cookedResult;                                     // 조리 완료된 결과물
     protected CookingTimer timer;
     protected bool isCooking = false;
 
     public string StationId => stationData? stationData.id : string.Empty;
-    public bool IsCookingOrWaiting => cookedIngredient != null && timer != null && timer.Remaining > 0f;
+    public bool IsCookingOrWaiting
+    {
+        get
+        {
+            // 자동 조리: 타이머가 돌아가고 있으면 true
+            if (stationData.workType == WorkType.Automatic)
+            {
+                return cookedIngredient != null && timer != null && timer.Remaining > 0f;
+            }
+
+            // 패시브 조리: 재료가 모두 충족되면 true
+            if (stationData.workType == WorkType.Passive)
+            {
+                return cookedIngredient != null &&
+                       cookedIngredient.ingredients.All(id => currentIngredients.Contains(id));
+            }
+
+            return false;
+        }
+    }
 
     private void Awake()
     {
@@ -85,9 +105,18 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
         UpdateCandidateRecipes();     // 현재 재료 조합으로 가능한 레시피 탐색
 
         // 모든 필요한 재료가 충족되었는지 확인 후 조리 시작
-        if (cookedIngredient != null && cookedIngredient.ingredients.All(id => currentIngredients.Contains(id)) && stationData.workType == WorkType.Automatic)
+        bool hasAllIngredients = cookedIngredient != null && cookedIngredient.ingredients.All(id => currentIngredients.Contains(id));
+
+        if (hasAllIngredients && stationData.workType == WorkType.Automatic)
         {
             StartCooking();
+        }
+        else if (hasAllIngredients && stationData.workType == WorkType.Passive)
+        {
+            // 패시브 조리: 조리는 시작하지 않지만, 픽업 금지 상태로 진입
+            if (showDebugInfo) Debug.Log("[Player] 조리 중인 스테이션 → 픽업 금지");
+
+            timerController?.ShowPassiveCookingState();
         }
         else
         {
@@ -95,9 +124,8 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
             timerController?.gameObject.SetActive(false);
             if (showDebugInfo) Debug.Log("조건에 맞는 레시피가 부족하여 대기 중...");
         }
-
     }
-    
+
     public void Interact(PlayerInventory inventory, InteractionType interactionType)
     {
         
@@ -263,6 +291,8 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
     /// </summary>
     protected void ProcessCookingResult()
     {
+        cookedResult = cookedIngredient; // 결과물 저장
+
         ClearPlacedObjects();
 
         if (!cookedIngredient)
@@ -333,8 +363,8 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
         currentIngredients.Clear();                                     // 현재 재료 목록 초기화는 그대로 유지
         placedIngredientList.Clear();                                   // 실재료 목록도 초기화
 
-        timer.Start();                                                  // CookingTimer 객체 기반으로 타이머 시작
-        timerController?.UpdateTimer(timer.Remaining, timer.Duration);  // 타이머 UI 갱신
+        //timer.Start();                                                  // CookingTimer 객체 기반으로 타이머 시작
+        //timerController?.UpdateTimer(timer.Remaining, timer.Duration);  // 타이머 UI 갱신
     }
 
     /// <summary>
@@ -348,9 +378,9 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
     private IEnumerator HandlePickup()
     {
         // 1. cookedIngredient 존재 → 결과물 꺼냄
-        if (cookedIngredient != null)
+        if (cookedResult != null)
         {
-            if (showDebugInfo) Debug.Log($"[Pickup] 결과물 픽업: {cookedIngredient.foodName}");
+            if (showDebugInfo) Debug.Log($"[Pickup] 결과물 픽업: {cookedResult.foodName}");
 
             iconDisplay?.ResetAll();
             ClearPlacedObjects();
@@ -363,9 +393,9 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
             placedIngredients.Clear(); 
             placedIngredientList.Clear();
 
-            EventBus.Raise(GameEventType.PlayerPickedUpItem, cookedIngredient);
+            EventBus.Raise(GameEventType.PlayerPickedUpItem, cookedResult);
 
-            cookedIngredient = null;
+            cookedResult = null;
             UpdateCandidateRecipes();
             yield break;
         }
@@ -400,7 +430,6 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
             if (food != null)
             {
                 AttachFoodIcon(targetObject, food.foodData);
-                //inventory.holdingItem = food;
                 EventBus.Raise(GameEventType.PlayerPickedUpItem, food.foodData);
             }
         }
