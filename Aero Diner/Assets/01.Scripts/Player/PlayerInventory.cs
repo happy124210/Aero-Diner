@@ -1,25 +1,23 @@
 ﻿using UnityEngine;
 
-/// <summary>
-/// 플레이어가 음식, 설비를 들고 내려놓는 기능을 담당
-/// 게임의 현재 상태에 따라 동작이 달라짐
-/// </summary>
+
+//플레이어가 재료를 들고, 내려놓는 기능을 담당하는 인벤토리
 public class PlayerInventory : MonoBehaviour
 {
     public Transform GetItemSlotTransform() => itemSlotTransform;
-
-    [Header("참조")]
+    
+    [Header("아이템 슬롯 위치")]
     [SerializeField] private Transform itemSlotTransform;
     [SerializeField] private TilemapController tilemapController;
-
-    [Header("디버그")]
+    
+    [Header("Debug Info")]
     [SerializeField] private bool showDebugInfo;
-
-    // 현재 들고 있는 아이템 정보
-    public FoodDisplay HoldingFood { get; private set; }
-    public IMovableStation HoldingStation { get; private set; }
-
-    public bool IsHoldingItem => HoldingFood != null || HoldingStation != null;
+    
+    // 인벤토리 정보
+    public FoodDisplay holdingItem;
+    public IMovableStation heldStation;
+    
+    public bool IsHoldingItem => holdingItem != null || heldStation != null;
 
     private void Start()
     {
@@ -29,170 +27,219 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 대상 아이템을 들려고 시도합니다.
-    /// </summary>
     public void TryPickup(IInteractable target)
     {
         if (IsHoldingItem || target == null) return;
 
-        // 설비 들기 (편집 모드)
+        //Station 들기: 편집 모드에서만
         if (GameManager.Instance.CurrentPhase == GamePhase.EditStation && target is IMovableStation movable)
         {
-            HandleStationPickup(movable);
+            heldStation = movable;
+
+            var tr = movable.GetTransform();
+            tr.SetParent(itemSlotTransform);
+            tr.localPosition = Vector3.zero;
+
+            var rb = tr.GetComponent<Rigidbody2D>();
+            if (rb) rb.simulated = false;
+
+            var col = tr.GetComponent<Collider2D>();
+            if (col) col.enabled = false;
+
+            tilemapController?.ShowAllCells();
+            EventBus.Raise(GameEventType.PlayerPickedUpItem, heldStation.StationData);
             return;
         }
 
-        // 재료/음식 들기 (영업 페이즈)
+        // Operation, Closing 페이즈 전용 처리
         if (GameManager.Instance.CurrentPhase == GamePhase.Operation || GameManager.Instance.CurrentPhase == GamePhase.Closing)
         {
-            // 재료 상자에서는 재료를 생성해서 바로 듦
+            // IngredientStation → Interact 호출로 재료 생성
             if (target is IngredientStation station)
             {
                 station.Interact(this, InteractionType.Pickup);
                 return;
             }
 
-            // 바닥에 놓인 음식/재료를 듦
+            // FoodDisplay → 직접 들기
             if (target is FoodDisplay food && food.CanPickup())
             {
-                HandleFoodPickup(food);
+                holdingItem = food;
+
+                food.transform.SetParent(itemSlotTransform);
+                food.transform.localPosition = Vector3.zero;
+
+                var rb = food.GetComponent<Rigidbody2D>();
+                if (rb) rb.simulated = false;
+
+                var col = food.GetComponent<Collider2D>();
+                if (col) col.enabled = false;
+
+                food.originPlace?.OnPlayerPickup();
+                EventBus.Raise(GameEventType.PlayerPickedUpItem, holdingItem.foodData);
             }
         }
     }
 
-    /// <summary>
-    /// 들고 있는 아이템을 대상에 내려놓으려 시도합니다.
-    /// </summary>
     public void DropItem(IInteractable target)
     {
-        if (!IsHoldingItem || target == null)
+        if (GameManager.Instance.CurrentPhase == GamePhase.EditStation && heldStation != null)
         {
-            if (showDebugInfo) Debug.Log("[Inventory] 아이템이 없거나 타겟이 없습니다.");
-            return;
+            if (GameManager.Instance.CurrentPhase == GamePhase.EditStation && heldStation != null)
+            {
+                if (target is GridCellStatus gridCell)
+                {
+                    // 배치 성공 여부 체크
+                    bool success = PlacementManager.Instance.TryPlaceStationAt(gridCell.gameObject, heldStation);
+
+                    if (success)
+                    {
+                        heldStation = null; // 성공 시에만 손에서 내려놓음
+
+                        if (tilemapController != null)
+                            tilemapController.HideAllCells();
+                    }
+
+                    return;
+                }
+            }
         }
 
-        // 설비 내려놓기 (편집 모드)
-        if (HoldingStation != null && GameManager.Instance.CurrentPhase == GamePhase.EditStation)
+        if (GameManager.Instance.CurrentPhase != GamePhase.Operation)
         {
-            HandleStationDrop(target);
-            return;
-        }
-
-        // 재료/음식 내려놓기 (영업 페이즈)
-        if (HoldingFood != null && (GameManager.Instance.CurrentPhase == GamePhase.Operation || GameManager.Instance.CurrentPhase == GamePhase.Closing))
-        {
-            HandleFoodDrop(target);
+            if (showDebugInfo)
+                Debug.Log("[Inventory] Operation 페이즈가 아니므로 재료를 배치할 수 없습니다.");
             return;
         }
 
         if (showDebugInfo)
-            Debug.Log($"[Inventory] 현재 게임 상태({GameManager.Instance.CurrentPhase})에서는 아이템을 내려놓을 수 없습니다.");
+            Debug.Log($"[Inventory] target 타입: {target.GetType().Name}");
+
+        if (!IsHoldingItem || target == null)
+        {
+            if (showDebugInfo)
+                Debug.Log("[Inventory] 아이템이 없거나 타겟이 없습니다.");
+            return;
+        }
+
+        bool placed = false;
+
+        switch (target)
+        {
+            case IngredientStation station:
+                FoodData dataToStation = holdingItem.foodData;
+                if (dataToStation != null && station.PlaceIngredient(dataToStation))
+                {
+                    Destroy(holdingItem.gameObject);
+                    holdingItem = null;
+                    if (showDebugInfo)
+                        Debug.Log($"[Inventory] 재료 일치 - 재료 소비됨");
+                    placed = true;
+                }
+                else
+                {
+                    if (showDebugInfo)
+                        Debug.Log("[Inventory] 재료 불일치 - 내려놓을 수 없음");
+                }
+                break;
+            
+            case Shelf shelf:
+                {
+                    if (shelf.CanPlaceIngredient(holdingItem.foodData))
+                    {
+                        shelf.PlaceObject(holdingItem.foodData);
+                        Destroy(holdingItem.gameObject);
+                        holdingItem = null;
+                        if (showDebugInfo)
+                            Debug.Log("[Inventory] 선반에 아이템 배치됨");
+                        placed = true;
+                    }
+                    else
+                    {
+                        if (showDebugInfo)
+                            Debug.Log("[Inventory] 선반에 재료를 배치할 수 없습니다.");
+                    }
+                    break;
+                }
+            
+            case Trashcan:
+                Destroy(holdingItem.gameObject);
+                holdingItem = null;
+                if (showDebugInfo)
+                    Debug.Log("[Inventory] 아이템을 쓰레기통에 버렸습니다.");
+                placed = true;
+                break;
+            
+            case PassiveStation station:
+                if (holdingItem.foodData
+                    && station.CanPlaceIngredient(holdingItem.foodData))
+                {
+                    // ScriptableObject 원본(rawData)으로 배치 호출
+                    station.PlaceObject(holdingItem.foodData);
+
+                    Destroy(holdingItem.gameObject);
+                    holdingItem = null;
+                    if (showDebugInfo)
+                        Debug.Log("[Inventory] PassiveStation에 아이템 배치됨");
+                    placed = true;
+                }
+
+                else
+                {
+                    if (showDebugInfo)
+                        Debug.Log("[Inventory] PassiveStation에 재료 배치 실패");
+                }
+                break;
+                
+            case AutomaticStation automatic:
+                if (holdingItem.foodData
+                    && automatic.CanPlaceIngredient(holdingItem.foodData))
+                {
+                    // 실제 배치 호출
+                    automatic.PlaceObject(holdingItem.foodData);
+
+                    Destroy(holdingItem.gameObject);
+                    holdingItem = null;
+                    if (showDebugInfo)
+                        Debug.Log("[Inventory] AutoStation에 아이템 배치됨");
+                    placed = true;
+                }
+                else
+                {
+                    if (showDebugInfo)
+                        Debug.Log("[Inventory] AutoStation에 배치 불가");
+                }
+                break;
+            
+            case Table table:
+                if (table.CanPlaceFood)
+                {
+                    table.PlaceObject(holdingItem.foodData);
+                    Destroy(holdingItem.gameObject);
+                    holdingItem = null;
+                    if (showDebugInfo)
+                        Debug.Log("[Inventory] 테이블에 아이템 배치됨");
+                    placed = true;
+                }
+                else
+                {
+                    if (showDebugInfo)
+                        Debug.Log("[Inventory] 테이블에 재료를 배치할 수 없습니다.");
+                }
+                break;
+            
+        }
+
+        if (!placed)
+        {
+            if (showDebugInfo)
+                Debug.Log("감지는 되었으나 배치 실패");
+        }
     }
 
-    /// <summary>
-    /// 외부에서 플레이어가 들 아이템을 직접 설정
-    /// </summary>
     public void SetHeldItem(FoodDisplay item)
     {
-        HoldingFood = item;
-        EventBus.Raise(GameEventType.PlayerPickedUpItem, HoldingFood.foodData);
+        holdingItem = item;
+        EventBus.Raise(GameEventType.PlayerPickedUpItem, holdingItem.foodData);
     }
-
-    // --- Private Helper Methods ---
-
-    #region 아이템 들기/놓기 처리
-    private void HandleStationPickup(IMovableStation station)
-    {
-        HoldingStation = station;
-
-        Transform tr = station.GetTransform();
-        tr.SetParent(itemSlotTransform);
-        tr.localPosition = Vector3.zero;
-
-        // 물리 및 충돌 비활성화
-        var rb = tr.GetComponent<Rigidbody2D>();
-        if (rb) rb.simulated = false;
-
-        var col = tr.GetComponent<Collider2D>();
-        if (col) col.enabled = false;
-
-        tilemapController?.ShowAllCells();
-        EventBus.Raise(GameEventType.PlayerPickedUpItem, HoldingStation.StationData);
-    }
-
-    private void HandleFoodPickup(FoodDisplay food)
-    {
-        HoldingFood = food;
-
-        food.transform.SetParent(itemSlotTransform);
-        food.transform.localPosition = Vector3.zero;
-
-        // 물리 및 충돌 비활성화
-        var rb = food.GetComponent<Rigidbody2D>();
-        if (rb) rb.simulated = false;
-
-        var col = food.GetComponent<Collider2D>();
-        if (col) col.enabled = false;
-
-        food.originPlace?.OnPlayerPickup();
-        EventBus.Raise(GameEventType.PlayerPickedUpItem, HoldingFood.foodData);
-    }
-
-    private void HandleStationDrop(IInteractable target)
-    {
-        if (target is GridCellStatus gridCell)
-        {
-            bool success = PlacementManager.Instance.TryPlaceStationAt(gridCell.gameObject, HoldingStation);
-            if (success)
-            {
-                HoldingStation = null; // 성공 시에만 손에서 놓음
-                tilemapController?.HideAllCells();
-            }
-        }
-    }
-
-    private void HandleFoodDrop(IInteractable target)
-    {
-        bool placedSuccessfully = false;
-
-        // IPlaceableStation 인터페이스 처리
-        if (target is IPlaceableStation placeable)
-        {
-            if (target is BaseStation station && !station.CanPlaceIngredient(HoldingFood.foodData))
-            {
-                if (showDebugInfo) Debug.Log($"[Inventory] {target.GetType().Name}에 재료({HoldingFood.foodData.foodName})를 놓을 수 없습니다.");
-                return;
-            }
-
-            // 내려놓기 실행
-            placeable.PlaceObject(HoldingFood.foodData);
-            placedSuccessfully = true;
-        }
-        
-        // IPlaceableStation을 구현하지 않은 특별한 케이스 (쓰레기통 등)
-        else if (target is Trashcan)
-        {
-            placedSuccessfully = true;
-        }
-
-        // 성공적으로 내려놓았다면 손에 든 아이템을 파괴하고 인벤토리 비우기
-        if (placedSuccessfully)
-        {
-            ConsumeHeldItem();
-        }
-    }
-
-    /// <summary>
-    /// 손에 들고 있는 아이템 파괴
-    /// </summary>
-    private void ConsumeHeldItem()
-    {
-        if (HoldingFood != null)
-        {
-            Destroy(HoldingFood.gameObject);
-            HoldingFood = null;
-        }
-    }
-    #endregion
 }
