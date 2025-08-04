@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class Store_Station_Content : MonoBehaviour
+public class Store_Station_Content : BaseScrollViewItem
 {
     [SerializeField] private TMP_Text stationNameText;
     [SerializeField] private Image stationIcon;
