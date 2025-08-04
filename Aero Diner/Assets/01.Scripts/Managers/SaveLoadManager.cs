@@ -119,6 +119,11 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         data.keyBindings = preservedKeyBindings;
 
         SaveGame(data);
+        
+        if (File.Exists(stationSavePath))
+        {
+            File.Delete(stationSavePath);
+        }
 
         if (Instance?.showDebugInfo == true)
             Debug.Log("[SaveLoadManager] 진행 정보만 초기화됨 (옵션 및 키 바인딩 유지)");
@@ -126,7 +131,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
 
     public static void SaveStationData(List<StationSaveInfo> infos)
     {
-        string path = Path.Combine(Application.persistentDataPath, "station.json");
+        string path = stationSavePath;
 
         try
         {
@@ -145,7 +150,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
 
     public static List<StationSaveInfo> LoadStationData()
     {
-        string path = Path.Combine(Application.persistentDataPath, "station.json");
+        string path = stationSavePath;
 
         try
         {
