@@ -1,0 +1,63 @@
+id,stationName,displayName,stationType,workType,description
+s1,Shelf,선반,Shelf,None,"조리 공간에 놓이는 기본 설비입니다.\n
+재료나 도구를 잠시 올려두기에 적당합니다."
+s2,TrashCan,쓰레기통,TrashCan,None,"불필요한 재료를 폐기하는 쓰레기통입니다.\n
+버려진 재료는 복구할 수 없습니다."
+s3,Pot,냄비,Pot,Automatic,"파스타 면을 삶는 데 사용하는 도구입니다.\n
+면을 일정한 온도로 익혀 부드러운 식감을 완성합니다."
+s4,Oven,오븐,Oven,Automatic,"재료를 굽거나 익히는 조리 설비입니다.\n
+온도가 일정하게 유지되어 조리 흐름이 안정됩니다."
+s5,CuttingBoard,도마,CuttingBoard,Passive,"재료를 자르거나 다듬는 데 사용하는 도구입니다.\n
+손질 과정에서 가장 기본이 되는 도구입니다."
+s6,Grinding,막자 사발,Grinding,Passive,"재료를 찧거나 으깨는 데 사용하는 도구입니다.\n
+조미료나 소스를 만들기 위한 간단한 손도구로 쓰입니다."
+s7,Grater,강판,Grater,Passive,"치즈나 단단한 식재료를 갈아내는 도구입니다.\n
+표면 마찰을 이용해 가늘게 분쇄됩니다."
+s8,FryingPan,프라이팬,FryingPan,Passive,"파스타를 볶아내는 데 쓰이는 도구입니다.\n
+면과 재료, 소스를 고루 익히며 풍미를 더합니다."
+s9,ThermalPot,열전도냄비,Pot,Automatic,"열을 균일하게 전달하는 고급 냄비입니다.\n
+끓는 속도가 일정하고 조리 편차가 적습니다."
+s10,HighPowerOven,고화력 오븐,Oven,Automatic,"고온으로 빠르게 조리할 수 있는 오븐입니다.\n
+두꺼운 재료도 짧은 시간에 고르게 익힙니다."
+s11,AutoCutter,전동 채칼,CuttingBoard,Automatic,"채소를 자동으로 썰어주는 조리 장비입니다.\n
+손질 속도를 크게 단축할 수 있습니다."
+s12,Blender,믹서기,Grinding,Automatic,"회전 날을 이용해 재료를 곱게 갈아내는 설비입니다.\n
+재료를 고르게 분쇄해 조리에 적합한 상태로 만들어줍니다."
+s13,AutoGrater,전동 강판,Grater,Automatic,"단단한 재료를 자동으로 갈아내는 설비입니다.\n
+손이 많이 가는 작업을 빠르게 처리해 줍니다."
+s14,RollerPan,롤팬,FryingPan,Automatic,"자동으로 재료를 볶고 섞는 전동 팬입니다.\n
+일정한 열과 움직임으로 조리 효율을 높입니다"
+s15,NoodleBox,건조면 보관함,IngredientBox,None,"건조된 파스타 면을 보관하고 있는 선반입니다.\n
+습기를 차단해 재료 상태를 안정적으로 유지합니다."
+s16,WaterBox,정수기,IngredientBox,None,"조리에 필요한 물을 공급하는 장치입니다.\n
+항상 깨끗하고 일정한 수질의 물을 제공합니다."
+s17,TomatoSauceBox,토마토 소스,IngredientBox,None,"산뜻한 신맛이 특징인 붉은 소스입니다.\n
+가볍고 상큼한 맛으로 요리에 활기를 줍니다."
+s18,OilSauceBox,오일,IngredientBox,None,"파스타에 풍미를 더하는 투명한 오일입니다.\n
+볶아내면 재료의 향과 감칠맛이 은근히 배어납니다."
+s19,CreamSauceBox,크림 소스,IngredientBox,None,"우유와 치즈를 섞어 만든 부드러운 흰색 소스입니다.\n
+면에 잘 스며들어 고소하고 진한 맛을 만들어냅니다."
+s20,RoseSauceBox,로제 소스,IngredientBox,None,"토마토와 크림이 어우러진 분홍빛 소스입니다.\n
+새콤함과 고소함이 조화롭게 섞여 있습니다."
+s21,CarbonaraSauceBox,까르보나라 소스,IngredientBox,None,"계란과 치즈의 진한 풍미를 담은 소스입니다.\n
+짭짤하고 묵직한 맛이 면과 잘 어울립니다."
+s22,PestoSauceBox,페스토 소스,IngredientBox,None,"바질과 올리브오일, 치즈가 어우러진 초록색 소스입니다.\n
+향긋함과 고소함이 함께 느껴지는 산뜻한 풍미가 특징입니다."
+s23,MeatBox,고기 냉동고,IngredientBox,None,"고기를 장기 보관하는 냉동 설비입니다. \n
+저온 상태에서 신선도를 오래 유지합니다."
+s24,VegetableBox,채소 상자,IngredientBox,None,"채소를 보관하는 보관함입니다.\n
+잎채소나 뿌리채소 등 다양한 재료를 담을 수 있습니다."
+s25,MushroomBox,버섯 상자,IngredientBox,None,"버섯류를 저장하는 보관 상자입니다.\n
+손상 없이 통풍된 상태로 보관할 수 있습니다."
+s26,SeafoodBox,해산물 냉동고,IngredientBox,None,"해산물을 보관하는 냉동 설비입니다.\n
+잡내 없이 보관할 수 있도록 온도가 조절됩니다."
+s27,BaconBox,베이컨 냉장고,IngredientBox,None,"베이컨을 저장하는 전용 냉장 설비입니다.\n
+적정 온도에서 훈연 향과 조직을 유지합니다."
+s28,CheeseBox,치즈 선반,IngredientBox,None,"덩어리 치즈를 보관하는 개방형 선반입니다.\n
+공기 순환으로 치즈의 풍미를 유지합니다."
+s29,ChiliBox,고추 상자,IngredientBox,None,"말린 고추를 보관하는 상자입니다.\n
+필요할 때 꺼내 향신 재료로 사용할 수 있습니다."
+s30,CapsicumBox,파프리카 상자,IngredientBox,None,"말린 파프리카를 담아두는 상자입니다.\n
+요리에 색감과 풍미를 더할 때 활용됩니다."
+s31,PepperBox,후추 상자,IngredientBox,None,"후추를 담아 보관하는 용기입니다.\n
+톡 쏘는 향으로 요리의 마무리를 담당합니다."

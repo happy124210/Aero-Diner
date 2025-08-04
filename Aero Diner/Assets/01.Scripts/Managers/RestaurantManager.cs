@@ -25,6 +25,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
     
     // private fields
     private float currentRoundTime;
+    private bool isTimerRunning;
     
     #region property & public methods
     
@@ -59,14 +60,15 @@ public class RestaurantManager : Singleton<RestaurantManager>
     private void Update()
     {
         if (GameManager.Instance.CurrentPhase != GamePhase.Operation
-            || GameManager.Instance.IsTutorialActive) return;
+            || GameManager.Instance.IsTutorialActive || !isTimerRunning) return;
         
         currentRoundTime += Time.deltaTime;
 
         if (currentRoundTime >= roundTimeLimit)
         {
+            currentRoundTime = roundTimeLimit; 
+            isTimerRunning = false;
             EventBus.Raise(GameEventType.RoundTimerEnded);
-            currentRoundTime = -1f; 
         }
     }
 
@@ -133,6 +135,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
         customersVisited = 0;
         todayEarnings = 0;
         currentRoundTime = 0f;
+        isTimerRunning = true;
         GameManager.Instance.BackupEarningsBeforeDayStart();
     }
     

@@ -25,9 +25,10 @@ public class Store_RecipePanel : MonoBehaviour
         menuNameText.text = item.DisplayName;
         saleText.text = $"{item.Cost} G";
         
-        menuDescriptionText.text = canBePurchased 
-            ? item.Description 
-            : StoreDataManager.Instance.GenerateUnlockDescription(item.CsvData);
+        if (canBePurchased)
+        {
+            menuDescriptionText.text = item.Description.Replace("\\n", "\n");
+        }
 
         buyButton.interactable = canBePurchased;
         SetLockedOverlayVisible(!canBePurchased);

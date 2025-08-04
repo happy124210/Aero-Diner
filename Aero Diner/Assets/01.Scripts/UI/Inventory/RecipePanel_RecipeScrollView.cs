@@ -11,15 +11,19 @@ public class RecipePanel_RecipeScrollView : MonoBehaviour
     
     // private
     private bool suppressNextSFX;
-    private StoreItem currentSelectedItem;
 
-    private void Start()
+    private void OnEnable()
     {
         PopulateMenuList();
     }
 
     private void PopulateMenuList()
     {
+        foreach (Transform child in contentTransform)
+        {
+            Destroy(child.gameObject);
+        }
+        
         var menus = MenuManager.Instance.GetUnlockedMenus()
             .OrderBy(menu =>
             {

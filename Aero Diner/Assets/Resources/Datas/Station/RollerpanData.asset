@@ -18,23 +18,9 @@ MonoBehaviour:
   stationType: 1
   workType: 1
   stationIcon: {fileID: 21300000, guid: 3103126cf7f73254fb28fecd771191a8, type: 3}
-  description: "\uB864\uD32C \uC785\uB2C8\uB2E4"
-  stationCost: 100
-  availableRecipes:
-  - {fileID: 11400000, guid: 0f5a68b1c98b3b7428510bfc3dd8af76, type: 2}
-  - {fileID: 11400000, guid: 6d0fa4d43c22e1f439b0e7bba6ff32b0, type: 2}
-  - {fileID: 11400000, guid: 31507687f85afd441a5787915156f229, type: 2}
-  - {fileID: 11400000, guid: 542ac65e81b538642a53411828a14d66, type: 2}
-  - {fileID: 11400000, guid: c3a8710e7ce26ab439b119a0445b789d, type: 2}
-  - {fileID: 11400000, guid: 8d83e5bbe7914fb45bd8b92251c0b00a, type: 2}
-  - {fileID: 11400000, guid: 75c62b34e6c1c5c44810dc34b5641358, type: 2}
-  - {fileID: 11400000, guid: 611bdcedeffbff14dac5f6fbbe93040d, type: 2}
-  - {fileID: 11400000, guid: b9aae12dc41169c488516b13b9c8f89b, type: 2}
+  description: "\uC790\uB3D9\uC73C\uB85C \uC7AC\uB8CC\uB97C \uBCF6\uACE0 \uC11E\uB294
+    \uC804\uB3D9 \uD32C\uC785\uB2C8\uB2E4.\\n\n\uC77C\uC815\uD55C \uC5F4\uACFC \uC6C0\uC9C1\uC784\uC73C\uB85C
+    \uC870\uB9AC \uD6A8\uC728\uC744 \uB192\uC785\uB2C8\uB2E4"
+  availableRecipes: []
   ingredientSlots: 3
-  slotDisplays:
-  - foodType: 3
-    placeholderIcon: {fileID: 21300000, guid: 400a107b4ea6bdd418b07793a2a364fa, type: 3}
-  - foodType: 2
-    placeholderIcon: {fileID: 21300000, guid: 990d83a6d69f8ae4d9f5d75de0d35d75, type: 3}
-  - foodType: 1
-    placeholderIcon: {fileID: 21300000, guid: bb251285ffdf7a141a716c9dc9ba5121, type: 3}
+  slotDisplays: []

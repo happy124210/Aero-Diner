@@ -70,7 +70,7 @@ public class BGMManager : Singleton<BGMManager>
     {
         if (audioSource.clip == clip && audioSource.isPlaying)
             return;
-
+        audioSource.loop = true;
         if (useFade)
         {
             FadeOutAndPlayNew(clip);
@@ -95,6 +95,7 @@ public class BGMManager : Singleton<BGMManager>
                 audioSource.Stop();
                 audioSource.clip = newClip;
                 audioSource.volume = 0f;
+                audioSource.loop = true;
                 audioSource.Play();
 
                 currentFadeTween = DOTween.To(() => 0f, x => audioSource.volume = x, targetVolume, fadeDuration)

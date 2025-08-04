@@ -24,7 +24,7 @@ public class Store_RecipeScrollView : MonoBehaviour
         if (store == null) store = FindObjectOfType<Store>();
     }
     
-    private void Start()
+    private void OnEnable()
     {
         InitializeAndPopulate();
     }
@@ -118,7 +118,7 @@ public class Store_RecipeScrollView : MonoBehaviour
         {
             case UnlockType.Quest:
                 // TODO : 퀘스트 체크
-                return true;
+                return false;
             case UnlockType.Recipe:
                 return item.CsvData.Conditions.Any(recipeId => MenuManager.Instance.FindMenuById(recipeId).isUnlocked);
         }

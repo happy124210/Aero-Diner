@@ -16,7 +16,7 @@ public class RecipePanel : MonoBehaviour
 
         menuIcon.sprite = data.foodIcon;
         menuNameText.text = data.displayName;
-        menuDescriptionText.text = data.description;
+        menuDescriptionText.text = data.description.Replace("\\n", "\n");
         recipeDescriptionText.text = data.recipeDescription;
     }
 }

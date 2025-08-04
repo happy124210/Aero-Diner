@@ -12,7 +12,7 @@ public class StoreDataManager : Singleton<StoreDataManager>
         LoadStoreData(StringPath.STORE_DATA_PATH);
     }
 
-    public void LoadStoreData(string path)
+    private void LoadStoreData(string path)
     {
         StoreItemMap = new Dictionary<string, StoreItemData>();
         TextAsset csvFile = Resources.Load<TextAsset>("Datas/Store/StoreData");
@@ -53,7 +53,7 @@ public class StoreDataManager : Singleton<StoreDataManager>
                         requiredRecipeNames.Add(foodData.displayName);
                     }
                 }
-                return $"선행 레시피\n[{string.Join("또는 ", requiredRecipeNames)}] 필요";
+                return $"선행 레시피\n[{string.Join("\nor ", requiredRecipeNames)}] 필요";
 
             case UnlockType.Quest:
                 string questName = itemData.Conditions.FirstOrDefault(); // "더미 퀘스트"
