@@ -1273,11 +1273,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 978063891954566019, guid: 9662261da23790740bcbbd1b6f1b624a, type: 3}
       propertyPath: m_Pivot.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 978063891954566019, guid: 9662261da23790740bcbbd1b6f1b624a, type: 3}
       propertyPath: m_Pivot.y
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 978063891954566019, guid: 9662261da23790740bcbbd1b6f1b624a, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1297,11 +1297,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 978063891954566019, guid: 9662261da23790740bcbbd1b6f1b624a, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 1920
       objectReference: {fileID: 0}
     - target: {fileID: 978063891954566019, guid: 9662261da23790740bcbbd1b6f1b624a, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 1080
       objectReference: {fileID: 0}
     - target: {fileID: 978063891954566019, guid: 9662261da23790740bcbbd1b6f1b624a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1321,19 +1321,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 978063891954566019, guid: 9662261da23790740bcbbd1b6f1b624a, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 978063891954566019, guid: 9662261da23790740bcbbd1b6f1b624a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 978063891954566019, guid: 9662261da23790740bcbbd1b6f1b624a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 978063891954566019, guid: 9662261da23790740bcbbd1b6f1b624a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 6.27
       objectReference: {fileID: 0}
     - target: {fileID: 978063891954566019, guid: 9662261da23790740bcbbd1b6f1b624a, type: 3}
       propertyPath: m_AnchoredPosition.y
