@@ -23,5 +23,7 @@ MonoBehaviour:
     \uAC00\uB298\uAC8C \uBD84\uC1C4\uB429\uB2C8\uB2E4."
   availableRecipes:
   - {fileID: 11400000, guid: c387cad776abb584b83df8bf77c8eda3, type: 2}
-  ingredientSlots: 3
-  slotDisplays: []
+  ingredientSlots: 1
+  slotDisplays:
+  - foodType: 6
+    placeholderIcon: {fileID: 21300000, guid: 77724d96d0123ac4f8d4f64c82b47cec, type: 3}

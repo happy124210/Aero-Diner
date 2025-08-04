@@ -26,4 +26,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e71f89a2de2d4ea4dbed63fe30c48463, type: 2}
   - {fileID: 11400000, guid: 63001436fe09b304d82f0a93ef9c428d, type: 2}
   ingredientSlots: 3
-  slotDisplays: []
+  slotDisplays:
+  - foodType: 7
+    placeholderIcon: {fileID: 21300000, guid: 88a2d74e1addd554ca82d2577170ef1b, type: 3}
+  - foodType: 8
+    placeholderIcon: {fileID: 21300000, guid: dae3c4b4dc3ad45489758d7bd706fca5, type: 3}
+  - foodType: 9
+    placeholderIcon: {fileID: 21300000, guid: ee81d7f5af8c6a44aa59992c79e9116a, type: 3}
