@@ -22,6 +22,9 @@ MonoBehaviour:
     \uAC08\uC544\uB0B4\uB294 \uC124\uBE44\uC785\uB2C8\uB2E4.\\n\n\uC7AC\uB8CC\uB97C
     \uACE0\uB974\uAC8C \uBD84\uC1C4\uD574 \uC870\uB9AC\uC5D0 \uC801\uD569\uD55C \uC0C1\uD0DC\uB85C
     \uB9CC\uB4E4\uC5B4\uC90D\uB2C8\uB2E4."
-  availableRecipes: []
+  availableRecipes:
+  - {fileID: 11400000, guid: aae9a85be31d0c240ba479fda8f0a43f, type: 2}
+  - {fileID: 11400000, guid: e71f89a2de2d4ea4dbed63fe30c48463, type: 2}
+  - {fileID: 11400000, guid: 63001436fe09b304d82f0a93ef9c428d, type: 2}
   ingredientSlots: 3
   slotDisplays: []

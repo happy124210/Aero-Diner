@@ -21,6 +21,8 @@ MonoBehaviour:
   description: "\uACE0\uC628\uC73C\uB85C \uBE60\uB974\uAC8C \uC870\uB9AC\uD560 \uC218
     \uC788\uB294 \uC624\uBE10\uC785\uB2C8\uB2E4.\\n\n\uB450\uAEBC\uC6B4 \uC7AC\uB8CC\uB3C4
     \uC9E7\uC740 \uC2DC\uAC04\uC5D0 \uACE0\uB974\uAC8C \uC775\uD799\uB2C8\uB2E4."
-  availableRecipes: []
+  availableRecipes:
+  - {fileID: 11400000, guid: 9bcc300ea765ce4419c99976f009c04e, type: 2}
+  - {fileID: 11400000, guid: a4209fe6c6535514a8b8bfe786a089a4, type: 2}
   ingredientSlots: 3
   slotDisplays: []
