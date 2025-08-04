@@ -66,6 +66,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
     public static bool HasSaveData()
     {
         bool exists = File.Exists(savePath);
+        bool StationExists = File.Exists(StationSavePath);
 
         if (Instance?.showDebugInfo == true)
             Debug.Log($"[SaveLoadManager] 저장 파일 존재 여부: {exists}");
@@ -79,10 +80,15 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         if (File.Exists(savePath))
         {
             File.Delete(savePath);
-            File.Delete(StationSavePath);
 
             if (Instance?.showDebugInfo == true)
                 Debug.Log("[SaveLoadManager] 저장 파일 삭제됨");
+        }
+        else if (File.Exists(StationSavePath))
+        {
+            File.Delete(StationSavePath);
+            if (Instance?.showDebugInfo == true)
+                Debug.Log("[SaveLoadManager] 스테이션 저장 파일 삭제됨");
         }
         else
         {
