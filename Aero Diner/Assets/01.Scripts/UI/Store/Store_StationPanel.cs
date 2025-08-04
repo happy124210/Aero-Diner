@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,7 +34,7 @@ public class Store_StationPanel : MonoBehaviour
 
         if (canBePurchased)
         {
-            descriptionText.text = item.Description;
+            descriptionText.text = item.Description.Replace("\\n", "\n");
         }
 
         buyButton.interactable = canBePurchased;

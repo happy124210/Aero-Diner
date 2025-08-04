@@ -14,7 +14,7 @@ public class StationPanel : MonoBehaviour
     {
         stationIconImage.sprite = data.stationIcon;
         stationNameText.text = data.displayName;
-        descriptionText.text = data.description;
+        descriptionText.text = data.description.Replace("\\n", "\n");
 
         storedCountText.text = StationManager.Instance.GetStationStoredCount(data.id).ToString();
         placedCountText.text = StationManager.Instance.GetStationPlacedCount(data.id).ToString();
