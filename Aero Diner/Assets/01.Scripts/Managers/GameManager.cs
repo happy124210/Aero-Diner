@@ -253,6 +253,15 @@ public class GameManager : Singleton<GameManager>
         
         if (showDebugInfo) Debug.Log("[GameManager]: 게임 데이터 저장 완료.");
     }
+    
+    public void ResetGameData()
+    {
+        currentDay = 1;
+        totalEarnings = 0;
+
+        StoryManager.Instance.ResetStoryData();
+        QuestManager.Instance.ResetQuestData();
+    }
 
     public void GetCurrentDate(out int month, out int day)
     {

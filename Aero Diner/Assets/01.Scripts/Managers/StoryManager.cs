@@ -184,6 +184,11 @@ public class StoryManager : Singleton<StoryManager>
         
         return true;
     }
+
+    public void ResetStoryData()
+    {
+        executedStoryIds =  new HashSet<string>();
+    }
     
     #region helper
     
