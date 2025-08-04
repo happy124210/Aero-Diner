@@ -47,8 +47,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialSpawnDelay: 3
-  minSpawnInterval: 20
-  maxSpawnInterval: 30
+  minSpawnInterval: 10
+  maxSpawnInterval: 15
   maxCustomers: 10
   spawnPoints:
   - {fileID: 1699959310969922015}
@@ -675,7 +675,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57f19b05d0bc5e34488f3821311ef775, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roundTimeLimit: 180
+  roundTimeLimit: 100
   entrancePoint: {fileID: 324621470884776571}
   exitPoint: {fileID: 5825409973683639667}
   customersServed: 0

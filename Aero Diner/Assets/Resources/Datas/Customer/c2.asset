@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: c2
   m_EditorClassIdentifier: 
   id: c2
-  rarity: 0
   customerName: adult
+  rarity: 0
   displayName: "\uC5B4\uB978"
   speed: 4
-  waitTime: 35
+  waitTime: 45
   eatTime: 7
   animator: {fileID: 22100000, guid: 380f964ec0122514d86674fbba3eec21, type: 2}
