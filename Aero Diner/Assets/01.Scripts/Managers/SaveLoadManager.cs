@@ -16,7 +16,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
     }
 
     private static string savePath => Path.Combine(Application.persistentDataPath, "save.json");
-    private static string StationSavePath => Path.Combine(Application.persistentDataPath, "station.json");
+    private static string stationSavePath => Path.Combine(Application.persistentDataPath, "station.json");
 
     // 저장
     public static void SaveGame(SaveData data)
@@ -44,7 +44,6 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
 
             return null;
         }
-
         try
         {
             string json = File.ReadAllText(savePath);
@@ -66,7 +65,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
     public static bool HasSaveData()
     {
         bool exists = File.Exists(savePath);
-        bool StationExists = File.Exists(StationSavePath);
+        bool StationExists = File.Exists(stationSavePath);
 
         if (Instance?.showDebugInfo == true)
             Debug.Log($"[SaveLoadManager] 저장 파일 존재 여부: {exists}");
@@ -84,9 +83,9 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
             if (Instance?.showDebugInfo == true)
                 Debug.Log("[SaveLoadManager] 저장 파일 삭제됨");
         }
-        else if (File.Exists(StationSavePath))
+        if (File.Exists(stationSavePath))
         {
-            File.Delete(StationSavePath);
+            File.Delete(stationSavePath);
             if (Instance?.showDebugInfo == true)
                 Debug.Log("[SaveLoadManager] 스테이션 저장 파일 삭제됨");
         }
