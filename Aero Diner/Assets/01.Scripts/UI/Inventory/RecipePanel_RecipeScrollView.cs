@@ -13,7 +13,7 @@ public class RecipePanel_RecipeScrollView : MonoBehaviour
     private bool suppressNextSFX;
     private StoreItem currentSelectedItem;
 
-    private void Start()
+    private void OnEnable()
     {
         PopulateMenuList();
     }
