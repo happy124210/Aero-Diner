@@ -69,12 +69,9 @@ public class ResultPanel : MonoBehaviour
         EventBus.PlaySFX(SFXType.ButtonClick);
 
         canvasGroup.interactable = false;
-        DOTween.Sequence()
-            .Append(canvasGroup.DOFade(0f, 0.3f))
-            .OnComplete(() =>
-            {
-                EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(scene: "DayScene"));
-            });
+        EventBus.Raise(UIEventType.HideResultPanel);
+        canvasGroup.interactable = false;
+        canvasGroup.DOFade(0f, 0.3f);
     }
     
     #region 통계 연결 & 애니메이션

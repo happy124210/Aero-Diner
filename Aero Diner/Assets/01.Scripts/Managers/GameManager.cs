@@ -131,6 +131,8 @@ public class GameManager : Singleton<GameManager>
         {
             int earningsFromDay = RestaurantManager.Instance.TodayEarnings;
             EndDayCycle(earningsFromDay);
+            EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(scene: StringScene.DAY_SCENE));
+        
         }
     }
     
