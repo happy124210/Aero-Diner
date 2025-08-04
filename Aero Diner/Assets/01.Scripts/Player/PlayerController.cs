@@ -66,8 +66,8 @@ public class PlayerController : Singleton<PlayerController>
     public bool IsHoldingFood(string id) => GetHeldFoodID() == id;
     public bool IsHoldingStation(string id) => GetHeldStationID() == id;
     
-    private string GetHeldFoodID() => playerInventory?.HoldingFood?.foodData?.id;
-    private string GetHeldStationID() => playerInventory?.HoldingFood?.foodData?.id;
+    private string GetHeldFoodID() => playerInventory?.holdingItem?.foodData?.id;
+    private string GetHeldStationID() => playerInventory?.holdingItem?.foodData?.id;
 
     #endregion
     
@@ -169,7 +169,7 @@ public class PlayerController : Singleton<PlayerController>
         {
             if (currentTarget != null)
             {
-                bool wasHoldingStation = playerInventory.HoldingStation != null;
+                bool wasHoldingStation = playerInventory.heldStation != null;
 
                 SetDirectionParams();
                 animator.SetTrigger(PutDown);
@@ -246,7 +246,7 @@ public class PlayerController : Singleton<PlayerController>
             }
         }
         
-        bool holdingStation = playerInventory.HoldingStation != null;
+        bool holdingStation = playerInventory.heldStation != null;
         IInteractable newTarget = holdingStation ? gridTarget ?? stationTarget 
             : stationTarget ?? gridTarget;
         
@@ -424,7 +424,7 @@ public class PlayerController : Singleton<PlayerController>
         if (GameManager.Instance.CurrentPhase == GamePhase.Operation)
             return StringMessage.OPERATION_ALERT;
         
-        if (playerInventory.HoldingStation != null)
+        if (playerInventory.heldStation != null)
             return StringMessage.STATION_ALERT;
         
         return StringMessage.ESCAPE_ALERT;
