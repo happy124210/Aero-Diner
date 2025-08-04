@@ -4,16 +4,10 @@ using System.Linq;
 /// <summary>
 /// 플레이어가 상호작용하면 재료를 가공하여 가공된 재료를 생성하는 스테이션
 /// 주요 기능:
-/// - PlaceIngredient(): 재료 오브젝트를 생성하고, 플레이어가 내려놓은 재료의 데이터를 바탕으로
-///   생성할 재료(selectedIngredient)와 가공 허용 재료 그룹(neededIngredients)을 동적으로 채움
 /// - Interact(): J 키를 누르는 동안 조리 타이머가 감소하며, 타이머가 다 되면 가공 처리
-/// - ProcessIngredient(): 조리가 완료되면 재료 오브젝트를 제거하고 결과 처리를 수행
 /// </summary>
 public class PassiveStation : BaseStation, IInteractable
 {
-    [Header("가공 허용 재료 그룹")]
-    public FoodData[] neededIngredients;
-
     /// <summary>
     /// 플레이어가 J 키 등으로 상호작용할 때 호출
     /// InteractionType.Use: 타이머 감소 및 조리 진행

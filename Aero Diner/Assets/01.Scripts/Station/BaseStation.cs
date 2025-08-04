@@ -201,6 +201,8 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
     /// </summary>
     private void UpdateCandidateRecipes()
     {
+        Debug.Log($"[UpdateCandidateRecipes] currentIngredients: {string.Join(", ", currentIngredients)}");
+
         // 현재 재료 ID 목록 가져오기
         var currentIds = currentIngredients;
 
@@ -358,13 +360,7 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
     /// </summary>
     public void OnPlayerPickup()
     {
-        StartCoroutine(HandlePickup());                                 // 픽업 처리
-
-        currentIngredients.Clear();                                     // 현재 재료 목록 초기화는 그대로 유지
-        placedIngredientList.Clear();                                   // 실재료 목록도 초기화
-
-        //timer.Start();                                                  // CookingTimer 객체 기반으로 타이머 시작
-        //timerController?.UpdateTimer(timer.Remaining, timer.Duration);  // 타이머 UI 갱신
+        StartCoroutine(HandlePickup());            // 픽업 처리
     }
 
     /// <summary>
@@ -409,7 +405,10 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
 
         FoodData targetData = placedIngredientList[^1];
         placedIngredientList.RemoveAt(placedIngredientList.Count - 1);
-        currentIngredients.Remove(targetData.id);
+       
+        int index = currentIngredients.IndexOf(targetData.id);
+        if (index >= 0)
+            currentIngredients.RemoveAt(index);
         iconDisplay?.ShowSlot(targetData.foodType);
 
         GameObject targetObject = null;
