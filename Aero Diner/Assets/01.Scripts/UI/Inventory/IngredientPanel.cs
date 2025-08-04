@@ -17,7 +17,7 @@ public class IngredientPanel : MonoBehaviour
         foodIcon.sprite = data.foodIcon;
         nameText.text = data.displayName;
         priceText.text = data.foodCost.ToString();
-        descriptionText.text = data.description;
+        descriptionText.text = data.description.Replace("\\n", "\n");
         foodTypeIcon.sprite = typeIcon;
     }
 }

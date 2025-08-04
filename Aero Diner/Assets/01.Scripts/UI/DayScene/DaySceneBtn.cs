@@ -11,6 +11,7 @@ public class DaySceneBtn : MonoBehaviour
     }
     public void OnShopButtonClick()
     {
+        EventBus.PlaySFX(SFXType.ButtonClick);
         EventBus.Raise(UIEventType.FadeInStore);
     }
 }
