@@ -27,5 +27,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6f74b333018cbf540950f52f148c2281, type: 2}
   - {fileID: 11400000, guid: 11fc209d50dd7f84c819d65cee7c2cf4, type: 2}
   - {fileID: 11400000, guid: 1ad4f7bbe831eeb4aad0d2fe6c2202d9, type: 2}
-  ingredientSlots: 3
-  slotDisplays: []
+  ingredientSlots: 1
+  slotDisplays:
+  - foodType: 5
+    placeholderIcon: {fileID: 21300000, guid: fea816b5683dd604fa10ac36c4d0ad37, type: 3}
