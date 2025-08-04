@@ -97,3 +97,5 @@ MonoBehaviour:
   - {fileID: -159639402, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
   - {fileID: 1873570143, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
   - {fileID: -1387021731, guid: f81a05ba96b292241b5c73bba0cbf0e4, type: 3}
+  - {fileID: 21300000, guid: 04e3c83d9a529f54bb9e7e95f300dc0e, type: 3}
+  lastTimerImg: {fileID: 530153210305321316}

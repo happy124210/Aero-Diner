@@ -6,13 +6,13 @@ using UnityEngine.UI;
 public class StationTimerController : MonoBehaviour
 {
     [SerializeField] private List<Sprite> sprites;
+    [SerializeField] private Image lastTimerImg;
 
-    private Image TimerImg;
-    //private int currentIdx = -1;
+    private Image timerImg;
 
     private void Awake()
     {
-        TimerImg = GetComponent<Image>();
+        timerImg = GetComponent<Image>();
     }
 
     /// <summary>
@@ -45,6 +45,34 @@ public class StationTimerController : MonoBehaviour
     /// <param name="totalTime">총 조리 시간</param>
     public void UpdateTimer(float currentCookingTime, float totalTime)
     {
-        TimerImg.sprite = sprites[GetSpriteIndex(currentCookingTime, totalTime)];
+        timerImg.sprite = sprites[GetSpriteIndex(currentCookingTime, totalTime)];
+    }
+
+    public void ShowPassiveCookingState()
+    {
+        if (sprites == null || sprites.Count == 0)
+        {
+            Debug.LogWarning("[TimerController] sprites 리스트가 비어있거나 null입니다.");
+            return;
+        }
+
+        if (lastTimerImg == null)
+        {
+            Debug.LogError("[TimerController] timerImg가 연결되지 않았습니다. Inspector에서 Image 컴포넌트를 연결하세요.");
+            return;
+        }
+
+        int lastIndex = sprites.Count - 1;
+        Sprite passiveSprite = sprites[lastIndex];
+
+        if (passiveSprite == null)
+        {
+            Debug.LogWarning("[TimerController] 마지막 스프라이트가 null입니다.");
+            return;
+        }
+
+        lastTimerImg.sprite = passiveSprite;
+        lastTimerImg.enabled = true;           // 이미지 표시
+        gameObject.SetActive(true);        // 타이머 오브젝트 활성화
     }
 }
