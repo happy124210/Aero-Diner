@@ -72,8 +72,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
 
         return exists;
     }
-
-    // 저장 파일 삭제 (New Game 시)
+    
     public static void DeleteSave()
     {
         if (File.Exists(savePath))
@@ -95,6 +94,8 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
                 Debug.LogWarning("[SaveLoadManager] 삭제할 저장 파일이 없습니다.");
         }
     }
+    
+    // 옵션 제외 게임데이터 초기화 (New Game 시)
     public static void ResetProgressOnly()
     {
         var data = LoadGame();
