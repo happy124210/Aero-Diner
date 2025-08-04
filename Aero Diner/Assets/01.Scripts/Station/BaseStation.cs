@@ -30,6 +30,7 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
     protected bool isCooking = false;
 
     public string StationId => stationData? stationData.id : string.Empty;
+    public bool IsCookingOrWaiting => cookedIngredient != null && timer != null && timer.Remaining > 0f;
 
     private void Awake()
     {
@@ -298,6 +299,7 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
     /// </summary>
     protected void ResetStation()
     {
+        cookedIngredient = null;
         timer = new CookingTimer(cookedIngredient);
         ClearPlacedObjects();                      // 오브젝트 제거
         var sfx = StationSFXResolver.GetSFXFromStationData(stationData);

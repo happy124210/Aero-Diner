@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Linq;
-using UnityEngine.UI;
 
 /// <summary>
 /// 플레이어가 상호작용하면 재료를 가공하여 가공된 재료를 생성하는 스테이션

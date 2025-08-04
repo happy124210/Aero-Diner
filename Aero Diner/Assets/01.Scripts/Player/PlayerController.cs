@@ -185,8 +185,18 @@ public class PlayerController : Singleton<PlayerController>
         else
         {
             var pickupTarget = FindBestInteractable(InteractionType.Pickup);
+
             if (pickupTarget != null)
             {
+                if (pickupTarget is FoodDisplay food)
+                {
+                    if (food.originPlace is BaseStation station && station.IsCookingOrWaiting)
+                    {
+                        Debug.Log("[Player] 조리 중인 스테이션 → 픽업 금지");
+                        return;
+                    }
+                }
+
                 SetDirectionParams();
                 animator.SetTrigger(PickUp);
                 playerInventory.TryPickup(pickupTarget);
