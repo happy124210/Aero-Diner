@@ -18,15 +18,10 @@ MonoBehaviour:
   stationType: 4
   workType: 1
   stationIcon: {fileID: 21300000, guid: 0daf54b6eeb63e647887184c71245b0e, type: 3}
-  description: "\uBBF9\uC11C\uAE30 \uC785\uB2C8\uB2E4"
-  stationCost: 100
-  availableRecipes:
-  - {fileID: 11400000, guid: fb715715dd6057a47955e293b07103f8, type: 2}
+  description: "\uD68C\uC804 \uB0A0\uC744 \uC774\uC6A9\uD574 \uC7AC\uB8CC\uB97C \uACF1\uAC8C
+    \uAC08\uC544\uB0B4\uB294 \uC124\uBE44\uC785\uB2C8\uB2E4.\\n\n\uC7AC\uB8CC\uB97C
+    \uACE0\uB974\uAC8C \uBD84\uC1C4\uD574 \uC870\uB9AC\uC5D0 \uC801\uD569\uD55C \uC0C1\uD0DC\uB85C
+    \uB9CC\uB4E4\uC5B4\uC90D\uB2C8\uB2E4."
+  availableRecipes: []
   ingredientSlots: 3
-  slotDisplays:
-  - foodType: 7
-    placeholderIcon: {fileID: 21300000, guid: 88a2d74e1addd554ca82d2577170ef1b, type: 3}
-  - foodType: 8
-    placeholderIcon: {fileID: 21300000, guid: dae3c4b4dc3ad45489758d7bd706fca5, type: 3}
-  - foodType: 9
-    placeholderIcon: {fileID: 21300000, guid: ee81d7f5af8c6a44aa59992c79e9116a, type: 3}
+  slotDisplays: []

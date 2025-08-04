@@ -18,15 +18,9 @@ MonoBehaviour:
   stationType: 0
   workType: 1
   stationIcon: {fileID: 21300000, guid: 41909a59935871047b0f032faba2487a, type: 3}
-  description: "\uC804\uB3D9 \uCC44\uCE7C \uC785\uB2C8\uB2E4"
-  stationCost: 100
-  availableRecipes:
-  - {fileID: 11400000, guid: 01a26afbc788c8a45a17280417a7eb9f, type: 2}
-  - {fileID: 11400000, guid: 9c816b746a0a9c3458d2701328884a4d, type: 2}
-  - {fileID: 11400000, guid: 167f20b2e9914a840b29c3a43b08a957, type: 2}
-  - {fileID: 11400000, guid: aeac6e2a980c5db4f9554530098c7b1d, type: 2}
-  - {fileID: 11400000, guid: 751086e2dafafb94080110c1346453e1, type: 2}
-  ingredientSlots: 1
-  slotDisplays:
-  - foodType: 5
-    placeholderIcon: {fileID: 21300000, guid: fea816b5683dd604fa10ac36c4d0ad37, type: 3}
+  description: "\uCC44\uC18C\uB97C \uC790\uB3D9\uC73C\uB85C \uC370\uC5B4\uC8FC\uB294
+    \uC870\uB9AC \uC7A5\uBE44\uC785\uB2C8\uB2E4.\\n\n\uC190\uC9C8 \uC18D\uB3C4\uB97C
+    \uD06C\uAC8C \uB2E8\uCD95\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+  availableRecipes: []
+  ingredientSlots: 3
+  slotDisplays: []
