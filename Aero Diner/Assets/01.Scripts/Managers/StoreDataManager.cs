@@ -12,7 +12,7 @@ public class StoreDataManager : Singleton<StoreDataManager>
         LoadStoreData(StringPath.STORE_DATA_PATH);
     }
 
-    public void LoadStoreData(string path)
+    private void LoadStoreData(string path)
     {
         StoreItemMap = new Dictionary<string, StoreItemData>();
         TextAsset csvFile = Resources.Load<TextAsset>("Datas/Store/StoreData");
