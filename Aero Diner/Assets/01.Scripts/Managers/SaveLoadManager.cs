@@ -16,6 +16,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
     }
 
     private static string savePath => Path.Combine(Application.persistentDataPath, "save.json");
+    private static string StationSavePath => Path.Combine(Application.persistentDataPath, "station.json");
 
     // 저장
     public static void SaveGame(SaveData data)
@@ -78,6 +79,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         if (File.Exists(savePath))
         {
             File.Delete(savePath);
+            File.Delete(StationSavePath);
 
             if (Instance?.showDebugInfo == true)
                 Debug.Log("[SaveLoadManager] 저장 파일 삭제됨");
