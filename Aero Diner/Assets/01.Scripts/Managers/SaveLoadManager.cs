@@ -72,8 +72,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
 
         return exists;
     }
-
-    // 저장 파일 삭제 (New Game 시)
+    
     public static void DeleteSave()
     {
         if (File.Exists(savePath))
@@ -95,6 +94,8 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
                 Debug.LogWarning("[SaveLoadManager] 삭제할 저장 파일이 없습니다.");
         }
     }
+    
+    // 옵션 제외 게임데이터 초기화 (New Game 시)
     public static void ResetProgressOnly()
     {
         var data = LoadGame();
@@ -119,6 +120,11 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         data.keyBindings = preservedKeyBindings;
 
         SaveGame(data);
+        
+        if (File.Exists(stationSavePath))
+        {
+            File.Delete(stationSavePath);
+        }
 
         if (Instance?.showDebugInfo == true)
             Debug.Log("[SaveLoadManager] 진행 정보만 초기화됨 (옵션 및 키 바인딩 유지)");
@@ -126,7 +132,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
 
     public static void SaveStationData(List<StationSaveInfo> infos)
     {
-        string path = Path.Combine(Application.persistentDataPath, "station.json");
+        string path = stationSavePath;
 
         try
         {
@@ -145,7 +151,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
 
     public static List<StationSaveInfo> LoadStationData()
     {
-        string path = Path.Combine(Application.persistentDataPath, "station.json");
+        string path = stationSavePath;
 
         try
         {

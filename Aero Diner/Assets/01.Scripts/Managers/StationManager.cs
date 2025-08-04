@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
 using static SaveData;
 
 public class StationManager : Singleton<StationManager>
@@ -127,18 +126,23 @@ public class StationManager : Singleton<StationManager>
     {
         var phase = GameManager.Instance.CurrentPhase;
         
-        if (phase == GamePhase.Day || phase == GamePhase.Opening)
-        {
-            StationLoad(phase);
-        }
+        var stationInfos = SaveLoadManager.LoadStationData();
         
-        if (tilemapController)
+        // 불러오기 성공
+        if (stationInfos != null && stationInfos.Count > 0)
         {
-            tilemapController.FindGridCells();
-            if (showDebugInfo) Debug.Log($"[StationManager] GridCell 수: {tilemapController.gridCells.Count}");
+            DestroyCurrentStations();
+            if(tilemapController) tilemapController.FindGridCells();
+            RestoreStations(stationInfos, phase);
         }
-        
-        SetStations();
+        // 불러오기 실패
+        else
+        {
+            // 씬 저장 그대로 사용
+            if(tilemapController) tilemapController.FindGridCells();
+            SetStations();
+        }
+
         CountStationsPerCellType();
     }
 
@@ -319,11 +323,11 @@ public class StationManager : Singleton<StationManager>
         SetStations(); // 현재 상태 갱신
 
         var stationInfos = GenerateStationSaveData();
-        Debug.Log($"[StationManager] 저장 대상 Station 수: {stationInfos.Count}");
+        if (showDebugInfo) Debug.Log($"[StationManager] 저장 대상 Station 수: {stationInfos.Count}");
 
         SaveLoadManager.SaveStationData(stationInfos); // JSON 저장
 
-        Debug.Log($"[StationManager] 저장 완료");
+        if (showDebugInfo) Debug.Log($"[StationManager] 저장 완료");
     }
 
     public void Save()
