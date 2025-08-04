@@ -24,7 +24,7 @@ public class Store_RecipeScrollView : MonoBehaviour
         if (store == null) store = FindObjectOfType<Store>();
     }
     
-    private void Start()
+    private void OnEnable()
     {
         InitializeAndPopulate();
     }
