@@ -20,14 +20,17 @@ public class IngredientPanel_ScrollView : MonoBehaviour
     private void PopulateScrollView()
     {
         var allFoods = RecipeManager.Instance.FoodDatabase.Values
-    .Where(f => !string.IsNullOrEmpty(f.id) && f.id.StartsWith("f"))
-    .OrderBy(f =>
-    {
-        if (int.TryParse(f.id.Substring(1), out int number))
-            return number;
-        return int.MaxValue; // 실패하면 뒤로 보냄
-    })
-    .ToList();
+            .Where(f =>
+                !string.IsNullOrEmpty(f.id) &&
+                f.id.StartsWith("f") &&
+                f.foodType != FoodType.Menu) // Menu 타입 제외
+            .OrderBy(f =>
+            {
+                if (int.TryParse(f.id.Substring(1), out int number))
+                    return number;
+                return int.MaxValue;
+            })
+            .ToList();
         // 표시할 재료가 없는 경우
         if (allFoods.Count == 0)
         {
