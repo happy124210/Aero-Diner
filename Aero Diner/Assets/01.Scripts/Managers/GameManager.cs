@@ -117,6 +117,7 @@ public class GameManager : Singleton<GameManager>
         if (eventType == GameEventType.RoundTimerEnded)
         {
             ChangePhase(GamePhase.Closing);
+            EventBus.Raise(UIEventType.ShowResultPanel);
         }
         
         if (eventType == GameEventType.NoMoreStoriesInPhase)
@@ -187,6 +188,21 @@ public class GameManager : Singleton<GameManager>
         if (currentPhase != GamePhase.Paused && 
             currentPhase != GamePhase.Dialogue) return;
         
+        ChangePhase(previousPhase);
+    }
+    
+    public void EnterDialogue()
+    {
+        if (currentPhase == GamePhase.Dialogue || currentPhase == GamePhase.Paused) return;
+
+        previousPhase = currentPhase;
+        ChangePhase(GamePhase.Dialogue);
+    }
+
+    public void ExitDialogue()
+    {
+        if (currentPhase != GamePhase.Dialogue) return;
+    
         ChangePhase(previousPhase);
     }
     
