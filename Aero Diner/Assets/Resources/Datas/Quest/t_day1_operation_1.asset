@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: t_day1_operation_1
   questName: "\uC5F0\uC2B5"
-  description: 
+  description: "\uCC44\uC18C \uB0C9\uC7A5\uACE0\uC5D0\uC11C \uCC44\uC18C\uB97C \uB4E4\uC5B4\uBCF4\uC790"
   rewardDescription: 
   objectives:
   - objectiveType: 3
