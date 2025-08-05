@@ -46,9 +46,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31dc2934ff3253e49b9a8b945c1ddfa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialSpawnDelay: 3
-  minSpawnInterval: 10
-  maxSpawnInterval: 15
+  initialSpawnDelay: 0
+  minSpawnInterval: 13
+  maxSpawnInterval: 18
   maxCustomers: 10
   spawnPoints:
   - {fileID: 1699959310969922015}

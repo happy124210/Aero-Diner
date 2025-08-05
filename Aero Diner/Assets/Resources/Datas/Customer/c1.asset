@@ -17,6 +17,6 @@ MonoBehaviour:
   rarity: 0
   displayName: "\uC9C1\uC7A5\uC778"
   speed: 5
-  waitTime: 35
+  waitTime: 90
   eatTime: 5
   animator: {fileID: 22100000, guid: e015267c039527b4d97b1b15c4396e84, type: 2}
