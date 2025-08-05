@@ -45,61 +45,62 @@ public class Store : MonoBehaviour
     }
     
     public void TryBuyItem(StoreItem item)
-{
-    if (item == null) return;
-    if (item.BaseData is FoodData && item.IsPurchased) return;
-
-    if (GameManager.Instance.TotalEarnings >= item.Cost)
     {
-        bool purchaseSucceeded = false;
-        
-        switch (item.BaseData)
-        {
-            case FoodData:
-                MenuManager.Instance.UnlockMenu(item.TargetID);
-                purchaseSucceeded = true;
-                break;
-            
-            case StationData:
-                if (StationManager.Instance.CreateStationInStorage(item.TargetID))
-                {
-                    if (showDebugInfo) Debug.Log($"구매 성공: {item.DisplayName}");
-                    purchaseSucceeded = true;
-                }
-                else
-                {
-                    AnimateStoreMoney(GameManager.Instance.TotalEarnings);
-                    EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
-                    ShowNoPlacePanel();
-                    if (showDebugInfo) Debug.LogWarning($"구매 실패: {item.DisplayName} - 보관 공간 부족");
-                }
-                break;
-        }
+        if (item == null) return;
+        if (item.BaseData is FoodData && item.IsPurchased) return;
 
-        if (purchaseSucceeded)
+        if (GameManager.Instance.TotalEarnings >= item.Cost)
         {
-            GameManager.Instance.AddMoney(-item.Cost);
-            AnimateStoreMoney(GameManager.Instance.TotalEarnings);
-            EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
-            
-            if (showDebugInfo) Debug.Log($"구매 성공 처리 완료, UI 갱신 시작: {item.DisplayName}");
+            bool purchaseSucceeded = false;
             
             switch (item.BaseData)
             {
                 case FoodData:
-                    recipeScrollView.InitializeAndPopulate();
+                    MenuManager.Instance.UnlockMenu(item.TargetID);
+                    purchaseSucceeded = true;
                     break;
+                
                 case StationData:
-                    stationScrollView.InitializeAndPopulate();
+                    if (StationManager.Instance.CreateStationInStorage(item.TargetID))
+                    {
+                        StationManager.Instance.UnlockStation(item.TargetID);
+                        purchaseSucceeded = true;
+                        if (showDebugInfo) Debug.Log($"구매 성공: {item.DisplayName}");
+                    }
+                    else
+                    {
+                        AnimateStoreMoney(GameManager.Instance.TotalEarnings);
+                        EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
+                        ShowNoPlacePanel();
+                        if (showDebugInfo) Debug.LogWarning($"구매 실패: {item.DisplayName} - 보관 공간 부족");
+                    }
                     break;
             }
+
+            if (purchaseSucceeded)
+            {
+                GameManager.Instance.AddMoney(-item.Cost);
+                AnimateStoreMoney(GameManager.Instance.TotalEarnings);
+                EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
+                
+                if (showDebugInfo) Debug.Log($"구매 성공 처리 완료, UI 갱신 시작: {item.DisplayName}");
+                
+                switch (item.BaseData)
+                {
+                    case FoodData:
+                        recipeScrollView.InitializeAndPopulate();
+                        break;
+                    case StationData:
+                        stationScrollView.InitializeAndPopulate();
+                        break;
+                }
+            }
+        }
+        else
+        {
+            ShowInsufficientMoneyPanel();
         }
     }
-    else
-    {
-        ShowInsufficientMoneyPanel();
-    }
-}
     
     #region 버튼 메서드
     

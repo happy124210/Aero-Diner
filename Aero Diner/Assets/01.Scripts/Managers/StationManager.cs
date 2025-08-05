@@ -126,20 +126,19 @@ public class StationManager : Singleton<StationManager>
     {
         var phase = GameManager.Instance.CurrentPhase;
         
+        if(tilemapController) tilemapController.FindGridCells();
+
         var stationInfos = SaveLoadManager.LoadStationData();
-        
-        // 불러오기 성공
+    
+        // 저장된 데이터가 있으면 복원
         if (stationInfos != null && stationInfos.Count > 0)
         {
             DestroyCurrentStations();
-            if(tilemapController) tilemapController.FindGridCells();
             RestoreStations(stationInfos, phase);
         }
-        // 불러오기 실패
+        // 저장된 데이터가 없으면 그대로 사용
         else
         {
-            // 씬 저장 그대로 사용
-            if(tilemapController) tilemapController.FindGridCells();
             SetStations();
         }
 
@@ -353,7 +352,7 @@ public class StationManager : Singleton<StationManager>
     /// <summary>
     /// GridCell 아래의 오브젝트들을 수집해서 구조화
     /// </summary>
-    private void SetStations()
+    public void SetStations()
     {
         if (!tilemapController)
         {
@@ -449,6 +448,16 @@ public class StationManager : Singleton<StationManager>
 
         if (showDebugInfo) Debug.Log($"[StationManager] 전체 스테이션 수: {totalStationCount} (GridCell: {gridCellStationCount}, StorageGridCell: {storageGridCellStationCount})");
     }
+    
+    /// <summary>
+    /// 현재 배치된 설비 목록을 갱신하고 타입별 개수 계산
+    /// 인벤토리에서 사용
+    /// </summary>
+    public void CalculateStationCounts()
+    {
+        SetStations();
+        CountStationsPerCellType();
+    }
 
     /// <summary>
     /// 보관장소에 스테이션 생성
@@ -456,8 +465,7 @@ public class StationManager : Singleton<StationManager>
     /// </summary>
     /// <param name="id">StationData의 고유 ID</param>
     public bool CreateStationInStorage(string id)
-    {
-        // StationData 확인
+    { // StationData 확인
         if (!stationDatabase.ContainsKey(id))
         {
             Debug.LogError($"[StationManager] StationData를 찾을 수 없음: {id}");
