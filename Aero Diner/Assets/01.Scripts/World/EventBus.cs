@@ -18,7 +18,7 @@ public enum BGMEventType
     PlayRecipeChoice,
     PlayLifeTheme,
     StopBGM,
-    Intro1, Intro2, Intro3,
+    Intro1, Intro2, Intro3, Title
 }
 
 public enum GameEventType
