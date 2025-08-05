@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: player_Silhouette
   m_EditorClassIdentifier: 
   id: player_Silhouette
-  speakerName: "\uD50C\uB808\uC774\uC5B4 \uC2E4\uB8E8\uC5E3"
+  speakerName: ???
   portraits:
   - expression: 0
     portrait: {fileID: 21300000, guid: 46b54d39e2ef2ad46b8dd6adae900b60, type: 3}

@@ -77,6 +77,12 @@ public class ResultPanel : MonoBehaviour
     #region 통계 연결 & 애니메이션
     public void Init()
     {
+        totalSalesVolume.text = "0";
+        totalRevenue.text = "0";
+        allCustomer.text = "0";
+        servedCustomer.text = "0";
+        goneCustomer.text = "0";
+        
         SetSalesResult();
         SetCustomerResult();
     }
@@ -122,9 +128,14 @@ public class ResultPanel : MonoBehaviour
             delay += 0.05f;
         }
 
-        totalSalesVolume.text = MenuManager.Instance.GetTotalSalesToday().ToString();
-        totalRevenue.text = MenuManager.Instance.GetTotalRevenueToday().ToString();
+        int totalSales = MenuManager.Instance.GetTotalSalesToday();
+        int totalRev = MenuManager.Instance.GetTotalRevenueToday();
+
+        // 가장 마지막에 등장하는 메뉴 아이템 애니메이션이 끝난 후 총합 애니메이션 시작
+        AnimateNumber(totalSalesVolume, totalSales, delay);
+        AnimateNumber(totalRevenue, totalRev, delay);
     }
+    
     private void SetCustomerResult()
     {
         int all = RestaurantManager.Instance.CustomersVisited;
@@ -138,6 +149,7 @@ public class ResultPanel : MonoBehaviour
         delay += 0.3f;
         AnimateNumber(goneCustomer, gone, delay);
     }
+    
     private void AnimateEntrance()
     {
         if (!canvasGroup || !panelTransform) return;

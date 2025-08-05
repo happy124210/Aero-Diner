@@ -46,5 +46,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   iconPrefab: {fileID: 8364092381454571471, guid: e5de86a06d0904e45b79c0369f2587cb, type: 3}
   basePosition: {fileID: 0}
-  spacing: 0.4
+  spacing: 0.32
   showDebugInfo: 0

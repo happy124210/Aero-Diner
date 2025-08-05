@@ -178,8 +178,7 @@ public class PlayerInventory : MonoBehaviour
         
         else if (target is IngredientStation ingredientStation)
         {
-            ingredientStation.PlaceIngredient(HoldingFood.foodData);
-            placedSuccessfully = true;
+            placedSuccessfully = ingredientStation.PlaceIngredient(HoldingFood.foodData);
         }
 
         // 성공적으로 내려놓았다면 손에 든 아이템을 파괴하고 인벤토리 비우기
