@@ -118,6 +118,7 @@ GameObject:
   - component: {fileID: 6851719063923598656}
   - component: {fileID: 4268348578635256126}
   - component: {fileID: -112771443436355401}
+  - component: {fileID: -3900641737639094235}
   m_Layer: 6
   m_Name: CuttingBoard
   m_TagString: Station
@@ -215,7 +216,6 @@ MonoBehaviour:
   slotSpacing: 0.5
   timerController: {fileID: 469954102932257093}
   showDebugInfo: 0
-  neededIngredients: []
 --- !u!50 &2297227440332960881
 Rigidbody2D:
   serializedVersion: 4
@@ -333,6 +333,20 @@ MonoBehaviour:
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
   disabledColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   foodSlotIconDisplay: {fileID: 4044890694406128566}
+--- !u!114 &-3900641737639094235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1967490182239246049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c63a58c56590c834192c9f553f99a378, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseSprite: {fileID: 21300000, guid: de1bac6e4ff7a9d47b659f4d34b2752d, type: 3}
+  cookSprite: {fileID: 21300000, guid: fa3d895782531b248941acbab03797cd, type: 3}
 --- !u!1001 &2812788427457342318
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 668578408764430275}
   - component: {fileID: 44329828034589330}
   - component: {fileID: -3108505135523501373}
+  - component: {fileID: 8043084463899631236}
   m_Layer: 6
   m_Name: Fryingpan
   m_TagString: Station
@@ -113,7 +114,6 @@ MonoBehaviour:
   slotSpacing: 0.5
   timerController: {fileID: 8235575826403114191}
   showDebugInfo: 1
-  neededIngredients: []
 --- !u!50 &6757697120133039226
 Rigidbody2D:
   serializedVersion: 4
@@ -231,6 +231,20 @@ MonoBehaviour:
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
   disabledColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   foodSlotIconDisplay: {fileID: 4277814135774405944}
+--- !u!114 &8043084463899631236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1580171974632153718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c63a58c56590c834192c9f553f99a378, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseSprite: {fileID: 21300000, guid: 6aaeb3fa300f2e045af9cc4299d707fd, type: 3}
+  cookSprite: {fileID: 21300000, guid: d9592d63891b6e449a463ec65cdec4f9, type: 3}
 --- !u!1 &6279339381248539789
 GameObject:
   m_ObjectHideFlags: 0
