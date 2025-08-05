@@ -43,6 +43,7 @@ public class ResultPanel : MonoBehaviour
     private void OnDisable()
     {
         EventBus.OnUIEvent -= HandleUIEvent;
+        isShown = false;
     }
     
     private void HandleUIEvent(UIEventType eventType, object payload)
@@ -72,6 +73,7 @@ public class ResultPanel : MonoBehaviour
         EventBus.Raise(UIEventType.HideResultPanel);
         canvasGroup.interactable = false;
         canvasGroup.DOFade(0f, 0.3f);
+        isShown = false;
     }
     
     #region 통계 연결 & 애니메이션
