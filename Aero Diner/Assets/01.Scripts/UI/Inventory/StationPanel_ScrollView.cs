@@ -7,8 +7,14 @@ public class StationPanel_ScrollView : MonoBehaviour
     [SerializeField] private StationPanel detailPanel;
     [SerializeField] private GameObject noItemPanel;
     [SerializeField] private GameObject stationSlotPrefab;
-    private void Start()
+    
+    private void OnEnable()
     {
+        if (StationManager.Instance != null)
+        {
+            StationManager.Instance.CalculateStationCounts(); 
+        }
+        
         PopulateStationList();
     }
 

@@ -218,6 +218,7 @@ public class Tu5 : MonoBehaviour
         AnimateStoreMoney(GameManager.Instance.TotalEarnings);
         EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
         StationManager.Instance.CreateStationInStorage("s23");
+        StationManager.Instance.UnlockStation("s23");
     }
 
     private void ForcePurchase(string id) => recipeScrollView.ForcePurchaseItem(id);
