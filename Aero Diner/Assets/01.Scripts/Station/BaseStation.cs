@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
 {
     public Transform GetTransform() => transform;
-
     public Transform spawnPoint;
     private CookingTimer cookingTimer;
     [SerializeField] private StationData stationData;
