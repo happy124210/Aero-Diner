@@ -142,6 +142,7 @@ public class RestaurantManager : Singleton<RestaurantManager>
     public void ReStartRestaurant()
     {
         InitializeDay();
+        customersVisited = 1;
         customerSpawner.StartSpawning();
         StationManager.Instance.ResetAllStationsInteractable();
     }
