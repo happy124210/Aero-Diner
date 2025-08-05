@@ -9,7 +9,7 @@ public class PressAnyKeyBlinker : MonoBehaviour
     [SerializeField] private float blinkInterval = 0.5f;
     [SerializeField] private float fastBlinkMultiplier = 0.5f; // 두 배 빠르게
     [SerializeField] private float fastBlinkDuration = 1f;
-
+    [SerializeField] private GameObject credditBtn;
     private bool inputDetected = false;
     private Tween blinkTween;
 
@@ -67,6 +67,7 @@ public class PressAnyKeyBlinker : MonoBehaviour
 
     private void RaiseStartMenuEvent()
     {
+        credditBtn.gameObject.SetActive(true); 
 
         if (HasSavedGame())
             EventBus.Raise(UIEventType.ShowStartMenuWithSave);
