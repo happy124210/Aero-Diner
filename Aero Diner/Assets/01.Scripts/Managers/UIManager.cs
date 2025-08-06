@@ -24,7 +24,8 @@ public class UIManager : Singleton<UIManager>
         typeof(Tu6),
         typeof(Tu7),
         typeof(Tu8),
-        typeof(DemoEnd)
+        typeof(DemoEnd),
+        typeof(IngredientWarnPopup),
 
         
         // 필요한 타입 추가 가능
