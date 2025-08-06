@@ -80,7 +80,7 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
     {
         if (data == null || menuSpawnPosition == null)
         {
-            Debug.LogError("필수 데이터가 누락되었습니다.");
+            if (showDebugInfo) Debug.LogError("필수 데이터가 누락되었습니다.");
             return null;
         }
 
@@ -99,12 +99,6 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
         return obj;
     }
 
-    public void OnOrderMatch()
-    {
-        // TODO: 주문 일치 시 FoodDisplay 비활성화
-        // 이벤트 연결 필요
-    }
-
     /// <summary>
     /// 식사 대기 후 음식 제거
     /// </summary>
@@ -118,11 +112,6 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
     
     public Vector3 GetSeatPoint() => seatPoint.position;
     public Vector3 GetStopPoint() => stopPoint.position;
-    
-    public bool HasFood => currentFoodObj != null;
-    public bool HasCustomer => assignedCustomer != null;
-    public bool CanPlaceFood => currentFoodObj == null;
-    public CustomerController AssignedCustomer => assignedCustomer;
     
     public FoodDisplay GetCurrentFood() => currentFoodObj?.GetComponent<FoodDisplay>();
 

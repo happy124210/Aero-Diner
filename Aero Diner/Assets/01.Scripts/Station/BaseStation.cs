@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
 {
@@ -19,12 +18,12 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
     [SerializeField] protected StationTimerController timerController; // 타이머 UI 컨트롤러
     [SerializeField] protected bool showDebugInfo;
 
-    protected List<FoodData> placedIngredientList = new();             // 실제 등록된 재료의 데이터 목록
-    protected List<GameObject> placedIngredients = new();              // 화면에 보여지는 재료 오브젝트들
-    protected List<FoodData> availableMatchedRecipes = new();          // 현재 조건에서 가능한 레시피 리스트
+    private List<FoodData> placedIngredientList = new();             // 실제 등록된 재료의 데이터 목록
+    private List<GameObject> placedIngredients = new();              // 화면에 보여지는 재료 오브젝트들
+    private List<FoodData> availableMatchedRecipes = new();          // 현재 조건에서 가능한 레시피 리스트
+    private OutlineShaderController outline;                         // 외곽선 효과를 제어하는 컴포넌트
+    
     protected FoodData cookedIngredient;                               // 조리 완료 시 결과가 되는 레시피
-    protected OutlineShaderController outline;                         // 외곽선 효과를 제어하는 컴포넌트
-    protected bool hasInitialized = false;                             // 아이콘 초기화 플래그
     private FoodData cookedResult;                                     // 조리 완료된 결과물
     protected CookingTimer timer;
     protected bool isCooking = false;
@@ -37,13 +36,13 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
             // 자동 조리: 타이머가 돌아가고 있으면 true
             if (stationData.workType == WorkType.Automatic)
             {
-                return cookedIngredient != null && timer != null && timer.Remaining > 0f;
+                return cookedIngredient && timer != null && timer.Remaining > 0f;
             }
 
             // 패시브 조리: 재료가 모두 충족되면 true
             if (stationData.workType == WorkType.Passive)
             {
-                return cookedIngredient != null &&
+                return cookedIngredient &&
                        cookedIngredient.ingredients.All(id => currentIngredients.Contains(id));
             }
 
@@ -63,10 +62,8 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
     {
         if (stationData != null && stationData.slotDisplays != null)
         {
-            var types = stationData.slotDisplays.ConvertAll(s => s.foodType);
             iconDisplay.Initialize(stationData.slotDisplays); // 슬롯 전체 전달
             iconDisplay.ResetAll();
-            hasInitialized = true;
         }
         else
         {
@@ -76,7 +73,7 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
     
     public void Initialize(StationData data)
     {
-        if (data == null) return;
+        if (!data) return;
         
         stationData = data; 
         
