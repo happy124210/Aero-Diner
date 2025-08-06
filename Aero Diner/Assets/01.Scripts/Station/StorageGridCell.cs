@@ -39,9 +39,6 @@ public class StorageGridCell : MonoBehaviour
 
         bool pausedReturn = phase == GamePhase.Paused;
         return;
-
-        bool shouldShow = phase == GamePhase.Day || phase == GamePhase.EditStation;
-        stored.gameObject.SetActive(shouldShow);
     }
 
     private Transform GetStoredObject()

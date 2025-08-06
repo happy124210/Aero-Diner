@@ -6,23 +6,24 @@ using System.Collections;
 public class Intro : MonoBehaviour
 {
     [SerializeField] private Image[] introImages;
-    [SerializeField] private BGMEventType[][] bgmEventsPerImage; // 각 이미지마다 여러 BGM 이벤트
     [SerializeField] private float fadeDuration = 1f;
-    [SerializeField] private float displayTime = 1.5f;
-
     [SerializeField] private float[] displayTimes;
+    
+    private BGMEventType[][] bgmEventsPerImage; // 각 이미지마다 여러 BGM 이벤트
     private Coroutine fadeCoroutine;
+    
     private void Awake()
     {
-        displayTimes = new float[] { 4f, 3f, 3f, 4f, 3f, 3f };
+        displayTimes = new[] { 4f, 3f, 3f, 4f, 3f, 3f };
         bgmEventsPerImage = new BGMEventType[6][];
-        bgmEventsPerImage[0] = new BGMEventType[] { BGMEventType.Intro1 };
-        bgmEventsPerImage[1] = new BGMEventType[] { BGMEventType.Intro2 };
+        bgmEventsPerImage[0] = new[] { BGMEventType.Intro1 };
+        bgmEventsPerImage[1] = new[] { BGMEventType.Intro2 };
         bgmEventsPerImage[2] = new BGMEventType[] { };
         bgmEventsPerImage[3] = new BGMEventType[] { };
-        bgmEventsPerImage[4] = new BGMEventType[] { BGMEventType.Intro3 };
+        bgmEventsPerImage[4] = new[] { BGMEventType.Intro3 };
         bgmEventsPerImage[5] = new BGMEventType[] {};
     }
+    
     private void Start()
     {
         EventBus.RaiseFadeEvent(FadeEventType.FadeIn);
@@ -41,21 +42,20 @@ public class Intro : MonoBehaviour
     {
         for (int i = 0; i < introImages.Length; i++)
         {
-            if (i == 2)
+            switch (i)
             {
-                EventBus.PlayLoopSFX(SFXType.Rain);
-            }
-            if(i == 3)
-            { 
-                EventBus.PlaySFX(SFXType.Sunder);
-            }
-            if (i == 4)
-            {
-                EventBus.PlaySFX(SFXType.Crash1);
-            }
-            if( i == 5)
-            {
-                EventBus.PlaySFX (SFXType.Crash2); ;
+                case 2:
+                    EventBus.PlayLoopSFX(SFXType.Rain);
+                    break;
+                case 3:
+                    EventBus.PlaySFX(SFXType.Sunder);
+                    break;
+                case 4:
+                    EventBus.PlaySFX(SFXType.Crash1);
+                    break;
+                case 5:
+                    EventBus.PlaySFX (SFXType.Crash2); ;
+                    break;
             }
 
             Image img = introImages[i];

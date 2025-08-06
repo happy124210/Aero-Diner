@@ -22,7 +22,7 @@ public class SFXManager : Singleton<SFXManager>
     private Queue<AudioSource> audioPool;
     private AudioSource baseAudioSource; // 볼륨 설정용 기준
     private Dictionary<SFXType, AudioSource> loopSources = new();
-    private SFXType? currentLoopType = null;
+    
     protected override void Awake()
     {
         base.Awake();
@@ -116,6 +116,7 @@ public class SFXManager : Singleton<SFXManager>
         if (showDebugInfo)
             Debug.Log($"[SFXManager] 볼륨 설정: {volume}");
     }
+    
     private void PlayLoop(SFXType type)
     {
         if (!sfxDict.TryGetValue(type, out var clip) || clip == null)
@@ -140,7 +141,7 @@ public class SFXManager : Singleton<SFXManager>
         }
     }
 
-    public void StopLoop(SFXType type)
+    private void StopLoop(SFXType type)
     {
         if (loopSources.TryGetValue(type, out var source) && source.isPlaying)
         {

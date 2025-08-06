@@ -96,7 +96,7 @@ public class QuestPanel : MonoBehaviour
         GameObject go = Instantiate(questListItemPrefab, parent);
         var item = go.GetComponent<Quest_ScrollView_Content>();
         item.SetData(questData);
-        item.OnClicked = () => ShowQuestDetail(questData);
+        item.onClicked = () => ShowQuestDetail(questData);
     }
     
     private void ShowQuestDetail(QuestData quest)

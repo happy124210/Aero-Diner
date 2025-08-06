@@ -9,9 +9,8 @@ public class LoadingManager : MonoBehaviour
 {
     public Slider progressBar;
     private string targetScene;
-    private bool fadeCompleted = false;
-    private bool isReadyToActivate = false;
-    private bool isClicked = false;
+    private bool fadeCompleted;
+    private bool isClicked;
 
     private void Start()
     {

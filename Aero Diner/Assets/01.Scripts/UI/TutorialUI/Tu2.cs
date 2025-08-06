@@ -157,7 +157,7 @@ public class Tu2 : MonoBehaviour
         _ = HandleDayStartAsync();
     }
 
-    private async Task HandleDayStartAsync()
+    private Task HandleDayStartAsync()
     {
         EventBus.PlaySFX(SFXType.ButtonClick);
 
@@ -177,7 +177,7 @@ public class Tu2 : MonoBehaviour
         {
             Debug.LogWarning("[MenuPanel] 선택된 메뉴가 없습니다!");
             ShowNoMenuSelectedPopup();
-            return;
+            return Task.CompletedTask;
         }
 
         //  삭제 셀 확인
@@ -194,11 +194,12 @@ public class Tu2 : MonoBehaviour
         if (hasStationInDeleteGrid)
         {
             ShowDeletePopup();
-            return;
+            return Task.CompletedTask;
         }
 
         // 정상 전환
         ProceedToMainScene();
+        return Task.CompletedTask;
     }
 
     private void ShowDeletePopup()
