@@ -45,7 +45,24 @@ public class StationTimerController : MonoBehaviour
     /// <param name="totalTime">총 조리 시간</param>
     public void UpdateTimer(float currentCookingTime, float totalTime)
     {
-        timerImg.sprite = sprites[GetSpriteIndex(currentCookingTime, totalTime)];
+        if (timerImg == null)
+        {
+            return;
+        }
+
+        if (sprites == null || sprites.Count == 0)
+        {
+            return;
+        }
+
+        int index = GetSpriteIndex(currentCookingTime, totalTime);
+
+        if (index < 0 || index >= sprites.Count)
+        {
+            return;
+        }
+
+        timerImg.sprite = sprites[index];
     }
 
     public void ShowPassiveCookingState()
