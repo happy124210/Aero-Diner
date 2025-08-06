@@ -15,7 +15,7 @@ public class StoreDataManager : Singleton<StoreDataManager>
     private void LoadStoreData(string path)
     {
         StoreItemMap = new Dictionary<string, StoreItemData>();
-        TextAsset csvFile = Resources.Load<TextAsset>("Datas/Store/StoreData");
+        TextAsset csvFile = Resources.Load<TextAsset>(StringPath.STORE_DATA_CSV_PATH);
 
         if (csvFile == null)
         {
@@ -56,7 +56,7 @@ public class StoreDataManager : Singleton<StoreDataManager>
                 return $"선행 레시피\n[{string.Join("\nor ", requiredRecipeNames)}] 필요";
 
             case UnlockType.Quest:
-                return "선행 퀘스트\n[기술의 발전] 완료 필요";
+                return StringMessage.QUEST_CONDITION_MESSAGE;
 
             case UnlockType.None:
                 break;

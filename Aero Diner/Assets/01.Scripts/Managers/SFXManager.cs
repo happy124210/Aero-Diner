@@ -16,7 +16,7 @@ public class SFXManager : Singleton<SFXManager>
     [SerializeField] private int poolSize = 10;
 
     [Header("디버그")]
-    [SerializeField] private bool showDebugInfo = false;
+    [SerializeField] private bool showDebugInfo;
 
     private Dictionary<SFXType, AudioClip> sfxDict;
     private Queue<AudioSource> audioPool;
@@ -76,7 +76,7 @@ public class SFXManager : Singleton<SFXManager>
         if (showDebugInfo)
             Debug.Log($"[SFXManager] SFX 요청 받음: {type}");
 
-        if (!sfxDict.TryGetValue(type, out var clip) || clip == null)
+        if (!sfxDict.TryGetValue(type, out var clip) || !clip)
         {
             if (showDebugInfo)
                 Debug.LogWarning($"[SFXManager] {type}에 해당하는 clip이 null입니다.");
@@ -119,7 +119,7 @@ public class SFXManager : Singleton<SFXManager>
     
     private void PlayLoop(SFXType type)
     {
-        if (!sfxDict.TryGetValue(type, out var clip) || clip == null)
+        if (!sfxDict.TryGetValue(type, out var clip) || !clip)
             return;
 
         if (!loopSources.TryGetValue(type, out var source))
@@ -151,16 +151,4 @@ public class SFXManager : Singleton<SFXManager>
                 Debug.Log($"[SFXManager] 루프 SFX 정지: {type}");
         }
     }
-    public void StopAllLoops()
-    {
-        foreach (var source in loopSources.Values)
-        {
-            if (source.isPlaying)
-                source.Stop();
-        }
-
-        if (showDebugInfo)
-            Debug.Log("[SFXManager] 모든 루프 SFX 정지");
-    }
-
 }

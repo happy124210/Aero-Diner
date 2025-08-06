@@ -66,13 +66,13 @@ public class QuestManager : Singleton<QuestManager>
 
         for (int i = 0; i < data.playerQuestStatusKeys.Count; i++)
         {
-            if (data.playerQuestStatusKeys[i].StartsWith("t_")) continue;
+            if (data.playerQuestStatusKeys[i].StartsWith(StringID.TUTORIAL_PREFIX)) continue;
             playerQuestStatus[data.playerQuestStatusKeys[i]] = data.playerQuestStatusValues[i];
         }
 
         foreach (var progressData in data.playerQuestProgress)
         {
-            if (progressData.questId.StartsWith("t_")) continue;
+            if (progressData.questId.StartsWith(StringID.TUTORIAL_PREFIX)) continue;
             var innerDict = new Dictionary<string, int>();
             for (int i = 0; i < progressData.objectiveTargetIds.Count; i++)
             {
@@ -143,14 +143,14 @@ public class QuestManager : Singleton<QuestManager>
         if (GetQuestStatus(questId) != QuestStatus.InProgress) return;
         
         QuestData quest = FindQuestByID(questId);
-        QuestStatus finalStatus = quest.id.StartsWith("t_") ? QuestStatus.Finished : QuestStatus.Completed;
+        QuestStatus finalStatus = quest.id.StartsWith(StringID.TUTORIAL_PREFIX) ? QuestStatus.Finished : QuestStatus.Completed;
         playerQuestStatus[questId] = finalStatus;
         
         if (quest.rewardMoney > 0) GameManager.Instance.AddMoney(quest.rewardMoney);
         foreach (var itemId in quest.rewardItemIds)
         {
-            if (itemId.StartsWith("s")) StationManager.Instance.UnlockStation(itemId);
-            else if (itemId.StartsWith("f")) MenuManager.Instance.UnlockMenu(itemId);
+            if (itemId.StartsWith(StringID.STATION_PREFIX)) StationManager.Instance.UnlockStation(itemId);
+            else if (itemId.StartsWith(StringID.FOOD_PREFIX)) MenuManager.Instance.UnlockMenu(itemId);
         }
 
         if (showDebugInfo) Debug.Log($"[QuestManager] 퀘스트 {finalStatus}: {quest.questName}");
@@ -171,22 +171,6 @@ public class QuestManager : Singleton<QuestManager>
 
     #region 퀘스트 진행도 및 완료 체크
     
-    // 진행도 누적이 필요한 퀘스트
-    public void UpdateQuestProgress(string questId, string objectiveTargetId, int amount = 1)
-    {
-        if (GetQuestStatus(questId) != QuestStatus.InProgress) return;
-
-        var objective = FindQuestByID(questId)?.objectives.FirstOrDefault(o => o.targetId == objectiveTargetId);
-        if (objective == null) return;
-        
-        int currentAmount = playerQuestProgress[questId].GetValueOrDefault(objectiveTargetId, 0) + amount;
-        playerQuestProgress[questId][objectiveTargetId] = currentAmount;
-        
-        if (showDebugInfo) Debug.Log($"[QuestManager] 진행도 업데이트: {questId} - {objectiveTargetId} ({currentAmount}/{objective.requiredIds.FirstOrDefault()})");
-        
-        CheckAndCompleteQuest(questId);
-    }
-
     // 퀘스트 완료 조건 확인
     private bool CheckQuestCompletion(string questId)
     {

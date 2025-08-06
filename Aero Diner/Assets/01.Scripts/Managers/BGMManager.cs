@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class BGMManager : Singleton<BGMManager>
 {
     private Tween currentFadeTween; // 현재 재생 중인 페이드 트윈
-    private float fadeDuration = 0.5f; // 기본 페이드 시간
+    private readonly float fadeDuration = 0.5f; // 기본 페이드 시간
     private float targetVolume = 1f;
    
     [System.Serializable]
@@ -48,7 +48,7 @@ public class BGMManager : Singleton<BGMManager>
         }
 
         var entry = bgmClips.Find(b => b.type == type);
-        if (entry == null || entry.bgmClip == null)
+        if (entry == null || !entry.bgmClip)
         {
             Debug.LogWarning($"[BGMManager] {type}에 해당하는 BGM이 없습니다.");
             return;
@@ -119,10 +119,5 @@ public class BGMManager : Singleton<BGMManager>
     {
         targetVolume = volume;            
         audioSource.volume = volume;    
-    }
-
-    public float GetVolume()
-    {
-        return audioSource.volume;
     }
 }

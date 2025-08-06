@@ -15,8 +15,8 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         DontDestroyOnLoad(this);
     }
 
-    private static string savePath => Path.Combine(Application.persistentDataPath, "save.json");
-    private static string stationSavePath => Path.Combine(Application.persistentDataPath, "station.json");
+    private static string savePath => Path.Combine(Application.persistentDataPath, StringPath.SAVE_PATH);
+    private static string stationSavePath => Path.Combine(Application.persistentDataPath, StringPath.STATION_PATH);
 
     // 저장
     public static void SaveGame(SaveData data)
@@ -65,34 +65,11 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
     public static bool HasSaveData()
     {
         bool exists = File.Exists(savePath);
-        bool StationExists = File.Exists(stationSavePath);
 
         if (Instance?.showDebugInfo == true)
             Debug.Log($"[SaveLoadManager] 저장 파일 존재 여부: {exists}");
 
         return exists;
-    }
-    
-    public static void DeleteSave()
-    {
-        if (File.Exists(savePath))
-        {
-            File.Delete(savePath);
-
-            if (Instance?.showDebugInfo == true)
-                Debug.Log("[SaveLoadManager] 저장 파일 삭제됨");
-        }
-        if (File.Exists(stationSavePath))
-        {
-            File.Delete(stationSavePath);
-            if (Instance?.showDebugInfo == true)
-                Debug.Log("[SaveLoadManager] 스테이션 저장 파일 삭제됨");
-        }
-        else
-        {
-            if (Instance?.showDebugInfo == true)
-                Debug.LogWarning("[SaveLoadManager] 삭제할 저장 파일이 없습니다.");
-        }
     }
     
     // 옵션 제외 게임데이터 초기화 (New Game 시)
@@ -161,16 +138,19 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
                     Debug.LogWarning($"[SaveLoadManager] station.json 파일이 존재하지 않습니다 → {path}");
 
                 // 현재 상태 저장
-                StationManager.Instance.Save();
+                if (StationManager.Instance)
+                {
+                    StationManager.Instance.Save();
 
-                // 다시 불러오기
-                string jsonAfterSave = File.ReadAllText(path);
-                var infosAfterSave = JsonConvert.DeserializeObject<List<StationSaveInfo>>(jsonAfterSave);
+                    // 다시 불러오기
+                    string jsonAfterSave = File.ReadAllText(path);
+                    var infosAfterSave = JsonConvert.DeserializeObject<List<StationSaveInfo>>(jsonAfterSave);
 
-                if (Instance?.showDebugInfo == true)
-                    Debug.Log($"[SaveLoadManager] station.json 저장 후 로드 완료: {infosAfterSave.Count}개 항목");
+                    if (Instance?.showDebugInfo == true)
+                        Debug.Log($"[SaveLoadManager] station.json 저장 후 로드 완료: {infosAfterSave.Count}개 항목");
 
-                return infosAfterSave;
+                    return infosAfterSave;
+                }
             }
 
             string json = File.ReadAllText(path);

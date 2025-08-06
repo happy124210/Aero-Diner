@@ -19,6 +19,12 @@ public static class StringPath
     public const string STORE_DATA_PATH = "Datas/Store";
     public const string DIALOGUE_DATA_PATH = "Datas/Dialogue";
     public const string SPEAKER_DATA_PATH = "Datas/Speakers";
+
+    public const string STORE_DATA_CSV_PATH = "Datas/Store/StoreData";
+    
+    // Save Path
+    public const string SAVE_PATH = "save.json";
+    public const string STATION_PATH = "station.json";
 }
 
 public static class StringTag
@@ -37,6 +43,8 @@ public static class StringMessage
     public const string ESCAPE_ALERT = "이 지역에서는 멀리 나가봐야 아무 것도 없어! \n 비행선을 수리해서 다른 지역으로 간다면 모를까...";
     
     public const string SAVE_MESSAGE = "설정이 저장되었습니다!";
+
+    public const string QUEST_CONDITION_MESSAGE = "선행 퀘스트\n[기술의 발전] 완료 필요";
 }
 
 public static class StringID
@@ -44,4 +52,13 @@ public static class StringID
     public const string TUTORIAL_RECIPE_ID = "f29";
     public const string TUTORIAL_SHOP_ID = "b32";
     public const string TUTORIAL_STATION_ID = "s23";
+    public const string TUTORIAL_PREFIX = "t_";
+    public const string QUEST_PREFIX = "q_";
+    public const string FOOD_PREFIX = "f_";
+    public const string STATION_PREFIX = "s_";
+}
+
+public static class StringName
+{
+    public const string POOL_CONTAINER = "PoolContainer";
 }

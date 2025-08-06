@@ -7,8 +7,7 @@ using System.Collections.Generic;
 public class UIManager : Singleton<UIManager>
 {
     //이 리스트에 있는 UI는 모두 비활성화 상태로 시작.
-    private readonly System.Type[] initiallyDisabledTypes = new System.Type[]
-    {
+    private readonly System.Type[] initiallyDisabledTypes = {
         typeof(ResultPanel),
         typeof(MenuPanel3),
         typeof(MenuPanel4),
@@ -80,7 +79,7 @@ public class UIManager : Singleton<UIManager>
 
     }
 
-    public async void LoadSceneUI(string sceneName)
+    private async void LoadSceneUI(string sceneName)
     {
         // 기존 UI 제거
         foreach (var ui in currentSceneUIs)
@@ -102,7 +101,7 @@ public class UIManager : Singleton<UIManager>
         if (assetRefs.Count == 0 && showDebugInfo)
             Debug.LogWarning($"[UIManager] {sceneName} 씬에 로드할 UI 프리팹이 없습니다.");
 
-        // Addressables 기반 UI 인스턴스 생성
+        // Addressable 기반 UI 인스턴스 생성
         foreach (var assetRef in assetRefs)
         {
             var handle = assetRef.InstantiateAsync(transform);
@@ -146,14 +145,14 @@ public class UIManager : Singleton<UIManager>
 
         switch (sceneName)
         {
-            case "StartScene":
+            case StringScene.START_SCENE:
                 uiHandlers.Add(new StartSceneUIHandler(currentSceneUIs));
                 break;
             
-            case "MainScene":
+            case StringScene.MAIN_SCENE:
                 uiHandlers.Add(new MainSceneUIHandler(currentSceneUIs));
                 break;
-            case "DayScene":
+            case StringScene.DAY_SCENE:
                 uiHandlers.Add(new DaySceneUIHandler(currentSceneUIs));
                 break;
         }

@@ -86,8 +86,8 @@ public class RestaurantManager : Singleton<RestaurantManager>
             }
         }
     }
-
-
+    
+    
     private void HandlePhaseChange(GamePhase newPhase)
     {
         switch (newPhase)

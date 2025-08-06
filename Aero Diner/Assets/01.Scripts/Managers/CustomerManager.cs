@@ -59,11 +59,11 @@ public class CustomerManager : Singleton<CustomerManager>
     {
         if (activeCustomers.Count == 0)
         {
-            Debug.Log("[CustomerManager] 활성화된 손님이 없습니다.");
+            if (showDebugInfo) Debug.Log("[CustomerManager] 활성화된 손님이 없습니다.");
             return;
         }
 
-        Debug.LogWarning($"[CustomerManager] {activeCustomers.Count}명의 모든 손님의 인내심을 제거합니다.");
+        if (showDebugInfo) Debug.LogWarning($"[CustomerManager] {activeCustomers.Count}명의 모든 손님의 인내심을 제거합니다.");
         
         foreach (var customer in activeCustomers.ToList())
         {
@@ -108,7 +108,7 @@ public class CustomerManager : Singleton<CustomerManager>
             return;
         }
 
-        Debug.LogWarning($"[CustomerManager] {activeCustomers.Count}명의 모든 손님을 풀로 반환합니다.");
+        if (showDebugInfo) Debug.LogWarning($"[CustomerManager] {activeCustomers.Count}명의 모든 손님을 풀로 반환합니다.");
         
         foreach (var customer in activeCustomers.ToList())
         {
