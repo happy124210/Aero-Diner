@@ -27,7 +27,7 @@ public class DialogueManager : Singleton<DialogueManager>
     {
         dialogueDatabase = new Dictionary<string, DialogueData>();
         
-        DialogueData[] allDialogues = Resources.LoadAll<DialogueData>("Datas/Dialogue");
+        DialogueData[] allDialogues = Resources.LoadAll<DialogueData>(StringPath.DIALOGUE_DATA_PATH);
         
         foreach (DialogueData dialogue in allDialogues)
         {
@@ -43,7 +43,7 @@ public class DialogueManager : Singleton<DialogueManager>
     private void LoadSpeakerDatabase()
     {
         speakerDatabase = new Dictionary<string, SpeakerData>();
-        SpeakerData[] allSpeakers = Resources.LoadAll<SpeakerData>("Datas/Speakers");
+        SpeakerData[] allSpeakers = Resources.LoadAll<SpeakerData>(StringPath.SPEAKER_DATA_PATH);
 
         foreach (var speaker in allSpeakers)
         {

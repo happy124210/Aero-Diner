@@ -17,6 +17,8 @@ public static class StringPath
     public const string STORY_DATA_PATH = "Datas/Story";
     public const string QUEST_DATA_PATH = "Datas/Quest";
     public const string STORE_DATA_PATH = "Datas/Store";
+    public const string DIALOGUE_DATA_PATH = "Datas/Dialogue";
+    public const string SPEAKER_DATA_PATH = "Datas/Speakers";
 }
 
 public static class StringTag
@@ -35,4 +37,11 @@ public static class StringMessage
     public const string ESCAPE_ALERT = "이 지역에서는 멀리 나가봐야 아무 것도 없어! \n 비행선을 수리해서 다른 지역으로 간다면 모를까...";
     
     public const string SAVE_MESSAGE = "설정이 저장되었습니다!";
+}
+
+public static class StringID
+{
+    public const string TUTORIAL_RECIPE_ID = "f29";
+    public const string TUTORIAL_SHOP_ID = "b32";
+    public const string TUTORIAL_STATION_ID = "s23";
 }

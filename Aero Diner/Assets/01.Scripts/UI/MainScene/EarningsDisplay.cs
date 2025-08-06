@@ -34,9 +34,7 @@ public class EarningsDisplay : MonoBehaviour
 
         //현재 UI에 표시된 금액을 기준으로 애니메이션 시작
         int fromAmount = currentDisplayAmount;
-
-
-
+        
         //애니메이션: 현재 표시값 → 새로운 수치
         DOVirtual.Int(fromAmount, newAmount, animateDuration, value =>
         {

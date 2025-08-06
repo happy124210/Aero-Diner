@@ -1,8 +1,6 @@
 ﻿using DG.Tweening;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using Sequence = DG.Tweening.Sequence;
 
 public class Tu5 : MonoBehaviour
 {
@@ -21,9 +19,9 @@ public class Tu5 : MonoBehaviour
     [SerializeField] private Color flashColor = Color.yellow;
     private int currentDisplayAmount;
     private Color originalColor;
-
+    
     [Header("Debug Info")]
-    [SerializeField] private bool IsDebug = false;
+    [SerializeField] private bool showDebugInfo;
 
     [Header("Tutorial UI")]
     [SerializeField] private GameObject step1Panel1;
@@ -44,6 +42,8 @@ public class Tu5 : MonoBehaviour
     [SerializeField] private GameObject step4Pointer;
 
     [SerializeField] private GameObject xPanel;
+
+    private const int TUTORIAL_GOLD = -50;
     
     private void Awake()
     {
@@ -64,23 +64,8 @@ public class Tu5 : MonoBehaviour
     }
 
     #region 두트윈 메서드
-
-    private void ShowInsufficientMoneyPanel()
-    {
-        var group = insufficientMoneyPanel.GetComponent<CanvasGroup>();
-        if (group == null)
-            group = insufficientMoneyPanel.AddComponent<CanvasGroup>();
-
-        group.alpha = 0;
-        insufficientMoneyPanel.SetActive(true);
-
-        Sequence seq = DOTween.Sequence();
-        seq.Append(group.DOFade(1, 0.5f))
-            .AppendInterval(1.2f)
-            .Append(group.DOFade(0, 0.5f))
-            .OnComplete(() => insufficientMoneyPanel.SetActive(false));
-    }
-    public void AnimateStoreMoney(int newAmount)
+    
+    private void AnimateStoreMoney(int newAmount)
     {
         DOTween.Kill(currentMoney);
         DOTween.Kill(currentMoney.transform);
@@ -100,15 +85,6 @@ public class Tu5 : MonoBehaviour
         seq.Append(currentMoney.DOColor(originalColor, 0.2f));
         seq.Join(currentMoney.transform.DOScale(1.0f, 0.2f));
     }
-    public void Show()
-    {
-        gameObject.SetActive(true);
-        canvasGroup.alpha = 0f;
-        canvasGroup.interactable = true;
-        canvasGroup.blocksRaycasts = true;
-
-        canvasGroup.DOFade(1f, 0.3f).SetEase(Ease.OutQuad);
-    }
 
     public void Hide()
     {
@@ -122,19 +98,10 @@ public class Tu5 : MonoBehaviour
     #endregion
 
     #region 버튼 메서드
-    public void OnIngredientTabClick()
-    {
-        if (IsDebug)
-            Debug.Log("버튼 클릭 됨");
-        EventBus.PlaySFX(SFXType.ButtonClick);
-        tabController.RequestSelectTab(2);
-        // EventBus.Raise(UIEventType.ShowInventory);
-        // TODO: 아직 해금 안 됨 경고 팝업
-    }
 
     public void OnRecipeTabClick()
     {
-        if (IsDebug)
+        if (showDebugInfo)
             Debug.Log("버튼 클릭 됨");
         EventBus.PlaySFX(SFXType.ButtonClick);
         tabController.RequestSelectTab(0);
@@ -143,23 +110,18 @@ public class Tu5 : MonoBehaviour
 
     public void OnStationTabClick()
     {
-        if (IsDebug)
+        if (showDebugInfo)
             Debug.Log("버튼 클릭 됨");
         EventBus.PlaySFX(SFXType.ButtonClick);
         tabController.RequestSelectTab(1);
         // EventBus.Raise(UIEventType.ShowStationPanel);
     }
 
-    public void OnCloseButtonClick()
-    {
-        EventBus.PlaySFX(SFXType.ButtonClick);
-        EventBus.Raise(UIEventType.FadeOutStore);
-    }
-
     #endregion
 
     #region Tutorial
-    public void Tu5Step1()
+
+    private void Tu5Step1()
     {
         step1Panel1.SetActive(true);
         step1Panel2.SetActive(true);
@@ -208,18 +170,18 @@ public class Tu5 : MonoBehaviour
 
     private void Tu5BuyRecipe()
     {
-        GameManager.Instance.AddMoney(-50);
-        MenuManager.Instance.UnlockMenu("f29");
-        ForcePurchase("b32");
+        GameManager.Instance.AddMoney(TUTORIAL_GOLD);
+        MenuManager.Instance.UnlockMenu(StringID.TUTORIAL_RECIPE_ID);
+        ForcePurchase(StringID.TUTORIAL_SHOP_ID);
         AnimateStoreMoney(GameManager.Instance.TotalEarnings);
         EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
     }
 
     private void Tu5BuyStation()
     {
-        GameManager.Instance.AddMoney(-50);
-        StationManager.Instance.UnlockStation("s23");
-        StationManager.Instance.CreateStationInStorage("s23");
+        GameManager.Instance.AddMoney(TUTORIAL_GOLD);
+        StationManager.Instance.UnlockStation(StringID.TUTORIAL_STATION_ID);
+        StationManager.Instance.CreateStationInStorage(StringID.TUTORIAL_STATION_ID);
         AnimateStoreMoney(GameManager.Instance.TotalEarnings);
         EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
     }
