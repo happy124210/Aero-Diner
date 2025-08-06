@@ -54,7 +54,7 @@ public class Tu3 : MonoBehaviour
 
     public void ShowTutorialStep4()
     {
-        ShowTextWithTyping("이번엔 면을 삶아보죠!\n싱크대에서 물을, 노란 면다발에서 건조 면을 꺼내 냄비에 집어넣으면 알아서 끓을 거에요!");
+        ShowTextWithTyping("이번엔 면을 삶아보죠!\n싱크대에서 물을, 노란 면다발에서 건조 면을 꺼내서\n냄비에 집어넣으면 알아서 끓을 거에요!");
     }
 
     public void ShowTutorialStep5()
@@ -64,7 +64,7 @@ public class Tu3 : MonoBehaviour
 
     public void ShowTutorialStep6()
     {
-        ShowTextWithTyping("이제 재료가 모인 프라이팬을 일정 시간 동안 상호작용해서 파스타를 완성해주세요!");
+        ShowTextWithTyping("이제 재료가 모인 프라이팬을 일정 시간 동안 상호작용해서\n파스타를 완성해주세요!");
     }
 
     public void ShowTutorialStep7()
