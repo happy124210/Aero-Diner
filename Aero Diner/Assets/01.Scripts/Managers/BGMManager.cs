@@ -1,7 +1,6 @@
 ﻿using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(AudioSource))]
 public class BGMManager : Singleton<BGMManager>
@@ -36,8 +35,6 @@ public class BGMManager : Singleton<BGMManager>
     {
         EventBus.OnBGMRequested -= HandleBGMEvent;
     }
-
-
 
     private void HandleBGMEvent(BGMEventType type)
     {
@@ -84,6 +81,7 @@ public class BGMManager : Singleton<BGMManager>
             audioSource.Play();
         }
     }
+    
     private void FadeOutAndPlayNew(AudioClip newClip)
     {
         currentFadeTween?.Kill();
@@ -102,6 +100,7 @@ public class BGMManager : Singleton<BGMManager>
                     .SetEase(Ease.InQuad);
             });
     }
+    
     private void FadeOutAndStop()
     {
         currentFadeTween?.Kill();
