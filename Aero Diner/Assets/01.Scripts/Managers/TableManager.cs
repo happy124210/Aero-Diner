@@ -37,7 +37,7 @@ public class TableManager : Singleton<TableManager>
         tables = GetComponentsInChildren<Table>();
         if (tables == null || tables.Length == 0)
         {
-            Debug.LogError("[TableManager] Table 배열 설정 안 됨 !!!");
+            if (showDebugInfo) Debug.LogError("[TableManager] Table 배열 설정 안 됨 !!!");
             return;
         }
 

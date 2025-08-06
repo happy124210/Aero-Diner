@@ -33,4 +33,6 @@ public static class StringMessage
     public const string OPERATION_ALERT = "지금은 영업 중이니 다른 곳에 가면 안돼!";
     public const string STATION_ALERT = "설비를 든 상태로는 무거워서 멀리까지 나갈 수 없어!";
     public const string ESCAPE_ALERT = "이 지역에서는 멀리 나가봐야 아무 것도 없어! \n 비행선을 수리해서 다른 지역으로 간다면 모를까...";
+    
+    public const string SAVE_MESSAGE = "설정이 저장되었습니다!";
 }

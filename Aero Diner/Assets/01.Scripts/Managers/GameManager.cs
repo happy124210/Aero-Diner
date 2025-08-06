@@ -318,6 +318,37 @@ public class GameManager : Singleton<GameManager>
 
     #endregion
     
+    #region 씬 전환 및 정리
+    public void ReturnToStartScene()
+    {
+        StartCoroutine(ReturnToStartSceneRoutine());
+    }
+
+    private IEnumerator ReturnToStartSceneRoutine()
+    {
+        EventBus.RaiseFadeEvent(FadeEventType.FadeOut, new FadeEventPayload(1f, 0.5f));
+        yield return new WaitForSecondsRealtime(0.5f);
+        
+        Time.timeScale = 1f;
+
+        Destroy(StoryManager.Instance.gameObject);
+        Destroy(StationManager.Instance.gameObject);
+        Destroy(RestaurantManager.Instance.gameObject);
+        Destroy(RecipeManager.Instance.gameObject);
+        Destroy(QuestManager.Instance.gameObject);
+        Destroy(PoolManager.Instance.gameObject);
+        Destroy(MenuManager.Instance.gameObject);
+        Destroy(DialogueManager.Instance.gameObject);
+        Destroy(TableManager.Instance.gameObject);
+        Destroy(CustomerManager.Instance.gameObject);
+        Destroy(PlacementManager.Instance.gameObject);
+        
+        Destroy(gameObject);
+
+        SceneManager.LoadScene(StringScene.START_SCENE);
+    }
+    #endregion
+    
     #region Debug Commands
 #if UNITY_EDITOR
     private void OnGUI()
