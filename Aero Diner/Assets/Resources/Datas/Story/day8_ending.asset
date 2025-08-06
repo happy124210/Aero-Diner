@@ -12,15 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce4ff5776a5c66845bd9a49d594fcc0b, type: 3}
   m_Name: day8_ending
   m_EditorClassIdentifier: 
-  id: day8_ending 1
-  triggerPhase: 1
+  id: day8_ending
+  triggerPhase: 11
   conditions:
-  - conditionType: 0
-    lValue: 
-    operator: ==
-    rValue: 8
   - conditionType: 2
-    lValue: day7_closing_end
+    lValue: day7_Closing_End
     operator: ==
     rValue: 
   actions:

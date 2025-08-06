@@ -24,9 +24,9 @@ MonoBehaviour:
     \uD574\uAE08 \n\uC601\uC5C5 \uC7A5\uC18C \uC774\uB3D9 \uD574\uAE08"
   objectives:
   - objectiveType: 0
-    targetId: 3000
+    targetId: 1000
     description: "7\uC77C\uCC28 \uC601\uC5C5\uC774 \uB05D\uB098\uB294 \uC2DC\uC810\uC744
-      \uAE30\uC900\uC73C\uB85C 10,000G \uC774\uC0C1 \uBCF4\uC720\uD55C \uC0C1\uD0DC\uC5EC\uC57C
+      \uAE30\uC900\uC73C\uB85C 1,000G \uC774\uC0C1 \uBCF4\uC720\uD55C \uC0C1\uD0DC\uC5EC\uC57C
       \uD568"
     requiredIds: []
   rewardMoney: 0

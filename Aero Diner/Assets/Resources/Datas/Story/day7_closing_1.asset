@@ -18,7 +18,7 @@ MonoBehaviour:
   - conditionType: 0
     lValue: 
     operator: ==
-    rValue: 8
+    rValue: 7
   actions:
   - storyType: 0
     targetId: day7_Closing_Start
