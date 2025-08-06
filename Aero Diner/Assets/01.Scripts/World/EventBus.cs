@@ -92,6 +92,7 @@ public enum UIEventType
     ShowResultPanel, HideResultPanel, 
     ShowOrderPanel, HideOrderPanel,
     ShowWallPopup, HideWallPopup,
+    ShowIngredientWarn,
 
     //Inventory
     ShowInventory, HideInventory,
@@ -109,7 +110,7 @@ public enum UIEventType
     
     //Tutorial
     tu1, tu2, tu3, tu3_step2, tu3_step3, tu3_step4, tu3_step5, tu3_step6, tu3_step7, tu3_stop,
-    tu4, tu5, tu6, tu7, tu8, tu9, tu8_stop,
+    tu4, tu5, tu6, tu7, tu8, tu9, tu8_stop, ShowDemoEnd
 }
 
 public static class EventBus

@@ -716,8 +716,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8981872372140789260, guid: e3855422d71835d4a98171c3335a085e, type: 3}
+      propertyPath: sceneUIPrefabs.Array.data[1].uiPrefabs.Array.size
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8981872372140789260, guid: e3855422d71835d4a98171c3335a085e, type: 3}
+      propertyPath: sceneUIPrefabs.Array.data[2].uiPrefabs.Array.size
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8981872372140789260, guid: e3855422d71835d4a98171c3335a085e, type: 3}
+      propertyPath: sceneUIPrefabs.Array.data[1].uiPrefabs.Array.data[8].m_AssetGUID
+      value: 4d0374c7022fb7f4d80ba6839ba63c45
+      objectReference: {fileID: 0}
+    - target: {fileID: 8981872372140789260, guid: e3855422d71835d4a98171c3335a085e, type: 3}
       propertyPath: sceneUIPrefabs.Array.data[2].uiPrefabs.Array.data[12].m_AssetGUID
       value: a60f6b8ce12321345b90aa10fdcbdb18
+      objectReference: {fileID: 0}
+    - target: {fileID: 8981872372140789260, guid: e3855422d71835d4a98171c3335a085e, type: 3}
+      propertyPath: sceneUIPrefabs.Array.data[2].uiPrefabs.Array.data[14].m_AssetGUID
+      value: cc280b02b3fba924eadf4197cfaf0cca
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
