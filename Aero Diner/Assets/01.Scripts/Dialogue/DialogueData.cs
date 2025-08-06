@@ -9,6 +9,7 @@ public struct DialogueLine
 {
     public string speakerId;  // SpeakerData의 id
     public Expression expression; // Happy, Sad 등 초상화용
+    [TextArea(3,10)]
     public string text;       // 실제 대사 텍스트
     public DialoguePosition position; // 이 대사의 화자가 표시될 위치
 }
