@@ -131,7 +131,9 @@ public class StationManager : Singleton<StationManager>
         var stationInfos = SaveLoadManager.LoadStationData();
     
         // 저장된 데이터가 있으면 복원
-        if (stationInfos != null && stationInfos.Count > 0)
+        if (GameManager.Instance.CurrentDay != 2 // 튜토리얼 진행용
+            && stationInfos != null 
+            && stationInfos.Count > 0)
         {
             DestroyCurrentStations();
             RestoreStations(stationInfos, phase);
