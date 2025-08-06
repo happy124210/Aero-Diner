@@ -179,6 +179,7 @@ public class Tu5 : MonoBehaviour
         step2Pointer.SetActive(true);
         step2Outline.SetActive(true);
     }
+    
     public void Tu5Step3()
     {
         step2Panel1.SetActive(false);
@@ -188,6 +189,7 @@ public class Tu5 : MonoBehaviour
         step3Panel2.SetActive(true);
         step3Pointer.SetActive(true);
     }
+    
     public void Tu5Step4()
     {
         Tu5BuyStation();
@@ -198,6 +200,7 @@ public class Tu5 : MonoBehaviour
         step4Panel.SetActive(true);
         step4Pointer.SetActive(true);
     }
+    
     public void Tu5Step5()
     {
         UIEventCaller.CallUIEvent("tu6");
@@ -205,20 +208,20 @@ public class Tu5 : MonoBehaviour
 
     private void Tu5BuyRecipe()
     {
-        GameManager.Instance.AddMoney(-100);
-        AnimateStoreMoney(GameManager.Instance.TotalEarnings);
-        EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
+        GameManager.Instance.AddMoney(-50);
         MenuManager.Instance.UnlockMenu("f29");
         ForcePurchase("b32");
+        AnimateStoreMoney(GameManager.Instance.TotalEarnings);
+        EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
     }
 
     private void Tu5BuyStation()
     {
-        GameManager.Instance.AddMoney(-100);
+        GameManager.Instance.AddMoney(-50);
+        StationManager.Instance.UnlockStation("s23");
+        StationManager.Instance.CreateStationInStorage("s23");
         AnimateStoreMoney(GameManager.Instance.TotalEarnings);
         EventBus.Raise(UIEventType.UpdateTotalEarnings, GameManager.Instance.TotalEarnings);
-        StationManager.Instance.CreateStationInStorage("s23");
-        StationManager.Instance.UnlockStation("s23");
     }
 
     private void ForcePurchase(string id) => recipeScrollView.ForcePurchaseItem(id);
