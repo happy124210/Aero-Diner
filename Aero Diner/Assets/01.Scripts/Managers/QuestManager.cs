@@ -23,6 +23,11 @@ public class QuestManager : Singleton<QuestManager>
             .Select(p => questDatabase[p.Key])
             .ToList();
     
+    public List<QuestData> GetFinishedQuests() => 
+        playerQuestStatus.Where(p => p.Value == QuestStatus.Completed || p.Value == QuestStatus.Failed)
+            .Select(p => questDatabase[p.Key])
+            .ToList();
+    
     public int GetQuestObjectiveProgress(string questId, string targetId)
     {
         return playerQuestProgress.TryGetValue(questId, out var progress) 

@@ -65,20 +65,19 @@ public class QuestPanel : MonoBehaviour
         ClearChildren(completeContent);
 
         var doingQuests = QuestManager.Instance.GetInProgressQuests();
-        var completeQuests = QuestManager.Instance.GetCompletedQuests();
-
+        var finishedQuests = QuestManager.Instance.GetFinishedQuests();
         foreach (var quest in doingQuests)
         {
             CreateQuestListItem(quest, doingContent);
         }
 
-        foreach (var quest in completeQuests)
+        foreach (var quest in finishedQuests)
         {
             CreateQuestListItem(quest, completeContent);
         }
 
         // 공용 퀘스트 없음 패널 처리
-        bool hasNoQuests = doingQuests.Count == 0 && completeQuests.Count == 0;
+        bool hasNoQuests = doingQuests.Count == 0 && finishedQuests.Count == 0;
 
         if (noQuestPanel != null)
             noQuestPanel.SetActive(hasNoQuests);
@@ -124,16 +123,16 @@ public class QuestPanel : MonoBehaviour
             rewardText.text = "보상: 없음";
         }
         
-        bool isCompleted = QuestManager.Instance.GetCompletedQuests().Any(q => q.id == quest.id);
+        StringBuilder objectivesBuilder = new StringBuilder();
+        QuestStatus status = QuestManager.Instance.GetQuestStatus(quest.id);
+
         foreach (var obj in quest.objectives)
         {
-            // 완료된 퀘스트
-            if (isCompleted)
+            if (status == QuestStatus.Completed || status == QuestStatus.Failed)
             {
-                objectiveText.text = $"• {obj.description}";
+                objectivesBuilder.AppendLine($"<s>• {obj.description}</s>");
             }
-            // 진행 중인 퀘스트
-            else
+            else // InProgress 상태
             {
                 int currentAmount;
                 int requiredAmount;
@@ -150,10 +149,10 @@ public class QuestPanel : MonoBehaviour
                         int.TryParse(obj.requiredIds.FirstOrDefault(), out requiredAmount);
                         break;
                 }
-            
-                objectiveText.text = $"• {obj.description} ({currentAmount} / {requiredAmount})";
+                objectivesBuilder.AppendLine($"• {obj.description} ({currentAmount} / {requiredAmount})");
             }
         }
+        objectiveText.text = objectivesBuilder.ToString().TrimEnd();
     }
     
     private void ClearChildren(Transform container)
