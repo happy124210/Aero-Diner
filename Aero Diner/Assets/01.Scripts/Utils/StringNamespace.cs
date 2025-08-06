@@ -21,6 +21,7 @@ public static class StringPath
     public const string SPEAKER_DATA_PATH = "Datas/Speakers";
 
     public const string STORE_DATA_CSV_PATH = "Datas/Store/StoreData";
+    public const string STATION_DEFAULT_SAVE_PATH = "DefaultSave/station";
     
     // Save Path
     public const string SAVE_PATH = "save.json";

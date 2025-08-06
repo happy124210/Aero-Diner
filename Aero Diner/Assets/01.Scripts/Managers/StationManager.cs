@@ -125,23 +125,40 @@ public class StationManager : Singleton<StationManager>
     private void InitializeStations()
     {
         var phase = GameManager.Instance.CurrentPhase;
-        
+    
         if(tilemapController) tilemapController.FindGridCells();
 
-        var stationInfos = SaveLoadManager.LoadStationData();
-    
-        // 저장된 데이터가 있으면 복원
-        if (GameManager.Instance.CurrentDay != 2 // 튜토리얼 진행용
-            && stationInfos != null 
-            && stationInfos.Count > 0)
+        // 2일차의 Day Phase 튜토리얼
+        bool forceTutorialLayout = GameManager.Instance.CurrentDay == 2 
+                                   && GameManager.Instance.CurrentPhase != GamePhase.Opening;
+
+        if (forceTutorialLayout)
         {
-            DestroyCurrentStations();
-            RestoreStations(stationInfos, phase);
+            // 튜토리얼 조건 만족 시 지정된 튜토리얼 레이아웃 파일 로드
+            if (showDebugInfo) Debug.Log("[StationManager] 2일차 Day Phase 튜토리얼: 기본 설비 레이아웃을 로드");
+            var tutorialStationInfos = SaveLoadManager.LoadTutorialStationData();
+            if (tutorialStationInfos != null)
+            {
+                DestroyCurrentStations();
+                RestoreStations(tutorialStationInfos, phase);
+            }
         }
-        // 저장된 데이터가 없으면 그대로 사용
         else
         {
-            SetStations();
+            // 플레이어의 저장 데이터가 있으면 복원 시도
+            var stationInfos = SaveLoadManager.LoadStationData();
+            if (stationInfos != null && stationInfos.Count > 0)
+            {
+                if (showDebugInfo) Debug.Log("[StationManager] 저장된 설비 데이터로 복원합니다.");
+                DestroyCurrentStations();
+                RestoreStations(stationInfos, phase);
+            }
+            else
+            {
+                // 저장 데이터가 없으면 씬 설비 사용
+                if (showDebugInfo) Debug.Log("[StationManager] 저장된 설비 데이터 없음. 씬의 설비를 사용합니다.");
+                SetStations();
+            }
         }
 
         CountStationsPerCellType();

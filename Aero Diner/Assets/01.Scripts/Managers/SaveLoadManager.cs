@@ -167,6 +167,34 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
             return null;
         }
     }
+    
+    /// <summary>
+    /// Resources 폴더에서 튜토리얼용 기본 설비 배치 파일 불러오기
+    /// </summary>
+    public static List<StationSaveInfo> LoadTutorialStationData()
+    {
+        string path = StringPath.STATION_DEFAULT_SAVE_PATH;
+        TextAsset jsonFile = Resources.Load<TextAsset>(path);
+
+        if (!jsonFile)
+        {
+            if (Instance?.showDebugInfo == true) Debug.LogError($"[SaveLoadManager] 튜토리얼 설비 파일을 찾을 수 없음: Resources/{path}.json");
+            return null;
+        }
+
+        try
+        {
+            var infos = JsonConvert.DeserializeObject<List<StationSaveInfo>>(jsonFile.text);
+            if (Instance?.showDebugInfo == true)
+                Debug.Log($"[SaveLoadManager] 튜토리얼 설비 파일 로드 완료: {infos.Count}개 항목");
+            return infos;
+        }
+        catch (System.Exception e)
+        {
+            if (Instance?.showDebugInfo == true) Debug.LogError($"[SaveLoadManager] 튜토리얼 설비 파일 파싱 실패: {e.Message}");
+            return null;
+        }
+    }
 
     public static void RestoreStationState(GamePhase currentPhase)
     {
