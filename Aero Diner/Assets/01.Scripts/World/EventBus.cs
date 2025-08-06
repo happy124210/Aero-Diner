@@ -92,6 +92,7 @@ public enum UIEventType
     ShowResultPanel, HideResultPanel, 
     ShowOrderPanel, HideOrderPanel,
     ShowWallPopup, HideWallPopup,
+    ShowIngredientWarn,
 
     //Inventory
     ShowInventory, HideInventory,
