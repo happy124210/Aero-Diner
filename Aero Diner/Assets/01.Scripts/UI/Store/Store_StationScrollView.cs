@@ -104,6 +104,7 @@ public class Store_StationScrollView : MonoBehaviour
         
         currentSelectedItem = item;
         bool canBePurchased = AreConditionsMet(item);
-        detailPanel.SetData(item, () => store.TryBuyItem(item), canBePurchased);
+        if (store != null)
+         detailPanel.SetData(item, () => store.TryBuyItem(item), canBePurchased);
     }
 }
