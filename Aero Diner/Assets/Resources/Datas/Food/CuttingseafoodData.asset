@@ -18,8 +18,8 @@ MonoBehaviour:
   foodType: 1
   foodIcon: {fileID: 21300000, guid: 39a962487f04bdd408f2d4b35b474bd5, type: 3}
   description: "\uAECD\uC9C8\uACFC \uB0B4\uC7A5\uC744 \uC81C\uAC70\uD574 \uC190\uC9C8\uD55C
-    \uBC14\uB2E4 \uC7AC\uB8CC\uC785\uB2C8\uB2E4.\\n\n\uAC10\uCE60\uB9DB\uACFC \uD2B9\uC720\uC758
-    \uD48D\uBBF8\uAC00 \uD2B9\uC9D5\uC785\uB2C8\uB2E4."
+    \uC218\uC0B0\uBB3C.\n\uAC10\uCE60\uB9DB\uACFC \uD2B9\uC720\uC758 \uD48D\uBBF8\uAC00
+    \uD2B9\uC9D5."
   stationType: 01000000
   ingredients:
   - f6
