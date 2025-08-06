@@ -19,14 +19,8 @@ MonoBehaviour:
   workType: 1
   stationIcon: {fileID: 21300000, guid: 41909a59935871047b0f032faba2487a, type: 3}
   description: "\uCC44\uC18C\uB97C \uC790\uB3D9\uC73C\uB85C \uC370\uC5B4\uC8FC\uB294
-    \uC870\uB9AC \uC7A5\uBE44\uC785\uB2C8\uB2E4.\\n\n\uC190\uC9C8 \uC18D\uB3C4\uB97C
-    \uD06C\uAC8C \uB2E8\uCD95\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
-  availableRecipes:
-  - {fileID: 11400000, guid: ff5d9b526cfdc9d4ea5d00308db03749, type: 2}
-  - {fileID: 11400000, guid: c1b65a060901fe44689f1b6821c8776c, type: 2}
-  - {fileID: 11400000, guid: 6f74b333018cbf540950f52f148c2281, type: 2}
-  - {fileID: 11400000, guid: 11fc209d50dd7f84c819d65cee7c2cf4, type: 2}
-  - {fileID: 11400000, guid: 1ad4f7bbe831eeb4aad0d2fe6c2202d9, type: 2}
+    \uC7A5\uBE44.\n\uC2A4\uC2A4\uB85C \uC7AC\uB8CC\uB97C \uC798\uAC8C \uC190\uC9C8\uD55C\uB2E4."
+  availableRecipes: []
   ingredientSlots: 1
   slotDisplays:
   - foodType: 5

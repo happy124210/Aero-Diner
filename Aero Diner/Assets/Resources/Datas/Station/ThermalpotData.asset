@@ -19,14 +19,12 @@ MonoBehaviour:
   workType: 1
   stationIcon: {fileID: 21300000, guid: 5699eccc7f8a3c942ac6d4648ce95c87, type: 3}
   description: "\uC5F4\uC744 \uADE0\uC77C\uD558\uAC8C \uC804\uB2EC\uD558\uB294 \uACE0\uAE09
-    \uB0C4\uBE44\uC785\uB2C8\uB2E4.\\n\n\uB053\uB294 \uC18D\uB3C4\uAC00 \uC77C\uC815\uD558\uACE0
-    \uC870\uB9AC \uD3B8\uCC28\uAC00 \uC801\uC2B5\uB2C8\uB2E4."
-  availableRecipes:
-  - {fileID: 11400000, guid: 88a44882a6155d7419c7589471c18497, type: 2}
-  - {fileID: 11400000, guid: efb9dca86fe9fa14e880869ef50db4cf, type: 2}
+    \uB0C4\uBE44.\n\uBCF4\uB2E4 \uBE60\uB974\uAC8C \uBA74\uC744 \uC775\uD600\uB0BC
+    \uC218 \uC788\uB2E4."
+  availableRecipes: []
   ingredientSlots: 2
   slotDisplays:
-  - foodType: 0
-    placeholderIcon: {fileID: 21300000, guid: 95adeefb83b4ed24fad4b0c16af1dc7f, type: 3}
   - foodType: 10
     placeholderIcon: {fileID: 21300000, guid: 74bdd77d2a150624caa01717482444a3, type: 3}
+  - foodType: 0
+    placeholderIcon: {fileID: 21300000, guid: 95adeefb83b4ed24fad4b0c16af1dc7f, type: 3}

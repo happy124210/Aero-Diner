@@ -19,22 +19,9 @@ MonoBehaviour:
   workType: 1
   stationIcon: {fileID: 21300000, guid: 3103126cf7f73254fb28fecd771191a8, type: 3}
   description: "\uC790\uB3D9\uC73C\uB85C \uC7AC\uB8CC\uB97C \uBCF6\uACE0 \uC11E\uB294
-    \uC804\uB3D9 \uD32C\uC785\uB2C8\uB2E4.\\n\n\uC77C\uC815\uD55C \uC5F4\uACFC \uC6C0\uC9C1\uC784\uC73C\uB85C
-    \uC870\uB9AC \uD6A8\uC728\uC744 \uB192\uC785\uB2C8\uB2E4"
-  availableRecipes:
-  - {fileID: 11400000, guid: 008593d2a3c26694da61ca4b355ae533, type: 2}
-  - {fileID: 11400000, guid: 98f0e40cf6800e54a807774e0137e3ba, type: 2}
-  - {fileID: 11400000, guid: 9cc2e1b8abab949478b254ce603a0fde, type: 2}
-  - {fileID: 11400000, guid: 01a26afbc788c8a45a17280417a7eb9f, type: 2}
-  - {fileID: 11400000, guid: 9c816b746a0a9c3458d2701328884a4d, type: 2}
-  - {fileID: 11400000, guid: 167f20b2e9914a840b29c3a43b08a957, type: 2}
-  - {fileID: 11400000, guid: aeac6e2a980c5db4f9554530098c7b1d, type: 2}
-  - {fileID: 11400000, guid: 751086e2dafafb94080110c1346453e1, type: 2}
-  - {fileID: 11400000, guid: 8892d509911c1184bbd8bd2120d1e3f8, type: 2}
-  - {fileID: 11400000, guid: cea4ac0e999051546ad78ffe2201e5a3, type: 2}
-  - {fileID: 11400000, guid: 8d08fe2aedf48774f9796b0b22d980b4, type: 2}
-  - {fileID: 11400000, guid: fb715715dd6057a47955e293b07103f8, type: 2}
-  - {fileID: 11400000, guid: 8a82aaffbce19a94a93d2735f338d2e3, type: 2}
+    \uC804\uB3D9 \uD32C\uC785\uB2C8\uB2E4.\n\uC2A4\uC2A4\uB85C \uC7AC\uB8CC\uB4E4
+    \uB4A4\uC11E\uC5B4 \uBCF6\uB294\uB2E4."
+  availableRecipes: []
   ingredientSlots: 3
   slotDisplays:
   - foodType: 3
