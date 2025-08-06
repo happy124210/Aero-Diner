@@ -156,29 +156,30 @@ public class PlayerInventory : MonoBehaviour
     {
         bool placedSuccessfully = false;
 
-        // IPlaceableStation 인터페이스 처리
-        if (target is IPlaceableStation placeable)
+        switch (target)
         {
-            if (target is BaseStation station && !station.CanPlaceIngredient(HoldingFood.foodData))
+            // IPlaceableStation 인터페이스 처리
+            case IPlaceableStation when target is BaseStation station && !station.CanPlaceIngredient(HoldingFood.foodData) 
+                                        || target is Shelf shelf && !shelf.CanPlaceIngredient(HoldingFood.foodData):
             {
                 if (showDebugInfo) Debug.Log($"[Inventory] {target.GetType().Name}에 재료({HoldingFood.foodData.foodName})를 놓을 수 없습니다.");
                 return;
             }
-
+            
             // 내려놓기 실행
-            placeable.PlaceObject(HoldingFood.foodData);
-            placedSuccessfully = true;
-        }
-        
-        // IPlaceableStation을 구현하지 않은 특별한 케이스 (쓰레기통 등)
-        else if (target is Trashcan)
-        {
-            placedSuccessfully = true;
-        }
-        
-        else if (target is IngredientStation ingredientStation)
-        {
-            placedSuccessfully = ingredientStation.PlaceIngredient(HoldingFood.foodData);
+            case IPlaceableStation placeable:
+                placeable.PlaceObject(HoldingFood.foodData);
+                placedSuccessfully = true;
+                break;
+            
+            // IPlaceableStation을 구현하지 않은 특별한 케이스 (쓰레기통 등)
+            case Trashcan:
+                placedSuccessfully = true;
+                break;
+            
+            case IngredientStation ingredientStation:
+                placedSuccessfully = ingredientStation.PlaceIngredient(HoldingFood.foodData);
+                break;
         }
 
         // 성공적으로 내려놓았다면 손에 든 아이템을 파괴하고 인벤토리 비우기

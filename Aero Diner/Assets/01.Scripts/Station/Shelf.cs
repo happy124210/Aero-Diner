@@ -47,7 +47,6 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation, IMovableSt
     // IPlaceableStation 인터페이스 구현
     public void PlaceObject(FoodData data)
     {
-
         // 이미 올려진 게 있으면 차단
         if (currentData != null)
         {
