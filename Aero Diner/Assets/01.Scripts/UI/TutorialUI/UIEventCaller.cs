@@ -15,8 +15,8 @@ public static class UIEventCaller
 
         if (System.Enum.TryParse<UIEventType>(eventName, out var result))
         {
-            //EventBus.Raise(result, payload);
-            Debug.Log($"[UIEventCaller] 이벤트 호출됨: {result} / Payload: {payload}");
+            EventBus.Raise(result, payload);
+            //Debug.Log($"[UIEventCaller] 이벤트 호출됨: {result} / Payload: {payload}");
         }
         else
         {
