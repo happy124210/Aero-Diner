@@ -267,8 +267,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 640882539}
   - {fileID: 2037431720}
+  - {fileID: 640882539}
   m_Father: {fileID: 921826391}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -380,6 +380,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 573502828}
+  - component: {fileID: 573502829}
   m_Layer: 0
   m_Name: StartSceneBG
   m_TagString: Untagged
@@ -403,6 +404,23 @@ Transform:
   - {fileID: 921826391}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &573502829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573502825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf0c667b3b4af484eadf4e71d4006447, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 2037431720}
+  moveDistanceX: 2500
+  moveDuration: 14
+  floatHeight: 75
+  floatDuration: 2
 --- !u!1 &640882538
 GameObject:
   m_ObjectHideFlags: 0
@@ -993,7 +1011,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -640, y: -13}
+  m_AnchoredPosition: {x: -1226, y: 46}
   m_SizeDelta: {x: 441, y: 441}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2037431721
