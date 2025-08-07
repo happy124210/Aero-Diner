@@ -15,6 +15,15 @@ public class StationTimerController : MonoBehaviour
         timerImg = GetComponent<Image>();
     }
 
+    private void Start()
+    {
+        SetupCanvasSorting(gameObject);
+
+        if (lastTimerImg != null)
+            SetupCanvasSorting(lastTimerImg.gameObject);
+    }
+
+
     /// <summary>
     /// 전체 시간 중 현재 남은 시간에 해당하는 스프라이트 인덱스를 계산하여 반환
     /// </summary>
@@ -91,5 +100,14 @@ public class StationTimerController : MonoBehaviour
         lastTimerImg.sprite = passiveSprite;
         lastTimerImg.enabled = true;           // 이미지 표시
         gameObject.SetActive(true);        // 타이머 오브젝트 활성화
+    }
+    private void SetupCanvasSorting(GameObject obj)
+    {
+        var canvas = obj.GetComponent<Canvas>();
+        if (canvas == null)
+            canvas = obj.AddComponent<Canvas>();
+
+        canvas.overrideSorting = true;
+        canvas.sortingOrder = 110;
     }
 }
