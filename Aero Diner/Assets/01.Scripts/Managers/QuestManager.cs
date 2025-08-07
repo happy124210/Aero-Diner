@@ -124,8 +124,6 @@ public class QuestManager : Singleton<QuestManager>
         playerQuestStatus[questId] = QuestStatus.InProgress;
         playerQuestProgress[questId] = new Dictionary<string, int>();
         if (showDebugInfo) Debug.Log($"[QuestManager] 퀘스트 시작: {questId}");
-        
-        CheckAndCompleteQuest(questId);
     }
     
     // StoryManager 등에서 수동으로 퀘스트 완료를 시도할 때 호출
