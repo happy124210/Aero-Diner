@@ -136,12 +136,12 @@ GameObject:
   - component: {fileID: 54419632}
   - component: {fileID: 54419631}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Btn_Skip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &54419630
 RectTransform:
   m_ObjectHideFlags: 0
@@ -293,7 +293,6 @@ MonoBehaviour:
   - {fileID: 1204441491}
   - {fileID: 1333485962}
   fadeDuration: 1
-  displayTime: 1.5
   displayTimes: []
 --- !u!4 &574372973
 Transform:
