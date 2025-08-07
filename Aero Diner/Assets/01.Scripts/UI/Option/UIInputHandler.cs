@@ -11,7 +11,7 @@ public class UIInputHandler : MonoBehaviour
         if (!tracker) return;
 
         string currentScene = SceneManager.GetActiveScene().name;
-        bool isRestrictedScene = currentScene == StringScene.START_SCENE || currentScene == StringScene.LOADING_SCENE;
+        bool isRestrictedScene = currentScene == StringScene.START_SCENE || currentScene == StringScene.LOADING_SCENE || currentScene == "IntroScene";
 
         if (tracker.IsOptionOpen)
         {
