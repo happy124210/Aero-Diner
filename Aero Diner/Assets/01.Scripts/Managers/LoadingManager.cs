@@ -46,7 +46,7 @@ public class LoadingManager : MonoBehaviour
         progressBar.value = 1f;
         isClicked = false;
 
-        yield return new WaitUntil(() => isClicked);
+        // yield return new WaitUntil(() => isClicked);
         StartCoroutine(WaitForClickThenFadeOutAndActivate(asyncOp));
     }
 
@@ -59,7 +59,6 @@ public class LoadingManager : MonoBehaviour
      }
     private IEnumerator WaitForClickThenFadeOutAndActivate(AsyncOperation asyncOp)
     {
-
         fadeCompleted = false;
         FadeManager.OnFadeCompleted += OnFadeComplete;
 
