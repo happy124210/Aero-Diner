@@ -119,10 +119,10 @@ public class MenuPanel : MonoBehaviour
     /// </summary>
     public void OnClickDayStartBtn()
     {
-        _ = HandleDayStartAsync();
+        HandleDayStart();
     }
 
-    private Task HandleDayStartAsync()
+    private void HandleDayStart()
     {
         EventBus.PlaySFX(SFXType.ButtonClick);
 
@@ -142,7 +142,7 @@ public class MenuPanel : MonoBehaviour
         {
             Debug.LogWarning("[MenuPanel] 선택된 메뉴가 없습니다!");
             ShowNoMenuSelectedPopup();
-            return Task.CompletedTask;
+            return;
         }
 
         //  삭제 셀 확인
@@ -159,12 +159,11 @@ public class MenuPanel : MonoBehaviour
         if (hasStationInDeleteGrid)
         {
             ShowDeletePopup();
-            return Task.CompletedTask;
+            return;
         }
 
         // 정상 전환
         ProceedToMainScene();
-        return Task.CompletedTask;
     }
     
     private void ShowDeletePopup()

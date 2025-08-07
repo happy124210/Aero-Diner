@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -78,8 +79,13 @@ public class UIManager : Singleton<UIManager>
         LoadSceneUI(scene.name);
 
     }
+    
+    private void LoadSceneUI(string sceneName)
+    {
+        StartCoroutine(LoadSceneUICoroutine(sceneName));
+    }
 
-    private async void LoadSceneUI(string sceneName)
+    private IEnumerator LoadSceneUICoroutine(string sceneName)
     {
         // 기존 UI 제거
         foreach (var ui in currentSceneUIs)
@@ -89,12 +95,11 @@ public class UIManager : Singleton<UIManager>
         }
         currentSceneUIs.Clear();
 
-        // 씬 이름으로 매핑된 UI 프리팹 찾기
         if (!uiMap.TryGetValue(sceneName, out var assetRefs))
         {
             if (showDebugInfo)
                 Debug.LogWarning($"[UIManager] UI 프리팹을 찾을 수 없음: {sceneName}");
-            return;
+            yield break; // 코루틴 종료
         }
 
         // 프리팹 비어있을 경우 경고 로그 (선택)
@@ -105,7 +110,7 @@ public class UIManager : Singleton<UIManager>
         foreach (var assetRef in assetRefs)
         {
             var handle = assetRef.InstantiateAsync(transform);
-            await handle.Task;
+            yield return handle;
 
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {

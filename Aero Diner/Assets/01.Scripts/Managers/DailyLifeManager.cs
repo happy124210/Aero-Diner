@@ -9,12 +9,18 @@ public class DailyLifeManager : Singleton<DailyLifeManager>
         EventBus.OnBGMRequested(BGMEventType.PlayLifeTheme);
     }
     
-    private async void Start()
+    private void Start()
     {
-        await Task.Delay(2000);
+        StartCoroutine(InitializeAfterDelay());
+    }
+
+    private IEnumerator InitializeAfterDelay()
+    {
+        yield return new WaitForSeconds(2.0f);
+
         EventBus.RaiseFadeEvent(FadeEventType.FadeIn, new FadeEventPayload(0f, 1f));
         StartCoroutine(ResendEarningsAfterDelay());
-        
+
         GameManager.Instance.ChangePhase(GamePhase.Day);
     }
 
