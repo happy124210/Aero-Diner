@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -7,15 +8,26 @@ using System.Collections.Generic;
 public class UIManager : Singleton<UIManager>
 {
     //이 리스트에 있는 UI는 모두 비활성화 상태로 시작.
-    private readonly System.Type[] initiallyDisabledTypes = new System.Type[]
-    {
+    private readonly System.Type[] initiallyDisabledTypes = {
         typeof(ResultPanel),
         typeof(MenuPanel3),
         typeof(MenuPanel4),
         typeof(Inventory),
         typeof(MenuPanel),
         typeof(DialogueUI),
-        typeof(Store)
+        typeof(Store),
+        typeof(Tu1),
+        typeof(Tu2),
+        typeof(Tu3),
+        typeof(Tu4),
+        typeof(Tu5),
+        typeof(Tu6),
+        typeof(Tu7),
+        typeof(Tu8),
+        typeof(DemoEnd),
+        typeof(IngredientWarnPopup),
+
+        
         // 필요한 타입 추가 가능
     };
 
@@ -67,8 +79,13 @@ public class UIManager : Singleton<UIManager>
         LoadSceneUI(scene.name);
 
     }
+    
+    private void LoadSceneUI(string sceneName)
+    {
+        StartCoroutine(LoadSceneUICoroutine(sceneName));
+    }
 
-    public async void LoadSceneUI(string sceneName)
+    private IEnumerator LoadSceneUICoroutine(string sceneName)
     {
         // 기존 UI 제거
         foreach (var ui in currentSceneUIs)
@@ -78,23 +95,22 @@ public class UIManager : Singleton<UIManager>
         }
         currentSceneUIs.Clear();
 
-        // 씬 이름으로 매핑된 UI 프리팹 찾기
         if (!uiMap.TryGetValue(sceneName, out var assetRefs))
         {
             if (showDebugInfo)
                 Debug.LogWarning($"[UIManager] UI 프리팹을 찾을 수 없음: {sceneName}");
-            return;
+            yield break; // 코루틴 종료
         }
 
         // 프리팹 비어있을 경우 경고 로그 (선택)
         if (assetRefs.Count == 0 && showDebugInfo)
             Debug.LogWarning($"[UIManager] {sceneName} 씬에 로드할 UI 프리팹이 없습니다.");
 
-        // Addressables 기반 UI 인스턴스 생성
+        // Addressable 기반 UI 인스턴스 생성
         foreach (var assetRef in assetRefs)
         {
             var handle = assetRef.InstantiateAsync(transform);
-            await handle.Task;
+            yield return handle;
 
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
@@ -121,6 +137,7 @@ public class UIManager : Singleton<UIManager>
             Debug.Log($"[UIManager] {sceneName} 씬 UI 로딩 완료, 프리팹 수: {assetRefs.Count}");
 
         RegisterHandlersForScene(sceneName); // 중복 제거
+        EventBus.Raise(GameEventType.UISceneReady);
     }
 
     private void RegisterHandlersForScene(string sceneName)
@@ -129,17 +146,18 @@ public class UIManager : Singleton<UIManager>
 
         // 공통 핸들러 (항상 등록)
         uiHandlers.Add(new OverSceneUIHandler(currentSceneUIs));
+        uiHandlers.Add(new TutorialUIHandler(currentSceneUIs));
 
         switch (sceneName)
         {
-            case "StartScene":
+            case StringScene.START_SCENE:
                 uiHandlers.Add(new StartSceneUIHandler(currentSceneUIs));
                 break;
             
-            case "MainScene":
+            case StringScene.MAIN_SCENE:
                 uiHandlers.Add(new MainSceneUIHandler(currentSceneUIs));
                 break;
-            case "DayScene":
+            case StringScene.DAY_SCENE:
                 uiHandlers.Add(new DaySceneUIHandler(currentSceneUIs));
                 break;
         }

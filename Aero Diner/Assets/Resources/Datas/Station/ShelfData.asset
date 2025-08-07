@@ -18,8 +18,8 @@ MonoBehaviour:
   stationType: 10
   workType: 0
   stationIcon: {fileID: 21300000, guid: b182157ec577b4843958afdb1639c5e9, type: 3}
-  description: "\uC120\uBC18 \uC785\uB2C8\uB2E4"
-  stationCost: 100
+  description: "\uC870\uB9AC \uACF5\uAC04\uC5D0 \uB193\uC774\uB294 \uAE30\uBCF8 \uC124\uBE44.\n\uC7AC\uB8CC\uB098
+    \uB3C4\uAD6C\uB97C \uC62C\uB824\uB450\uAE30\uC5D0 \uC801\uB2F9\uD558\uB2E4."
   availableRecipes: []
-  ingredientSlots: 0
+  ingredientSlots: 3
   slotDisplays: []

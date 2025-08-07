@@ -3,11 +3,12 @@
 /// <summary>
 /// 플레이어가 올바른 재료(또는 메뉴)를 선반에 놓으면 저장되는 스테이션
 /// </summary>
-public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation, IMovableStation
+public class Shelf : MonoBehaviour, IPlaceableStation, IMovableStation
 {
     public Transform GetTransform() => transform;
 
-    public StationData stationData;
+    [SerializeField] private StationData stationData;
+    public StationData StationData => stationData;
     [Header("생성할 Food/Menu SO")]
     public FoodData currentData; // 선반에 올려진 음식 데이터
 
@@ -15,10 +16,7 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation, IMovableSt
     public Transform spawnPoint;
 
     [SerializeField] protected bool showDebugInfo;
-
-    // 내부 상태
-    private GameObject placedIngredientObj;
-
+    
     private OutlineShaderController outline;
 
     private void Awake()
@@ -38,10 +36,6 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation, IMovableSt
                 sr.sprite = data.stationIcon;   // StationData에 있는 아이콘 사용
             }
         }
-        else
-        {
-            if (showDebugInfo) Debug.LogWarning($"[IconLoader] 해당 오브젝트 '{objName}'에 대한 StationData를 '{resourcePath}' 경로에서 찾지 못했습니다.");
-        }
     }
 
     // 선반 자체는 직접 Interact 불필요
@@ -50,11 +44,10 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation, IMovableSt
     // IPlaceableStation 인터페이스 구현
     public void PlaceObject(FoodData data)
     {
-
         // 이미 올려진 게 있으면 차단
         if (currentData != null)
         {
-            Debug.Log("이미 항목이 배치되어 있습니다.");
+            if (showDebugInfo) Debug.Log("이미 항목이 배치되어 있습니다.");
             return;
         }
 
@@ -62,7 +55,7 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation, IMovableSt
         currentData = data;
 
         // 비주얼 생성
-        placedIngredientObj = CreateIngredientDisplay(data);
+        CreateIngredientDisplay(data);
     }
 
     // IIngredientData 전반을 검사
@@ -70,11 +63,11 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation, IMovableSt
     {
         if (currentData != null)
         {
-            Debug.Log("[Shelf] 이미 항목이 배치되어 있습니다.");
+            if (showDebugInfo) Debug.Log("[Shelf] 이미 항목이 배치되어 있습니다.");
             return false;
         }
 
-        Debug.Log($"[Shelf] '{data.displayName}' 배치 가능");
+        if (showDebugInfo) Debug.Log($"[Shelf] '{data.displayName}' 배치 가능");
         return true;
     }
 
@@ -85,7 +78,7 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation, IMovableSt
     {
         if (data == null || spawnPoint == null)
         {
-            Debug.LogError("필수 데이터가 누락되었습니다.");
+            if (showDebugInfo) Debug.LogError("필수 데이터가 누락되었습니다.");
             return null;
         }
 
@@ -110,9 +103,8 @@ public class Shelf : MonoBehaviour, IInteractable, IPlaceableStation, IMovableSt
     /// </summary>
     public void OnPlayerPickup()
     {
-        placedIngredientObj = null;
         currentData = null;
-        Debug.Log("플레이어가 재료를 들었고, 스테이션이 초기화되었습니다.");
+        if (showDebugInfo) Debug.Log("플레이어가 재료를 들었고, 스테이션이 초기화되었습니다.");
     }
 
     public void OnHoverEnter()

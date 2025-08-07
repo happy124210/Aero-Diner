@@ -6,12 +6,12 @@ using System.Collections;
 
 public class FadeManager : Singleton<FadeManager>
 {
-    public Image fadeImage;
-    public float defaultFadeTime = 1f;
-
-    private Coroutine currentFade;
+    [SerializeField] private Image fadeImage;
+    [SerializeField] private float defaultFadeTime = 1f;
 
     public static event Action OnFadeCompleted;
+    
+    private Coroutine currentFade;
 
     protected override void Awake()
     {

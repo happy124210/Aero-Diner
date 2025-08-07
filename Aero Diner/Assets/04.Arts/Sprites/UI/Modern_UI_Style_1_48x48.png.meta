@@ -6490,9 +6490,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1152
-        y: 1728
+        y: 1727
         width: 48
-        height: 48
+        height: 47
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -19422,7 +19422,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Modern_UI_Style_1_48x48_919
+      name: cursor
       rect:
         serializedVersion: 2
         x: 480
@@ -32340,7 +32340,6 @@ TextureImporter:
       Modern_UI_Style_1_48x48_916: 1009273345
       Modern_UI_Style_1_48x48_917: -1778740422
       Modern_UI_Style_1_48x48_918: 1697687872
-      Modern_UI_Style_1_48x48_919: 403477022
       Modern_UI_Style_1_48x48_92: -723123886
       Modern_UI_Style_1_48x48_920: -894223131
       Modern_UI_Style_1_48x48_921: 1622853695
@@ -32429,6 +32428,7 @@ TextureImporter:
       Modern_UI_Style_1_48x48_997: -1092127342
       Modern_UI_Style_1_48x48_998: 1061495271
       Modern_UI_Style_1_48x48_999: -2063562689
+      cursor: 403477022
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -7,10 +7,11 @@ public class UIInputHandler : MonoBehaviour
     {
         EventBus.PlaySFX(SFXType.ButtonClick);
         var tracker = UIRoot.Instance.uiTracker;
-        if (tracker == null) return;
+        
+        if (!tracker) return;
 
         string currentScene = SceneManager.GetActiveScene().name;
-        bool isRestrictedScene = currentScene == "StartScene" || currentScene == "LoadingScene";
+        bool isRestrictedScene = currentScene == StringScene.START_SCENE || currentScene == StringScene.LOADING_SCENE || currentScene == "IntroScene";
 
         if (tracker.IsOptionOpen)
         {
@@ -50,7 +51,7 @@ public class UIInputHandler : MonoBehaviour
             }
             else
             {
-                Debug.Log($"{currentScene}에서는 PausePanel을 열지 않습니다.");
+                //Debug.Log($"{currentScene}에서는 PausePanel을 열지 않습니다.");
             }
         }
     }

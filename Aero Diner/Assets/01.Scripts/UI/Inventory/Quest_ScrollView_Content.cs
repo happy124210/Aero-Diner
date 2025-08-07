@@ -6,18 +6,17 @@ using System;
 public class Quest_ScrollView_Content : BaseScrollViewItem
 {
     [SerializeField] private TMP_Text titleText;
-    private QuestData questData;
 
-    public Action OnClicked;
+    public Action onClicked;
 
-    private void Awake()
+    protected override void Awake()
     {
-        GetComponent<Button>().onClick.AddListener(() => OnClicked?.Invoke());
+        base.Awake();
+        GetComponent<Button>().onClick.AddListener(() => onClicked?.Invoke());
     }
 
     public void SetData(QuestData data)
     {
-        questData = data;
         titleText.text = data.questName;
     }
 }

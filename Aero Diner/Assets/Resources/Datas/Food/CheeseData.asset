@@ -17,8 +17,11 @@ MonoBehaviour:
   displayName: "\uCE58\uC988 \uB369\uC774"
   foodType: 6
   foodIcon: {fileID: 21300000, guid: 3f60966c2d83b1c4b9b3a5fc65d737b4, type: 3}
-  description: "\uCE58\uC988 \uB369\uC774 \uC785\uB2C8\uB2E4"
+  description: "\uACE0\uC18C\uD55C \uD5A5\uC744 \uD488\uC740 \uAC70\uB300\uD55C \uCE58\uC988
+    \uB369\uC5B4\uB9AC.\n\uC798\uAC8C \uC370\uC5B4 \uB123\uC73C\uBA74 \uC694\uB9AC\uC758
+    \uD48D\uBBF8\uAC00 \uD6E8\uC52C \uD48D\uC131\uD574\uC9C4\uB2E4."
   stationType: 03000000
   ingredients: []
   cookTime: 5
-  foodCost: 500
+  foodCost: 0
+  recipeDescription: 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -100,34 +99,12 @@ public class RecipeManager : Singleton<RecipeManager>
         }
     }
 
-    /// <summary>
-    /// 특정 메뉴 하나의 원재료만 가져오기
-    /// </summary>
-    public List<FoodData> GetRawIngredientsForMenu(FoodData menu)
-    {
-        if (menu == null) return new List<FoodData>();
-    
-        HashSet<string> rawIngredientIds = new HashSet<string>();
-        CollectRawIngredients(menu.id, rawIngredientIds);
-    
-        List<FoodData> result = new List<FoodData>();
-        foreach (string id in rawIngredientIds)
-        {
-            if (FoodDatabase.TryGetValue(id, out var food))
-            {
-                result.Add(food);
-            }
-        }
-    
-        return result;
-    }
-
     #endregion
 
     #region 레시피 관리
 
     // 항상 레시피로 포함될 예외 재료 ID 리스트
-    private static readonly HashSet<string> AlwaysIncludedRecipeIds = new HashSet<string>
+    private static readonly HashSet<string> AlwaysIncludedRecipeIds = new()
     {
         "f18", "f19", "f20", "f21", "f22", "f23", "f24", "f25"
     };
@@ -135,7 +112,6 @@ public class RecipeManager : Singleton<RecipeManager>
     /// <summary>
     /// 유저가 선택한 재료 ID 리스트를 기반으로, 후보 레시피 중 일치하는 레시피를 찾아 반환
     /// </summary>
-    /// <param name="candidateRecipes">레시피 후보 리스트</param>
     /// <param name="ingredientIds">유저가 선택한 재료 ID 리스트</param>
     /// <returns>일치율 순으로 정렬된 레시피 결과 리스트</returns>
     public List<RecipeMatchResult> FindMatchingTodayRecipes(List<string> ingredientIds)
@@ -196,10 +172,8 @@ public class RecipeManager : Singleton<RecipeManager>
                 {
                     return r.matchedCount > 0; // OR 조건
                 }
-                else
-                {
-                    return ingredientIds.All(id => r.recipe.ingredients.Contains(id)); // AND 조건
-                }
+
+                return ingredientIds.All(id => r.recipe.ingredients.Contains(id)); // AND 조건
             })
             .ToList();
 

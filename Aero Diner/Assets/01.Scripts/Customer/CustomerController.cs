@@ -17,6 +17,8 @@ public class CustomerController : MonoBehaviour, IPoolable
     private Customer model;
     private CustomerView view;
     private CustomerState currentState; // 상태머신의 State
+
+    private bool isTutorialMode;
     
     #region Unity Functions
     
@@ -47,7 +49,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     private void UpdateTimers(float deltaTime)
     {
         // 인내심 타이머
-        if (ShouldPatienceDecrease())
+        if (ShouldPatienceDecrease() && !isTutorialMode)
         {
             float newPatience = Mathf.Max(0, model.RuntimeData.CurrentPatience - deltaTime);
             model.UpdatePatience(newPatience);
@@ -75,6 +77,7 @@ public class CustomerController : MonoBehaviour, IPoolable
     {
         model.Initialize(data);
         view.Initialize(data);
+        isTutorialMode = false;
         
         SetupNavMeshAgent(model.Data.speed);
         SubscribeToModelEvents();
@@ -153,6 +156,8 @@ public class CustomerController : MonoBehaviour, IPoolable
         {
             ChangeState(new PayingState());
         });
+        
+        EventBus.Raise(GameEventType.CustomerServed);
     }
 
     private void HandlePayment()
@@ -292,7 +297,8 @@ public class CustomerController : MonoBehaviour, IPoolable
     public Vector3 GetSeatPosition() => GetAssignedTable().GetSeatPoint();
     public bool HasPatience() => model.RuntimeData.CurrentPatience > 0;
     public void EmptyPatience() => model.UpdatePatience(0f);
-    private bool ShouldPatienceDecrease() => currentState != null && (currentState.Name == CustomerStateName.Ordering || currentState.Name == CustomerStateName.WaitingInLine);
+    public void SetTutorialMode(bool value) => isTutorialMode = value;
     
+    private bool ShouldPatienceDecrease() => currentState != null && (currentState.Name == CustomerStateName.Ordering || currentState.Name == CustomerStateName.WaitingInLine);
     #endregion
 }

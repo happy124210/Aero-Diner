@@ -100,6 +100,14 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 073b1a270fd1bff40ab45d7d9c4ac9db, type: 3}
   - type: 29
     clip: {fileID: 8300000, guid: 206c668d8b70d8a4a8325eaefec801e4, type: 3}
+  - type: 30
+    clip: {fileID: 8300000, guid: 10caa3bf6c2f3824cbbd903484c7e6fe, type: 3}
+  - type: 31
+    clip: {fileID: 8300000, guid: b3f6fe7396f7bde4bbee5ae54efd49b8, type: 3}
+  - type: 32
+    clip: {fileID: 8300000, guid: 4ba046b394ea96744a1d6f1b739e3935, type: 3}
+  - type: 33
+    clip: {fileID: 8300000, guid: cd348cfdaf602434396b7fdfd92d9e63, type: 3}
   poolSize: 10
   showDebugInfo: 0
 --- !u!82 &6240375366473892893

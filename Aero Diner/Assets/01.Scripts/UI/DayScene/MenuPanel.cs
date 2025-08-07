@@ -2,20 +2,25 @@
 using UnityEngine;
 using System.Collections;
 using System.Threading.Tasks;
-using UnityEngine.Serialization;
 
 public class MenuPanel : MonoBehaviour
 {
+    [Header("참조")]
     [SerializeField] private GameObject menuPanelContent;      // Content 프리팹
+    [SerializeField] public RectTransform menuPanelTransform;
     [SerializeField] private Transform contentTransform;      // ScrollView의 Content
     [SerializeField] private CanvasGroup canvasGroup;
-
+    [SerializeField] private GameObject deleteWarningPopup;
     [SerializeField] private GameObject warningPopup; // 팝업 루트
     [SerializeField] private CanvasGroup warningPopupCanvas; // 팝업의 CanvasGroup
+    
+    [Header("DOTween 설정")]
     [SerializeField] private float popupFadeDuration = 0.5f;
     [SerializeField] private float popupVisibleTime = 2f;
-
-    [SerializeField] public RectTransform menuPanelTransform;
+    
+    [Header("Debug Info")]
+    [SerializeField] private bool showDebugInfo;
+    
     private Vector2 originalPos;
     
     private void Awake()
@@ -56,27 +61,30 @@ public class MenuPanel : MonoBehaviour
         var menuList = MenuManager.Instance.GetUnlockedMenus();
         if (menuList == null)
         {
-            Debug.LogWarning("TodayMenus 가 null입니다!");
+            if (showDebugInfo) Debug.LogWarning("TodayMenus 가 null입니다!");
             return;
         }
 
         //Debug.Log($" 메뉴 수: {menuList.Count}");
 
-        float delay = 1f;
+        
         foreach (var menu in menuList)
         {
             if (menu == null)
             {
-                Debug.LogWarning("null인 Menu 발견");
+                if (showDebugInfo) Debug.LogWarning("null인 Menu 발견");
                 continue;
             }
 
             var go = Instantiate(menuPanelContent, contentTransform);
             var foodUI = go.GetComponent<MenuPanelContent>();
             foodUI.SetData(menu);
+            
             #region 메뉴등장 애니메이션
+            
+            float delay = 1f;
             var cg = go.GetComponent<CanvasGroup>();
-            if (cg == null)
+            if (!cg)
             {
                 cg = go.AddComponent<CanvasGroup>();
             }
@@ -93,23 +101,32 @@ public class MenuPanel : MonoBehaviour
                 .Join(rt.DOScale(1f, 0.3f).SetEase(Ease.OutBack));
 
             delay += 0.05f; // 순차적으로 나옴
+            
             #endregion
         }
     }
+    
     public void OnClickBackBtn()
     {
         PlayExitAnimation();
+        GameManager.Instance.ChangePhase(GamePhase.EditStation);
+        EventBus.PlaySFX(SFXType.ButtonClick);
         EventBus.PlayBGM(BGMEventType.PlayLifeTheme);
     }
+    
+    /// <summary>
+    /// 시작버튼 클릭
+    /// </summary>
     public void OnClickDayStartBtn()
     {
-        _ = HandleDayStartAsync();
+        HandleDayStart();
     }
 
-    private async Task HandleDayStartAsync()
+    private void HandleDayStart()
     {
         EventBus.PlaySFX(SFXType.ButtonClick);
 
+        // 메뉴 선택 여부 확인
         bool anyToggled = false;
         foreach (Transform child in contentTransform)
         {
@@ -128,23 +145,77 @@ public class MenuPanel : MonoBehaviour
             return;
         }
 
-        if (menuPanelTransform == null)
+        //  삭제 셀 확인
+        bool hasStationInDeleteGrid = false;
+        foreach (var deleteCell in FindObjectsOfType<DeleteGridCell>())
         {
-            Debug.LogError("[MenuPanel] menuPanelTransform이 할당되지 않았습니다.");
+            if (deleteCell.HasStationToBeDeleted())
+            {
+                hasStationInDeleteGrid = true;
+                break;
+            }
+        }
+
+        if (hasStationInDeleteGrid)
+        {
+            ShowDeletePopup();
             return;
         }
 
-        PlayExitAnimation();
-        EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(1f, 1f, scene: "MainScene"));
-        //이거 위치 UI/Mainscene/Fader.cs(Start)로 옮겼습니다.
-        //RestaurantManager.Instance.StartRestaurant();
-        //EventBus.PlayBGM(BGMEventType.PlayMainTheme);
+        // 정상 전환
+        ProceedToMainScene();
+    }
+    
+    private void ShowDeletePopup()
+    {
+        if (deleteWarningPopup == null) return;
 
+        deleteWarningPopup.SetActive(true);
+    }
+    
+    public void HideDeleteConfirmationPopup()
+    {
+        deleteWarningPopup?.SetActive(false);
     }
 
-
+    public void OnClickConfirmProceed()
+    {
+        deleteWarningPopup?.SetActive(false);
+        ProceedToMainScene();
+    }
+    
     #region 애니메이션
 
+    private void ProceedToMainScene()
+    {
+        PlayExitAnimation();
+        EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(1f, 1f, scene: "MainScene"));
+    }
+    
+    private void ShowDeleteStationPopup()
+    {
+        if (deleteWarningPopup == null) return;
+
+        var cg = deleteWarningPopup.GetComponent<CanvasGroup>();
+        if (cg == null)
+            cg = deleteWarningPopup.AddComponent<CanvasGroup>();
+
+        deleteWarningPopup.SetActive(true);
+        cg.alpha = 0f;
+
+        cg.DOFade(1f, popupFadeDuration)
+            .SetEase(Ease.OutQuad)
+            .OnComplete(() =>
+            {
+                DOVirtual.DelayedCall(popupVisibleTime, () =>
+                {
+                    cg.DOFade(0f, popupFadeDuration)
+                        .SetEase(Ease.InQuad)
+                        .OnComplete(() => deleteWarningPopup.SetActive(false));
+                });
+            });
+    }
+    
     private void ShowNoMenuSelectedPopup()
     {
         if (warningPopup == null || warningPopupCanvas == null) return;
@@ -163,20 +234,23 @@ public class MenuPanel : MonoBehaviour
                 });
             });
     }
+    
     private IEnumerator DelayedAnimateEntrance()
     {
         yield return new WaitForSeconds(0.5f); // 약간의 연출 지연
         AnimateEntrance();
     }
+    
     private void AnimateEntrance()
     {
-        if (canvasGroup == null || menuPanelTransform == null) return;
+        if (!canvasGroup || !menuPanelTransform) return;
 
         Sequence seq = DOTween.Sequence();
         seq.SetUpdate(true);
         seq.Append(canvasGroup.DOFade(1f, 0.7f));
         seq.Join(menuPanelTransform.DOAnchorPos(originalPos, 0.5f).SetEase(Ease.OutBack));
     }
+    
     private void PlayExitAnimation()
     {
         Vector2 originalPos = menuPanelTransform.anchoredPosition;
@@ -192,5 +266,7 @@ public class MenuPanel : MonoBehaviour
                    EventBus.Raise(UIEventType.HideMenuPanel);
                });
     }
+    
+    #endregion
+    
 }
-#endregion

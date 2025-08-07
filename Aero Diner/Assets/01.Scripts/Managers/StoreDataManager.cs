@@ -12,10 +12,10 @@ public class StoreDataManager : Singleton<StoreDataManager>
         LoadStoreData(StringPath.STORE_DATA_PATH);
     }
 
-    public void LoadStoreData(string path)
+    private void LoadStoreData(string path)
     {
         StoreItemMap = new Dictionary<string, StoreItemData>();
-        TextAsset csvFile = Resources.Load<TextAsset>("Datas/Store/StoreData");
+        TextAsset csvFile = Resources.Load<TextAsset>(StringPath.STORE_DATA_CSV_PATH);
 
         if (csvFile == null)
         {
@@ -36,7 +36,7 @@ public class StoreDataManager : Singleton<StoreDataManager>
             StoreItemMap[itemData.TargetID] = itemData;
         }
 
-        Debug.Log($"{StoreItemMap.Count}개의 상점 아이템 데이터 로드 완료");
+        //Debug.Log($"{StoreItemMap.Count}개의 상점 아이템 데이터 로드 완료");
     }
     
     public string GenerateUnlockDescription(StoreItemData itemData)
@@ -53,11 +53,10 @@ public class StoreDataManager : Singleton<StoreDataManager>
                         requiredRecipeNames.Add(foodData.displayName);
                     }
                 }
-                return $"선행 레시피: [{string.Join(", ", requiredRecipeNames)}] 필요";
+                return $"선행 레시피\n[{string.Join("\nor ", requiredRecipeNames)}] 필요";
 
             case UnlockType.Quest:
-                string questName = itemData.Conditions.FirstOrDefault(); // "더미 퀘스트"
-                return $"선행 퀘스트: [{questName}] 완료 필요";
+                return StringMessage.QUEST_CONDITION_MESSAGE;
 
             case UnlockType.None:
                 break;

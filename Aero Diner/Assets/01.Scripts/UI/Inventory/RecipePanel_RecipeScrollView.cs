@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 public class RecipePanel_RecipeScrollView : MonoBehaviour
 {
@@ -10,16 +7,23 @@ public class RecipePanel_RecipeScrollView : MonoBehaviour
     [SerializeField] private GameObject menuSlotPrefab;
     [SerializeField] private RecipePanel_IngredientScrollView ingredientScroll;
     [SerializeField] private RecipePanel detailPanel;
+    [SerializeField] private GameObject noItemPanel;
+    
+    // private
+    private bool suppressNextSFX;
 
-    private FoodData currentSelected;
-    private bool suppressNextSFX = false;
-    void Start()
+    private void OnEnable()
     {
         PopulateMenuList();
     }
 
     private void PopulateMenuList()
     {
+        foreach (Transform child in contentTransform)
+        {
+            Destroy(child.gameObject);
+        }
+        
         var menus = MenuManager.Instance.GetUnlockedMenus()
             .OrderBy(menu =>
             {
@@ -29,23 +33,34 @@ public class RecipePanel_RecipeScrollView : MonoBehaviour
             .Select(menu => menu.foodData)
             .ToList();
 
+        // 아무 레시피도 없음
+        if (!menus.Any())
+        {
+            detailPanel.gameObject.SetActive(false);
+            noItemPanel.SetActive(true);
+            return;
+        }
+
+        // 레시피 있음
+        detailPanel.gameObject.SetActive(true);
+        noItemPanel.SetActive(false);
+
         foreach (var menu in menus)
         {
             var go = Instantiate(menuSlotPrefab, contentTransform);
             var slot = go.GetComponent<RecipePanel_RecipeScrollView_Content>();
-            slot.Init(menu, OnMenuSelected);
+            slot.Init(menu, OnSlotSelected);
         }
+
         if (menus.Count > 0)
         {
-            suppressNextSFX = true; // 효과음 suppress 설정
-            OnMenuSelected(menus[0]);
+            suppressNextSFX = true;
+            OnSlotSelected(menus[0]);
         }
     }
 
-    private void OnMenuSelected(FoodData menuData)
+    private void OnSlotSelected(FoodData menuData)
     {
-        currentSelected = menuData; // 계속 갱신해도 괜찮음
-
         if (!suppressNextSFX)
             EventBus.PlaySFX(SFXType.ButtonClick);
         else

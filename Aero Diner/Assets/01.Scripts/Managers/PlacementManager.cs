@@ -10,11 +10,6 @@ public class PlacementManager : Singleton<PlacementManager>
 
     private GameObject stationPrefab;                               // 자동 설정됨
 
-    private void Update()
-    {
-        //UpdateStationPrefabFromTestInventory(); // 매 프레임 업데이트 가능, 추후 테스트후 최적화
-    }
-
     /// <summary>
     /// 들고 있는 station을 지정된 그리드셀에 배치 시도
     /// </summary>
@@ -58,13 +53,12 @@ public class PlacementManager : Singleton<PlacementManager>
         return true; // 배치 성공
     }
 
-
     /// <summary>
     /// 현재 들고 있는 설비을 지정된 그리드셀에 배치 시도
     /// </summary>
     public void TestTryPlaceStationAt(GameObject gridCellGO)
     {
-        if (stationPrefab == null) return;
+        if (!stationPrefab) return;
 
         if (gridCellGO.transform.childCount == 0)
         {
@@ -72,23 +66,6 @@ public class PlacementManager : Singleton<PlacementManager>
             tilemapController.UpdateGridCellStates();
         }
     }
-
-    ///// <summary>
-    ///// 테스트 인벤토리에서 Station 태그를 가진 오브젝트를 프리팹으로 등록
-    ///// </summary>
-    //private void UpdateStationPrefabFromTestInventory()
-    //{
-    //    GameObject heldItem = testInventory.GetHeldItem();
-
-    //    if (heldItem != null && heldItem.CompareTag("Station"))
-    //    {
-    //        stationPrefab = heldItem;
-    //    }
-    //    else
-    //    {
-    //        stationPrefab = null;
-    //    }
-    //}
 
 #if UNITY_EDITOR
     [SerializeField] public GameObject testTargetGridCell;

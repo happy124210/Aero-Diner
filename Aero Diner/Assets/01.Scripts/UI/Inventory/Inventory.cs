@@ -1,18 +1,21 @@
 ﻿using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
+    [Header("참조")]
     [SerializeField] public TabController tabController;
-    public bool IsDebug = false;
     [SerializeField] private CanvasGroup canvasGroup;
+    
+    [Header("Debug Info")]
+    [SerializeField] private bool showDebugInfo;
+    
     private void Awake()
     {
         if (tabController == null)
             tabController = GetComponentInChildren<TabController>();
     }
+    
     #region 두트윈 메서드
     public void Show()
     {
@@ -33,10 +36,12 @@ public class Inventory : MonoBehaviour
         });
     }
     #endregion
+    
     #region 버튼 메서드
+    
     public void OnIngredientTabClick()
     {
-        if (IsDebug)
+        if (showDebugInfo)
             Debug.Log("버튼 클릭 됨");
         EventBus.PlaySFX(SFXType.ButtonClick);
         tabController.RequestSelectTab(0);
@@ -44,7 +49,7 @@ public class Inventory : MonoBehaviour
     }
     public void OnRecipeTabClick()
     {
-        if (IsDebug)
+        if (showDebugInfo)
             Debug.Log("버튼 클릭 됨");
         EventBus.PlaySFX(SFXType.ButtonClick);
         tabController.RequestSelectTab(2);
@@ -52,7 +57,7 @@ public class Inventory : MonoBehaviour
     }
     public void OnStationTabClick()
     {
-        if (IsDebug)
+        if (showDebugInfo)
             Debug.Log("버튼 클릭 됨");
         EventBus.PlaySFX(SFXType.ButtonClick);
         tabController.RequestSelectTab(1);
@@ -60,7 +65,7 @@ public class Inventory : MonoBehaviour
     }
     public void OnQuestTabClick()
     {
-        if (IsDebug)
+        if (showDebugInfo)
             Debug.Log("버튼 클릭 됨");
         EventBus.PlaySFX(SFXType.ButtonClick);
         tabController.RequestSelectTab(3);
@@ -71,5 +76,6 @@ public class Inventory : MonoBehaviour
         EventBus.PlaySFX(SFXType.ButtonClick);
         EventBus.Raise(UIEventType.HideInventory);
     }
+    
+    #endregion
 }
-#endregion

@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3016406984b8b94e9f7c7e996cc12e2, type: 3}
+  m_Name: day7_Closing_End
+  m_EditorClassIdentifier: 
+  id: day7_Closing_End
+  lines:
+  - speakerId: lota
+    expression: 0
+    text: "\uC544, \uC800\uAE30 \uC815\uBE44\uACF5 \uC544\uC800\uC528 \uC624\uB294
+      \uAC83 \uAC19\uB124\uC694. \uC5B4\uC11C \uBE44\uD589\uC120 \uC218\uB9AC\uD558\uACE0
+      \uB3C4\uC2DC\uB85C \uB118\uC5B4\uAC00\uC694!\n\uC774\uC820 \uB9E4\uC77C \uBA40\uB9AC\uC11C\uBD80\uD130
+      \uBCF4\uAE09\uD488 \uAC00\uC838\uC62C \uD544\uC694\uB3C4 \uC5C6\uACE0... \uB354
+      \uB9CE\uC740 \uAC83\uB4E4\uC774 \uAC00\uB2A5\uD574\uC9C8 \uAC70\uC5D0\uC694!"
+    position: 1
+  - speakerId: lota
+    expression: 0
+    text: "\uADF8\uB9AC\uACE0 \uC2E4\uC740 \uB4DC\uB9B4 \uB9D0\uC500\uC774 \uC788\uB294\uB370\uC694..."
+    position: 1
+  - speakerId: lota
+    expression: 1
+    text: "\uB370\uBAA8 \uD50C\uB808\uC774 \uBD84\uB7C9\uC740 \uC5EC\uAE30\uAE4C\uC9C0\uC5D0\uC694!"
+    position: 1

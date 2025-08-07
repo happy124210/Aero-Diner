@@ -60,6 +60,10 @@ public class DaySceneUIHandler : IUIEventHandler
                     tab?.ApplyTabSelectionVisuals();
                 }
                 return true;
+            case UIEventType.ShowDemoEnd:
+                foreach (var ui in sceneUIs)
+                    ui?.GetComponentInChildren<DemoEnd>(true)?.gameObject.SetActive(true);
+                return true;
         }
         return false;
     }

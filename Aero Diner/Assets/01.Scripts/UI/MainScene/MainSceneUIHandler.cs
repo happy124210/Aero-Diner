@@ -79,6 +79,11 @@ public class MainSceneUIHandler : IUIEventHandler
                         ui?.GetComponentInChildren<CustomerOrderPanel>(true)?.HideOrderPanel(customerToHide);
                 }
                 return true;
+            case UIEventType.ShowIngredientWarn:
+                    foreach (var ui in sceneUIs)
+                        ui?.GetComponentInChildren<IngredientWarnPopup>(true)?.ShowPopup();
+                
+                return true;
         }
 
         return false;

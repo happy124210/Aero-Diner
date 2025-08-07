@@ -59,17 +59,42 @@ public class CustomerManager : Singleton<CustomerManager>
     {
         if (activeCustomers.Count == 0)
         {
-            Debug.Log("[CustomerManager] 활성화된 손님이 없습니다.");
+            if (showDebugInfo) Debug.Log("[CustomerManager] 활성화된 손님이 없습니다.");
             return;
         }
 
-        Debug.LogWarning($"[CustomerManager] {activeCustomers.Count}명의 모든 손님의 인내심을 제거합니다.");
+        if (showDebugInfo) Debug.LogWarning($"[CustomerManager] {activeCustomers.Count}명의 모든 손님의 인내심을 제거합니다.");
         
         foreach (var customer in activeCustomers.ToList())
         {
             customer.EmptyPatience();
         }
     }
+
+    #region 튜토리얼 관리
+
+    /// <summary>
+    /// 현재 레스토랑에 있는 첫 번째 손님이 'Eating' 상태인지 확인합니다.
+    /// (튜토리얼처럼 손님이 한 명만 있는 상황에서 사용)
+    /// </summary>
+    /// <returns>조건 충족 시 true</returns>
+    public bool IsFirstCustomerEating()
+    {
+        // 손님이 한 명도 없으면 false
+        if (activeCustomers.Count == 0) return false;
+        
+        // activeCustomers 리스트의 첫 번째 손님
+        var customer = activeCustomers[0];
+        if (!customer)
+        {
+            return false;
+        }
+
+        // 해당 손님의 상태가 'Eating'인지 확인하여 결과 반환
+        return customer.CurrentStateName == CustomerStateName.Eating;
+    }
+
+    #endregion
 
     /// <summary>
     /// 현재 활성화된 모든 손님을 풀로 반환
@@ -83,7 +108,7 @@ public class CustomerManager : Singleton<CustomerManager>
             return;
         }
 
-        Debug.LogWarning($"[CustomerManager] {activeCustomers.Count}명의 모든 손님을 풀로 반환합니다.");
+        if (showDebugInfo) Debug.LogWarning($"[CustomerManager] {activeCustomers.Count}명의 모든 손님을 풀로 반환합니다.");
         
         foreach (var customer in activeCustomers.ToList())
         {

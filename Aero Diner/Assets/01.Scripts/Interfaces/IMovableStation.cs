@@ -5,4 +5,5 @@ using UnityEngine;
 public interface IMovableStation : IInteractable
 { 
     Transform GetTransform();
+    StationData StationData { get; }
 }

@@ -41,7 +41,7 @@ public class FoodSlotIconDisplay : MonoBehaviour
             var type = slot.foodType;
             var iconSprite = slot.placeholderIcon;
 
-            Vector3 pos = basePosition.position + new Vector3(i * spacing - totalWidth / 2f, 0.8f, 0);
+            Vector3 pos = basePosition.position + new Vector3(i * spacing - totalWidth / 2f, 1f, 0);
             GameObject icon = Instantiate(iconPrefab, pos, Quaternion.identity, transform);
 
             var sr = icon.GetComponent<SpriteRenderer>();
@@ -91,4 +91,10 @@ public class FoodSlotIconDisplay : MonoBehaviour
         }
     }
 
+    public void CloseSlot()
+    {
+        foreach (var list in iconMap.Values)
+            foreach (var icon in list)
+                if (icon) icon.SetActive(false);
+    }
 }

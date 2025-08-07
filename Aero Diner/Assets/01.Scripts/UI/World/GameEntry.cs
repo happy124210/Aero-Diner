@@ -17,6 +17,7 @@ public class GameEntry : MonoBehaviour
             ApplySettingsFromSave(defaultData);
         }
         EventBus.RaiseFadeEvent(FadeEventType.FadeIn, new FadeEventPayload(0f, 1f));
+        EventBus.PlayBGM(BGMEventType.Title);
     }
     private void ApplySettingsFromSave(SaveData data)
     {

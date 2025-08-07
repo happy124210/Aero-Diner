@@ -1,7 +1,4 @@
-﻿
-
-﻿using System.Collections.Generic;
-
+﻿﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -163,6 +160,23 @@ public class OverSceneUIHandler : IUIEventHandler
                 {
                     var ed = ui?.GetComponentInChildren<EarningsDisplay>(true);
                     ed?.AnimateEarnings((int)payload);
+                }
+                return true;
+            case UIEventType.ShowWallPopup:
+                {
+                    string msg = payload as string ?? "이 너머로는 갈 수 없습니다";
+                    foreach (var ui in sceneUIs)
+                    {
+                        var popup = ui?.GetComponentInChildren<WallPopupUI>(true);
+                        popup?.Show(msg);
+                    }
+                    return true;
+                }
+            case UIEventType.HideWallPopup:
+                foreach (var ui in sceneUIs)
+                {
+                    var popup = ui?.GetComponentInChildren<WallPopupUI>(true);
+                    popup?.Hide();
                 }
                 return true;
         }

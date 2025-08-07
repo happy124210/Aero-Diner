@@ -17,7 +17,7 @@ public class StationEditor : Editor
         DrawDefaultInspector();
 
         GUILayout.Space(10);
-        GUILayout.Label("🔍 레시피 미리보기", EditorStyles.boldLabel);
+        GUILayout.Label("레시피 미리보기", EditorStyles.boldLabel);
 
         BaseStation station = (BaseStation)target;
 

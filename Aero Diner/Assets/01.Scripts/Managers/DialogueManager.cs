@@ -27,7 +27,7 @@ public class DialogueManager : Singleton<DialogueManager>
     {
         dialogueDatabase = new Dictionary<string, DialogueData>();
         
-        DialogueData[] allDialogues = Resources.LoadAll<DialogueData>("Datas/Dialogue");
+        DialogueData[] allDialogues = Resources.LoadAll<DialogueData>(StringPath.DIALOGUE_DATA_PATH);
         
         foreach (DialogueData dialogue in allDialogues)
         {
@@ -43,7 +43,7 @@ public class DialogueManager : Singleton<DialogueManager>
     private void LoadSpeakerDatabase()
     {
         speakerDatabase = new Dictionary<string, SpeakerData>();
-        SpeakerData[] allSpeakers = Resources.LoadAll<SpeakerData>("Datas/Speakers");
+        SpeakerData[] allSpeakers = Resources.LoadAll<SpeakerData>(StringPath.SPEAKER_DATA_PATH);
 
         foreach (var speaker in allSpeakers)
         {
@@ -79,10 +79,8 @@ public class DialogueManager : Singleton<DialogueManager>
             return;
         }
         
-        GameManager.Instance.PauseGame();
-        GameManager.Instance.ChangePhase(GamePhase.Dialogue);
-
-
+        GameManager.Instance.EnterDialogue();
+        
         linesQueue.Clear();
         foreach (var line in data.lines)
         {
@@ -103,6 +101,7 @@ public class DialogueManager : Singleton<DialogueManager>
         if (linesQueue.Count > 0)
         {
             DialogueLine lineToShow = linesQueue.Dequeue();
+            GameManager.Instance.ChangePhase(GamePhase.Dialogue);
             EventBus.Raise(UIEventType.ShowDialogueLine, lineToShow);
         }
         else
@@ -115,52 +114,12 @@ public class DialogueManager : Singleton<DialogueManager>
     {
         EventBus.Raise(UIEventType.HideDialoguePanel);
         EventBus.Raise(GameEventType.DialogueEnded, currentDialogue.id);
-        GameManager.Instance.ContinueGame();
+        GameManager.Instance.ExitDialogue();
     }
     
-    // /// <summary>
-    // /// 선택지 확인
-    // /// 보여줄 선택지 있으면 event로 choices 넘겨주고, 없으면 종료
-    // /// </summary>
-    // private void ShowChoicesOrEnd()
-    // {
-    //     if (currentDialogue.choices != null && currentDialogue.choices.Count > 0)
-    //     {
-    //         // 이벤트 발생 여부 논의
-    //         // OnShowChoices?.Invoke(currentDialogue.choices);
-    //     }
-    //     else
-    //     {
-    //         EndDialogue();
-    //     }
-    // }
-
-    // /// <summary>
-    // /// 플레이어가 선택지를 골랐을 때
-    // /// 선택지에 연결된 다음 대화가 있다면 연결, 없으면 종료
-    // /// </summary>
-    // /// <param name="choiceIndex"> 선택한 선택지의 인덱스 </param>
-    // public void SelectChoice(int choiceIndex)
-    // {
-    //     // 유효하지 않은 선택이면 대화 종료
-    //     if (choiceIndex < 0 || choiceIndex >= currentDialogue.choices.Count)
-    //     {
-    //         EndDialogue();
-    //         return;
-    //     }
-    //     
-    //     DialogueChoice selectedChoice = currentDialogue.choices[choiceIndex];
-    //
-    //     // 이 선택지에 연결된 다음 대화가 있다면 연결
-    //     if (!string.IsNullOrEmpty(selectedChoice.nextDialogueId))
-    //     {
-    //         DialogueData nextDialogue = FindDialogueDataById(selectedChoice.nextDialogueId);
-    //         StartDialogue(nextDialogue);
-    //     }
-    //     // 없다면 종료
-    //     else
-    //     {
-    //         EndDialogue();
-    //     }
-    // }
+    public void SkipDialogue()
+    {
+        linesQueue.Clear(); // 남은 대사 삭제
+        EndDialogue();      // 바로 종료 처리
+    }
 }

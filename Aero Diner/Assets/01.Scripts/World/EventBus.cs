@@ -17,15 +17,27 @@ public enum BGMEventType
     PlayStartMenu,
     PlayRecipeChoice,
     PlayLifeTheme,
-    StopBGM
+    StopBGM,
+    Intro1, Intro2, Intro3, Title
 }
 
 public enum GameEventType
 {
     GamePhaseChanged, // 게임 상태 변경
+    
     RoundTimerEnded,  // 영업 시간 종료
+    AllCustomersLeft,
     DialogueEnded,
     QuestStatusChanged,
+    
+    NoMoreStoriesInPhase,
+    
+    // 튜토리얼용
+    PlayerPickedUpItem,
+    StationUsed,
+    CustomerServed,
+    StationLayoutChanged,
+    UISceneReady,
 }
 
 public enum SFXType
@@ -56,7 +68,7 @@ public enum SFXType
     
     //추후 추가(리스트 번호 오류 방지)
     OpenPause, ClosePause,
-    OpenBook, OpenInventory,
+    OpenBook, OpenInventory,Rain, Sunder, Crash1, Crash2,
 }
 public enum UIEventType
 {
@@ -72,14 +84,16 @@ public enum UIEventType
     ShowStartWarningPanel, ShowStartMenuWithSave,
     ShowStartMenuNoSave, LoadMainScene,
     QuitGame, ShowPressAnyKey,LoadDayScene,
-    
+    LoadIntroScene,
     //MainSceneUI
     ShowRoundTimer, HideRoundTimer,
     UpdateTotalEarnings, UpdateTodayEarnings,
     ShowMenuPanel, UpdateMenuPanel, HideMenuPanel, 
     ShowResultPanel, HideResultPanel, 
     ShowOrderPanel, HideOrderPanel,
-    
+    ShowWallPopup, HideWallPopup,
+    ShowIngredientWarn,
+
     //Inventory
     ShowInventory, HideInventory,
     ShowRecipeBook, ShowStationPanel,
@@ -93,6 +107,10 @@ public enum UIEventType
     //Dialogue
     ShowDialogueLine, HideDialoguePanel,
     ShowDialoguePanel,
+    
+    //Tutorial
+    tu1, tu2, tu3, tu3_step2, tu3_step3, tu3_step4, tu3_step5, tu3_step6, tu3_step7, tu3_stop,
+    tu4, tu5, tu6, tu7, tu8, tu9, tu8_stop, ShowDemoEnd
 }
 
 public static class EventBus
@@ -112,6 +130,7 @@ public static class EventBus
         //Debug.Log($"[SFX DEBUG] 요청된 SFXType: {type} | 호출 스택:\n{Environment.StackTrace}");
         OnSFXRequested?.Invoke(type);
     }
+    
     public static void Raise(UIEventType eventType, object payload = null)
     {
         OnUIEvent?.Invoke(eventType, payload);

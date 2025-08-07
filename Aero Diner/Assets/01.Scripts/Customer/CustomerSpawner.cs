@@ -51,12 +51,15 @@ public class CustomerSpawner : MonoBehaviour
 
         while (true)
         {
-            if (CustomerManager.Instance.ActiveCustomerCount < maxCustomers && 
-                TableManager.Instance.CanAcceptNewCustomer())
+            if (!GameManager.Instance.IsTutorialActive)
             {
-                SpawnRandomCustomer();
+                if (CustomerManager.Instance.ActiveCustomerCount < maxCustomers && 
+                    TableManager.Instance.CanAcceptNewCustomer())
+                {
+                    SpawnRandomCustomer();
+                }
             }
-        
+
             float waitTime = Random.Range(minSpawnInterval, maxSpawnInterval);
             yield return new WaitForSeconds(waitTime);
         }
@@ -136,5 +139,13 @@ public class CustomerSpawner : MonoBehaviour
     {
         if (!Application.isPlaying) return;
         SpawnRandomCustomer();
+    }
+
+    public void SpawnTutorialCustomer()
+    {
+        Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+        CustomerData customerData = SelectRandomCustomerByRarity();
+        CustomerController cc = CustomerManager.Instance.SpawnCustomer(customerData, spawnPoint.position, spawnPoint.rotation);
+        cc.SetTutorialMode(true);
     }
 }

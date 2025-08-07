@@ -14,7 +14,7 @@ public class PoolManager : Singleton<PoolManager>
     protected override void Awake()
     {
         base.Awake();
-        poolContainer = new GameObject("PoolContainer").transform;
+        poolContainer = new GameObject(StringName.POOL_CONTAINER).transform;
         poolContainer.SetParent(transform);
     }
 

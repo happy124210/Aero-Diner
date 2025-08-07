@@ -8,26 +8,35 @@ public class QuestManager : Singleton<QuestManager>
     [SerializeField] private bool showDebugInfo;
     
     private Dictionary<string, QuestData> questDatabase;
-    
-    // TODO: Save/Load 시스템과 연동
-    private Dictionary<string, QuestStatus> playerQuestStatus; // 플레이어의 퀘스트 현황.
-    private Dictionary<string, Dictionary<string, int>> playerQuestProgress; // <questId, <targetId, currentAmount>>
+    private Dictionary<string, QuestStatus> playerQuestStatus;
+    private Dictionary<string, Dictionary<string, int>> playerQuestProgress;
 
     #region 외부 사용 함수
     
-    // 진행 중인 모든 퀘스트를 반환
-    public List<QuestData> GetInProgressQuests() => GetQuestsByStatus(QuestStatus.InProgress);
-    // 완료된 모든 퀘스트를 반환
-    public List<QuestData> GetCompletedQuests() => GetQuestsByStatus(QuestStatus.Completed);
+    public List<QuestData> GetInProgressQuests() => 
+        playerQuestStatus.Where(p => p.Value == QuestStatus.InProgress)
+            .Select(p => questDatabase[p.Key])
+            .ToList();
     
-    // 특정 상태의 모든 퀘스트를 반환
-    private List<QuestData> GetQuestsByStatus(QuestStatus status)
+    public List<QuestData> GetCompletedQuests() => 
+        playerQuestStatus.Where(p => p.Value == QuestStatus.Completed)
+            .Select(p => questDatabase[p.Key])
+            .ToList();
+    
+    public List<QuestData> GetFinishedQuests() => 
+        playerQuestStatus.Where(p => p.Value == QuestStatus.Completed || p.Value == QuestStatus.Failed)
+            .Select(p => questDatabase[p.Key])
+            .ToList();
+    
+    public int GetQuestObjectiveProgress(string questId, string targetId)
     {
-        var filteredEntries = playerQuestStatus.Where(pair => pair.Value == status);
-        return filteredEntries.Select(pair => questDatabase[pair.Key]).ToList();
+        return playerQuestProgress.TryGetValue(questId, out var progress) 
+            ? progress.GetValueOrDefault(targetId, 0) 
+            : 0;
     }
     
     public QuestStatus GetQuestStatus(string questId) => playerQuestStatus.GetValueOrDefault(questId, QuestStatus.Inactive);
+    public QuestData FindQuestByID(string questID) => questDatabase.GetValueOrDefault(questID);
     
     #endregion
     
@@ -35,92 +44,94 @@ public class QuestManager : Singleton<QuestManager>
     {
         base.Awake();
         DontDestroyOnLoad(this);
-        
         LoadQuestDatabase();
-        
-        // TODO: 저장에서 playerQuestStatus와 playerQuestProgress 불러오기
-        playerQuestStatus = new Dictionary<string, QuestStatus>();
-        playerQuestProgress = new Dictionary<string, Dictionary<string, int>>();
+        LoadQuestData();
+        EventBus.OnGameEvent += HandleGameEvent;
+    }
+
+    private void OnDestroy()
+    {
+        EventBus.OnGameEvent -= HandleGameEvent;
     }
 
     private void LoadQuestDatabase()
     {
-        questDatabase = new Dictionary<string, QuestData>();
-        QuestData[] allQuests = Resources.LoadAll<QuestData>(StringPath.QUEST_DATA_PATH);
-        foreach (var quest in allQuests)
-        {
-            questDatabase.Add(quest.id, quest);
-        }
+        questDatabase = Resources.LoadAll<QuestData>(StringPath.QUEST_DATA_PATH).ToDictionary(q => q.id);
         if (showDebugInfo) Debug.Log($"[QuestManager] 총 {questDatabase.Count}개 Quest Database 로드 완료");
     }
     
-    private QuestData FindQuestByID(string questID) => questDatabase.GetValueOrDefault(questID);
+    #region 데이터 저장 및 불러오기
+
+    private void LoadQuestData()
+    {
+        playerQuestStatus = new Dictionary<string, QuestStatus>();
+        playerQuestProgress = new Dictionary<string, Dictionary<string, int>>();
+        var data = SaveLoadManager.LoadGame();
+        if (data == null) return;
+
+        for (int i = 0; i < data.playerQuestStatusKeys.Count; i++)
+        {
+            if (data.playerQuestStatusKeys[i].StartsWith(StringID.TUTORIAL_PREFIX)) continue;
+            playerQuestStatus[data.playerQuestStatusKeys[i]] = data.playerQuestStatusValues[i];
+        }
+
+        foreach (var progressData in data.playerQuestProgress)
+        {
+            if (progressData.questId.StartsWith(StringID.TUTORIAL_PREFIX)) continue;
+            var innerDict = new Dictionary<string, int>();
+            for (int i = 0; i < progressData.objectiveTargetIds.Count; i++)
+            {
+                innerDict[progressData.objectiveTargetIds[i]] = progressData.objectiveCurrentAmounts[i];
+            }
+            playerQuestProgress[progressData.questId] = innerDict;
+        }
+    }
+
+    public void SaveQuestData()
+    {
+        var data = SaveLoadManager.LoadGame() ?? new SaveData();
+
+        data.playerQuestStatusKeys = playerQuestStatus.Keys.Where(k => !k.StartsWith("t_")).ToList();
+        data.playerQuestStatusValues = playerQuestStatus.Where(p => !p.Key.StartsWith("t_")).Select(p => p.Value).ToList();
+        
+        data.playerQuestProgress.Clear();
+        foreach (var pair in playerQuestProgress.Where(p => !p.Key.StartsWith("t_")))
+        {
+            data.playerQuestProgress.Add(new SerializableQuestProgress
+            {
+                questId = pair.Key,
+                objectiveTargetIds = pair.Value.Keys.ToList(),
+                objectiveCurrentAmounts = pair.Value.Values.ToList()
+            });
+        }
+        SaveLoadManager.SaveGame(data);
+    }
+
+    public void ResetQuestData()
+    {
+        playerQuestStatus.Clear();
+        playerQuestProgress.Clear();
+    }
+
+    #endregion
     
     #region 퀘스트 상태 관리
     
     public void StartQuest(string questId)
     {
-        if (!questDatabase.ContainsKey(questId))
-        {
-            if (showDebugInfo) Debug.LogError($"[QuestManager] 존재하지 않는 퀘스트 ID: {questId}");
-            return;
-        }
+        if (!questDatabase.ContainsKey(questId) || GetQuestStatus(questId) != QuestStatus.Inactive) return;
 
-        if (playerQuestStatus.ContainsKey(questId))
-        {
-            if (showDebugInfo) Debug.LogWarning($"[QuestManager] 이미 시작되었거나 완료된 퀘스트: {questId}");
-            return;
-        }
-
-        if (showDebugInfo) Debug.Log($"[QuestManager] 퀘스트 시작: {questId}");
         playerQuestStatus[questId] = QuestStatus.InProgress;
         playerQuestProgress[questId] = new Dictionary<string, int>();
-
-        // TODO: UI에 퀘스트가 추가되었음을 알리는 이벤트 발생
-        // EventBus.Raise(UIEventType.OnQuestStarted, questDatabase[questId]);
+        if (showDebugInfo) Debug.Log($"[QuestManager] 퀘스트 시작: {questId}");
     }
     
+    // StoryManager 등에서 수동으로 퀘스트 완료를 시도할 때 호출
     public void EndQuest(string questId)
     {
-        if (GetQuestStatus(questId) != QuestStatus.InProgress)
-        {
-            if (showDebugInfo) Debug.LogWarning($"[QuestManager] '{questId}' 퀘스트는 판정할 수 없습니다. 현재 상태: {GetQuestStatus(questId)}");
-            return;
-        }
-
-        QuestData quest = FindQuestByID(questId);
-        if (!quest) return;
-
-        bool allObjectivesMet = true;
-
-        // 퀘스트의 모든 목표를 순회하며 달성 여부 체크
-        foreach (var objective in quest.objectives)
-        {
-            bool isObjectiveMet = false;
-            switch (objective.objectiveType)
-            {
-                // 현재 소지금이 목표 금액 이상인지 확인
-                case QuestObjectiveType.EarnMoney:
-                    if (GameManager.Instance.TotalEarnings >= objective.requiredAmount)
-                    {
-                        isObjectiveMet = true;
-                    }
-                    break;
-                
-                // 다른 목표 타입에 대한 판정 로직
-                // case QuestObjectiveType.BuyStation:
-                //     // 
-                //     break;
-            }
-            
-            if (!isObjectiveMet)
-            {
-                allObjectivesMet = false;
-                break;
-            }
-        }
+        if (GetQuestStatus(questId) != QuestStatus.InProgress) return;
         
-        if (allObjectivesMet)
+        if (CheckQuestCompletion(questId))
         {
             CompleteQuest(questId);
         }
@@ -129,101 +140,136 @@ public class QuestManager : Singleton<QuestManager>
             FailQuest(questId);
         }
     }
-
-
-    private bool CompleteQuest(string questId)
+    
+    private void CompleteQuest(string questId)
     {
-        // InProgress인지 확인
-        if (GetQuestStatus(questId) != QuestStatus.InProgress)
+        if (GetQuestStatus(questId) != QuestStatus.InProgress) return;
+        
+        QuestData quest = FindQuestByID(questId);
+        QuestStatus finalStatus = quest.id.StartsWith(StringID.TUTORIAL_PREFIX) ? QuestStatus.Finished : QuestStatus.Completed;
+        playerQuestStatus[questId] = finalStatus;
+        
+        if (quest.rewardMoney > 0) GameManager.Instance.AddMoney(quest.rewardMoney);
+        foreach (var itemId in quest.rewardItemIds)
         {
-            if (showDebugInfo) Debug.LogWarning($"[QuestManager] '{questId}' 퀘스트는 해금되지 않음. 현재 상태: {GetQuestStatus(questId)}");
-            return false;
+            if (itemId.StartsWith(StringID.STATION_PREFIX)) StationManager.Instance.UnlockStation(itemId);
+            else if (itemId.StartsWith(StringID.FOOD_PREFIX)) MenuManager.Instance.UnlockMenu(itemId);
         }
-        
-        QuestData quest = questDatabase[questId];
 
-        // 보상 지급
-        if (quest.rewardMoney > 0)
+        if (showDebugInfo) Debug.Log($"[QuestManager] 퀘스트 {finalStatus}: {quest.questName}");
+        EventBus.Raise(GameEventType.QuestStatusChanged, new KeyValuePair<string, QuestStatus>(questId, finalStatus));
+    }
+    
+    private void FailQuest(string questId)
+    {
+        if (GetQuestStatus(questId) != QuestStatus.InProgress) return;
+
+        playerQuestStatus[questId] = QuestStatus.Failed;
+
+        if (showDebugInfo) Debug.Log($"[QuestManager] 퀘스트 실패: {FindQuestByID(questId)?.questName}");
+        EventBus.Raise(GameEventType.QuestStatusChanged, new KeyValuePair<string, QuestStatus>(questId, QuestStatus.Failed));
+    }
+
+    #endregion
+
+    #region 퀘스트 진행도 및 완료 체크
+    
+    // 퀘스트 완료 조건 확인
+    private bool CheckQuestCompletion(string questId)
+    {
+        QuestData quest = FindQuestByID(questId);
+        if (!quest) return false;
+
+        foreach (var objective in quest.objectives)
         {
-            GameManager.Instance.AddMoney(quest.rewardMoney);
+            bool isObjectiveMet = false;
+            switch (objective.objectiveType)
+            {
+                // --- 특정 상태달성형 퀘스트 ---
+                case QuestObjectiveType.EarnMoney:
+                    if (int.TryParse(objective.targetId, out int money)) isObjectiveMet = GameManager.Instance.TotalEarnings >= money;
+                    break;
+                case QuestObjectiveType.HoldFood:
+                    isObjectiveMet = PlayerController.Instance.IsHoldingFood(objective.targetId);
+                    break;
+                case QuestObjectiveType.HoldStation:
+                    isObjectiveMet = PlayerController.Instance.IsHoldingStation(objective.targetId);
+                    break;
+                case QuestObjectiveType.CheckIngredients:
+                    isObjectiveMet = StationManager.Instance.CheckIngredients(objective.targetId, objective.requiredIds.ToArray());
+                    break;
+                case QuestObjectiveType.CheckFood:
+                    isObjectiveMet = StationManager.Instance.CheckObjectOnStation(objective.targetId, objective.requiredIds[0]);
+                    break;
+                case QuestObjectiveType.DeliverFood:
+                    isObjectiveMet = CustomerManager.Instance.IsFirstCustomerEating();
+                    break;
+                case QuestObjectiveType.PlaceStation:
+                    isObjectiveMet = StationManager.Instance.CheckStationPlacedOnCell(objective.targetId, objective.requiredIds[0]);
+                    break;
+                    
+                // --- 횟수/수량 누적형 퀘스트 ---
+                default:
+                    if (int.TryParse(objective.requiredIds.FirstOrDefault(), out int required))
+                    {
+                        int current = playerQuestProgress[questId].GetValueOrDefault(objective.targetId, 0);
+                        isObjectiveMet = current >= required;
+                    }
+                    break;
+            }
+            if (!isObjectiveMet) return false;
         }
-        
-        // TODO: 아이템 보상 지급 로직 (StationManager 연동)
-
-        // 퀘스트 상태 변경
-        playerQuestStatus[questId] = QuestStatus.Completed;
-        if (showDebugInfo) Debug.Log($"[QuestManager] 퀘스트 최종 완료 및 보상 지급: {questId}");
-
-        EventBus.Raise(GameEventType.QuestStatusChanged, new KeyValuePair<string, QuestStatus>(questId, QuestStatus.Completed));
-        // TODO: UI 갱신 이벤트
-        
         return true;
     }
 
-    private void FailQuest(string questId)
+    // 완료 체크와 실행
+    private void CheckAndCompleteQuest(string questId)
     {
-        if (playerQuestStatus.ContainsKey(questId) && playerQuestStatus[questId] == QuestStatus.InProgress)
+        if (GetQuestStatus(questId) == QuestStatus.InProgress && CheckQuestCompletion(questId))
         {
-            playerQuestStatus[questId] = QuestStatus.Failed;
-            if (showDebugInfo) Debug.Log($"퀘스트 실패: {questId}");
-            EventBus.Raise(GameEventType.QuestStatusChanged, new KeyValuePair<string, QuestStatus>(questId, QuestStatus.Failed));
-            // TODO: UI 갱신 이벤트
+            CompleteQuest(questId);
         }
     }
 
     #endregion
 
-    #region 퀘스트 진행도 업데이트
+    #region 이벤트 관리
 
-    /// <summary>
-    /// 퀘스트 목표 달성도 업데이트할 때 사용
-    /// </summary>
-    public void UpdateQuestProgress(QuestObjectiveType type, string targetId, int amount = 1)
+    // 모든 게임 이벤트를 받아 관련 퀘스트들의 상태 확인
+    private void HandleGameEvent(GameEventType eventType, object payload)
     {
-        // 현재 진행 중인 모든 퀘스트를 확인합니다.
-        foreach (var questEntry in playerQuestStatus.Where(pair => pair.Value == QuestStatus.InProgress))
+        var inProgressQuests = playerQuestStatus
+            .Where(p => p.Value == QuestStatus.InProgress)
+            .Select(p => FindQuestByID(p.Key))
+            .ToList();
+
+        foreach (var quest in inProgressQuests)
         {
-            string questId = questEntry.Key;
-            QuestData quest = FindQuestByID(questEntry.Key);
-
-            // 해당 퀘스트의 목표들 중에 일치하는 것이 있는지 확인
-            foreach (var objective in quest.objectives.Where(obj => obj.objectiveType == type && obj.targetId == targetId))
+            bool needsRecheck = quest.objectives.Any(obj =>
             {
-                if (!playerQuestProgress.ContainsKey(questId)) continue;
-                
-                // 현재 진행도를 가져와서 업데이트
-                int currentAmount = playerQuestProgress[questId].GetValueOrDefault(targetId, 0);
-                currentAmount += amount;
-                playerQuestProgress[questId][targetId] = currentAmount;
-                
-                if (showDebugInfo) Debug.Log($"[QuestManager] 퀘스트 진행도 업데이트: {questId} - {targetId} ({currentAmount}/{objective.requiredAmount})");
+                switch (eventType)
+                {
+                    case GameEventType.PlayerPickedUpItem:
+                        return obj.objectiveType == QuestObjectiveType.HoldFood ||
+                               obj.objectiveType == QuestObjectiveType.HoldStation;
+                    case GameEventType.StationUsed:
+                        return obj.objectiveType == QuestObjectiveType.CheckIngredients ||
+                               obj.objectiveType == QuestObjectiveType.CheckFood;
+                    case GameEventType.StationLayoutChanged:
+                        return obj.objectiveType == QuestObjectiveType.PlaceStation;
+                    case GameEventType.CustomerServed:
+                        return obj.objectiveType == QuestObjectiveType.DeliverFood;
+                }
 
-                // 퀘스트 완료 여부 체크
-                CheckQuestCompletion(questId);
+                return false;
+            });
+            
+            if (needsRecheck)
+            {
+                CheckAndCompleteQuest(quest.id);
             }
         }
     }
-
-    private void CheckQuestCompletion(string questId)
-    {
-        QuestData quest = questDatabase[questId];
-        
-        // 모든 목표가 달성되었는지 확인
-        foreach (var objective in quest.objectives)
-        {
-            int currentAmount = playerQuestProgress[questId].GetValueOrDefault(objective.targetId, 0);
-            if (currentAmount < objective.requiredAmount)
-            {
-                return;
-            }
-        }
-        
-        // 모든 목표를 달성했다면, 퀘스트 상태를 'Completed'로 변경합니다.
-        playerQuestStatus[questId] = QuestStatus.Completed;
-        if (showDebugInfo) Debug.Log($"[QuestManager] 퀘스트 목표 달성!: {questId}");
-        
-        // TODO: UI에 퀘스트를 완료할 수 있다고 알림 (느낌표 등)
-    }
-
+    
     #endregion
 }

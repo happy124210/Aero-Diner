@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 게임의 전체적인 상태와 데이터를 관리
@@ -12,6 +14,7 @@ public class GameManager : Singleton<GameManager>
     [Header("디버그 정보")]
     [SerializeField, ReadOnly] private GamePhase currentPhase;
     [SerializeField] private bool showDebugInfo;
+    [SerializeField] private bool isTutorialActive;
     
     private static readonly int[] DaysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
     private GamePhase previousPhase;
@@ -21,6 +24,7 @@ public class GameManager : Singleton<GameManager>
     public int TotalEarnings => totalEarnings;
     public int CurrentDay => currentDay;
     public GamePhase CurrentPhase => currentPhase;
+    public bool IsTutorialActive => isTutorialActive;
     
     #endregion
     
@@ -36,16 +40,11 @@ public class GameManager : Singleton<GameManager>
         EventBus.OnGameEvent += HandleGameEvent;
         EventBus.OnUIEvent += HandleUIEvent;
     }
-    
+
     private void OnDestroy()
     {
         EventBus.OnGameEvent -= HandleGameEvent;
         EventBus.OnUIEvent -= HandleUIEvent;
-    }
-
-    private void Start()
-    {
-        ChangePhase(GamePhase.EditStation); 
     }
     
     #endregion
@@ -64,24 +63,68 @@ public class GameManager : Singleton<GameManager>
         
         Time.timeScale = currentPhase 
             is GamePhase.Paused 
-            //or GamePhase.Dialogue 
+            //or GamePhase.Dialogue
             or GamePhase.GameOver 
-            or GamePhase.SelectMenu 
-            or GamePhase.Shop ? 0f : 1f;
+            //or GamePhase.SelectMenu 
+            //or GamePhase.Shop
+            ? 0f : 1f;
         
         if (showDebugInfo) Debug.Log($"[GameManager] Game Phase 변경됨: {newPhase}");
     }
-    
-    
-    private void HandleGameEvent(GameEventType eventType, object data)
+
+    private void ProceedToEditStation()
     {
-        // RestaurantManager에서 영업 시간 종료 알림 받으면
-        if (eventType == GameEventType.RoundTimerEnded)
+        // 현재 Day 단계일 때만
+        if (CurrentPhase == GamePhase.Day)
         {
-            ChangePhase(GamePhase.Closing);
+            if (showDebugInfo) Debug.Log("[GameManager] 모든 스토리가 종료되어 EditStation으로 전환");
+            StartCoroutine(ProceedToEditStation_Coroutine());
+        }
+    }
+
+    private void ProceedToOperation()
+    {
+        // Opening 단계일 때만
+        if (CurrentPhase == GamePhase.Opening)
+        {
+            if (showDebugInfo) Debug.Log("[GameManager] 모든 Opening 스토리가 종료되어 Operation으로 전환");
+            StartCoroutine(ProceedToOperation_Coroutine());
         }
     }
     
+    // TODO === 임시방편. 7/31 저녁에 수정 예정 ===
+    private IEnumerator ProceedToOperation_Coroutine()
+    {
+        yield return null; 
+        yield return null;
+
+        if (showDebugInfo) Debug.Log("[GameManager] 모든 Opening 스토리가 종료되어 Operation으로 전환");
+        ChangePhase(GamePhase.Operation);
+    }
+    
+    private IEnumerator ProceedToEditStation_Coroutine()
+    {
+        yield return null; 
+        yield return null;
+
+        if (showDebugInfo) Debug.Log("[GameManager] 모든 Opening 스토리가 종료되어 Operation으로 전환");
+        ChangePhase(GamePhase.EditStation);
+    }
+    // TODO === END ===
+    
+    private void HandleGameEvent(GameEventType eventType, object data)
+    {
+        if (eventType == GameEventType.RoundTimerEnded)
+        {
+            ChangePhase(GamePhase.Closing);
+            EventBus.Raise(UIEventType.ShowResultPanel);
+        }
+        
+        if (eventType == GameEventType.NoMoreStoriesInPhase)
+        {
+            OnNoMoreStories();
+        }
+    }
 
     private void HandleUIEvent(UIEventType eventType, object data)
     {
@@ -89,6 +132,28 @@ public class GameManager : Singleton<GameManager>
         {
             int earningsFromDay = RestaurantManager.Instance.TodayEarnings;
             EndDayCycle(earningsFromDay);
+            EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(scene: StringScene.DAY_SCENE));
+        
+        }
+    }
+    
+    private void OnNoMoreStories()
+    {
+        string currentSceneName = SceneManager.GetActiveScene().name;
+    
+        switch (CurrentPhase)
+        {
+            case GamePhase.Day:
+                if (currentSceneName == StringScene.DAY_SCENE) 
+                    ProceedToEditStation();
+                break;
+            case GamePhase.Opening:
+                if (currentSceneName == StringScene.MAIN_SCENE)
+                    ProceedToOperation();
+                break;
+            case GamePhase.Closing:
+                EventBus.Raise(UIEventType.ShowResultPanel);
+                break;
         }
     }
 
@@ -99,8 +164,7 @@ public class GameManager : Singleton<GameManager>
     {
         IncreaseDay();
         SaveData();
-        
-        ChangePhase(GamePhase.Day);
+        ChangePhase(GamePhase.Loading);
         
         if (showDebugInfo) Debug.Log($"[GameManager] 저장 완료. 하루 수입: {earningsFromDay}");
     }
@@ -127,6 +191,21 @@ public class GameManager : Singleton<GameManager>
         ChangePhase(previousPhase);
     }
     
+    public void EnterDialogue()
+    {
+        if (currentPhase == GamePhase.Dialogue || currentPhase == GamePhase.Paused) return;
+
+        previousPhase = currentPhase;
+        ChangePhase(GamePhase.Dialogue);
+    }
+
+    public void ExitDialogue()
+    {
+        if (currentPhase != GamePhase.Dialogue) return;
+    
+        ChangePhase(previousPhase);
+    }
+    
     #endregion
     
     #region 데이터 관리 (돈, 날짜, 저장/불러오기)
@@ -134,6 +213,16 @@ public class GameManager : Singleton<GameManager>
     public void AddMoney(int amount)
     {
         totalEarnings += amount;
+        EventBus.Raise(UIEventType.UpdateTotalEarnings, TotalEarnings);
+        EventBus.OnSFXRequested(SFXType.CustomerPay);
+    }
+
+    // 강제로 해당 amount로 지정. 사용에 주의할 것 !!!
+    public void SetMoney(int amount)
+    {
+        totalEarnings = amount;
+        EventBus.Raise(UIEventType.UpdateTotalEarnings, TotalEarnings);
+        EventBus.OnSFXRequested(SFXType.CustomerPay);
     }
 
     private void IncreaseDay()
@@ -157,9 +246,21 @@ public class GameManager : Singleton<GameManager>
         data.currentDay = currentDay;
         
         SaveLoadManager.SaveGame(data);
+        
+        StationManager.Instance.SaveStationDatabase();
         MenuManager.Instance.SaveMenuDatabase();
+        QuestManager.Instance.SaveQuestData();
         
         if (showDebugInfo) Debug.Log("[GameManager]: 게임 데이터 저장 완료.");
+    }
+    
+    public void ResetGameData()
+    {
+        currentDay = 1;
+        totalEarnings = 0;
+
+        StoryManager.Instance.ResetStoryData();
+        QuestManager.Instance.ResetQuestData();
     }
 
     public void GetCurrentDate(out int month, out int day)
@@ -197,6 +298,57 @@ public class GameManager : Singleton<GameManager>
     }
     #endregion
 
+    #region 튜토리얼 관리
+
+    public void SetTutorialMode(bool value)
+    {
+        isTutorialActive = value;
+
+        switch (isTutorialActive)
+        {
+            case true:
+                break;
+            
+            case false:
+                ChangePhase(GamePhase.Operation);
+                RestaurantManager.Instance.ReStartRestaurant();
+                break;
+        }
+    }
+
+    #endregion
+    
+    #region 씬 전환 및 정리
+    public void ReturnToStartScene()
+    {
+        StartCoroutine(ReturnToStartSceneRoutine());
+    }
+
+    private IEnumerator ReturnToStartSceneRoutine()
+    {
+        EventBus.RaiseFadeEvent(FadeEventType.FadeOut, new FadeEventPayload(1f, 0.5f));
+        yield return new WaitForSecondsRealtime(0.5f);
+        
+        Time.timeScale = 1f;
+
+        Destroy(StoryManager.Instance.gameObject);
+        Destroy(StationManager.Instance.gameObject);
+        Destroy(RestaurantManager.Instance.gameObject);
+        Destroy(RecipeManager.Instance.gameObject);
+        Destroy(QuestManager.Instance.gameObject);
+        Destroy(PoolManager.Instance.gameObject);
+        Destroy(MenuManager.Instance.gameObject);
+        Destroy(DialogueManager.Instance.gameObject);
+        Destroy(TableManager.Instance.gameObject);
+        Destroy(CustomerManager.Instance.gameObject);
+        Destroy(PlacementManager.Instance.gameObject);
+        
+        Destroy(gameObject);
+
+        SceneManager.LoadScene(StringScene.START_SCENE);
+    }
+    #endregion
+    
     #region Debug Commands
 #if UNITY_EDITOR
     private void OnGUI()
@@ -213,6 +365,11 @@ public class GameManager : Singleton<GameManager>
         if (GUILayout.Button("모든 메뉴 해금"))
         {
             MenuManager.Instance.UnlockAllMenus();
+        }
+        
+        if (GUILayout.Button("모든 설비 해금"))
+        {
+            StationManager.Instance.UnlockAllStations();
         }
         
         if (GUILayout.Button("일차 스킵하기"))
@@ -257,8 +414,8 @@ public class GameManager : Singleton<GameManager>
 public enum GamePhase
 {
     // === DAY SCENE ===
-    EditStation, // 배치 편집 ( 배 안에 있을 때 )
-    Day,         // 일상 ( 배 밖에 있을 때 )
+    EditStation, // 배치 편집
+    Day,         // 일상
     SelectMenu, // 메뉴 선택창 켰을 때
     Shop,        // 상점
     
@@ -271,5 +428,6 @@ public enum GamePhase
     Dialogue,
     Paused,
     GameOver,
+    Loading,
     None,
 }

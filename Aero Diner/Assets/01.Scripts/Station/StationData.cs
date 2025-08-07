@@ -39,7 +39,6 @@ public class StationData : ScriptableObject
     public WorkType workType ;
     public Sprite stationIcon;
     public string description;
-    public int stationCost;
 
     // 해당 스테이션에서 지원하는 레시피 목록
     public List<FoodData> availableRecipes;

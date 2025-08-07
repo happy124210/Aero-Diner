@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce4ff5776a5c66845bd9a49d594fcc0b, type: 3}
+  m_Name: day1_opening
+  m_EditorClassIdentifier: 
+  id: day1_opening
+  triggerPhase: 4
+  conditions:
+  - conditionType: 0
+    lValue: 
+    operator: ==
+    rValue: 1
+  actions:
+  - storyType: 0
+    targetId: day1_tutorial_start
+    value: 
+  - storyType: 1
+    targetId: t_day1_operation_1
+    value: 
+  - storyType: 10
+    targetId: true
+    value: 
+  - storyType: 13
+    targetId: s24
+    value: false
+  - storyType: 13
+    targetId: s5
+    value: false
+  - storyType: 13
+    targetId: s3
+    value: false
+  - storyType: 13
+    targetId: s16
+    value: false
+  - storyType: 13
+    targetId: s15
+    value: false
+  - storyType: 13
+    targetId: s17
+    value: false
+  - storyType: 13
+    targetId: s8
+    value: false

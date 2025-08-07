@@ -7,8 +7,6 @@ public class KeyRebindManager : MonoBehaviour
 {
     [SerializeField] private List<KeyRebindButton> rebindButtons;
 
-    private bool isSaved = false;
-
     private void Start()
     {
         var data = SaveLoadManager.LoadGame() ?? new SaveData();
@@ -35,7 +33,6 @@ public class KeyRebindManager : MonoBehaviour
         }
 
         SaveLoadManager.SaveGame(data);
-        isSaved = true;
         Debug.Log("[KeyRebindManager] 키 바인딩 저장 완료");
     }
 
@@ -79,7 +76,6 @@ public class KeyRebindManager : MonoBehaviour
         }
 
         SaveLoadManager.SaveGame(data);
-        isSaved = true;
         Debug.Log("[KeyRebindManager] 기본 키(WASD, J, K)로 리셋 완료");
     }
 

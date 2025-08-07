@@ -14,7 +14,7 @@ PlayerSettings:
   accelerometerFrequency: 60
   companyName: SPARTA_TEAM17
   productName: Aero Diner
-  defaultCursor: {fileID: 0}
+  defaultCursor: {fileID: 2800000, guid: 6c7ee9223226cdb43b7f02f79c00c5d2, type: 3}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
   m_ShowUnitySplashScreen: 1
@@ -284,7 +284,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 4e003c49ca4d7b649bf321c9f3e606e7, type: 3}
+      m_Icon: {fileID: 2800000, guid: 2dc9fdb2c2e31294b8237b8806d4b901, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0

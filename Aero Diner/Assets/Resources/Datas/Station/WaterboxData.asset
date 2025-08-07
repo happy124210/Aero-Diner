@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: s16
   stationName: WaterBox
-  displayName: "\uC815\uC218\uAE30"
+  displayName: "\uC2F1\uD06C\uB300"
   stationType: 8
   workType: 0
   stationIcon: {fileID: 21300000, guid: a6ba8e6c63637e6498ca3efdcc5f1005, type: 3}
-  description: "\uC815\uC218\uAE30 \uC785\uB2C8\uB2E4"
-  stationCost: 100
+  description: "\uC870\uB9AC\uC5D0 \uD544\uC694\uD55C \uBB3C\uC744 \uACF5\uAE09\uD558\uB294
+    \uC7A5\uCE58.\n\uD56D\uC0C1 \uAE68\uB057\uD558\uACE0 \uC2DC\uC6D0\uD55C \uBB3C\uC744
+    \uC81C\uACF5\uD55C\uB2E4."
   availableRecipes: []
-  ingredientSlots: 0
+  ingredientSlots: 3
   slotDisplays: []

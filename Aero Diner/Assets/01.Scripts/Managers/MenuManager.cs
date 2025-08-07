@@ -57,6 +57,10 @@ public class MenuManager : Singleton<MenuManager>
     }
     private int GetMenuPrice(string menuId) => FindMenuById(menuId)?.Price ?? 0;
     
+    
+    // 튜토리얼용
+    public bool IsMenuSelected(string menuId) => FindMenuById(menuId).isSelected;
+
     #endregion
     
     protected override void Awake()
@@ -141,7 +145,7 @@ public class MenuManager : Singleton<MenuManager>
         data.menuDatabase = new HashSet<string>(GetPlayerMenuIds());
         SaveLoadManager.SaveGame(data);
 
-        Debug.Log($"[MenuManager] 해금 메뉴 저장됨: {data.menuDatabase.Count}개");
+        if (showDebugInfo) Debug.Log($"[MenuManager] 해금 메뉴 저장됨: {data.menuDatabase.Count}개");
     }
 
     public void LoadMenuDatabase()

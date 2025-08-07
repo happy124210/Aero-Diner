@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-
 public class Store_StationScrollView : MonoBehaviour
 {
     [Header("UI 연결")]
@@ -16,7 +15,8 @@ public class Store_StationScrollView : MonoBehaviour
     [Header("참조")]
     [SerializeField] private Store store;
 
-    private List<StoreItem> stationStoreItems = new List<StoreItem>();
+    private List<StoreItem> stationStoreItems = new();
+    private StoreItem currentSelectedItem;
 
     private void Awake()
     {
@@ -30,6 +30,7 @@ public class Store_StationScrollView : MonoBehaviour
 
     public void InitializeAndPopulate()
     {
+        string previouslySelectedId = currentSelectedItem?.ID;
         stationStoreItems.Clear();
 
         var allStations = StationManager.Instance.StationDatabase;
@@ -39,18 +40,26 @@ public class Store_StationScrollView : MonoBehaviour
         {
             if (storeDataMap.TryGetValue(station.Key, out var csvData))
             {
-                var storeItem = new StoreItem(station.Value, csvData);
+                var storeItem = new StoreItem(station.Value.stationData, csvData);
                 stationStoreItems.Add(storeItem);
             }
         }
 
-        stationStoreItems = stationStoreItems.OrderBy(item =>
-        {
-            string numericPart = new string(item.ID.Where(char.IsDigit).ToArray());
-            return int.TryParse(numericPart, out int n) ? n : int.MaxValue;
+        stationStoreItems = stationStoreItems.OrderBy(item => {
+            string numPart = new string(item.ID.Where(char.IsDigit).ToArray());
+            return int.TryParse(numPart, out int n) ? n : int.MaxValue;
         }).ToList();
 
         PopulateScrollView();
+        
+        // 구매 후 해당 항목 머무르기
+        StoreItem itemToSelect = stationStoreItems.FirstOrDefault(item => item.ID == previouslySelectedId) 
+                                 ?? stationStoreItems.FirstOrDefault();
+
+        if (itemToSelect != null)
+        {
+            OnSlotSelected(itemToSelect, false);
+        }
     }
 
     private void PopulateScrollView()
@@ -67,17 +76,11 @@ public class Store_StationScrollView : MonoBehaviour
 
             var go = Instantiate(prefabToUse, contentTransform);
             var slotUI = go.GetComponent<Store_Station_Content>();
-            slotUI.Init(item, OnSlotSelected, conditionsMet);
-        }
-
-        var firstItem = stationStoreItems.FirstOrDefault();
-        if (firstItem != null)
-        {
-            OnSlotSelected(firstItem);
+            slotUI.Init(item, selected => OnSlotSelected(selected, true), conditionsMet);
         }
     }
 
-    public bool AreConditionsMet(StoreItem item)
+    private bool AreConditionsMet(StoreItem item)
     {
         if (item.CsvData.Type == UnlockType.None) return true;
 
@@ -88,15 +91,18 @@ public class Store_StationScrollView : MonoBehaviour
                 return false;
             
             case UnlockType.Recipe:
-                return item.CsvData.Conditions.All(id => MenuManager.Instance.FindMenuById(id).isUnlocked);
+                return item.CsvData.Conditions.Any(id => MenuManager.Instance.FindMenuById(id).isUnlocked);
         }
         return false;
     }
 
-    private void OnSlotSelected(StoreItem item)
+    private void OnSlotSelected(StoreItem item, bool playSFX = true)
     {
-        EventBus.PlaySFX(SFXType.ButtonClick);
+        if (playSFX)
+            EventBus.PlaySFX(SFXType.ButtonClick);
+        
+        currentSelectedItem = item;
         bool canBePurchased = AreConditionsMet(item);
-        detailPanel.SetData(item, () => store.TryBuyItem(item), canBePurchased);
+        detailPanel.SetData(item, () => store?.TryBuyItem(item), canBePurchased);
     }
 }

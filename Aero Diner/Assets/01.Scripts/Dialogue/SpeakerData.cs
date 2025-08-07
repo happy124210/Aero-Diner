@@ -1,13 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
 
 public enum Expression
 {
     Default,
     Happy,
     Sad,
-    Angry
+    Angry,
+    Surprised,
 }
 
 [System.Serializable]

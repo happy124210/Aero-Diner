@@ -4,22 +4,16 @@ using System.Linq;
 /// <summary>
 /// 플레이어가 상호작용하면 재료를 가공하여 가공된 재료를 생성하는 스테이션
 /// 주요 기능:
-/// - PlaceIngredient(): 재료 오브젝트를 생성하고, 플레이어가 내려놓은 재료의 데이터를 바탕으로
-///   생성할 재료(selectedIngredient)와 가공 허용 재료 그룹(neededIngredients)을 동적으로 채움
 /// - Interact(): J 키를 누르는 동안 조리 타이머가 감소하며, 타이머가 다 되면 가공 처리
-/// - ProcessIngredient(): 조리가 완료되면 재료 오브젝트를 제거하고 결과 처리를 수행
 /// </summary>
 public class PassiveStation : BaseStation, IInteractable
 {
-    [Header("가공 허용 재료 그룹")]
-    public FoodData[] neededIngredients;
-
     /// <summary>
     /// 플레이어가 J 키 등으로 상호작용할 때 호출
     /// InteractionType.Use: 타이머 감소 및 조리 진행
     /// InteractionType.Stop: 조리 중단 및 사운드 정지
     /// </summary>
-    public void Interact(PlayerInventory playerInventory, InteractionType interactionType)
+    public new void Interact(PlayerInventory playerInventory, InteractionType interactionType)
     {
         if (interactionType == InteractionType.Use)
         {
@@ -30,7 +24,7 @@ public class PassiveStation : BaseStation, IInteractable
 
                 // 인스턴스 없으면 생성, 있으면 리셋
                 if (timer == null)
-                    timer = new CookingTimer(cookingTime);
+                    timer = new CookingTimer(cookedIngredient);
                 else
                     timer.Reset(); // 기존 타이머 유지하면서 리셋
 
@@ -71,7 +65,7 @@ public class PassiveStation : BaseStation, IInteractable
             isCooking = false;
             timer?.Stop(); // 타이머 멈춤
 
-            var sfx = StationSFXResolver.GetSFXFromStationData(stationData);
+            var sfx = StationSFXResolver.GetSFXFromStationData(StationData);
             EventBus.StopLoopSFX(sfx);
 
             if (showDebugInfo) Debug.Log($"[PassiveStation] 조리 중단됨 / 저장된 시간: {timer?.Remaining:F2}s");
@@ -94,7 +88,7 @@ public class PassiveStation : BaseStation, IInteractable
     private void ResetCookingTimer()
     {
         if (timer == null)
-            timer = new CookingTimer(cookingTime);
+            timer = new CookingTimer(cookedIngredient);
         else
             timer.Reset(); // 인스턴스 유지하며 초기화
 

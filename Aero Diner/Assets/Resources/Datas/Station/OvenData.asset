@@ -18,10 +18,10 @@ MonoBehaviour:
   stationType: 6
   workType: 1
   stationIcon: {fileID: 21300000, guid: d97a7a73078f3b347897860aa786eea4, type: 3}
-  description: "\uC624\uBE10 \uC785\uB2C8\uB2E4"
-  stationCost: 100
-  availableRecipes:
-  - {fileID: 11400000, guid: e2827eaaa1956f64c9bbdfa0172d943b, type: 2}
+  description: "\uC7AC\uB8CC\uB97C \uAD7D\uAC70\uB098 \uC775\uD788\uB294 \uC870\uB9AC
+    \uC124\uBE44.\n\uC628\uB3C4\uAC00 \uC77C\uC815\uD558\uAC8C \uC720\uC9C0\uB418\uC5B4
+    \uC548\uC815\uC801\uC73C\uB85C \uC775\uB294\uB2E4."
+  availableRecipes: []
   ingredientSlots: 2
   slotDisplays:
   - foodType: 4

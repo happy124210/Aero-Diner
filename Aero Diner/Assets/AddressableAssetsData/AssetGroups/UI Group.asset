@@ -67,6 +67,66 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 90142a11982d7b2428330ea3728ee241
+    m_Address: Assets/02.Prefabs/UI/WallPopupUI.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7005acc379c8d2a4ab7768cc88783035
+    m_Address: Assets/02.Prefabs/UI/UICanvas_DaySceneBtn.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: db44f1c37eca39e4f87a2496c8da76c1
+    m_Address: Assets/02.Prefabs/UI/TutorialUI/Tu1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2f95afbaad5372f4996b6945d7fa89bf
+    m_Address: Assets/02.Prefabs/UI/TutorialUI/tu2.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 12e1040d40fefa14983308670ca22f9f
+    m_Address: Assets/02.Prefabs/UI/TutorialUI/tu3.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 12d40f60e56d6224486c6b7805d9f255
+    m_Address: Assets/02.Prefabs/UI/TutorialUI/tu4.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3129bb9dea375cd4eb1e927e0de5f57b
+    m_Address: Assets/02.Prefabs/UI/TutorialUI/tu5.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f04148490cc3b954da489cb639d0a475
+    m_Address: Assets/02.Prefabs/UI/TutorialUI/tu6.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a60f6b8ce12321345b90aa10fdcbdb18
+    m_Address: Assets/02.Prefabs/UI/TutorialUI/tu7.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: daf970347a19a894a9ab386291b47029
+    m_Address: Assets/02.Prefabs/UI/TutorialUI/tu8.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cc280b02b3fba924eadf4197cfaf0cca
+    m_Address: Assets/02.Prefabs/UI/TutorialUI/Demo_End.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4d0374c7022fb7f4d80ba6839ba63c45
+    m_Address: Assets/02.Prefabs/UI/IngredientWarnPopup.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 0453cdc04330a03449ad1a1148e5f26b, type: 2}
   m_SchemaSet:

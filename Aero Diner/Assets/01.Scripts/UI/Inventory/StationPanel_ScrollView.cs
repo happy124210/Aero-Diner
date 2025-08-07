@@ -4,44 +4,58 @@ using System.Linq;
 public class StationPanel_ScrollView : MonoBehaviour
 {
     [SerializeField] private RectTransform contentTransform;
-    [SerializeField] private GameObject slotPrefab;
     [SerializeField] private StationPanel detailPanel;
-
-    private void Start()
+    [SerializeField] private GameObject noItemPanel;
+    [SerializeField] private GameObject stationSlotPrefab;
+    
+    private void OnEnable()
     {
-        PopulateScrollView();
+        if (StationManager.Instance != null)
+        {
+            StationManager.Instance.CalculateStationCounts(); 
+        }
+        
+        PopulateStationList();
     }
 
-    private void PopulateScrollView()
+    private void PopulateStationList()
     {
-        var allStations = Resources.LoadAll<StationData>("Datas/Station")
-            .Where(s => !string.IsNullOrEmpty(s.id) && s.id.StartsWith("s"))
+        foreach (Transform child in contentTransform)
+        {
+            Destroy(child.gameObject);
+        }
+        
+        var stations = StationManager.Instance.GetUnlockedStations()
             .OrderBy(s =>
             {
-                string numericPart = new string(s.id.Where(char.IsDigit).ToArray());
-                return int.TryParse(numericPart, out int number) ? number : int.MaxValue;
+                string numPart = new string(s.stationData.id.Where(char.IsDigit).ToArray());
+                return int.TryParse(numPart, out int n) ? n : int.MaxValue;
             })
+            .Select(s => s.stationData)
             .ToList();
-
-        StationPanel_ScrollView_Content firstSlot = null;
-
-        foreach (var station in allStations)
+        
+        // 아무 설비도 없음
+        if (!stations.Any())
         {
-            var go = Instantiate(slotPrefab, contentTransform);
+            detailPanel.gameObject.SetActive(false);
+            noItemPanel?.SetActive(true);
+            return;
+        }
+        
+        // 설비 있음
+        detailPanel.gameObject.SetActive(true);
+        noItemPanel?.SetActive(false);
+        
+        foreach (var station in stations)
+        {
+            var go = Instantiate(stationSlotPrefab, contentTransform);
             var slotUI = go.GetComponent<StationPanel_ScrollView_Content>();
             slotUI.Init(station, OnSlotSelected);
-
-            if (firstSlot == null)
-                firstSlot = slotUI;
         }
 
-        // 기본 선택
-        if (firstSlot != null)
-        {
-            detailPanel.SetData(firstSlot.GetStationData());
-        }
+        OnSlotSelected(stations.First());
     }
-
+    
     private void OnSlotSelected(StationData data)
     {
         detailPanel.SetData(data);
