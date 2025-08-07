@@ -26,27 +26,31 @@ public class LoadingManager : MonoBehaviour
         AsyncOperation asyncOp = SceneManager.LoadSceneAsync(targetScene);
         asyncOp.allowSceneActivation = false;
 
-        // 로딩 진행도 0 ~ 0.9 동안 업데이트
-        while (asyncOp.progress < 0.9f)
+        float elapsed = 0f;
+        float minLoadTime = 2f;
+
+        while (asyncOp.progress < 0.9f || elapsed < minLoadTime)
         {
-            float progress = Mathf.Clamp01(asyncOp.progress / 0.9f);
-            progressBar.value = progress;
+            elapsed += Time.deltaTime;
+
+            float rawProgress = asyncOp.progress / 0.9f;
+            float timeBasedProgress = Mathf.Clamp01(elapsed / minLoadTime);
+
+            float displayProgress = Mathf.Min(rawProgress, timeBasedProgress);
+            progressBar.value = displayProgress;
+
             yield return null;
         }
 
-        // 로딩 완료 → 진행바 100%, 텍스트 활성화
+        // 로딩 완료 처리
         progressBar.value = 1f;
-          // 클릭 대기 전 준비
         isClicked = false;
-           // 예: "화면을 클릭하세요" 텍스트 표시 등 UI 처리
-        //Debug.Log("로딩 완료. 클릭을 기다립니다.");
 
-        yield return new WaitUntil(() => isClicked); // 클릭 기다림
-        // 클릭 시점까지 대기 & 전환
+        yield return new WaitUntil(() => isClicked);
         StartCoroutine(WaitForClickThenFadeOutAndActivate(asyncOp));
     }
 
-     private void Update()
+    private void Update()
      {
          if (!isClicked && Input.GetMouseButtonDown(0))
          { 
