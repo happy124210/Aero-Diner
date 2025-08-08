@@ -74,6 +74,8 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
         currentFoodObj = null;
     }
 
+    public bool CanPlace() => currentFoodObj != null;
+    
     #endregion
     
     private GameObject CreateMenuDisplay(FoodData data)

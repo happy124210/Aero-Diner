@@ -158,9 +158,10 @@ public class PlayerInventory : MonoBehaviour
 
         switch (target)
         {
-            // IPlaceableStation 인터페이스 처리
+            // 놓을 수 없음 처리
             case IPlaceableStation when target is BaseStation station && !station.CanPlaceIngredient(HoldingFood.foodData) 
-                                        || target is Shelf shelf && !shelf.CanPlaceIngredient(HoldingFood.foodData):
+                                        || target is Shelf shelf && !shelf.CanPlaceIngredient(HoldingFood.foodData) 
+                                        || target is Table table && !table.CanPlace():
             {
                 if (showDebugInfo) Debug.Log($"[Inventory] {target.GetType().Name}에 재료({HoldingFood.foodData.foodName})를 놓을 수 없습니다.");
                 return;
