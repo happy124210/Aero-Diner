@@ -60,7 +60,7 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
     
     public void PlaceObject(FoodData data)
     {
-        if (currentFoodObj) return;
+        if (currentFoodObj || currentFoodData) return;
         currentFoodObj = CreateMenuDisplay(data);
         currentFoodData = currentFoodObj.GetComponent<FoodDisplay>().foodData;
         
@@ -72,9 +72,20 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
     public void OnPlayerPickup()
     {
         currentFoodObj = null;
+        currentFoodData = null;
     }
 
-    public bool CanPlace() => currentFoodObj != null;
+    public bool CanPlaceIngredient(FoodData data)
+    {
+        if (currentFoodData != null)
+        {
+            if (showDebugInfo) Debug.Log("[Shelf] 이미 항목이 배치되어 있습니다.");
+            return false;
+        }
+
+        if (showDebugInfo) Debug.Log($"[Shelf] '{data.displayName}' 배치 가능");
+        return true;
+    }
     
     #endregion
     
@@ -108,6 +119,7 @@ public class Table : MonoBehaviour, IInteractable, IPlaceableStation
     {
         Destroy(currentFoodObj);
         currentFoodObj = null;
+        currentFoodData = null;
     }
     
     #region Public getters & methods
