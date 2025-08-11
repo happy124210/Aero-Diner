@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: s11
   stationName: AutoCutter
-  displayName: "\uC804\uB3D9 \uCC44\uCE7C"
+  displayName: "\uC790\uB3D9 \uC2AC\uB77C\uC774\uC11C"
   stationType: 0
   workType: 1
   stationIcon: {fileID: 21300000, guid: 41909a59935871047b0f032faba2487a, type: 3}
-  description: "\uCC44\uC18C\uB97C \uC790\uB3D9\uC73C\uB85C \uC370\uC5B4\uC8FC\uB294
-    \uC7A5\uBE44.\n\uC2A4\uC2A4\uB85C \uC7AC\uB8CC\uB97C \uC798\uAC8C \uC190\uC9C8\uD55C\uB2E4."
+  description: "\uC7AC\uB8CC\uB97C \uC790\uB3D9\uC73C\uB85C \uC370\uC5B4\uC8FC\uB294
+    \uC7A5\uBE44.\n\uB3C4\uB9C8\uC758 \uC790\uB3D9 \uBC84\uC804."
   availableRecipes: []
   ingredientSlots: 1
   slotDisplays:

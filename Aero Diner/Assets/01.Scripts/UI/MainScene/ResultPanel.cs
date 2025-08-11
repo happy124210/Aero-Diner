@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ResultPanel : MonoBehaviour
 {
@@ -12,16 +13,19 @@ public class ResultPanel : MonoBehaviour
     [SerializeField] TextMeshProUGUI totalSalesVolume;
     [SerializeField] TextMeshProUGUI totalRevenue;
     public TextMeshProUGUI TotalRevenueText => totalRevenue;
+    [SerializeField] private TextMeshProUGUI bonusRevenue;
     
     [Header("Customer Result")]
     [SerializeField] TextMeshProUGUI allCustomer;
     [SerializeField] TextMeshProUGUI servedCustomer;
     [SerializeField] TextMeshProUGUI goneCustomer;
 
+    [Header("UI 참조")]
     [SerializeField] public CanvasGroup canvasGroup;
     [SerializeField] private RectTransform panelTransform;
+    
     private Vector2 originalPos;
-    private bool isShown = false;
+    private bool isShown;
 
     private void Awake()
     {
@@ -47,21 +51,27 @@ public class ResultPanel : MonoBehaviour
     
     private void HandleUIEvent(UIEventType eventType, object payload)
     {
-        if (eventType == UIEventType.ShowResultPanel && GameManager.Instance.CurrentPhase != GamePhase.Dialogue)
+        if (eventType == UIEventType.ShowResultPanel && !isShown)
         {
+            isShown = true;
             ShowPanel();
         }
     }
     
     private void ShowPanel()
     {
-        if (isShown) return;
-        isShown = true;
-
-        panelTransform.anchoredPosition = originalPos + new Vector2(0, 800f);
-
         Init();
-        StartCoroutine(DelayedAnimate());
+        panelTransform.anchoredPosition = originalPos + new Vector2(0, 800f);
+        
+        Sequence seq = DOTween.Sequence();
+        seq.Append(canvasGroup.DOFade(1f, 0.7f));
+        seq.Join(panelTransform.DOAnchorPos(originalPos, 0.5f).SetEase(Ease.OutBack));
+        seq.OnComplete(() =>
+        {
+            StartAllAnimations();
+            canvasGroup.interactable = true;
+            EventBus.OnBGMRequested(BGMEventType.PlayResultTheme);
+        });
     }
 
     public void OnNextButtonClick()
@@ -75,35 +85,37 @@ public class ResultPanel : MonoBehaviour
     }
     
     #region 통계 연결 & 애니메이션
-    public void Init()
+
+    private void Init()
     {
         totalSalesVolume.text = "0";
         totalRevenue.text = "0";
+        bonusRevenue.text = "보너스 +0";
         allCustomer.text = "0";
         servedCustomer.text = "0";
         goneCustomer.text = "0";
         
-        SetSalesResult();
-        SetCustomerResult();
-    }
-    
-    private IEnumerator DelayedAnimate()
-    {
-        yield return new WaitForSeconds(1f); 
-        AnimateEntrance(); 
-    }
-    
-    private void SetSalesResult()
-    {
         foreach (Transform child in contentTransform)
         {
             Destroy(child.gameObject);
         }
-
+    }
+    
+    private void StartAllAnimations()
+    {
+        SetSalesResult();
+        SetCustomerResult();
+    }
+    
+    private void SetSalesResult()
+    {
         var salesResults = MenuManager.Instance.GetAllMenuSalesData();
         if (salesResults == null) return;
 
-        float delay = 1.5f;
+        float initialDelay = 0.5f;
+        float numberAnimationDuration = 1.2f;
+
+        // 메뉴별 판매량 UI
         foreach (var sales in salesResults)
         {
             var go = Instantiate(contentPrefab, contentTransform);
@@ -111,8 +123,7 @@ public class ResultPanel : MonoBehaviour
             foodUI.SetData(sales);
             
             var cg = go.GetComponent<CanvasGroup>();
-            if (cg == null)
-                cg = go.AddComponent<CanvasGroup>();
+            if (!cg) cg = go.AddComponent<CanvasGroup>();
 
             RectTransform rt = go.GetComponent<RectTransform>();
             rt.anchoredPosition += new Vector2(0, 100f);
@@ -120,20 +131,28 @@ public class ResultPanel : MonoBehaviour
             rt.localScale = Vector3.one * 0.8f;
 
             DOTween.Sequence()
-                .AppendInterval(delay)
+                .AppendInterval(initialDelay)
                 .Append(cg.DOFade(1f, 0.3f))
                 .Join(rt.DOAnchorPosY(rt.anchoredPosition.y - 100f, 0.3f).SetRelative().SetEase(Ease.OutQuad))
                 .Join(rt.DOScale(1f, 0.3f).SetEase(Ease.OutBack));
 
-            delay += 0.05f;
+            initialDelay += 0.05f;
         }
-
+        
         int totalSales = MenuManager.Instance.GetTotalSalesToday();
+        int baseRev = MenuManager.Instance.GetBaseTotalRevenueToday();
         int totalRev = MenuManager.Instance.GetTotalRevenueToday();
+        int bonusRev = totalRev - baseRev;
 
-        // 가장 마지막에 등장하는 메뉴 아이템 애니메이션이 끝난 후 총합 애니메이션 시작
-        AnimateNumber(totalSalesVolume, totalSales, delay);
-        AnimateNumber(totalRevenue, totalRev, delay);
+        // 기본 수익
+        float baseRevenueDelay = initialDelay;
+        AnimateNumber(totalSalesVolume, totalSales, baseRevenueDelay, numberAnimationDuration);
+        AnimateNumber(totalRevenue, baseRev, baseRevenueDelay, numberAnimationDuration);
+
+        // 추가 수익
+        float bonusDelay = baseRevenueDelay + numberAnimationDuration + 0.5f;
+        AnimateBonusNumber(bonusRevenue, bonusRev, bonusDelay, numberAnimationDuration);
+        EventBus.OnSFXRequested(SFXType.CustomerPay);
     }
     
     private void SetCustomerResult()
@@ -142,7 +161,7 @@ public class ResultPanel : MonoBehaviour
         int served = RestaurantManager.Instance.CustomersServed;
         int gone = all - served;
 
-        float delay = 1.5f;
+        float delay = 0.5f;
         AnimateNumber(allCustomer, all, delay);
         delay += 0.3f;
         AnimateNumber(servedCustomer, served, delay);
@@ -150,24 +169,26 @@ public class ResultPanel : MonoBehaviour
         AnimateNumber(goneCustomer, gone, delay);
     }
     
-    private void AnimateEntrance()
-    {
-        if (!canvasGroup || !panelTransform) return;
-
-        DG.Tweening.Sequence seq = DOTween.Sequence();
-        seq.Append(canvasGroup.DOFade(1f, 0.7f));
-        seq.Join(panelTransform.DOAnchorPos(originalPos, 0.5f).SetEase(Ease.OutBack));
-        seq.OnComplete(() => canvasGroup.interactable = true);
-        EventBus.OnBGMRequested(BGMEventType.PlayResultTheme);
-
-    }
     private void AnimateNumber(TextMeshProUGUI targetText, int finalValue, float delay = 0f, float duration = 1.2f)
     {
+        if (!targetText) return;
         DOVirtual.DelayedCall(delay, () =>
         {
             DOVirtual.Int(0, finalValue, duration, value =>
             {
-                targetText.text = value.ToString();
+                targetText.text = value.ToString("N0");
+            }).SetEase(Ease.OutQuad);
+        });
+    }
+    
+    private void AnimateBonusNumber(TextMeshProUGUI targetText, int finalValue, float delay = 0f, float duration = 1.2f)
+    {
+        if (!targetText) return;
+        DOVirtual.DelayedCall(delay, () =>
+        {
+            DOVirtual.Int(0, finalValue, duration, value =>
+            {
+                targetText.text = $"보너스 +{value:N0}";
             }).SetEase(Ease.OutQuad);
         });
     }
