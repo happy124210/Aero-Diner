@@ -85,12 +85,13 @@ public enum UIEventType
     ShowStartMenuNoSave, LoadMainScene,
     QuitGame, ShowPressAnyKey,LoadDayScene,
     LoadIntroScene,
+    
     //MainSceneUI
     ShowRoundTimer, HideRoundTimer,
     UpdateTotalEarnings, UpdateTodayEarnings,
     ShowMenuPanel, UpdateMenuPanel, HideMenuPanel, 
     ShowResultPanel, HideResultPanel, 
-    ShowOrderPanel, HideOrderPanel,
+    ShowOrderPanel, HideOrderPanel, UpdateBonusText,
     ShowWallPopup, HideWallPopup,
     ShowIngredientWarn,
 

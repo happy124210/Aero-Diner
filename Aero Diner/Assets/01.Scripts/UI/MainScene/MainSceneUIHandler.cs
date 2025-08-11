@@ -28,18 +28,9 @@ public class MainSceneUIHandler : IUIEventHandler
                 }
                 return true;
 
-
-
             case UIEventType.ShowResultPanel:
                 foreach (var ui in sceneUIs)
-                {
-                    var resultPanel = ui?.GetComponentInChildren<ResultPanel>(true);
-                    if (resultPanel != null)
-                    {
-                        resultPanel.gameObject.SetActive(true);
-                        resultPanel.Init();
-                    }
-                }
+                    ui?.GetComponentInChildren<ResultPanel>(true)?.gameObject.SetActive(true);
                 return true;
 
             case UIEventType.HideResultPanel:

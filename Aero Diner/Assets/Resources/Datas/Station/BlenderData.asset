@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: s12
   stationName: Blender
-  displayName: "\uBBF9\uC11C\uAE30"
+  displayName: "\uC790\uB3D9 \uBBF9\uC11C\uAE30"
   stationType: 4
   workType: 1
   stationIcon: {fileID: 21300000, guid: 0daf54b6eeb63e647887184c71245b0e, type: 3}
   description: "\uD68C\uC804 \uB0A0\uC744 \uC774\uC6A9\uD574 \uC7AC\uB8CC\uB97C \uACF1\uAC8C
-    \uAC08\uC544\uB0B4\uB294 \uB3C4\uAD6C.\n\uC2A4\uC2A4\uB85C \uC7AC\uB8CC\uB97C
-    \uACF1\uAC8C \uBD84\uC1C4\uD55C\uB2E4."
+    \uAC08\uC544\uB0B4\uB294 \uB3C4\uAD6C.\n\uB9C9\uC790 \uC0AC\uBC1C\uC758 \uC790\uB3D9
+    \uBC84\uC804."
   availableRecipes: []
   ingredientSlots: 3
   slotDisplays:

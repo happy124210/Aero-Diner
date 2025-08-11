@@ -25,6 +25,12 @@ public class DeleteGridCell : MonoBehaviour
             DeleteChildStations();
         }
     }
+    
+    public bool HasStationToBeDeleted()
+    {
+        return GetComponentsInChildren<Transform>()
+            .Any(t => t.CompareTag("Station") || t.GetComponent<IMovableStation>() != null);
+    }
 
     /// <summary>
     /// 자식 중 Station 태그를 가진 오브젝트를 모두 삭제
@@ -41,11 +47,5 @@ public class DeleteGridCell : MonoBehaviour
 #endif
             }
         }
-    }
-    // 외부에서 확인 가능한 검사용 메서드 추가
-    public bool HasStationToBeDeleted()
-    {
-        return GetComponentsInChildren<Transform>()
-            .Any(t => t.CompareTag("Station") || t.GetComponent<IMovableStation>() != null);
     }
 }
