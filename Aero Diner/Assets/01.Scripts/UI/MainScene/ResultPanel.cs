@@ -85,11 +85,12 @@ public class ResultPanel : MonoBehaviour
     }
     
     #region 통계 연결 & 애니메이션
-    public void Init()
+
+    private void Init()
     {
         totalSalesVolume.text = "0";
         totalRevenue.text = "0";
-        bonusRevenue.text = "+ 0";
+        bonusRevenue.text = "보너스 +0";
         allCustomer.text = "0";
         servedCustomer.text = "0";
         goneCustomer.text = "0";
