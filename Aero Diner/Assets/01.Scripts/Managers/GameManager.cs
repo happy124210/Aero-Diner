@@ -130,10 +130,18 @@ public class GameManager : Singleton<GameManager>
     {
         if (eventType == UIEventType.HideResultPanel)
         {
+            int baseRev = MenuManager.Instance.GetBaseTotalRevenueToday();
+            int totalRev = MenuManager.Instance.GetTotalRevenueToday();
+            int bonusRev = totalRev - baseRev;
+
+            if (bonusRev > 0)
+            {
+                AddMoney(bonusRev, false);
+            }
+
             int earningsFromDay = RestaurantManager.Instance.TodayEarnings;
             EndDayCycle(earningsFromDay);
             EventBus.RaiseFadeEvent(FadeEventType.FadeOutAndLoadScene, new FadeEventPayload(scene: StringScene.DAY_SCENE));
-        
         }
     }
     
@@ -210,11 +218,11 @@ public class GameManager : Singleton<GameManager>
     
     #region 데이터 관리 (돈, 날짜, 저장/불러오기)
 
-    public void AddMoney(int amount)
+    public void AddMoney(int amount, bool isSound = true)
     {
         totalEarnings += amount;
         EventBus.Raise(UIEventType.UpdateTotalEarnings, TotalEarnings);
-        EventBus.OnSFXRequested(SFXType.CustomerPay);
+        if (isSound) EventBus.OnSFXRequested(SFXType.CustomerPay);
     }
 
     // 강제로 해당 amount로 지정. 사용에 주의할 것 !!!

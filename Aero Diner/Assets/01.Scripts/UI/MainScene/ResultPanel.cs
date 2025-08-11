@@ -51,21 +51,27 @@ public class ResultPanel : MonoBehaviour
     
     private void HandleUIEvent(UIEventType eventType, object payload)
     {
-        if (eventType == UIEventType.ShowResultPanel && GameManager.Instance.CurrentPhase != GamePhase.Dialogue)
+        if (eventType == UIEventType.ShowResultPanel && !isShown)
         {
+            isShown = true;
             ShowPanel();
         }
     }
     
     private void ShowPanel()
     {
-        if (isShown) return;
-        isShown = true;
-
-        panelTransform.anchoredPosition = originalPos + new Vector2(0, 800f);
-
         Init();
-        StartCoroutine(DelayedAnimate());
+        panelTransform.anchoredPosition = originalPos + new Vector2(0, 800f);
+        
+        Sequence seq = DOTween.Sequence();
+        seq.Append(canvasGroup.DOFade(1f, 0.7f));
+        seq.Join(panelTransform.DOAnchorPos(originalPos, 0.5f).SetEase(Ease.OutBack));
+        seq.OnComplete(() =>
+        {
+            StartAllAnimations();
+            canvasGroup.interactable = true;
+            EventBus.OnBGMRequested(BGMEventType.PlayResultTheme);
+        });
     }
 
     public void OnNextButtonClick()
@@ -88,27 +94,24 @@ public class ResultPanel : MonoBehaviour
         servedCustomer.text = "0";
         goneCustomer.text = "0";
         
-        SetSalesResult();
-        SetCustomerResult();
-    }
-    
-    private IEnumerator DelayedAnimate()
-    {
-        yield return new WaitForSeconds(1f); 
-        AnimateEntrance(); 
-    }
-    
-    private void SetSalesResult()
-    {
         foreach (Transform child in contentTransform)
         {
             Destroy(child.gameObject);
         }
-
+    }
+    
+    private void StartAllAnimations()
+    {
+        SetSalesResult();
+        SetCustomerResult();
+    }
+    
+    private void SetSalesResult()
+    {
         var salesResults = MenuManager.Instance.GetAllMenuSalesData();
         if (salesResults == null) return;
 
-        float initialDelay = 1.5f;
+        float initialDelay = 0.5f;
         float numberAnimationDuration = 1.2f;
 
         // 메뉴별 판매량 UI
@@ -148,14 +151,7 @@ public class ResultPanel : MonoBehaviour
         // 추가 수익
         float bonusDelay = baseRevenueDelay + numberAnimationDuration + 0.5f;
         AnimateBonusNumber(bonusRevenue, bonusRev, bonusDelay, numberAnimationDuration);
-        
-        DOVirtual.DelayedCall(bonusDelay, () =>
-        {
-            if (bonusRev > 0)
-            {
-                GameManager.Instance.AddMoney(bonusRev);
-            }
-        });
+        EventBus.OnSFXRequested(SFXType.CustomerPay);
     }
     
     private void SetCustomerResult()
@@ -164,7 +160,7 @@ public class ResultPanel : MonoBehaviour
         int served = RestaurantManager.Instance.CustomersServed;
         int gone = all - served;
 
-        float delay = 1.5f;
+        float delay = 0.5f;
         AnimateNumber(allCustomer, all, delay);
         delay += 0.3f;
         AnimateNumber(servedCustomer, served, delay);
@@ -172,17 +168,6 @@ public class ResultPanel : MonoBehaviour
         AnimateNumber(goneCustomer, gone, delay);
     }
     
-    private void AnimateEntrance()
-    {
-        if (!canvasGroup || !panelTransform) return;
-
-        Sequence seq = DOTween.Sequence();
-        seq.Append(canvasGroup.DOFade(1f, 0.7f));
-        seq.Join(panelTransform.DOAnchorPos(originalPos, 0.5f).SetEase(Ease.OutBack));
-        seq.OnComplete(() => canvasGroup.interactable = true);
-        EventBus.OnBGMRequested(BGMEventType.PlayResultTheme);
-
-    }
     private void AnimateNumber(TextMeshProUGUI targetText, int finalValue, float delay = 0f, float duration = 1.2f)
     {
         if (!targetText) return;
