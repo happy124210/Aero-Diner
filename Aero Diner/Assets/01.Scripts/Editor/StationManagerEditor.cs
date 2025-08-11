@@ -14,7 +14,7 @@ public class StationManagerEditor : Editor
 
         if (GUILayout.Button("스테이션 프리팹 자동 로드"))
         {
-            string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/02.Prefabs/Station/Station" });
+            string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Resources/Prefabs/Stations" });
             List<GameObject> loadedPrefabs = new();
 
             foreach (string guid in guids)

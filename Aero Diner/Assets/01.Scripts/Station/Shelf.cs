@@ -58,7 +58,7 @@ public class Shelf : MonoBehaviour, IPlaceableStation, IMovableStation
         CreateIngredientDisplay(data);
     }
 
-    // IIngredientData 전반을 검사
+    // FoodData 전반을 검사
     public bool CanPlaceIngredient(FoodData data)
     {
         if (currentData != null)
