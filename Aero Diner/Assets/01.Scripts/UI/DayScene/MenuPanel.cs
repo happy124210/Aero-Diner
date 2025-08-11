@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Threading.Tasks;
+using TMPro;
 
 public class MenuPanel : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class MenuPanel : MonoBehaviour
     [SerializeField] private GameObject deleteWarningPopup;
     [SerializeField] private GameObject warningPopup; // 팝업 루트
     [SerializeField] private CanvasGroup warningPopupCanvas; // 팝업의 CanvasGroup
+    [SerializeField] private TextMeshProUGUI bonusRevenueText;
     
     [Header("DOTween 설정")]
     [SerializeField] private float popupFadeDuration = 0.5f;
@@ -48,6 +50,31 @@ public class MenuPanel : MonoBehaviour
             canvasGroup.alpha = 0f;
 
         StartCoroutine(DelayedAnimateEntrance());
+        
+        EventBus.OnUIEvent += HandleUIEvent;
+        UpdateBonusText();
+    }
+    
+    private void OnDisable()
+    {
+        EventBus.OnUIEvent -= HandleUIEvent;
+    }
+    
+    private void HandleUIEvent(UIEventType type, object payload)
+    {
+        if (type == UIEventType.UpdateBonusText)
+        {
+            UpdateBonusText();
+        }
+    }
+    
+    private void UpdateBonusText()
+    {
+        if (bonusRevenueText && MenuManager.Instance)
+        {
+            int bonus = MenuManager.Instance.GetBonusRevenuePercentage();
+            bonusRevenueText.text = $"보너스 수익: {bonus}%";
+        }
     }
 
     public void GenerateFoodList()

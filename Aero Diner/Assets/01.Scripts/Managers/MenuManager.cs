@@ -45,10 +45,17 @@ public class MenuManager : Singleton<MenuManager>
 
     // 전체 판매량 / 판매액 조회
     public int GetTotalSalesToday() => todayMenuSales.Values.Sum();
-    public int GetTotalRevenueToday() => todayMenuIds.Sum(GetTodayMenuRevenue);
+    public int GetBaseTotalRevenueToday() => todayMenuIds.Sum(menuId => GetTodayMenuSales(menuId) * GetMenuPrice(menuId));
+    public int GetTotalRevenueToday()
+    {
+        int baseRevenue = GetBaseTotalRevenueToday();
+        float bonusMultiplier = GetBonusMultiplier();
+        return Mathf.RoundToInt(baseRevenue * bonusMultiplier);
+    }
 
     // 메뉴별 판매량 / 판매액 조회
     public int GetTodayMenuSales(string menuId) => todayMenuSales.GetValueOrDefault(menuId, 0);
+    
     public int GetTodayMenuRevenue(string menuId)
     {
         int soldCount = GetTodayMenuSales(menuId);
@@ -57,6 +64,21 @@ public class MenuManager : Singleton<MenuManager>
     }
     private int GetMenuPrice(string menuId) => FindMenuById(menuId)?.Price ?? 0;
     
+    
+    // 보너스 수익률 계산
+    public int GetBonusRevenuePercentage()
+    {
+        if (todayMenuIds.Count <= 1)
+        {
+            return 0;
+        }
+        return (todayMenuIds.Count - 1) * 10;
+    }
+    
+    private float GetBonusMultiplier()
+    {
+        return 1f + (GetBonusRevenuePercentage() / 100f);
+    }
     
     // 튜토리얼용
     public bool IsMenuSelected(string menuId) => FindMenuById(menuId).isSelected;
@@ -187,6 +209,7 @@ public class MenuManager : Singleton<MenuManager>
         if (showDebugInfo) Debug.Log($"[MenuManager]: 오늘 메뉴 - {todayMenuIds.Count}개");
         
         UpdateTodayStats();
+        EventBus.Raise(UIEventType.UpdateBonusText);
     }
 
     /// <summary>
