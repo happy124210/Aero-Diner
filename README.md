@@ -1,6 +1,107 @@
 # 🍳 프로젝트: Aero Diner
 
-Unity로 개발한 Top-down 시점의 레스토랑 타이쿤 게임입니다. 플레이어는 주방장이 되어 제한 시간 내에 손님들의 주문을 받고, 레시피에 맞춰 요리를 만들어 판매하며 식당을 성장시켜야 합니다.
+<img width="2000" height="1125" alt="1" src="https://github.com/user-attachments/assets/c229fdf4-fbf0-4922-a1af-1377b8f80cd5" />
+
+<details>
+<summary>&nbsp; 게임 소개</summary>
+<br>
+
+| 장르 | 2D / 요리 / 타이쿤 / 도트 / 탑뷰 |
+| --- | --- |
+| 플랫폼 | PC |
+| 플레이 시간 | 30분 ~ 1시간 (데모 기준) |
+
+</details>
+
+<details>
+<summary>&nbsp; 게임 목표</summary>
+<br>
+
+- 스토리를 따라 비행선 식당을 경영 및 부흥시키는 것이 목표입니다.
+- 매 일차마다 일상 → 영업 → 결산 → 일자 변경 순으로 흐름이 진행됩니다.
+- 골드를 재화로 사용합니다.
+
+</details>
+
+<details>
+<summary>&nbsp; 튜토리얼</summary>
+<br>
+
+<img width="2000" height="1125" alt="2" src="https://github.com/user-attachments/assets/7f6fefe7-7b4e-4bf1-ba53-1e2bae5bd14c" />
+
+
+- 게임 진행에 필요한 기본 지식을 알려주기 위한 튜토리얼 입니다.
+- 이동, 재료 가공 및 조리, 서빙과 같은 기본적인 동작부터 상점 이용, 설비 관리 등 재화 사용처에 대한 지식을 안내합니다.
+
+</details>
+
+<details>
+<summary>&nbsp; 일상 단계</summary>
+<br>
+
+<img width="2000" height="1125" alt="3" src="https://github.com/user-attachments/assets/498d6332-3806-4b33-bb46-2e228d49110d" />
+
+
+- 오늘의 영업에 사용할 레시피, 설비를 준비하거나 구매하는 단계입니다.
+
+**상점**
+- 상점에서는 골드를 소모하여 레시피나 설비를 구입할 수 있습니다.
+- 일부 레시피, 설비는 구입하려면 선행 조건을 달성해야 합니다. 특정 레시피를 구입하거나 퀘스트를 클리어 해야 해금됩니다.
+- 레시피는 1회만 구입 가능하지만 설비는 횟수 제한 없이 구매 가능합니다.
+- 만약 구입에 필요한 골드가 부족하다면 관련 팝업 메시지로 안내됩니다.
+- 구입한 설비는 맵 우측의 창고에 배치되며, 만약 빈 공간이 없다면 관련 팝업 메시지로 안내됩니다.
+
+**인벤토리**
+- 인벤토리에서는 보유한 재료, 설비, 레시피에 대한 정보를 확인할 수 있습니다.
+- 재료탭에서는 자신이 사용할 수 있는 재료의 종류를 확인할 수 있으며, 추후 재고 시스템이 추가될 경우 활용될 재고 수량 안내 정보 역시 존재합니다.
+- 설비 탭에서는 자신이 보유한 설비 목록을 확인할 수 있으며, 각 설비의 배치/보관 수량 역시 표시됩니다.
+- 레시피 탭에서는 자신이 보유한 레시피 목록을 확인할 수 있으며, 각 레시피에 필요한 재료와 조리 방법을 확인할 수 있습니다.
+
+**설비 배치**
+- 각 설비를 원하는 위치에 배치할 수 있으며, 설비를 들고 있는 동안 배치 그리드가 표시됩니다.
+- 좌측 수거 구역에 배치된 설비는 영업이 시작될 때 제거되며, 영업 시작 전 설비 제거에 대한 경고 팝업 메시지가 출력됩니다.
+- 우측 창고 구역에 배치된 설비는 영업 동안엔 표시되지 않고 보관됩니다. 상점에서 구입한 설비 역시 이곳에 보관됩니다.
+
+</details>
+
+<details>
+<summary>&nbsp; 영업 단계</summary>
+<br>
+
+<img width="2000" height="1125" alt="4" src="https://github.com/user-attachments/assets/67875e58-7124-46e7-b175-85e4d2bf9af8" />
+
+
+- 손님이 방문하여 오늘의 메뉴 중 자신이 원하는 것을 주문하고 기다립니다. 플레이어는 손님이 떠나기 전 해당 요리를 만들고 서빙하여 골드를 벌어들일 수 있습니다.
+
+**오늘의 메뉴**
+- 오늘 영업에 사용할 레시피를 선택할 수 있으며, 손님들 역시 해당 목록 내에서만 주문합니다.
+- 우하단 시작 하기 버튼 클릭 시, 영업 단계가 시작됩니다.
+
+**손님**
+- 손님은 일정 주기마다 가게에 방문하며 빈 자리가 있다면 그곳에 착석합니다.
+- 자리가 없다면 줄을 서서 빈 자리가 생기는 것을 인내심이 고갈될 때까지 기다립니다. 빈 자리가 생길 시, 먼저 줄을 선 손님부터 착석 및 인내심이 초기화됩니다.
+- 착석한 손님은 오늘의 메뉴 중 원하는 것을 주문한 뒤, 인내심이 고갈될 때까지 기다립니다.
+- 인내심이 고갈되기 전에 요리를 서빙 받았다면 몇 초간 식사 후 재화를 지불하며 가게를 떠납니다.
+- 요리를 제때 제공받지 못해 인내심이 고갈되었다면 즉시 가게를 떠납니다.
+
+**설비**
+- 각 설비마다 가공 가능한 재료의 종류 및 숫자가 다릅니다.
+- 모든 설비는 재료 배치 후 일정 시간 동안 가공해야 결과물을 획득할 수 있습니다.
+- 수동 설비는 재료 배치 후 플레이어가 직접 가공 과정을 거쳐야 하지만 자동 설비는 재료만 배치하면 스스로 가공을 진행합니다.
+
+</details>
+
+<details>
+<summary>&nbsp; 결산</summary>
+<br>
+
+<img width="2000" height="1125" alt="5" src="https://github.com/user-attachments/assets/47773524-b7ea-4330-9ed3-2dba2e96b50f" />
+
+
+- 그날의 영업을 통해 벌어들인 금액, 방문 손님 숫자 등 정보를 확인할 수 있는 창입니다.
+- 각 메뉴의 판매 숫자 및 수익, 손님 방문 및 대응 여부에 따른 숫자를 확인할 수 있습니다.
+
+</details>
 
 
 ## 🧑🏻‍🍳 플레이 방법
@@ -20,12 +121,44 @@ Unity로 개발한 Top-down 시점의 레스토랑 타이쿤 게임입니다. �
 <img width="1298" height="249" alt="CustomerAI" src="https://github.com/user-attachments/assets/20191318-3e27-4012-bd6b-886790fcabec" />
 
 
+<img width="1298" height="249" alt="Component 20" src="https://github.com/user-attachments/assets/3443403f-6c69-44bb-949e-12a4a7666d1d" />
+
+
+<img width="1298" height="249" alt="Component 21" src="https://github.com/user-attachments/assets/3bd5c652-2ec5-48a2-8823-beb27fb1d7ee" />
+
+
+
 <img width="1298" height="249" alt="DataDrivenSystem" src="https://github.com/user-attachments/assets/f9a3019b-0a6a-4579-bd40-62cafa8d8c0b" />
 
 
 <img width="1298" height="249" alt="IMGUISystem" src="https://github.com/user-attachments/assets/083919db-70f3-40f0-bda3-562c2ac59391" />
 
+  
 
+## 🏗️ 프로젝트 구조
+
+| **구분** | **주요 스크립트** | **설명** |
+|---|---|---|
+| **Core & Managers** | `GameManager`, `UIManager`, `SaveLoadManager`, `PoolManager`, `EventBus`, `RecipeManager`, `StoryManager`, `QuestManager` | 게임의 핵심 로직, 데이터, 씬 관리 등 전반적인 시스템을 담당하는 매니저 그룹입니다. |
+| **Player** | `PlayerController`, `PlayerInventory`, `PlayerInputActions.cs` | 플레이어의 입력 처리, 이동, 애니메이션, 아이템 소지 및 상호작용을 관리합니다. |
+| **Customer** | `CustomerController`, `CustomerState`, `CustomerSpawner`, `TableManager`, `CustomerData.cs` | 손님의 상태 머신 기반 AI, 생성, 테이블 배치, 대기열 시스템 등 손님 관련 로직을 담당합니다. |
+| **Station** | `BaseStation`, `IInteractable`, `PassiveStation`, `AutomaticStation`, `IngredientStation`, `StationData.cs` | 모든 조리대와 선반의 상호작용, 재료 조합, 요리 진행 과정을 처리하며, 모든 데이터는 `StationData` ScriptableObject 기반으로 관리됩니다. |
+| **UI System** | `UIManager`, `OverSceneUIHandler`, `KeyRebindManager`, `Store.cs`, `Inventory.cs` | Addressable로 씬별 UI를 로드하고, `EventBus`로 이벤트를 처리합니다. 설정, 상점, 인벤토리 등 모든 UI 패널을 포함합니다. |
+| **Data & Utils** | `SaveData.cs`, `CSVImporter.cs`, `StringNamespace.cs`, `VisualObjectFactory.cs` | 게임 저장 데이터 구조, CSV 데이터 임포터, 문자열 상수, 동적 오브젝트 생성 등 프로젝트 전반에서 사용되는 유틸리티와 데이터 구조를 정의합니다. |
+
+## 🛠️ 기술 스택
+
+* **Unity 2022.3.17f1**
+
+* **C# 11**
+
+* **Unity New Input System**: 유연한 키 입력 및 리바인딩 처리
+
+* **Addressable Asset System**: UI 에셋의 비동기 로딩 및 메모리 관리
+
+* **Newtonsoft.Json**: 게임 데이터의 안정적인 직렬화/역직렬화
+
+* **DOTween**: UI 애니메이션 및 동적 연출
 
 ## ✨ 주요 기능
 
@@ -70,39 +203,12 @@ Unity로 개발한 Top-down 시점의 레스토랑 타이쿤 게임입니다. �
 * **구매 및 해금 로직**: `Store.cs`에서 플레이어의 소지금(`GameManager.TotalEarnings`)을 확인하여 구매 가능 여부를 판단하고, 구매 시 `MenuManager` 또는 `StationManager`에 해금 정보를 등록합니다.
 * **동적 해금 조건**: 특정 퀘스트를 완료하거나 선행 레시피를 구매해야만 다음 상품이 해금되는(`UnlockType`) 시스템을 구현하여 플레이어에게 성장 목표를 제시합니다.
 
-  
 
-## 🏗️ 프로젝트 구조
-
-| **구분** | **주요 스크립트** | **설명** |
-|---|---|---|
-| **Core & Managers** | `GameManager`, `UIManager`, `SaveLoadManager`, `PoolManager`, `EventBus`, `RecipeManager`, `StoryManager`, `QuestManager` | 게임의 핵심 로직, 데이터, 씬 관리 등 전반적인 시스템을 담당하는 매니저 그룹입니다. |
-| **Player** | `PlayerController`, `PlayerInventory`, `PlayerInputActions.cs` | 플레이어의 입력 처리, 이동, 애니메이션, 아이템 소지 및 상호작용을 관리합니다. |
-| **Customer** | `CustomerController`, `CustomerState`, `CustomerSpawner`, `TableManager`, `CustomerData.cs` | 손님의 상태 머신 기반 AI, 생성, 테이블 배치, 대기열 시스템 등 손님 관련 로직을 담당합니다. |
-| **Station** | `BaseStation`, `IInteractable`, `PassiveStation`, `AutomaticStation`, `IngredientStation`, `StationData.cs` | 모든 조리대와 선반의 상호작용, 재료 조합, 요리 진행 과정을 처리하며, 모든 데이터는 `StationData` ScriptableObject 기반으로 관리됩니다. |
-| **UI System** | `UIManager`, `OverSceneUIHandler`, `KeyRebindManager`, `Store.cs`, `Inventory.cs` | Addressable로 씬별 UI를 로드하고, `EventBus`로 이벤트를 처리합니다. 설정, 상점, 인벤토리 등 모든 UI 패널을 포함합니다. |
-| **Data & Utils** | `SaveData.cs`, `CSVImporter.cs`, `StringNamespace.cs`, `VisualObjectFactory.cs` | 게임 저장 데이터 구조, CSV 데이터 임포터, 문자열 상수, 동적 오브젝트 생성 등 프로젝트 전반에서 사용되는 유틸리티와 데이터 구조를 정의합니다. |
-
-## 🛠️ 기술 스택
-
-* **Unity 2022.3.17f1**
-
-* **C# 11**
-
-* **Unity New Input System**: 유연한 키 입력 및 리바인딩 처리
-
-* **Addressable Asset System**: UI 에셋의 비동기 로딩 및 메모리 관리
-
-* **Newtonsoft.Json**: 게임 데이터의 안정적인 직렬화/역직렬화
-
-* **DOTween**: UI 애니메이션 및 동적 연출
-
-
-## 🍝 개발팀 Aero Diner
+## 🍝 17조
 
 | **역할** | **이름** | **개인 깃허브** |
 |---|---|---|
-| **팀장** | 김민범 |  |
-| **개발팀장** | 고윤아 | https://github.com/happy124210 |
-| **팀원** | 김재영 |  |
-| **팀원** | 김동현 |  |
+| **팀장/기획** | 김민범 | - |
+| **리드개발** | 고윤아 | https://github.com/happy124210 |
+| **개발** | 김재영 | https://github.com/GUYoof |
+| **개발** | 김동현 | https://github.com/StarCandy-D2 |
