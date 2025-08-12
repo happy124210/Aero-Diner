@@ -2,15 +2,12 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
-using System;
-using TMPro;
 
 public class LoadingManager : MonoBehaviour
 {
     public Slider progressBar;
     private string targetScene;
     private bool fadeCompleted;
-    private bool isClicked;
 
     private void Start()
     {
@@ -31,33 +28,23 @@ public class LoadingManager : MonoBehaviour
 
         while (asyncOp.progress < 0.9f || elapsed < minLoadTime)
         {
-            elapsed += Time.deltaTime;
-
-            float rawProgress = asyncOp.progress / 0.9f;
+            elapsed += Time.unscaledDeltaTime; //타임스케일 영향 방지(선택)
+            float rawProgress = asyncOp.progress / 0.9f;              // 0~1 정규화
             float timeBasedProgress = Mathf.Clamp01(elapsed / minLoadTime);
-
             float displayProgress = Mathf.Min(rawProgress, timeBasedProgress);
             progressBar.value = displayProgress;
-
             yield return null;
         }
 
-        // 로딩 완료 처리
+        // 로딩 종료: 바를 확실히 1.0으로 보여주고 한 프레임 양보
         progressBar.value = 1f;
-        isClicked = false;
+        yield return null;
 
-        // yield return new WaitUntil(() => isClicked);
-        StartCoroutine(WaitForClickThenFadeOutAndActivate(asyncOp));
+        // 바로 페이드아웃 → 씬 활성화
+        StartCoroutine(FadeOutThenActivate(asyncOp));
     }
 
-    private void Update()
-     {
-         if (!isClicked && Input.GetMouseButtonDown(0))
-         { 
-             isClicked = true;
-         }
-     }
-    private IEnumerator WaitForClickThenFadeOutAndActivate(AsyncOperation asyncOp)
+    private IEnumerator FadeOutThenActivate(AsyncOperation asyncOp)
     {
         fadeCompleted = false;
         FadeManager.OnFadeCompleted += OnFadeComplete;

@@ -132,6 +132,13 @@ public class BaseStation : MonoBehaviour, IPlaceableStation, IMovableStation
     /// </summary>
     public bool CanPlaceIngredient(FoodData data)
     {
+        // 완성된 요리가 있다면 더 이상 재료를 추가할 수 없음
+        if (cookedResult != null)
+        {
+            if (showDebugInfo) Debug.LogWarning($"[Station] 완성된 요리가 존재하여 재료를 추가할 수 없습니다.");
+            return false;
+        }
+
         // 중복 방지
         if (currentIngredients.Contains(data.id))
         {
