@@ -29,7 +29,7 @@ public class LoadingManager : MonoBehaviour
         while (asyncOp.progress < 0.9f || elapsed < minLoadTime)
         {
             elapsed += Time.unscaledDeltaTime; //타임스케일 영향 방지(선택)
-            float rawProgress = asyncOp.progress / 1f;              // 0~1 정규화
+            float rawProgress = asyncOp.progress / 0.9f;              // 0~1 정규화
             float timeBasedProgress = Mathf.Clamp01(elapsed / minLoadTime);
             float displayProgress = Mathf.Min(rawProgress, timeBasedProgress);
             progressBar.value = displayProgress;
