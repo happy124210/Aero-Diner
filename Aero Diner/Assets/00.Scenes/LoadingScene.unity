@@ -203,10 +203,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: UICanvas_LoadingScene
       objectReference: {fileID: 0}
-    - target: {fileID: 2146223052149719289, guid: 57c7f4e59bd49494a850032ef34ba337, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 4565f723bf2e1dc4db595646dfb274d0, type: 3}
     - target: {fileID: 3661639594827724841, guid: 57c7f4e59bd49494a850032ef34ba337, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -289,10 +285,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4354159535272733035, guid: 57c7f4e59bd49494a850032ef34ba337, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8513224034066932171, guid: 57c7f4e59bd49494a850032ef34ba337, type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
